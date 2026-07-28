@@ -1544,6 +1544,48 @@ public abstract class UnsafeUtils implements Utils {
         return getIntVolatile(object, offset);
     }
 
+    /**
+     * Atomically sets the field of the specified object to the given updated value
+     *
+     * @param object    the target object
+     * @param fieldName the name of {@link Field}
+     * @param expected  the expected value
+     * @param newValue  the new value
+     * @return {@code true} if successful, {@code false} otherwise
+     */
+    public static boolean compareAndSwapObject(Object object, String fieldName, Object expected, Object newValue) {
+        long offset = objectFieldOffset(object, fieldName);
+        return compareAndSwapObject(object, offset, expected, newValue);
+    }
+
+    /**
+     * Atomically sets the field of the specified object to the given updated value
+     *
+     * @param object    the target object
+     * @param fieldName the name of {@link Field}
+     * @param expected  the expected value
+     * @param newValue  the new value
+     * @return {@code true} if successful, {@code false} otherwise
+     */
+    public static boolean compareAndSwapInt(Object object, String fieldName, int expected, int newValue) {
+        long offset = objectFieldOffset(object, fieldName);
+        return compareAndSwapInt(object, offset, expected, newValue);
+    }
+
+    /**
+     * Atomically sets the field of the specified object to the given updated value
+     *
+     * @param object    the target object
+     * @param fieldName the name of {@link Field}
+     * @param expected  the expected value
+     * @param newValue  the new value
+     * @return {@code true} if successful, {@code false} otherwise
+     */
+    public static boolean compareAndSwapLong(Object object, String fieldName, long expected, long newValue) {
+        long offset = objectFieldOffset(object, fieldName);
+        return compareAndSwapLong(object, offset, expected, newValue);
+    }
+
     //| peek and poke operations
     //| (compilers should optimize these to memory ops)
 
@@ -2241,9 +2283,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return {@code true} if successful
      * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
      */
-    public static boolean compareAndSwapObject(Object o, long offset,
-                                               Object expected,
-                                               Object x) {
+    public static boolean compareAndSwapObject(Object o, long offset, Object expected, Object x) {
         return invokeMethod(unsafe, compareAndSwapObjectMethod, o, offset, expected, x);
     }
 

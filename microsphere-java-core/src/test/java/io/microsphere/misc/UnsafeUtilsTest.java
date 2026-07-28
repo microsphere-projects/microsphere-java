@@ -25,14 +25,76 @@ import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_INDEX_SCALE;
+import static io.microsphere.misc.UnsafeUtils.compareAndSwapInt;
+import static io.microsphere.misc.UnsafeUtils.compareAndSwapLong;
+import static io.microsphere.misc.UnsafeUtils.compareAndSwapObject;
+import static io.microsphere.misc.UnsafeUtils.getBoolean;
+import static io.microsphere.misc.UnsafeUtils.getBooleanVolatile;
+import static io.microsphere.misc.UnsafeUtils.getBooleanVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getByte;
+import static io.microsphere.misc.UnsafeUtils.getByteVolatile;
+import static io.microsphere.misc.UnsafeUtils.getByteVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getChar;
+import static io.microsphere.misc.UnsafeUtils.getCharVolatile;
+import static io.microsphere.misc.UnsafeUtils.getCharVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getDouble;
+import static io.microsphere.misc.UnsafeUtils.getDoubleVolatile;
+import static io.microsphere.misc.UnsafeUtils.getDoubleVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getFloat;
+import static io.microsphere.misc.UnsafeUtils.getFloatVolatile;
+import static io.microsphere.misc.UnsafeUtils.getFloatVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getInt;
+import static io.microsphere.misc.UnsafeUtils.getIntVolatile;
+import static io.microsphere.misc.UnsafeUtils.getIntVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getLong;
+import static io.microsphere.misc.UnsafeUtils.getLongVolatile;
 import static io.microsphere.misc.UnsafeUtils.getLongVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getObject;
+import static io.microsphere.misc.UnsafeUtils.getObjectVolatile;
+import static io.microsphere.misc.UnsafeUtils.getObjectVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.getShort;
+import static io.microsphere.misc.UnsafeUtils.getShortVolatile;
+import static io.microsphere.misc.UnsafeUtils.getShortVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.putBoolean;
+import static io.microsphere.misc.UnsafeUtils.putBooleanVolatile;
+import static io.microsphere.misc.UnsafeUtils.putBooleanVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putByte;
+import static io.microsphere.misc.UnsafeUtils.putByteVolatile;
+import static io.microsphere.misc.UnsafeUtils.putByteVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putChar;
+import static io.microsphere.misc.UnsafeUtils.putCharVolatile;
+import static io.microsphere.misc.UnsafeUtils.putCharVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putDouble;
+import static io.microsphere.misc.UnsafeUtils.putDoubleVolatile;
+import static io.microsphere.misc.UnsafeUtils.putDoubleVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putFloat;
+import static io.microsphere.misc.UnsafeUtils.putFloatVolatile;
+import static io.microsphere.misc.UnsafeUtils.putFloatVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putInt;
+import static io.microsphere.misc.UnsafeUtils.putIntVolatile;
+import static io.microsphere.misc.UnsafeUtils.putIntVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putLong;
+import static io.microsphere.misc.UnsafeUtils.putLongVolatile;
 import static io.microsphere.misc.UnsafeUtils.putLongVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putObject;
+import static io.microsphere.misc.UnsafeUtils.putObjectVolatile;
+import static io.microsphere.misc.UnsafeUtils.putObjectVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putOrderedInt;
+import static io.microsphere.misc.UnsafeUtils.putOrderedIntIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putOrderedLong;
 import static io.microsphere.misc.UnsafeUtils.putOrderedLongIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putOrderedObject;
+import static io.microsphere.misc.UnsafeUtils.putOrderedObjectIntoArray;
+import static io.microsphere.misc.UnsafeUtils.putShort;
+import static io.microsphere.misc.UnsafeUtils.putShortVolatile;
+import static io.microsphere.misc.UnsafeUtils.putShortVolatileIntoArray;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link UnsafeUtils} Test
@@ -84,57 +146,69 @@ class UnsafeUtilsTest {
     void testPutLongAndGetLong() {
         String fieldName = "longValue";
         long value = Long.MAX_VALUE;
-        UnsafeUtils.putLong(model, fieldName, value);
-        long returnValue = UnsafeUtils.getLong(model, fieldName);
+        putLong(model, fieldName, value);
+        long returnValue = getLong(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.longValue, returnValue);
 
         value = Long.MIN_VALUE;
-        UnsafeUtils.putLongVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getLongVolatile(model, fieldName);
+        putLongVolatile(model, fieldName, value);
+        returnValue = getLongVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.longValue, returnValue);
 
         value = Long.MAX_VALUE;
-        UnsafeUtils.putOrderedLong(model, fieldName, value);
-        returnValue = UnsafeUtils.getLongVolatile(model, fieldName);
+        putOrderedLong(model, fieldName, value);
+        returnValue = getLongVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.longValue, returnValue);
+
+        assertTrue(compareAndSwapLong(model, fieldName, value, Long.MIN_VALUE));
+        returnValue = getLong(model, fieldName);
+        assertEquals(returnValue, Long.MIN_VALUE);
+
+        assertFalse(compareAndSwapLong(model, fieldName, value, Long.MAX_VALUE));
     }
 
     @Test
     void testPutIntAndGetInt() {
         String fieldName = "intValue";
         int value = 123;
-        UnsafeUtils.putInt(model, fieldName, value);
-        int returnValue = UnsafeUtils.getInt(model, fieldName);
+        putInt(model, fieldName, value);
+        int returnValue = getInt(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.intValue, returnValue);
 
         value = Integer.MAX_VALUE;
-        UnsafeUtils.putIntVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getIntVolatile(model, fieldName);
+        putIntVolatile(model, fieldName, value);
+        returnValue = getIntVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.intValue, returnValue);
 
         value = Integer.MIN_VALUE;
-        UnsafeUtils.putOrderedInt(model, fieldName, value);
-        returnValue = UnsafeUtils.getIntVolatile(model, fieldName);
+        putOrderedInt(model, fieldName, value);
+        returnValue = getIntVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.intValue, returnValue);
+
+        assertTrue(compareAndSwapInt(model, fieldName, value, Integer.MAX_VALUE));
+        returnValue = getInt(model, fieldName);
+        assertEquals(returnValue, Integer.MAX_VALUE);
+
+        assertFalse(compareAndSwapInt(model, fieldName, value, Integer.MIN_VALUE));
     }
 
     @Test
     void testPutShortAndGetShort() {
         String fieldName = "shortValue";
         short value = Short.MAX_VALUE;
-        UnsafeUtils.putShort(model, fieldName, value);
-        short returnValue = UnsafeUtils.getShort(model, fieldName);
+        putShort(model, fieldName, value);
+        short returnValue = getShort(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.shortValue, returnValue);
 
-        UnsafeUtils.putShortVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getShortVolatile(model, fieldName);
+        putShortVolatile(model, fieldName, value);
+        returnValue = getShortVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.shortValue, returnValue);
     }
@@ -143,13 +217,13 @@ class UnsafeUtilsTest {
     void testPutByteAndGetByte() {
         String fieldName = "byteValue";
         byte value = Byte.MAX_VALUE;
-        UnsafeUtils.putByte(model, fieldName, value);
-        byte returnValue = UnsafeUtils.getByte(model, fieldName);
+        putByte(model, fieldName, value);
+        byte returnValue = getByte(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.byteValue, returnValue);
 
-        UnsafeUtils.putByteVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getByteVolatile(model, fieldName);
+        putByteVolatile(model, fieldName, value);
+        returnValue = getByteVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.byteValue, returnValue);
     }
@@ -157,14 +231,14 @@ class UnsafeUtilsTest {
     @Test
     void testPutBooleanAndGetBoolean() {
         String fieldName = "booleanValue";
-        boolean value = Boolean.TRUE;
-        UnsafeUtils.putBoolean(model, fieldName, value);
-        boolean returnValue = UnsafeUtils.getBoolean(model, fieldName);
+        boolean value = true;
+        putBoolean(model, fieldName, value);
+        boolean returnValue = getBoolean(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.booleanValue, returnValue);
 
-        UnsafeUtils.putBooleanVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getBooleanVolatile(model, fieldName);
+        putBooleanVolatile(model, fieldName, value);
+        returnValue = getBooleanVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.booleanValue, returnValue);
     }
@@ -173,13 +247,13 @@ class UnsafeUtilsTest {
     void testPutDoubleAndGetDouble() {
         String fieldName = "doubleValue";
         double value = Double.MAX_VALUE;
-        UnsafeUtils.putDouble(model, fieldName, value);
-        double returnValue = UnsafeUtils.getDouble(model, fieldName);
+        putDouble(model, fieldName, value);
+        double returnValue = getDouble(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.doubleValue, returnValue);
 
-        UnsafeUtils.putDoubleVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getDoubleVolatile(model, fieldName);
+        putDoubleVolatile(model, fieldName, value);
+        returnValue = getDoubleVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.doubleValue, returnValue);
     }
@@ -188,13 +262,13 @@ class UnsafeUtilsTest {
     void testPutFloatAndGetFloat() {
         String fieldName = "floatValue";
         float value = Float.MAX_VALUE;
-        UnsafeUtils.putFloat(model, fieldName, value);
-        float returnValue = UnsafeUtils.getFloat(model, fieldName);
+        putFloat(model, fieldName, value);
+        float returnValue = getFloat(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.floatValue, returnValue);
 
-        UnsafeUtils.putFloatVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getFloatVolatile(model, fieldName);
+        putFloatVolatile(model, fieldName, value);
+        returnValue = getFloatVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.floatValue, returnValue);
     }
@@ -203,38 +277,44 @@ class UnsafeUtilsTest {
     void testPutCharAndGetChar() {
         String fieldName = "charValue";
         char value = '@';
-        UnsafeUtils.putChar(model, fieldName, value);
-        char returnValue = UnsafeUtils.getChar(model, fieldName);
+        putChar(model, fieldName, value);
+        char returnValue = getChar(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.charValue, returnValue);
 
-        UnsafeUtils.putCharVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getCharVolatile(model, fieldName);
+        putCharVolatile(model, fieldName, value);
+        returnValue = getCharVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.charValue, returnValue);
-
     }
 
     @Test
     void testPutObjectAndGetObject() {
         String fieldName = "stringValue";
         Object value = "Test text";
-        UnsafeUtils.putObject(model, fieldName, value);
-        Object returnValue = UnsafeUtils.getObject(model, fieldName);
+        putObject(model, fieldName, value);
+        Object returnValue = getObject(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.stringValue, returnValue);
 
         value = "AAAAAAAAAAAA";
-        UnsafeUtils.putObjectVolatile(model, fieldName, value);
-        returnValue = UnsafeUtils.getObjectVolatile(model, fieldName);
+        putObjectVolatile(model, fieldName, value);
+        returnValue = getObjectVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.stringValue, returnValue);
 
         value = "BBBBBB";
-        UnsafeUtils.putOrderedObject(model, fieldName, value);
-        returnValue = UnsafeUtils.getObject(model, fieldName);
+        putOrderedObject(model, fieldName, value);
+        returnValue = getObject(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.stringValue, returnValue);
+
+        value = "CCCCCC";
+        assertTrue(compareAndSwapObject(model, fieldName, returnValue, value));
+        returnValue = getObject(model, fieldName);
+        assertEquals(returnValue, value);
+
+        assertFalse(compareAndSwapObject(model, fieldName, "returnValue", value));
     }
 
     @Test
@@ -259,14 +339,14 @@ class UnsafeUtilsTest {
         String fieldName = "intArrayValue";
         int value = 123;
         int index = 1;
-        UnsafeUtils.putIntVolatileIntoArray(model, fieldName, index, value);
-        int returnValue = UnsafeUtils.getIntVolatileFromArray(model, fieldName, index);
+        putIntVolatileIntoArray(model, fieldName, index, value);
+        int returnValue = getIntVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.intArrayValue[index], returnValue);
 
         value = Integer.MAX_VALUE;
-        UnsafeUtils.putOrderedIntIntoArray(model, fieldName, index, value);
-        returnValue = UnsafeUtils.getIntVolatileFromArray(model, fieldName, index);
+        putOrderedIntIntoArray(model, fieldName, index, value);
+        returnValue = getIntVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.intArrayValue[index], returnValue);
     }
@@ -276,8 +356,8 @@ class UnsafeUtilsTest {
         String fieldName = "shortArrayValue";
         short value = 123;
         int index = 5;
-        UnsafeUtils.putShortVolatileIntoArray(model, fieldName, index, value);
-        short returnValue = UnsafeUtils.getShortVolatileFromArray(model, fieldName, index);
+        putShortVolatileIntoArray(model, fieldName, index, value);
+        short returnValue = getShortVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.shortArrayValue[index], returnValue);
     }
@@ -287,8 +367,8 @@ class UnsafeUtilsTest {
         String fieldName = "byteArrayValue";
         byte value = 123;
         int index = 5;
-        UnsafeUtils.putByteVolatileIntoArray(model, fieldName, index, value);
-        byte returnValue = UnsafeUtils.getByteVolatileFromArray(model, fieldName, index);
+        putByteVolatileIntoArray(model, fieldName, index, value);
+        byte returnValue = getByteVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.byteArrayValue[index], returnValue);
     }
@@ -296,10 +376,10 @@ class UnsafeUtilsTest {
     @Test
     void testPutBooleanIntoArrayVolatileAndGetBooleanFromArrayVolatile() {
         String fieldName = "booleanArrayValue";
-        boolean value = Boolean.TRUE;
+        boolean value = true;
         int index = 3;
-        UnsafeUtils.putBooleanVolatileIntoArray(model, fieldName, index, value);
-        boolean returnValue = UnsafeUtils.getBooleanVolatileFromArray(model, fieldName, index);
+        putBooleanVolatileIntoArray(model, fieldName, index, value);
+        boolean returnValue = getBooleanVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.booleanArrayValue[index], returnValue);
     }
@@ -309,8 +389,8 @@ class UnsafeUtilsTest {
         String fieldName = "doubleArrayValue";
         double value = Double.MAX_VALUE;
         int index = 8;
-        UnsafeUtils.putDoubleVolatileIntoArray(model, fieldName, index, value);
-        double returnValue = UnsafeUtils.getDoubleVolatileFromArray(model, fieldName, index);
+        putDoubleVolatileIntoArray(model, fieldName, index, value);
+        double returnValue = getDoubleVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.doubleArrayValue[index], returnValue);
     }
@@ -320,8 +400,8 @@ class UnsafeUtilsTest {
         String fieldName = "floatArrayValue";
         float value = Float.MAX_VALUE;
         int index = 7;
-        UnsafeUtils.putFloatVolatileIntoArray(model, fieldName, index, value);
-        float returnValue = UnsafeUtils.getFloatVolatileFromArray(model, fieldName, index);
+        putFloatVolatileIntoArray(model, fieldName, index, value);
+        float returnValue = getFloatVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.floatArrayValue[index], returnValue);
     }
@@ -331,8 +411,8 @@ class UnsafeUtilsTest {
         String fieldName = "charArrayValue";
         char value = '@';
         int index = 9;
-        UnsafeUtils.putCharVolatileIntoArray(model, fieldName, index, value);
-        char returnValue = UnsafeUtils.getCharVolatileFromArray(model, fieldName, index);
+        putCharVolatileIntoArray(model, fieldName, index, value);
+        char returnValue = getCharVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.charArrayValue[index], returnValue);
     }
@@ -342,16 +422,15 @@ class UnsafeUtilsTest {
         String fieldName = "objectArrayValue";
         Object value = "Test";
         int index = 5;
-        UnsafeUtils.putObjectVolatileIntoArray(model, fieldName, index, value);
-        Object returnValue = UnsafeUtils.getObjectVolatileFromArray(model, fieldName, index);
+        putObjectVolatileIntoArray(model, fieldName, index, value);
+        Object returnValue = getObjectVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.objectArrayValue[index], returnValue);
 
-        UnsafeUtils.putOrderedObjectIntoArray(model, fieldName, index, value);
-        returnValue = UnsafeUtils.getObjectVolatileFromArray(model, fieldName, index);
+        putOrderedObjectIntoArray(model, fieldName, index, value);
+        returnValue = getObjectVolatileFromArray(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.objectArrayValue[index], returnValue);
-
     }
 
     @Test
@@ -364,7 +443,7 @@ class UnsafeUtilsTest {
         exception = null;
         assertNull(exception);
         try {
-            UnsafeUtils.putLong(model, fieldName, value);
+            putLong(model, fieldName, value);
         } catch (IllegalArgumentException e) {
             exception = e;
         }
@@ -373,7 +452,7 @@ class UnsafeUtilsTest {
         exception = null;
         assertNull(exception);
         try {
-            UnsafeUtils.putShort(model, fieldName, (short) 1);
+            putShort(model, fieldName, (short) 1);
         } catch (IllegalArgumentException e) {
             exception = e;
         }
@@ -382,15 +461,12 @@ class UnsafeUtilsTest {
         exception = null;
         assertNull(exception);
         try {
-            UnsafeUtils.putChar(model, fieldName, (char) 1);
+            putChar(model, fieldName, (char) 1);
         } catch (IllegalArgumentException e) {
             exception = e;
         }
         assertNotNull(exception);
-
-
     }
-
 
     @Test
     void testOnObjectIsNull() {
@@ -399,7 +475,7 @@ class UnsafeUtilsTest {
 
         NullPointerException exception = null;
         try {
-            UnsafeUtils.putObject(null, fieldName, value);
+            putObject(null, fieldName, value);
         } catch (NullPointerException e) {
             exception = e;
         }
@@ -413,7 +489,7 @@ class UnsafeUtilsTest {
 
         NullPointerException exception = null;
         try {
-            UnsafeUtils.putObject(model, fieldName, value);
+            putObject(model, fieldName, value);
         } catch (NullPointerException e) {
             exception = e;
         }
