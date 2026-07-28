@@ -78,7 +78,7 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
             String name = DEFAULT_HANDLER_PACKAGE_PREFIX + DOT + protocol + DOT + "Handler";
             Class<?> handlerClass = resolveClass(name);
             if (handlerClass != null) {
-                handler = (URLStreamHandler) newInstance(handlerClass);
+                handler = (URLStreamHandler) newInstance(true, handlerClass);
             }
         }
         return handler;
