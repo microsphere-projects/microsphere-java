@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.ALL;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublic;
@@ -291,7 +292,7 @@ public abstract class MethodHandleUtils implements Utils {
      * @return non-null
      */
     public static Lookup lookup(Class<?> requestedClass) {
-        return lookup(requestedClass, LookupMode.ALL);
+        return lookup(requestedClass, ALL);
     }
 
     /**
