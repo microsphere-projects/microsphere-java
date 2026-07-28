@@ -206,12 +206,12 @@ public abstract class UnsafeUtils implements Utils {
     /**
      * @see {@link sun.misc.Unsafe#getAddress(long)}
      */
-    static final Method getAddressFromAddressMethod = findMethod(UNSAFE_CLASS, "getAddress", long.class);
+    static final Method getAddressMethod = findMethod(UNSAFE_CLASS, "getAddress", long.class);
 
     /**
      * @see {@link sun.misc.Unsafe#putAddress(long, long)}
      */
-    static final Method putAddressToAddressMethod = findMethod(UNSAFE_CLASS, "putAddress", long.class, long.class);
+    static final Method putAddressMethod = findMethod(UNSAFE_CLASS, "putAddress", long.class, long.class);
 
     // Wrappers for malloc, realloc, free:
 
@@ -460,7 +460,6 @@ public abstract class UnsafeUtils implements Utils {
      * @see {@link sun.misc.Unsafe#fullFence()}
      */
     static final Method fullFenceMethod = findMethod(UNSAFE_CLASS, "fullFence");
-
 
     /**
      * <code>long</code> Array base index
@@ -849,7 +848,7 @@ public abstract class UnsafeUtils implements Utils {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
-        return invokeMethod(unsafe, getObjectVolatileMethod, array, offset);
+        return getObjectVolatile(array, offset);
     }
 
     /**
@@ -861,7 +860,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putDouble(Object object, String fieldName, double value) {
         assertFieldMatchType(object, fieldName, double.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putDoubleMethod, object, offset, value);
     }
 
@@ -874,7 +873,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putFloat(Object object, String fieldName, float value) {
         assertFieldMatchType(object, fieldName, float.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putFloatMethod, object, offset, value);
     }
 
@@ -887,7 +886,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putShort(Object object, String fieldName, short value) {
         assertFieldMatchType(object, fieldName, short.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putShortMethod, object, offset, value);
     }
 
@@ -900,7 +899,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putByte(Object object, String fieldName, byte value) {
         assertFieldMatchType(object, fieldName, byte.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putByteMethod, object, offset, value);
     }
 
@@ -913,9 +912,8 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putBoolean(Object object, String fieldName, boolean value) {
         assertFieldMatchType(object, fieldName, boolean.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putBooleanMethod, object, offset, value);
-
     }
 
     /**
@@ -927,7 +925,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putChar(Object object, String fieldName, char value) {
         assertFieldMatchType(object, fieldName, char.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putCharMethod, object, offset, value);
     }
 
@@ -940,7 +938,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putObject(Object object, String fieldName, Object value) {
         assertFieldMatchType(object, fieldName, Object.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putObjectMethod, object, offset, value);
     }
 
@@ -953,7 +951,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putLong(Object object, String fieldName, long value) {
         assertFieldMatchType(object, fieldName, long.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putLongMethod, object, offset, value);
     }
 
@@ -966,7 +964,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putInt(Object object, String fieldName, int value) {
         assertFieldMatchType(object, fieldName, int.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putIntMethod, object, offset, value);
     }
 
@@ -979,7 +977,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putOrderedInt(Object object, String fieldName, int value) {
         assertFieldMatchType(object, fieldName, int.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putOrderedIntMethod, object, offset, value);
     }
 
@@ -992,7 +990,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putOrderedLong(Object object, String fieldName, long value) {
         assertFieldMatchType(object, fieldName, long.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putOrderedLongMethod, object, offset, value);
     }
 
@@ -1005,7 +1003,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putOrderedObject(Object object, String fieldName, Object value) {
         assertFieldMatchType(object, fieldName, Object.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putOrderedObjectMethod, object, offset, value);
     }
 
@@ -1018,7 +1016,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putDoubleVolatile(Object object, String fieldName, double value) {
         assertFieldMatchType(object, fieldName, double.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putDoubleVolatileMethod, object, offset, value);
     }
 
@@ -1031,7 +1029,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putFloatVolatile(Object object, String fieldName, float value) {
         assertFieldMatchType(object, fieldName, float.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putFloatVolatileMethod, object, offset, value);
     }
 
@@ -1044,7 +1042,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putShortVolatile(Object object, String fieldName, short value) {
         assertFieldMatchType(object, fieldName, short.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putShortVolatileMethod, object, offset, value);
     }
 
@@ -1057,7 +1055,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putByteVolatile(Object object, String fieldName, byte value) {
         assertFieldMatchType(object, fieldName, byte.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putByteVolatileMethod, object, offset, value);
     }
 
@@ -1070,7 +1068,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putBooleanVolatile(Object object, String fieldName, boolean value) {
         assertFieldMatchType(object, fieldName, boolean.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putBooleanVolatileMethod, object, offset, value);
     }
 
@@ -1083,7 +1081,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putCharVolatile(Object object, String fieldName, char value) {
         assertFieldMatchType(object, fieldName, char.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putCharVolatileMethod, object, offset, value);
     }
 
@@ -1096,7 +1094,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putObjectVolatile(Object object, String fieldName, Object value) {
         assertFieldMatchType(object, fieldName, Object.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putObjectVolatileMethod, object, offset, value);
     }
 
@@ -1109,7 +1107,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putLongVolatile(Object object, String fieldName, long value) {
         assertFieldMatchType(object, fieldName, long.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putLongVolatileMethod, object, offset, value);
     }
 
@@ -1122,7 +1120,7 @@ public abstract class UnsafeUtils implements Utils {
      */
     public static void putIntVolatile(Object object, String fieldName, int value) {
         assertFieldMatchType(object, fieldName, int.class);
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         invokeMethod(unsafe, putIntVolatileMethod, object, offset, value);
     }
 
@@ -1339,7 +1337,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return Object value
      */
     public static Object getObject(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getObjectMethod, object, offset);
     }
 
@@ -1351,7 +1349,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return long value
      */
     public static long getLong(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getLongMethod, object, offset);
     }
 
@@ -1363,7 +1361,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return double value
      */
     public static double getDouble(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getDoubleMethod, object, offset);
     }
 
@@ -1375,7 +1373,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return float value
      */
     public static float getFloat(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getFloatMethod, object, offset);
     }
 
@@ -1387,7 +1385,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return short value
      */
     public static short getShort(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getShortMethod, object, offset);
     }
 
@@ -1399,7 +1397,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return byte value
      */
     public static byte getByte(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getByteMethod, object, offset);
     }
 
@@ -1411,7 +1409,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return boolean value
      */
     public static boolean getBoolean(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getBooleanMethod, object, offset);
     }
 
@@ -1423,7 +1421,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return char value
      */
     public static char getChar(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
+        long offset = objectFieldOffset(object, fieldName);
         return invokeMethod(unsafe, getCharMethod, object, offset);
     }
 
@@ -1435,8 +1433,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return int value
      */
     public static int getInt(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getIntMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getInt(object, offset);
     }
 
     /**
@@ -1447,8 +1445,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return Object value
      */
     public static Object getObjectVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getObjectVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getObjectVolatile(object, offset);
     }
 
     /**
@@ -1459,8 +1457,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return long value
      */
     public static long getLongVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getLongVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getLongVolatile(object, offset);
     }
 
     /**
@@ -1471,8 +1469,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return double value
      */
     public static double getDoubleVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getDoubleVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getDoubleVolatile(object, offset);
     }
 
     /**
@@ -1483,8 +1481,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return float value
      */
     public static float getFloatVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getFloatVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getFloatVolatile(object, offset);
     }
 
     /**
@@ -1495,8 +1493,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return short value
      */
     public static short getShortVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getShortVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getShortVolatile(object, offset);
     }
 
     /**
@@ -1507,8 +1505,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return byte value
      */
     public static byte getByteVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getByteVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getByteVolatile(object, offset);
     }
 
     /**
@@ -1519,8 +1517,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return boolean value
      */
     public static boolean getBooleanVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getBooleanVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getBooleanVolatile(object, offset);
     }
 
     /**
@@ -1531,8 +1529,8 @@ public abstract class UnsafeUtils implements Utils {
      * @return char value
      */
     public static char getCharVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getCharVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getCharVolatile(object, offset);
     }
 
     /**
@@ -1543,8 +1541,473 @@ public abstract class UnsafeUtils implements Utils {
      * @return int value
      */
     public static int getIntVolatile(Object object, String fieldName) {
-        long offset = getObjectFieldOffset(object, fieldName);
-        return invokeMethod(unsafe, getIntVolatileMethod, object, offset);
+        long offset = objectFieldOffset(object, fieldName);
+        return getIntVolatile(object, offset);
+    }
+
+    //| peek and poke operations
+    //| (compilers should optimize these to memory ops)
+
+    // These work on object fields in the Java heap.
+    // They will not work on elements of packed arrays.
+
+    /**
+     * Fetches a value from a given Java variable.
+     * More specifically, fetches a field or array element within the given
+     * object {@code o} at the given offset, or (if {@code o} is null)
+     * from the memory address whose numerical value is the given offset.
+     * <p>
+     * The results are undefined unless one of the following cases is true:
+     * <ul>
+     * <li>The offset was obtained from {@link #objectFieldOffset} on
+     * the {@link java.lang.reflect.Field} of some Java field and the object
+     * referred to by {@code o} is of a class compatible with that
+     * field's class.
+     *
+     * <li>The offset and object reference {@code o} (either null or
+     * non-null) were both obtained via {@link #staticFieldOffset}
+     * and {@link #staticFieldBase} (respectively) from the
+     * reflective {@link Field} representation of some Java field.
+     *
+     * <li>The object referred to by {@code o} is an array, and the offset
+     * is an integer of the form {@code B+N*S}, where {@code N} is
+     * a valid index into the array, and {@code B} and {@code S} are
+     * the values obtained by {@link #arrayBaseOffset} and {@link
+     * #arrayIndexScale} (respectively) from the array's class.  The value
+     * referred to is the {@code N}<em>th</em> element of the array.
+     *
+     * </ul>
+     * <p>
+     * If one of the above cases is true, the call references a specific Java
+     * variable (field or array element).  However, the results are undefined
+     * if that variable is not in fact of the type returned by this method.
+     * <p>
+     * This method refers to a variable by means of two parameters, and so
+     * it provides (in effect) a <em>double-register</em> addressing mode
+     * for Java variables.  When the object reference is null, this method
+     * uses its offset as an absolute address.  This is similar in operation
+     * to methods such as {@link #getInt(long)}, which provide (in effect) a
+     * <em>single-register</em> addressing mode for non-Java variables.
+     * However, because Java variables may have a different layout in memory
+     * from non-Java variables, programmers should not assume that these
+     * two addressing modes are ever equivalent.  Also, programmers should
+     * remember that offsets from the double-register addressing mode cannot
+     * be portably confused with longs used in the single-register addressing
+     * mode.
+     *
+     * @param o      Java heap object in which the variable resides, if any, else
+     *               null
+     * @param offset indication of where the variable resides in a Java heap
+     *               object, if any, else a memory address locating the variable
+     *               statically
+     * @return the value fetched from the indicated Java variable
+     * @throws RuntimeException No defined exceptions are thrown, not even
+     *                          {@link NullPointerException}
+     * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
+     * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfInt, long)} instead.
+     */
+    public static int getInt(Object o, long offset) {
+        return invokeMethod(unsafe, getIntMethod, o, offset);
+    }
+
+    /**
+     * Stores a value into a given Java variable.
+     * <p>
+     * The first two parameters are interpreted exactly as with
+     * {@link #getInt(Object, long)} to refer to a specific
+     * Java variable (field or array element).  The given value
+     * is stored into that variable.
+     * <p>
+     * The variable must be of the same type as the method
+     * parameter {@code x}.
+     *
+     * @param o      Java heap object in which the variable resides, if any, else
+     *               null
+     * @param offset indication of where the variable resides in a Java heap
+     *               object, if any, else a memory address locating the variable
+     *               statically
+     * @param x      the value to store into the indicated Java variable
+     * @throws RuntimeException No defined exceptions are thrown, not even
+     *                          {@link NullPointerException}
+     * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
+     * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfInt, long, int)} instead.
+     */
+    public static void putInt(Object o, long offset, int x) {
+        invokeMethod(unsafe, putIntMethod, o, offset, x);
+    }
+
+    /**
+     * Fetches a reference value from a given Java variable.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} instead.
+     */
+    public static Object getObject(Object o, long offset) {
+        return invokeMethod(unsafe, getObjectMethod, o, offset);
+    }
+
+    /**
+     * Stores a reference value into a given Java variable.
+     * <p>
+     * Unless the reference {@code x} being stored is either null
+     * or matches the field type, the results are undefined.
+     * If the reference {@code o} is non-null, card marks or
+     * other store barriers for that object (if the VM requires them)
+     * are updated.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} instead.
+     */
+    public static void putObject(Object o, long offset, Object x) {
+        invokeMethod(unsafe, putObjectMethod, o, offset, x);
+    }
+
+    /**
+     * @see #getInt(Object, long)
+     * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
+     * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfBoolean, long)} instead.
+     */
+    public static boolean getBoolean(Object o, long offset) {
+        return invokeMethod(unsafe, getBooleanMethod, o, offset);
+    }
+
+    /**
+     * @see #putInt(Object, long, int)
+     * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
+     * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfBoolean, long, boolean)} instead.
+     */
+    public static void putBoolean(Object o, long offset, boolean x) {
+        invokeMethod(unsafe, putBooleanMethod, o, offset, x);
+    }
+
+    // These work on values in the C heap.
+
+    /**
+     * Fetches a value from a given memory address.  If the address is zero, or
+     * does not point into a block obtained from {@link #allocateMemory}, the
+     * results are undefined.
+     *
+     * @see #allocateMemory
+     * @see {@link sun.misc.Unsafe#getByte(Object, long)}
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static byte getByte(long address) {
+        return invokeMethod(unsafe, getByteFromAddressMethod, address);
+    }
+
+    /**
+     * Stores a value into a given memory address.  If the address is zero, or
+     * does not point into a block obtained from {@link #allocateMemory}, the
+     * results are undefined.
+     *
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putByte(long address, byte x) {
+        invokeMethod(unsafe, putByteToAddressMethod, address, x);
+    }
+
+    /**
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static short getShort(long address) {
+        return invokeMethod(unsafe, getShortFromAddressMethod, address);
+    }
+
+    /**
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putShort(long address, short x) {
+        invokeMethod(unsafe, putShortToAddressMethod, address, x);
+    }
+
+    /**
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static char getChar(long address) {
+        return invokeMethod(unsafe, getCharFromAddressMethod, address);
+    }
+
+    /**
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putChar(long address, char x) {
+        invokeMethod(unsafe, putCharToAddressMethod, address, x);
+    }
+
+    /**
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static int getInt(long address) {
+        return invokeMethod(unsafe, getIntFromAddressMethod, address);
+    }
+
+    /**
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putInt(long address, int x) {
+        invokeMethod(unsafe, putIntToAddressMethod, address, x);
+    }
+
+    /**
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static long getLong(long address) {
+        return invokeMethod(unsafe, getLongFromAddressMethod, address);
+    }
+
+    /**
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putLong(long address, long x) {
+        invokeMethod(unsafe, putLongToAddressMethod, address, x);
+    }
+
+    /**
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static float getFloat(long address) {
+        return invokeMethod(unsafe, getFloatFromAddressMethod, address);
+    }
+
+    /**
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putFloat(long address, float x) {
+        invokeMethod(unsafe, putFloatToAddressMethod, address, x);
+    }
+
+    /**
+     * @see #getByte(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static double getDouble(long address) {
+        return invokeMethod(unsafe, getDoubleFromAddressMethod, address);
+    }
+
+    /**
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putDouble(long address, double x) {
+        invokeMethod(unsafe, putDoubleToAddressMethod, address, x);
+    }
+
+    /**
+     * Fetches a native pointer from a given memory address.  If the address is
+     * zero, or does not point into a block obtained from {@link
+     * #allocateMemory}, the results are undefined.
+     *
+     * <p>If the native pointer is less than 64 bits wide, it is extended as
+     * an unsigned number to a Java long.  The pointer may be indexed by any
+     * given byte offset, simply by adding that offset (as a simple integer) to
+     * the long representing the pointer.  The number of bytes actually read
+     * from the target address may be determined by consulting {@link
+     * #addressSize}.
+     *
+     * @see #allocateMemory
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static long getAddress(long address) {
+        return invokeMethod(unsafe, getAddressMethod, address);
+    }
+
+    /**
+     * Stores a native pointer into a given memory address.  If the address is
+     * zero, or does not point into a block obtained from {@link
+     * #allocateMemory}, the results are undefined.
+     *
+     * <p>The number of bytes actually written at the target address may be
+     * determined by consulting {@link #addressSize}.
+     *
+     * @see #getAddress(long)
+     * @deprecated Use {@link java.lang.foreign} to access off-heap memory.
+     */
+    public static void putAddress(long address, long x) {
+        invokeMethod(unsafe, putAddressMethod, address, x);
+    }
+
+    //| wrappers for malloc, realloc, free:
+
+    /**
+     * Allocates a new block of native memory, of the given size in bytes.  The
+     * contents of the memory are uninitialized; they will generally be
+     * garbage.  The resulting native pointer will be zero if and only if the
+     * requested size is zero.  The resulting native pointer will be aligned for
+     * all value types.   Dispose of this memory by calling {@link #freeMemory}
+     * or resize it with {@link #reallocateMemory}.
+     *
+     * <em>Note:</em> It is the responsibility of the caller to make
+     * sure arguments are checked before the methods are called. While
+     * some rudimentary checks are performed on the input, the checks
+     * are best effort and when performance is an overriding priority,
+     * as when methods of this class are optimized by the runtime
+     * compiler, some or all checks (if any) may be elided. Hence, the
+     * caller must not rely on the checks and corresponding
+     * exceptions!
+     *
+     * @throws RuntimeException if the size is negative or too large
+     *                          for the native size_t type
+     * @throws OutOfMemoryError if the allocation is refused by the system
+     * @see #getByte(long)
+     * @see #putByte(long, byte)
+     * @deprecated Use {@link java.lang.foreign} to allocate off-heap memory.
+     */
+    public static long allocateMemory(long bytes) {
+        return invokeMethod(unsafe, allocateMemoryMethod, bytes);
+    }
+
+    /**
+     * Resizes a new block of native memory, to the given size in bytes.  The
+     * contents of the new block past the size of the old block are
+     * uninitialized; they will generally be garbage.  The resulting native
+     * pointer will be zero if and only if the requested size is zero.  The
+     * resulting native pointer will be aligned for all value types.  Dispose
+     * of this memory by calling {@link #freeMemory}, or resize it with {@link
+     * #reallocateMemory}.  The address passed to this method may be null, in
+     * which case an allocation will be performed.
+     *
+     * <em>Note:</em> It is the responsibility of the caller to make
+     * sure arguments are checked before the methods are called. While
+     * some rudimentary checks are performed on the input, the checks
+     * are best effort and when performance is an overriding priority,
+     * as when methods of this class are optimized by the runtime
+     * compiler, some or all checks (if any) may be elided. Hence, the
+     * caller must not rely on the checks and corresponding
+     * exceptions!
+     *
+     * @throws RuntimeException if the size is negative or too large
+     *                          for the native size_t type
+     * @throws OutOfMemoryError if the allocation is refused by the system
+     * @see #allocateMemory
+     * @deprecated Use {@link java.lang.foreign} to allocate off-heap memory.
+     */
+    public static long reallocateMemory(long address, long bytes) {
+        return invokeMethod(unsafe, reallocateMemoryMethod, address, bytes);
+    }
+
+    /**
+     * Sets all bytes in a given block of memory to a fixed value
+     * (usually zero).
+     *
+     * <p>This method determines a block's base address by means of two parameters,
+     * and so it provides (in effect) a <em>double-register</em> addressing mode,
+     * as discussed in {@link #getInt(Object, long)}.  When the object reference is null,
+     * the offset supplies an absolute base address.
+     *
+     * <p>The stores are in coherent (atomic) units of a size determined
+     * by the address and length parameters.  If the effective address and
+     * length are all even modulo 8, the stores take place in 'long' units.
+     * If the effective address and length are (resp.) even modulo 4 or 2,
+     * the stores take place in units of 'int' or 'short'.
+     *
+     * <em>Note:</em> It is the responsibility of the caller to make
+     * sure arguments are checked before the methods are called. While
+     * some rudimentary checks are performed on the input, the checks
+     * are best effort and when performance is an overriding priority,
+     * as when methods of this class are optimized by the runtime
+     * compiler, some or all checks (if any) may be elided. Hence, the
+     * caller must not rely on the checks and corresponding
+     * exceptions!
+     *
+     * @throws RuntimeException if any of the arguments is invalid
+     * @since 1.7
+     * @deprecated {@link java.lang.foreign.MemorySegment#fill(byte)} fills the contents of a memory
+     * segment with a given value.
+     */
+    public static void setMemory(Object o, long offset, long bytes, byte value) {
+        invokeMethod(unsafe, setMemoryMethod, o, offset, bytes, value);
+    }
+
+    /**
+     * Sets all bytes in a given block of memory to a fixed value
+     * (usually zero).  This provides a <em>single-register</em> addressing mode,
+     * as discussed in {@link #getInt(Object, long)}.
+     *
+     * <p>Equivalent to {@code setMemory(null, address, bytes, value)}.
+     *
+     * @deprecated {@link java.lang.foreign.MemorySegment#fill(byte)} fills the contents of a memory
+     * segment with a given value.
+     * <p>
+     * Use {@link java.lang.foreign.MemorySegment} and its bulk copy methods instead.
+     */
+    public static void setMemory(long address, long bytes, byte value) {
+        invokeMethod(unsafe, setMemoryToAddressMethod, address, bytes, value);
+    }
+
+    /**
+     * Sets all bytes in a given block of memory to a copy of another
+     * block.
+     *
+     * <p>This method determines each block's base address by means of two parameters,
+     * and so it provides (in effect) a <em>double-register</em> addressing mode,
+     * as discussed in {@link #getInt(Object, long)}.  When the object reference is null,
+     * the offset supplies an absolute base address.
+     *
+     * <p>The transfers are in coherent (atomic) units of a size determined
+     * by the address and length parameters.  If the effective addresses and
+     * length are all even modulo 8, the transfer takes place in 'long' units.
+     * If the effective addresses and length are (resp.) even modulo 4 or 2,
+     * the transfer takes place in units of 'int' or 'short'.
+     *
+     * <em>Note:</em> It is the responsibility of the caller to make
+     * sure arguments are checked before the methods are called. While
+     * some rudimentary checks are performed on the input, the checks
+     * are best effort and when performance is an overriding priority,
+     * as when methods of this class are optimized by the runtime
+     * compiler, some or all checks (if any) may be elided. Hence, the
+     * caller must not rely on the checks and corresponding
+     * exceptions!
+     *
+     * @throws RuntimeException if any of the arguments is invalid
+     * @since 1.7
+     * @deprecated Use {@link java.lang.foreign.MemorySegment} and its bulk copy methods instead.
+     */
+    public static void copyMemory(Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes) {
+        invokeMethod(unsafe, copyMemoryMethod, srcBase, srcOffset, destBase, destOffset, bytes);
+    }
+
+    /**
+     * Sets all bytes in a given block of memory to a copy of another
+     * block.  This provides a <em>single-register</em> addressing mode,
+     * as discussed in {@link #getInt(Object, long)}.
+     * <p>
+     * Equivalent to {@code copyMemory(null, srcAddress, null, destAddress, bytes)}.
+     *
+     * @deprecated Use {@link java.lang.foreign.MemorySegment} and its bulk copy methods instead.
+     */
+    public static void copyMemory(long srcAddress, long destAddress, long bytes) {
+        invokeMethod(unsafe, copyMemoryFromAddressMethod, srcAddress, destAddress, bytes);
+    }
+
+    /**
+     * Disposes of a block of native memory, as obtained from {@link
+     * #allocateMemory} or {@link #reallocateMemory}.  The address passed to
+     * this method may be null, in which case no action is taken.
+     *
+     * <em>Note:</em> It is the responsibility of the caller to make
+     * sure arguments are checked before the methods are called. While
+     * some rudimentary checks are performed on the input, the checks
+     * are best effort and when performance is an overriding priority,
+     * as when methods of this class are optimized by the runtime
+     * compiler, some or all checks (if any) may be elided. Hence, the
+     * caller must not rely on the checks and corresponding
+     * exceptions!
+     *
+     * @throws RuntimeException if any of the arguments is invalid
+     * @see #allocateMemory
+     * @deprecated Use {@link java.lang.foreign} to allocate and free off-heap memory.
+     */
+    public static void freeMemory(long address) {
+        invokeMethod(unsafe, freeMemoryMethod, address);
     }
 
     /**
@@ -1556,7 +2019,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException If the class is null, or the field name is blank or empty or is matched at multiple places in the inheritance hierarchy
      * @throws NullPointerException     If any argument is <code>null</code>
      */
-    public static long getObjectFieldOffset(Object object, String fieldName) throws IllegalArgumentException, NullPointerException {
+    public static long objectFieldOffset(Object object, String fieldName) throws IllegalArgumentException, NullPointerException {
         Class<?> type = object.getClass();
         Long offsetFromCache = getOffsetFromCache(type, fieldName);
         if (offsetFromCache != null) {
@@ -1575,7 +2038,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return offset
      */
-    public static long getStaticFieldOffset(Class<?> type, String fieldName) {
+    public static long staticFieldOffset(Class<?> type, String fieldName) {
         Field field = findField(type, fieldName);
         return invokeMethod(unsafe, staticFieldOffsetMethod, field);
     }
@@ -1587,9 +2050,454 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return base
      */
-    public static long getStaticFieldBase(Class<?> type, String fieldName) {
+    public static long staticFieldBase(Class<?> type, String fieldName) {
         Field field = findField(type, fieldName);
         return invokeMethod(unsafe, staticFieldBaseMethod, field);
+    }
+
+    /**
+     * Reports the offset of the first element in the storage allocation of a
+     * given array class.  If {@link #arrayIndexScale} returns a non-zero value
+     * for the same class, you may use that scale factor, together with this
+     * base offset, to form new offsets to access elements of arrays of the
+     * given class.
+     *
+     * @see #getInt(Object, long)
+     * @see #putInt(Object, long, int)
+     * @deprecated Not needed when using {@link java.lang.invoke.VarHandle} or {@link java.lang.foreign}.
+     */
+    public static int arrayBaseOffset(Class<?> arrayClass) {
+        return invokeMethod(unsafe, arrayBaseOffsetMethod, arrayClass);
+    }
+
+    /**
+     * Reports the scale factor for addressing elements in the storage
+     * allocation of a given array class.  However, arrays of "narrow" types
+     * will generally not work properly with accessors like {@link
+     * #getByte(Object, long)}, so the scale factor for such classes is reported
+     * as zero.
+     *
+     * @see #arrayBaseOffset
+     * @see #getInt(Object, long)
+     * @see #putInt(Object, long, int)
+     * @deprecated Not needed when using {@link java.lang.invoke.VarHandle} or {@link java.lang.foreign}.
+     */
+    public static int arrayIndexScale(Class<?> arrayClass) {
+        return invokeMethod(unsafe, arrayIndexScaleMethod, arrayClass);
+    }
+
+    /**
+     * Reports the size in bytes of a native pointer, as stored via {@link
+     * #putAddress}.  This value will be either 4 or 8.  Note that the sizes of
+     * other primitive types (as stored in native memory blocks) is determined
+     * fully by their information content.
+     *
+     * @deprecated Use {@link java.lang.foreign.ValueLayout#ADDRESS}.{@link java.lang.foreign.MemoryLayout#byteSize()} instead.
+     */
+    public static int addressSize() {
+        return invokeMethod(unsafe, addressSizeMethod);
+    }
+
+    /**
+     * Reports the size in bytes of a native memory page (whatever that is).
+     * This value will always be a power of two.
+     */
+    public static int pageSize() {
+        return invokeMethod(unsafe, pageSizeMethod);
+    }
+
+    //| random trusted operations from JNI:
+
+    /**
+     * Allocates an instance but does not run any constructor.
+     * Initializes the class if it has not yet been.
+     */
+    public static Object allocateInstance(Class<?> cls)
+            throws InstantiationException {
+        return invokeMethod(unsafe, allocateInstanceMethod, cls);
+    }
+
+    /**
+     * Throws the exception without telling the verifier.
+     */
+    public static void throwException(Throwable ee) {
+        invokeMethod(unsafe, throwExceptionMethod, ee);
+    }
+
+    /**
+     * Atomically updates Java variable to {@code x} if it is currently
+     * holding {@code expected}.
+     *
+     * <p>This operation has memory semantics of a {@code volatile} read
+     * and write.  Corresponds to C11 atomic_compare_exchange_strong.
+     *
+     * @return {@code true} if successful
+     * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
+     */
+    public static boolean compareAndSwapObject(Object o, long offset,
+                                               Object expected,
+                                               Object x) {
+        return invokeMethod(unsafe, compareAndSwapObjectMethod, o, offset, expected, x);
+    }
+
+    /**
+     * Atomically updates Java variable to {@code x} if it is currently
+     * holding {@code expected}.
+     *
+     * <p>This operation has memory semantics of a {@code volatile} read
+     * and write.  Corresponds to C11 atomic_compare_exchange_strong.
+     *
+     * @return {@code true} if successful
+     * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
+     */
+    public static boolean compareAndSwapInt(Object o, long offset, int expected, int x) {
+        return invokeMethod(unsafe, compareAndSwapIntMethod, o, offset, expected, x);
+    }
+
+    /**
+     * Atomically updates Java variable to {@code x} if it is currently
+     * holding {@code expected}.
+     *
+     * <p>This operation has memory semantics of a {@code volatile} read
+     * and write.  Corresponds to C11 atomic_compare_exchange_strong.
+     *
+     * @return {@code true} if successful
+     * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
+     */
+    public static boolean compareAndSwapLong(Object o, long offset, long expected, long x) {
+        return invokeMethod(unsafe, compareAndSwapLongMethod, o, offset, expected, x);
+    }
+
+    /**
+     * Fetches a reference value from a given Java variable, with volatile
+     * load semantics. Otherwise identical to {@link #getObject(Object, long)}
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static Object getObjectVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getObjectVolatileMethod, o, offset);
+    }
+
+    /**
+     * Stores a reference value into a given Java variable, with
+     * volatile store semantics. Otherwise identical to {@link #putObject(Object, long, Object)}
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putObjectVolatile(Object o, long offset, Object x) {
+        invokeMethod(unsafe, putObjectVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getInt(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static int getIntVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getIntVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putInt(Object, long, int)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putIntVolatile(Object o, long offset, int x) {
+        invokeMethod(unsafe, putIntVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getBoolean(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static boolean getBooleanVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getBooleanVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putBoolean(Object, long, boolean)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putBooleanVolatile(Object o, long offset, boolean x) {
+        invokeMethod(unsafe, putBooleanVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getByte(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)}
+     * instead.
+     */
+    public static byte getByteVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getByteVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putByte(Object, long, byte)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putByteVolatile(Object o, long offset, byte x) {
+        invokeMethod(unsafe, putByteVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getShort(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static short getShortVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getShortVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putShort(Object, long, short)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putShortVolatile(Object o, long offset, short x) {
+        invokeMethod(unsafe, putShortVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getChar(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static char getCharVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getCharVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putChar(Object, long, char)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putCharVolatile(Object o, long offset, char x) {
+        invokeMethod(unsafe, putCharVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getLong(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static long getLongVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getLongVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putLong(Object, long, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putLongVolatile(Object o, long offset, long x) {
+        invokeMethod(unsafe, putLongVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getFloat(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static float getFloatVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getFloatVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putFloat(Object, long, float)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putFloatVolatile(Object o, long offset, float x) {
+        invokeMethod(unsafe, putFloatVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Volatile version of {@link #getDouble(Object, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
+     */
+    public static double getDoubleVolatile(Object o, long offset) {
+        return invokeMethod(unsafe, getDoubleVolatileMethod, o, offset);
+    }
+
+    /**
+     * Volatile version of {@link #putDouble(Object, long, double)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
+     */
+    public static void putDoubleVolatile(Object o, long offset, double x) {
+        invokeMethod(unsafe, putDoubleVolatileMethod, o, offset, x);
+    }
+
+    /**
+     * Version of {@link #putObjectVolatile(Object, long, Object)}
+     * that does not guarantee immediate visibility of the store to
+     * other threads. This method is generally only useful if the
+     * underlying field is a Java volatile (or if an array cell, one
+     * that is otherwise only accessed using volatile accesses).
+     * <p>
+     * Corresponds to C11 atomic_store_explicit(..., memory_order_release).
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setRelease(Object...)} instead.
+     */
+    public static void putOrderedObject(Object o, long offset, Object x) {
+        invokeMethod(unsafe, putOrderedObjectMethod, o, offset, x);
+    }
+
+    /**
+     * Ordered/Lazy version of {@link #putIntVolatile(Object, long, int)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setRelease(Object...)} instead.
+     */
+    public static void putOrderedInt(Object o, long offset, int x) {
+        invokeMethod(unsafe, putOrderedIntMethod, o, offset, x);
+    }
+
+    /**
+     * Ordered/Lazy version of {@link #putLongVolatile(Object, long, long)}.
+     *
+     * @deprecated Use {@link java.lang.invoke.VarHandle#setRelease(Object...)} instead.
+     */
+    public static void putOrderedLong(Object o, long offset, long x) {
+        invokeMethod(unsafe, putOrderedLongMethod, o, offset, x);
+    }
+
+    // The following contain CAS-based Java implementations used on
+    // platforms not supporting native instructions
+
+    /**
+     * Atomically adds the given value to the current value of a field
+     * or array element within the given object {@code o}
+     * at the given {@code offset}.
+     *
+     * @param o      object/array to update the field/element in
+     * @param offset field/element offset
+     * @param delta  the value to add
+     * @return the previous value
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
+     */
+    public static int getAndAddInt(Object o, long offset, int delta) {
+        return invokeMethod(unsafe, getAndAddIntMethod, o, offset, delta);
+    }
+
+    /**
+     * Atomically adds the given value to the current value of a field
+     * or array element within the given object {@code o}
+     * at the given {@code offset}.
+     *
+     * @param o      object/array to update the field/element in
+     * @param offset field/element offset
+     * @param delta  the value to add
+     * @return the previous value
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
+     */
+    public static long getAndAddLong(Object o, long offset, long delta) {
+        return invokeMethod(unsafe, getAndAddLongMethod, o, offset, delta);
+    }
+
+    /**
+     * Atomically exchanges the given value with the current value of
+     * a field or array element within the given object {@code o}
+     * at the given {@code offset}.
+     *
+     * @param o        object/array to update the field/element in
+     * @param offset   field/element offset
+     * @param newValue new value
+     * @return the previous value
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
+     */
+    public static int getAndSetInt(Object o, long offset, int newValue) {
+        return invokeMethod(unsafe, getAndSetIntMethod, o, offset, newValue);
+    }
+
+    /**
+     * Atomically exchanges the given value with the current value of
+     * a field or array element within the given object {@code o}
+     * at the given {@code offset}.
+     *
+     * @param o        object/array to update the field/element in
+     * @param offset   field/element offset
+     * @param newValue new value
+     * @return the previous value
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
+     */
+    public static long getAndSetLong(Object o, long offset, long newValue) {
+        return invokeMethod(unsafe, getAndSetLongMethod, o, offset, newValue);
+    }
+
+    /**
+     * Atomically exchanges the given reference value with the current
+     * reference value of a field or array element within the given
+     * object {@code o} at the given {@code offset}.
+     *
+     * @param o        object/array to update the field/element in
+     * @param offset   field/element offset
+     * @param newValue new value
+     * @return the previous value
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
+     */
+    public static Object getAndSetObject(Object o, long offset, Object newValue) {
+        return invokeMethod(unsafe, getAndSetObjectMethod, o, offset, newValue);
+    }
+
+    /**
+     * Ensures that loads before the fence will not be reordered with loads and
+     * stores after the fence; a "LoadLoad plus LoadStore barrier".
+     * <p>
+     * Corresponds to C11 atomic_thread_fence(memory_order_acquire)
+     * (an "acquire fence").
+     * <p>
+     * A pure LoadLoad fence is not provided, since the addition of LoadStore
+     * is almost always desired, and most current hardware instructions that
+     * provide a LoadLoad barrier also provide a LoadStore barrier for free.
+     *
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#acquireFence()} instead.
+     */
+    public static void loadFence() {
+        invokeMethod(unsafe, loadFenceMethod);
+    }
+
+    /**
+     * Ensures that loads and stores before the fence will not be reordered with
+     * stores after the fence; a "StoreStore plus LoadStore barrier".
+     * <p>
+     * Corresponds to C11 atomic_thread_fence(memory_order_release)
+     * (a "release fence").
+     * <p>
+     * A pure StoreStore fence is not provided, since the addition of LoadStore
+     * is almost always desired, and most current hardware instructions that
+     * provide a StoreStore barrier also provide a LoadStore barrier for free.
+     *
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#releaseFence()} instead.
+     */
+    public static void storeFence() {
+        invokeMethod(unsafe, storeFenceMethod);
+    }
+
+    /**
+     * Ensures that loads and stores before the fence will not be reordered
+     * with loads and stores after the fence.  Implies the effects of both
+     * loadFence() and storeFence(), and in addition, the effect of a StoreLoad
+     * barrier.
+     * <p>
+     * Corresponds to C11 atomic_thread_fence(memory_order_seq_cst).
+     *
+     * @since 1.8
+     * @deprecated Use {@link java.lang.invoke.VarHandle#fullFence()} instead.
+     */
+    public static void fullFence() {
+        invokeMethod(unsafe, fullFenceMethod);
     }
 
     private UnsafeUtils() {
