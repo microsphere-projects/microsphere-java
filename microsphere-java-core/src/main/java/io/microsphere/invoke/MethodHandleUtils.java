@@ -25,7 +25,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Objects;
@@ -37,7 +36,6 @@ import static io.microsphere.invoke.MethodHandleUtils.LookupMode.ALL;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublic;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
@@ -174,16 +172,6 @@ public abstract class MethodHandleUtils implements Utils {
      * The {@link Lookup} for {@link MethodHandles#publicLookup()}
      */
     public static final Lookup PUBLIC_LOOKUP = publicLookup();
-
-    /**
-     * The {@link Lookup#IMPL_LOOKUP} is a trusted lookup that has full access to all classes and members,
-     * including private ones. It is used internally by the JDK and should be used with caution.
-     * Using this lookup can lead to security risks and should only be done in trusted environments.
-     * <p>
-     * Note: Must add the JVM option to break Strongly Encapsulate JDK Internals by Default :
-     * <code>"--add-opens=java.base/java.lang.invoke=ALL-UNNAMED"</code>
-     */
-    public static final Lookup TRUSTED_LOOKUP = trustedLookup();
 
     /**
      * The allowed {@link Lookup} modes enumeration
@@ -364,19 +352,8 @@ public abstract class MethodHandleUtils implements Utils {
         if (isiCandidateMethod(method)) {
             return findPublic(method, function);
         }
-        Lookup lookup = TRUSTED_LOOKUP;
-        if (lookup == null) {
-            return NOT_FOUND_METHOD_HANDLE;
-        }
+        Lookup lookup = lookup(requestedClass);
         return MethodHandlesLookupUtils.find(lookup, requestedClass, methodName, parameterTypes, function);
-    }
-
-    private static Lookup trustedLookup() {
-        return execute(() -> {
-            Field implLookupField = Lookup.class.getDeclaredField("IMPL_LOOKUP");
-            implLookupField.setAccessible(true);
-            return (Lookup) implLookupField.get(null);
-        }, e -> null);
     }
 
     private static Lookup newLookup(LookupKey key) {
