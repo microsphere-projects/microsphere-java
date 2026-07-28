@@ -122,6 +122,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         if (classLoader == null) {
             return EMPTY_URL_ARRAY;
         }
+
         Object ucp = getFieldValue(true, classLoader, findUcpField(classLoader));
         return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(true, ucp, "getURLs");
     }
