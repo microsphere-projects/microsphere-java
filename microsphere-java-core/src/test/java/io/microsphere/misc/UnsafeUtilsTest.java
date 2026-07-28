@@ -46,7 +46,7 @@ class UnsafeUtilsTest {
     private Model model;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         model = new Model();
     }
 
@@ -82,7 +82,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutLongAndGetLong() throws Exception {
+    void testPutLongAndGetLong() {
         String fieldName = "longValue";
         long value = Long.MAX_VALUE;
         UnsafeUtils.putLong(model, fieldName, value);
@@ -104,7 +104,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutIntAndGetInt() throws Exception {
+    void testPutIntAndGetInt() {
         String fieldName = "intValue";
         int value = 123;
         UnsafeUtils.putInt(model, fieldName, value);
@@ -126,7 +126,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutShortAndGetShort() throws Exception {
+    void testPutShortAndGetShort() {
         String fieldName = "shortValue";
         short value = Short.MAX_VALUE;
         UnsafeUtils.putShort(model, fieldName, value);
@@ -141,7 +141,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutByteAndGetByte() throws Exception {
+    void testPutByteAndGetByte() {
         String fieldName = "byteValue";
         byte value = Byte.MAX_VALUE;
         UnsafeUtils.putByte(model, fieldName, value);
@@ -156,7 +156,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutBooleanAndGetBoolean() throws Exception {
+    void testPutBooleanAndGetBoolean() {
         String fieldName = "booleanValue";
         boolean value = Boolean.TRUE;
         UnsafeUtils.putBoolean(model, fieldName, value);
@@ -171,7 +171,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutDoubleAndGetDouble() throws Exception {
+    void testPutDoubleAndGetDouble() {
         String fieldName = "doubleValue";
         double value = Double.MAX_VALUE;
         UnsafeUtils.putDouble(model, fieldName, value);
@@ -186,7 +186,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutFloatAndGetFloat() throws Exception {
+    void testPutFloatAndGetFloat() {
         String fieldName = "floatValue";
         float value = Float.MAX_VALUE;
         UnsafeUtils.putFloat(model, fieldName, value);
@@ -201,7 +201,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutCharAndGetChar() throws Exception {
+    void testPutCharAndGetChar() {
         String fieldName = "charValue";
         char value = '@';
         UnsafeUtils.putChar(model, fieldName, value);
@@ -217,7 +217,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutObjectAndGetObject() throws Exception {
+    void testPutObjectAndGetObject() {
         String fieldName = "stringValue";
         Object value = "Test text";
         UnsafeUtils.putObject(model, fieldName, value);
@@ -239,7 +239,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutLongIntoArrayVolatileAndGetLongFromArrayVolatile() throws Exception {
+    void testPutLongIntoArrayVolatileAndGetLongFromArrayVolatile() {
         String fieldName = "longArrayValue";
         long value = 123;
         int index = 2;
@@ -256,7 +256,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutIntIntoArrayVolatileAndGetIntFromArrayVolatile() throws Exception {
+    void testPutIntIntoArrayVolatileAndGetIntFromArrayVolatile() {
         String fieldName = "intArrayValue";
         int value = 123;
         int index = 1;
@@ -273,7 +273,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutShortIntoArrayVolatileAndGetShortFromArrayVolatile() throws Exception {
+    void testPutShortIntoArrayVolatileAndGetShortFromArrayVolatile() {
         String fieldName = "shortArrayValue";
         short value = 123;
         int index = 5;
@@ -284,7 +284,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutByteIntoArrayVolatileAndGetByteFromArrayVolatile() throws Exception {
+    void testPutByteIntoArrayVolatileAndGetByteFromArrayVolatile() {
         String fieldName = "byteArrayValue";
         byte value = 123;
         int index = 5;
@@ -295,7 +295,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutBooleanIntoArrayVolatileAndGetBooleanFromArrayVolatile() throws Exception {
+    void testPutBooleanIntoArrayVolatileAndGetBooleanFromArrayVolatile() {
         String fieldName = "booleanArrayValue";
         boolean value = Boolean.TRUE;
         int index = 3;
@@ -306,7 +306,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutDoubleIntoArrayVolatileAndGetDoubleFromArrayVolatile() throws Exception {
+    void testPutDoubleIntoArrayVolatileAndGetDoubleFromArrayVolatile() {
         String fieldName = "doubleArrayValue";
         double value = Double.MAX_VALUE;
         int index = 8;
@@ -317,7 +317,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutFloatIntoArrayVolatileAndGetFloatFromArrayVolatile() throws Exception {
+    void testPutFloatIntoArrayVolatileAndGetFloatFromArrayVolatile() {
         String fieldName = "floatArrayValue";
         float value = Float.MAX_VALUE;
         int index = 7;
@@ -328,7 +328,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutCharIntoArrayVolatileAndGetCharFromArrayVolatile() throws Exception {
+    void testPutCharIntoArrayVolatileAndGetCharFromArrayVolatile() {
         String fieldName = "charArrayValue";
         char value = '@';
         int index = 9;
@@ -339,7 +339,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutObjectIntoArrayVolatileAndGetObjectFromArrayVolatile() throws Exception {
+    void testPutObjectIntoArrayVolatileAndGetObjectFromArrayVolatile() {
         String fieldName = "objectArrayValue";
         Object value = "Test";
         int index = 5;
@@ -356,7 +356,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void tesPutOnInvalidTypeValue() throws Exception {
+    void tesPutOnInvalidTypeValue() {
         String fieldName = "intValue";
         int value = Integer.MAX_VALUE;
         int index = 1;
@@ -394,7 +394,7 @@ class UnsafeUtilsTest {
 
 
     @Test
-    void testOnObjectIsNull() throws Exception {
+    void testOnObjectIsNull() {
         String fieldName = "aaaa";
         Object value = "value";
 
@@ -408,7 +408,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testOnIllegalArgumentException() throws Exception {
+    void testOnIllegalArgumentException() {
         String fieldName = "aaaa";
         Object value = "value";
 
