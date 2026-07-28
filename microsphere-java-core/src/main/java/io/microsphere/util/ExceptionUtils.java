@@ -21,9 +21,9 @@ import io.microsphere.io.StringBuilderWriter;
 
 import java.io.PrintWriter;
 
+import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
-import static io.microsphere.util.ClassUtils.newInstance;
 
 /**
  * {@link Exception} Utilities class
@@ -145,7 +145,7 @@ public abstract class ExceptionUtils implements Utils {
      */
     @Nonnull
     public static <T extends Throwable> T create(Class<T> throwableClass, String message) {
-        return newInstance(throwableClass, message);
+        return newInstance(true, throwableClass, message);
     }
 
     /**

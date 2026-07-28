@@ -20,8 +20,8 @@ package io.microsphere.json;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.beans.BeanMetadata;
+import io.microsphere.reflect.ConstructorUtils;
 import io.microsphere.util.CharSequenceUtils;
-import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
 
 import java.lang.reflect.Method;
@@ -987,7 +987,7 @@ public abstract class JSONUtils implements Utils {
     @Nonnull
     public static <V> V readValueAsBean(JSONObject jsonObject, Class<V> beanClass) {
         BeanMetadata beanMetadata = getBeanMetadata(beanClass);
-        V valueObject = ClassUtils.newInstance(beanClass);
+        V valueObject = ConstructorUtils.newInstance(true, beanClass);
         Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();

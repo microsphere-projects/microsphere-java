@@ -26,10 +26,10 @@ import java.net.URLStreamHandlerFactory;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
+import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
-import static io.microsphere.util.ClassUtils.newInstance;
 
 /**
  * Standard implementation of {@link URLStreamHandlerFactory} that creates a new instance of

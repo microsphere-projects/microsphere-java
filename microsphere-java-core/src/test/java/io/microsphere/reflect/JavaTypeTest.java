@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
@@ -39,7 +40,6 @@ import static io.microsphere.reflect.JavaType.fromMethodParameter;
 import static io.microsphere.reflect.JavaType.fromMethodParameters;
 import static io.microsphere.reflect.JavaType.fromMethodReturnType;
 import static io.microsphere.reflect.MethodUtils.findMethod;
-import static io.microsphere.util.ClassUtils.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
