@@ -1,7 +1,7 @@
 package io.microsphere.misc;
 
 import io.microsphere.util.Assert;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -29,7 +29,7 @@ import static java.security.AccessController.doPrivileged;
  * @see sun.misc.Unsafe
  * @since 1.0.0
  */
-public abstract class UnsafeUtils extends BaseUtils {
+public abstract class UnsafeUtils implements Utils {
 
     static final String UNSAFE_CLASS_NAME = "sun.misc.Unsafe";
 

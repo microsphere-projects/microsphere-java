@@ -2,6 +2,7 @@ package io.microsphere.reflect;
 
 import io.microsphere.LoggingTest;
 
+import io.microsphere.util.BaseUtils;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
@@ -117,6 +118,11 @@ class ConstructorUtilsTest extends LoggingTest {
     }
 
     @Test
+    void testNewInstanceWithTypeOnRuntimeException() {
+        assertThrows(RuntimeException.class, () -> newInstance(MyUtils.class));
+    }
+
+    @Test
     void testNewInstanceWithConstructor() {
         assertNotNull(newInstance(getConstructor(PublicConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(ProtectedConstructorClass.class)));
@@ -145,6 +151,13 @@ class ConstructorUtilsTest extends LoggingTest {
 
     static class PrivateConstructorClass {
         private PrivateConstructorClass() {
+        }
+    }
+
+    static class MyUtils extends BaseUtils {
+
+        protected MyUtils() {
+            super();
         }
     }
 }
