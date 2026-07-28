@@ -15,7 +15,6 @@ import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ConstructorUtils;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -57,12 +56,9 @@ import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
-import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.reflect.Modifier.isAnnotation;
 import static io.microsphere.reflect.Modifier.isSynthetic;
-import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -2038,70 +2034,6 @@ public abstract class ClassUtils implements Utils {
             }
         }
         return derived;
-    }
-
-    /**
-     * Creates a new instance of the specified class by finding a suitable constructor
-     * that matches the provided arguments and invoking it.
-     *
-     * <p>This method searches for a declared constructor in the given class that
-     * matches the number and types of the provided arguments. It handles primitive
-     * types by resolving their wrapper types for comparison. If no matching constructor
-     * is found, an {@link IllegalArgumentException} is thrown. If a matching constructor
-     * is found, it is invoked using {@link ConstructorUtils#newInstance(Constructor, Object...)}.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * // Creating an instance of a class with a parameterized constructor
-     * MyClass instance = ClassUtils.newInstance(MyClass.class, "example", 42);
-     *
-     * // Creating an instance of a class with a no-arg constructor
-     * MyClass instance2 = ClassUtils.newInstance(MyClass.class);
-     *
-     * // This will throw an IllegalArgumentException if no matching constructor exists
-     * try {
-     *     ClassUtils.newInstance(MyClass.class, "invalid", "arguments");
-     * } catch (IllegalArgumentException e) {
-     *     System.out.println("No matching constructor found: " + e.getMessage());
-     * }
-     * }</pre>
-     *
-     * @param type the class of which to create a new instance
-     * @param args the arguments to pass to the constructor
-     * @param <T>  the type of the object to create
-     * @return a new instance of the specified class
-     * @throws IllegalArgumentException if no constructor matching the provided arguments is found
-     * @see ConstructorUtils#newInstance(Constructor, Object...)
-     */
-    @Nonnull
-    public static <T> T newInstance(@Nonnull Class<T> type, Object... args) {
-        int length = length(args);
-
-        List<Constructor<?>> constructors = findDeclaredConstructors(type, constructor -> {
-            Class<?>[] parameterTypes = constructor.getParameterTypes();
-            if (length != parameterTypes.length) {
-                return false;
-            }
-            for (int i = 0; i < length; i++) {
-                Object arg = args[i];
-                Class<?> parameterType = parameterTypes[i];
-                if (isPrimitive(parameterType)) {
-                    parameterType = resolveWrapperType(parameterType);
-                }
-                if (!parameterType.isInstance(arg)) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        if (constructors.isEmpty()) {
-            String message = format("No constructor[class : '{}'] matches the arguments : {}", getTypeName(type), arrayToString(args));
-            throw new IllegalArgumentException(message);
-        }
-
-        Constructor<T> constructor = (Constructor<T>) constructors.get(0);
-        return ConstructorUtils.newInstance(constructor, args);
     }
 
     /**

@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.lang.function.ThrowableFunction;
 import io.microsphere.lang.function.ThrowableSupplier;
@@ -31,6 +32,9 @@ import java.lang.reflect.Method;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static io.microsphere.util.ExceptionUtils.wrap;
 
 /**
@@ -233,6 +237,32 @@ public abstract class ExecutableUtils implements Utils {
         }
 
         return result;
+    }
+
+    /**
+     * Matches the parameter types of the given {@link Executable} with the provided arguments.
+     *
+     * @param executable The executable member whose parameter types are to be matched.
+     * @param args       The arguments to be matched against the parameter types of the executable.
+     * @return <code>true</code> if the parameter types of the executable match the provided arguments; <code>false</code> otherwise.
+     */
+    public static boolean matchParameterTypes(@Nonnull Executable executable, @Nonnull Object... args) {
+        Class<?>[] parameterTypes = executable.getParameterTypes();
+        int length = parameterTypes.length;
+        if (length != length(args)) {
+            return false;
+        }
+        for (int i = 0; i < length; i++) {
+            Object arg = args[i];
+            Class<?> parameterType = parameterTypes[i];
+            if (isPrimitive(parameterType)) {
+                parameterType = resolveWrapperType(parameterType);
+            }
+            if (!parameterType.isInstance(arg)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private ExecutableUtils() {

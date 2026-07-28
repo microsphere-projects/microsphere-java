@@ -34,9 +34,10 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.ExecutableUtils.matchParameterTypes;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.arrayToString;
-import static io.microsphere.util.ClassUtils.getTypes;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -321,7 +322,12 @@ public abstract class ConstructorUtils implements Utils {
      */
     @Nonnull
     public static <T> T newInstance(boolean forceAccess, Class<T> type, Object... args) {
-        Constructor<T> constructor = findConstructor(type, getTypes(args));
+        List<Constructor<?>> constructors = findDeclaredConstructors(type, constructor -> matchParameterTypes(constructor, args));
+        if (constructors.isEmpty()) {
+            String message = format("No constructor['{}'] matches the arguments : {}", type, arrayToString(args));
+            throw new IllegalArgumentException(message);
+        }
+        Constructor<T> constructor = (Constructor<T>) constructors.get(0);
         return newInstance(forceAccess, constructor, args);
     }
 
