@@ -80,6 +80,11 @@ public abstract class IOUtils implements Utils {
     public static final String BUFFER_SIZE_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "io.buffer.size";
 
     /**
+     * The size in bytes of an unbounded type.
+     */
+    public static final int UNBOUND_BYTES_SIZE = -1;
+
+    /**
      * The size in bytes of <code>boolean</code> type.
      */
     public static final int BOOLEAN_BYTES_SIZE = 1;

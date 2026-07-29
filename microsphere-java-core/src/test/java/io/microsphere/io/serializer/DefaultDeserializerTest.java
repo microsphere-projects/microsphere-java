@@ -1,4 +1,4 @@
-package io.microsphere.io;
+package io.microsphere.io.serializer;
 
 import org.junit.jupiter.api.Test;
 

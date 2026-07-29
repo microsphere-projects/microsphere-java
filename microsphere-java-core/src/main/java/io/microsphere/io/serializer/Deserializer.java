@@ -14,28 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.convert;
+package io.microsphere.io.serializer;
 
-import io.microsphere.io.serializer.DefaultSerializer;
-
-import java.io.Serializable;
+import java.io.IOException;
 
 /**
- * The class coverts the {@link Object} instance to be {@link byte[] byte array} object.
+ * A functional interface for deserializing byte arrays into objects of type {@code T}.
+ * <p>
+ * Implementations of this interface must be thread-safe.
+ * </p>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Serializable
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * Deserializer<String> deserializer = bytes -> new String(bytes, StandardCharsets.UTF_8);
+ * String data = deserializer.deserialize("Hello, World!".getBytes(StandardCharsets.UTF_8));
+ * System.out.println(data); // Output: Hello, World!
+ * }</pre>
+ * </p>
+ *
+ * @param <T> the type to be deserialized from a byte array
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Serializer
  * @since 1.0.0
  */
-public class ObjectToByteArrayConverter extends AbstractConverter<Object, byte[]> {
+@FunctionalInterface
+public interface Deserializer<T> {
 
-    /**
-     * Singleton instance of {@link ObjectToByteArrayConverter}
-     */
-    public static final ObjectToByteArrayConverter INSTANCE = new ObjectToByteArrayConverter();
-
-    @Override
-    protected byte[] doConvert(Object source) throws Throwable {
-        return DefaultSerializer.INSTANCE.serialize(source);
-    }
+    T deserialize(byte[] bytes) throws IOException;
 }

@@ -24,6 +24,7 @@ import static io.microsphere.io.IOUtils.FLOAT_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.INTEGER_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.LONG_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.SHORT_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.UNBOUND_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.io.IOUtils.copyToString;
@@ -68,6 +69,7 @@ class IOUtilsTest extends LoggingTest {
     void testConstants() {
         assertEquals(2048, DEFAULT_BUFFER_SIZE);
         assertEquals(2048, BUFFER_SIZE);
+        assertEquals(-1, UNBOUND_BYTES_SIZE);
         assertEquals(1, BOOLEAN_BYTES_SIZE);
         assertEquals(1, BYTE_BYTES_SIZE);
         assertEquals(2, SHORT_BYTES_SIZE);

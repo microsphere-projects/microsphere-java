@@ -14,28 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.convert;
 
-import io.microsphere.io.serializer.DefaultSerializer;
+package io.microsphere.io.serializer;
 
-import java.io.Serializable;
+
+import static io.microsphere.io.serializer.BooleanSerializer.BOOLEAN_SERIALIZER;
+import static java.lang.Boolean.FALSE;
 
 /**
- * The class coverts the {@link Object} instance to be {@link byte[] byte array} object.
+ * {@link BooleanSerializer} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Serializable
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see BooleanSerializer
  * @since 1.0.0
  */
-public class ObjectToByteArrayConverter extends AbstractConverter<Object, byte[]> {
-
-    /**
-     * Singleton instance of {@link ObjectToByteArrayConverter}
-     */
-    public static final ObjectToByteArrayConverter INSTANCE = new ObjectToByteArrayConverter();
+class BooleanSerializerTest extends AbstractSerializerTest<Boolean> {
 
     @Override
-    protected byte[] doConvert(Object source) throws Throwable {
-        return DefaultSerializer.INSTANCE.serialize(source);
+    protected AbstractSerializer<Boolean> getSerializer() {
+        return BOOLEAN_SERIALIZER;
+    }
+
+    @Override
+    protected Boolean getValue() {
+        return FALSE;
     }
 }

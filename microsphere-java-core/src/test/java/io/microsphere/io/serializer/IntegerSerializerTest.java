@@ -14,31 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.io;
 
-import java.io.IOException;
+package io.microsphere.io.serializer;
+
+
+import static io.microsphere.io.serializer.IntegerSerializer.INTEGER_SERIALIZER;
+import static java.lang.Integer.MAX_VALUE;
 
 /**
- * A functional interface for deserializing byte arrays into objects of type {@code T}.
- * <p>
- * Implementations of this interface must be thread-safe.
- * </p>
+ * {@link IntegerSerializer} Test
  *
- * <h3>Example Usage</h3>
- * <pre>{@code
- * Deserializer<String> deserializer = bytes -> new String(bytes, StandardCharsets.UTF_8);
- * String data = deserializer.deserialize("Hello, World!".getBytes(StandardCharsets.UTF_8));
- * System.out.println(data); // Output: Hello, World!
- * }</pre>
- * </p>
- *
- * @param <T> the type to be deserialized from a byte array
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see Serializer
+ * @see IntegerSerializer
  * @since 1.0.0
  */
-@FunctionalInterface
-public interface Deserializer<T> {
+class IntegerSerializerTest extends AbstractSerializerTest<Integer> {
 
-    T deserialize(byte[] bytes) throws IOException;
+    @Override
+    protected AbstractSerializer<Integer> getSerializer() {
+        return INTEGER_SERIALIZER;
+    }
+
+    @Override
+    protected Integer getValue() {
+        return MAX_VALUE;
+    }
 }

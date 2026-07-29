@@ -1,0 +1,2 @@
+io.microsphere.io.serializer.DefaultDeserializer
+io.microsphere.io.serializer.StringDeserializer

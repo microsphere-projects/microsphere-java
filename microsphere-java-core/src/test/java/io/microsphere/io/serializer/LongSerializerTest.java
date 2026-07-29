@@ -14,30 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.io;
 
-import java.io.IOException;
+package io.microsphere.io.serializer;
+
+
+import static io.microsphere.io.serializer.LongSerializer.LONG_SERIALIZER;
+import static java.lang.Long.MAX_VALUE;
 
 /**
- * A strategy interface for serializing objects of type {@code S} into a byte array.
- * <p>
- * Implementations of this interface must be thread-safe and should also ensure that the serialization process is consistent
- * and efficient.
+ * {@link LongSerializer} Test
  *
- * <h3>Example Usage</h3>
- * <pre>{@code
- * public class StringSerializer implements Serializer<String> {
- *     public byte[] serialize(String source) throws IOException {
- *         return source.getBytes(StandardCharsets.UTF_8);
- *     }
- * }
- * }</pre>
- *
- * @param <S> the type of the object that will be serialized
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see LongSerializer
  * @since 1.0.0
  */
-public interface Serializer<S> {
+class LongSerializerTest extends AbstractSerializerTest<Long> {
 
-    byte[] serialize(S source) throws IOException;
+    @Override
+    protected AbstractSerializer<Long> getSerializer() {
+        return LONG_SERIALIZER;
+    }
+
+    @Override
+    protected Long getValue() {
+        return MAX_VALUE;
+    }
+
 }
