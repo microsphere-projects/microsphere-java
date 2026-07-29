@@ -50,7 +50,7 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
  */
 public class DefaultDeserializer implements Deserializer<Object> {
 
-    public static final DefaultDeserializer INSTANCE = new DefaultDeserializer();
+    public static final DefaultDeserializer DEFAULT_DESERIALIZER = new DefaultDeserializer();
 
     @Override
     public Object deserialize(byte[] bytes) throws IOException {
