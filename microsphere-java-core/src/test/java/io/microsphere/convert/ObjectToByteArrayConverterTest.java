@@ -44,7 +44,7 @@ class ObjectToByteArrayConverterTest extends BaseConverterTest<Object, byte[]> {
 
     @Override
     protected byte[] getTarget() throws Throwable {
-        return DefaultSerializer.INSTANCE.serialize(getSource());
+        return DefaultSerializer.DEFAULT_SERIALIZER.serialize(getSource());
     }
 
     @Test
