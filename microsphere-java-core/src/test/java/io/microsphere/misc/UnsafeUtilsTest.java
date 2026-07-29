@@ -1,11 +1,16 @@
 package io.microsphere.misc;
 
+import io.microsphere.io.serializer.Serializer;
+import io.microsphere.io.serializer.Serializers;
 import io.microsphere.reflect.MemberUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static io.microsphere.misc.UnsafeUtils.BOOLEAN_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.BOOLEAN_ARRAY_INDEX_SCALE;
@@ -26,6 +31,7 @@ import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.addressSize;
+import static io.microsphere.misc.UnsafeUtils.allocateInstance;
 import static io.microsphere.misc.UnsafeUtils.allocateMemory;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapInt;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapLong;
@@ -92,12 +98,14 @@ import static io.microsphere.misc.UnsafeUtils.putOrderedObjectIntoArray;
 import static io.microsphere.misc.UnsafeUtils.putShort;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatile;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.throwException;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -111,9 +119,13 @@ class UnsafeUtilsTest {
 
     private Model model;
 
+    private Serializers serializers;
+
     @BeforeEach
     void setUp() {
-        model = new Model();
+        this.model = new Model();
+        this.serializers = new Serializers();
+        this.serializers.loadSPI();
     }
 
     @Test
@@ -514,32 +526,56 @@ class UnsafeUtilsTest {
 
     @Test
     void testByteOpsInOffHeap() {
-        long address = -1L;
-        try {
-            address = allocateMemory(1);
-            byte b = 1;
-            putByte(address, b);
-            byte returnValue = getByte(address);
-            assertEquals(b, returnValue);
-        } finally {
-            freeMemory(address);
-        }
+        testInOffHeap(Byte.MAX_VALUE, UnsafeUtils::putByte, UnsafeUtils::getByte);
     }
 
-    void testNumberInOffHeap(short s) {
-        long address = -1L;
-        try {
-            address = allocateMemory(2);
-            putShort(address, s);
-            short returnValue = getShort(address);
-            assertEquals(s, returnValue);
-        } finally {
-            freeMemory(address);
-        }
+    @Test
+    void testShortOpsInOffHeap() {
+        testInOffHeap(Short.MAX_VALUE, UnsafeUtils::putShort, UnsafeUtils::getShort);
     }
 
-    void testInOffHeap(Number n) {
+    @Test
+    void testCharOpsInOffHeap() {
+        testInOffHeap(Character.MAX_VALUE, UnsafeUtils::putChar, UnsafeUtils::getChar);
+    }
 
+    @Test
+    void testIntegerOpsInOffHeap() {
+        testInOffHeap(Integer.MAX_VALUE, UnsafeUtils::putInt, UnsafeUtils::getInt);
+    }
+
+    @Test
+    void testLongOpsInOffHeap() {
+        testInOffHeap(Long.MAX_VALUE, UnsafeUtils::putLong, UnsafeUtils::getLong);
+    }
+
+    @Test
+    void testFloatOpsInOffHeap() {
+        testInOffHeap(Float.MAX_VALUE, UnsafeUtils::putFloat, UnsafeUtils::getFloat);
+    }
+
+    @Test
+    void testDoubleOpsInOffHeap() {
+        testInOffHeap(Double.MAX_VALUE, UnsafeUtils::putDouble, UnsafeUtils::getDouble);
+    }
+
+    <N> void testInOffHeap(N number, BiConsumer<Long, N> addressConsumer, Function<Long, N> addressFunction) {
+        long address = -1L;
+        Class<N> numberType = (Class<N>) number.getClass();
+        Serializer<N> serializer = (Serializer<N>) this.serializers.getMostCompatible(numberType);
+        try {
+            byte[] bytes = serializer.serialize(number);
+            address = allocateMemory(bytes.length);
+            addressConsumer.accept(address, number);
+            N returnValue = addressFunction.apply(address);
+            assertEquals(number, returnValue);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (address != -1L) {
+                freeMemory(address);
+            }
+        }
     }
 
     @Test
@@ -550,6 +586,16 @@ class UnsafeUtilsTest {
     @Test
     void testPageSize() {
         assertTrue(pageSize() > 0);
+    }
+
+    @Test
+    void testAllocateInstance() {
+        assertNotNull(allocateInstance(Model.class));
+    }
+
+    @Test
+    void testThrowException() {
+        assertThrows(RuntimeException.class, () -> throwException(new RuntimeException()));
     }
 
     private static class Model {

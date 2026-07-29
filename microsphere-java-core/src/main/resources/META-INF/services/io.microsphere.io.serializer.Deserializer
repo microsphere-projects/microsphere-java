@@ -1,4 +1,5 @@
 io.microsphere.io.serializer.BooleanSerializer
+io.microsphere.io.serializer.ByteSerializer
 io.microsphere.io.serializer.CharacterSerializer
 io.microsphere.io.serializer.ShortSerializer
 io.microsphere.io.serializer.IntegerSerializer
