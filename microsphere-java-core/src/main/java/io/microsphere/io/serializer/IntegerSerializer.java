@@ -1,6 +1,6 @@
 package io.microsphere.io.serializer;
 
-import static io.microsphere.io.IOUtils.INTEGER_BYTES_SIZE;
+import static io.microsphere.util.SizeUtils.INTEGER_BYTES_SIZE;
 
 /**
  * Java {@code int} or {@link Integer} type {@link Serializer} and {@link Deserializer} Class

@@ -1,6 +1,6 @@
 package io.microsphere.io.serializer;
 
-import static io.microsphere.io.IOUtils.LONG_BYTES_SIZE;
+import static io.microsphere.util.SizeUtils.LONG_BYTES_SIZE;
 
 /**
  * Java {@code long} or {@link Long} type {@link Serializer} and {@link Deserializer} Class

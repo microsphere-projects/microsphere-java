@@ -1,6 +1,6 @@
 package io.microsphere.io.serializer;
 
-import static io.microsphere.io.IOUtils.BOOLEAN_BYTES_SIZE;
+import static io.microsphere.util.SizeUtils.BOOLEAN_BYTES_SIZE;
 
 /**
  * Java {@code boolean} or {@link Boolean} type {@link Serializer} and {@link Deserializer} Class
@@ -32,6 +32,6 @@ public final class BooleanSerializer extends AbstractSerializer<Boolean> {
     @Override
     protected Boolean doDeserialize(byte[] bytes) {
         byte byteValue = bytes[0];
-        return byteValue == TRUE_VALUE ? true : false;
+        return byteValue == TRUE_VALUE;
     }
 }

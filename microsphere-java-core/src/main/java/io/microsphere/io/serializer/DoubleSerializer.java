@@ -2,8 +2,8 @@ package io.microsphere.io.serializer;
 
 import java.io.IOException;
 
-import static io.microsphere.io.IOUtils.DOUBLE_BYTES_SIZE;
 import static io.microsphere.io.serializer.LongSerializer.LONG_SERIALIZER;
+import static io.microsphere.util.SizeUtils.DOUBLE_BYTES_SIZE;
 import static java.lang.Double.doubleToLongBits;
 import static java.lang.Double.longBitsToDouble;
 
