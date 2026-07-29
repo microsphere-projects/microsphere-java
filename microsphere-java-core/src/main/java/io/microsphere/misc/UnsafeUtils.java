@@ -2261,8 +2261,7 @@ public abstract class UnsafeUtils implements Utils {
      * Allocates an instance but does not run any constructor.
      * Initializes the class if it has not yet been.
      */
-    public static Object allocateInstance(Class<?> cls)
-            throws InstantiationException {
+    public static Object allocateInstance(Class<?> cls) {
         return invokeMethod(unsafe, allocateInstanceMethod, cls);
     }
 
