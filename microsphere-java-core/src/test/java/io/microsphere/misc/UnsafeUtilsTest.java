@@ -33,10 +33,17 @@ import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.addressSize;
 import static io.microsphere.misc.UnsafeUtils.allocateInstance;
 import static io.microsphere.misc.UnsafeUtils.allocateMemory;
+import static io.microsphere.misc.UnsafeUtils.arrayBaseOffset;
+import static io.microsphere.misc.UnsafeUtils.arrayIndexScale;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapInt;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapLong;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapObject;
 import static io.microsphere.misc.UnsafeUtils.freeMemory;
+import static io.microsphere.misc.UnsafeUtils.getAndAddInt;
+import static io.microsphere.misc.UnsafeUtils.getAndAddLong;
+import static io.microsphere.misc.UnsafeUtils.getAndSetInt;
+import static io.microsphere.misc.UnsafeUtils.getAndSetLong;
+import static io.microsphere.misc.UnsafeUtils.getAndSetObject;
 import static io.microsphere.misc.UnsafeUtils.getBoolean;
 import static io.microsphere.misc.UnsafeUtils.getBooleanVolatile;
 import static io.microsphere.misc.UnsafeUtils.getBooleanVolatileFromArray;
@@ -98,9 +105,11 @@ import static io.microsphere.misc.UnsafeUtils.putOrderedObjectIntoArray;
 import static io.microsphere.misc.UnsafeUtils.putShort;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatile;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatileIntoArray;
+import static io.microsphere.misc.UnsafeUtils.reallocateMemory;
 import static io.microsphere.misc.UnsafeUtils.throwException;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -159,7 +168,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutLongAndGetLong() {
+    void testLongOps() {
         String fieldName = "longValue";
         long value = Long.MAX_VALUE;
         putLong(model, fieldName, value);
@@ -184,10 +193,19 @@ class UnsafeUtilsTest {
         assertEquals(returnValue, Long.MIN_VALUE);
 
         assertFalse(compareAndSwapLong(model, fieldName, value, Long.MAX_VALUE));
+
+        long oldValue = getAndAddLong(model, fieldName, 1);
+        assertEquals(oldValue, returnValue);
+        returnValue = getLong(model, fieldName);
+        assertEquals(returnValue, Long.MIN_VALUE + 1);
+
+        assertEquals(returnValue, getAndSetLong(model, fieldName, Long.MIN_VALUE));
+        returnValue = getLong(model, fieldName);
+        assertEquals(returnValue, Long.MIN_VALUE);
     }
 
     @Test
-    void testPutIntAndGetInt() {
+    void testIntOps() {
         String fieldName = "intValue";
         int value = 123;
         putInt(model, fieldName, value);
@@ -212,10 +230,19 @@ class UnsafeUtilsTest {
         assertEquals(returnValue, Integer.MAX_VALUE);
 
         assertFalse(compareAndSwapInt(model, fieldName, value, Integer.MIN_VALUE));
+
+        int oldValue = getAndAddInt(model, fieldName, 1);
+        assertEquals(oldValue, returnValue);
+        returnValue = getInt(model, fieldName);
+        assertEquals(returnValue, Integer.MAX_VALUE + 1);
+
+        assertEquals(returnValue, getAndSetInt(model, fieldName, Integer.MIN_VALUE));
+        returnValue = getInt(model, fieldName);
+        assertEquals(returnValue, Integer.MIN_VALUE);
     }
 
     @Test
-    void testPutShortAndGetShort() {
+    void testShortOps() {
         String fieldName = "shortValue";
         short value = Short.MAX_VALUE;
         putShort(model, fieldName, value);
@@ -230,7 +257,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutByteAndGetByte() {
+    void testByteOps() {
         String fieldName = "byteValue";
         byte value = Byte.MAX_VALUE;
         putByte(model, fieldName, value);
@@ -245,7 +272,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutBooleanAndGetBoolean() {
+    void testBooleanOps() {
         String fieldName = "booleanValue";
         boolean value = true;
         putBoolean(model, fieldName, value);
@@ -260,7 +287,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutDoubleAndGetDouble() {
+    void testDoubleOps() {
         String fieldName = "doubleValue";
         double value = Double.MAX_VALUE;
         putDouble(model, fieldName, value);
@@ -275,7 +302,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutFloatAndGetFloat() {
+    void testFloatOps() {
         String fieldName = "floatValue";
         float value = Float.MAX_VALUE;
         putFloat(model, fieldName, value);
@@ -290,7 +317,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutCharAndGetChar() {
+    void testCharOps() {
         String fieldName = "charValue";
         char value = '@';
         putChar(model, fieldName, value);
@@ -305,7 +332,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutObjectAndGetObject() {
+    void testObjectOps() {
         String fieldName = "stringValue";
         Object value = "Test text";
         putObject(model, fieldName, value);
@@ -313,28 +340,33 @@ class UnsafeUtilsTest {
         assertEquals(returnValue, value);
         assertEquals(model.stringValue, returnValue);
 
-        value = "AAAAAAAAAAAA";
+        value = "A";
         putObjectVolatile(model, fieldName, value);
         returnValue = getObjectVolatile(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.stringValue, returnValue);
 
-        value = "BBBBBB";
+        value = "B";
         putOrderedObject(model, fieldName, value);
         returnValue = getObject(model, fieldName);
         assertEquals(returnValue, value);
         assertEquals(model.stringValue, returnValue);
 
-        value = "CCCCCC";
+        value = "C";
         assertTrue(compareAndSwapObject(model, fieldName, returnValue, value));
         returnValue = getObject(model, fieldName);
         assertEquals(returnValue, value);
 
         assertFalse(compareAndSwapObject(model, fieldName, "returnValue", value));
+
+        value = "D";
+        assertEquals(returnValue, getAndSetObject(model, fieldName, value));
+        returnValue = getObject(model, fieldName);
+        assertEquals(returnValue, value);
     }
 
     @Test
-    void testPutLongIntoArrayVolatileAndGetLongFromArrayVolatile() {
+    void testLongArrayVolatileOps() {
         String fieldName = "longArrayValue";
         long value = 123;
         int index = 2;
@@ -351,7 +383,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutIntIntoArrayVolatileAndGetIntFromArrayVolatile() {
+    void testIntArrayVolatileOps() {
         String fieldName = "intArrayValue";
         int value = 123;
         int index = 1;
@@ -368,7 +400,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutShortIntoArrayVolatileAndGetShortFromArrayVolatile() {
+    void testShortArrayVolatileOps() {
         String fieldName = "shortArrayValue";
         short value = 123;
         int index = 5;
@@ -379,7 +411,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutByteIntoArrayVolatileAndGetByteFromArrayVolatile() {
+    void testByteArrayVolatileOps() {
         String fieldName = "byteArrayValue";
         byte value = 123;
         int index = 5;
@@ -390,7 +422,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutBooleanIntoArrayVolatileAndGetBooleanFromArrayVolatile() {
+    void testBooleanArrayVolatileOps() {
         String fieldName = "booleanArrayValue";
         boolean value = true;
         int index = 3;
@@ -401,7 +433,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutDoubleIntoArrayVolatileAndGetDoubleFromArrayVolatile() {
+    void testDoubleArrayVolatileOps() {
         String fieldName = "doubleArrayValue";
         double value = Double.MAX_VALUE;
         int index = 8;
@@ -412,7 +444,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutFloatIntoArrayVolatileAndGetFloatFromArrayVolatile() {
+    void testFloatArrayVolatileOps() {
         String fieldName = "floatArrayValue";
         float value = Float.MAX_VALUE;
         int index = 7;
@@ -423,7 +455,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutCharIntoArrayVolatileAndGetCharFromArrayVolatile() {
+    void testCharArrayVolatileOps() {
         String fieldName = "charArrayValue";
         char value = '@';
         int index = 9;
@@ -434,7 +466,7 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testPutObjectIntoArrayVolatileAndGetObjectFromArrayVolatile() {
+    void testObjectArrayVolatileOps() {
         String fieldName = "objectArrayValue";
         Object value = "Test";
         int index = 5;
@@ -579,6 +611,32 @@ class UnsafeUtilsTest {
     }
 
     @Test
+    void testArrayBaseOffset() {
+        assertEquals(LONG_ARRAY_BASE_OFFSET, arrayBaseOffset(long[].class));
+        assertEquals(INT_ARRAY_BASE_OFFSET, arrayBaseOffset(int[].class));
+        assertEquals(SHORT_ARRAY_BASE_OFFSET, arrayBaseOffset(short[].class));
+        assertEquals(BYTE_ARRAY_BASE_OFFSET, arrayBaseOffset(byte[].class));
+        assertEquals(BOOLEAN_ARRAY_BASE_OFFSET, arrayBaseOffset(boolean[].class));
+        assertEquals(DOUBLE_ARRAY_BASE_OFFSET, arrayBaseOffset(double[].class));
+        assertEquals(FLOAT_ARRAY_BASE_OFFSET, arrayBaseOffset(float[].class));
+        assertEquals(CHAR_ARRAY_BASE_OFFSET, arrayBaseOffset(char[].class));
+        assertEquals(OBJECT_ARRAY_BASE_OFFSET, arrayBaseOffset(Object[].class));
+    }
+
+    @Test
+    void testArrayIndexScale() {
+        assertEquals(LONG_ARRAY_INDEX_SCALE, arrayIndexScale(long[].class));
+        assertEquals(INT_ARRAY_INDEX_SCALE, arrayIndexScale(int[].class));
+        assertEquals(SHORT_ARRAY_INDEX_SCALE, arrayIndexScale(short[].class));
+        assertEquals(BYTE_ARRAY_INDEX_SCALE, arrayIndexScale(byte[].class));
+        assertEquals(BOOLEAN_ARRAY_INDEX_SCALE, arrayIndexScale(boolean[].class));
+        assertEquals(DOUBLE_ARRAY_INDEX_SCALE, arrayIndexScale(double[].class));
+        assertEquals(FLOAT_ARRAY_INDEX_SCALE, arrayIndexScale(float[].class));
+        assertEquals(CHAR_ARRAY_INDEX_SCALE, arrayIndexScale(char[].class));
+        assertEquals(OBJECT_ARRAY_INDEX_SCALE, arrayIndexScale(Object[].class));
+    }
+
+    @Test
     void testAddressSize() {
         assertTrue(addressSize() > 0);
     }
@@ -596,6 +654,21 @@ class UnsafeUtilsTest {
     @Test
     void testThrowException() {
         assertThrows(RuntimeException.class, () -> throwException(new RuntimeException()));
+    }
+
+    @Test
+    void testMemoryOps() {
+        long address = allocateMemory(8);
+        long newAddress = reallocateMemory(address, 16);
+        assertEquals(newAddress, address);
+        freeMemory(address);
+    }
+
+    @Test
+    void testFenceOps() {
+        assertDoesNotThrow(UnsafeUtils::loadFence);
+        assertDoesNotThrow(UnsafeUtils::storeFence);
+        assertDoesNotThrow(UnsafeUtils::fullFence);
     }
 
     private static class Model {
@@ -618,5 +691,4 @@ class UnsafeUtilsTest {
         private char[] charArrayValue = new char[10];
         private Object[] objectArrayValue = new Object[10];
     }
-
 }

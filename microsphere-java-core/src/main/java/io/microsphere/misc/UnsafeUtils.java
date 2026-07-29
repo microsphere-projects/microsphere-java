@@ -1586,6 +1586,31 @@ public abstract class UnsafeUtils implements Utils {
         return compareAndSwapLong(object, offset, expected, newValue);
     }
 
+    public static int getAndAddInt(Object object, String fieldName, int delta) {
+        long offset = objectFieldOffset(object, fieldName);
+        return getAndAddInt(object, offset, delta);
+    }
+
+    public static long getAndAddLong(Object object, String fieldName, long delta) {
+        long offset = objectFieldOffset(object, fieldName);
+        return getAndAddLong(object, offset, delta);
+    }
+
+    public static int getAndSetInt(Object object, String fieldName, int newValue) {
+        long offset = objectFieldOffset(object, fieldName);
+        return getAndSetInt(object, offset, newValue);
+    }
+
+    public static long getAndSetLong(Object object, String fieldName, long newValue) {
+        long offset = objectFieldOffset(object, fieldName);
+        return getAndSetLong(object, offset, newValue);
+    }
+
+    public static Object getAndSetObject(Object object, String fieldName, Object newValue) {
+        long offset = objectFieldOffset(object, fieldName);
+        return getAndSetObject(object, offset, newValue);
+    }
+
     //| peek and poke operations
     //| (compilers should optimize these to memory ops)
 
