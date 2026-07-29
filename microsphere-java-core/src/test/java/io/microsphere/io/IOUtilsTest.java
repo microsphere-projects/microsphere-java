@@ -14,8 +14,16 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
+import static io.microsphere.io.IOUtils.BOOLEAN_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.BUFFER_SIZE;
+import static io.microsphere.io.IOUtils.BYTE_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.CHAR_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.DEFAULT_BUFFER_SIZE;
+import static io.microsphere.io.IOUtils.DOUBLE_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.FLOAT_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.INTEGER_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.LONG_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.SHORT_BYTES_SIZE;
 import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.io.IOUtils.copyToString;
@@ -60,6 +68,14 @@ class IOUtilsTest extends LoggingTest {
     void testConstants() {
         assertEquals(2048, DEFAULT_BUFFER_SIZE);
         assertEquals(2048, BUFFER_SIZE);
+        assertEquals(1, BOOLEAN_BYTES_SIZE);
+        assertEquals(1, BYTE_BYTES_SIZE);
+        assertEquals(2, SHORT_BYTES_SIZE);
+        assertEquals(2, CHAR_BYTES_SIZE);
+        assertEquals(4, INTEGER_BYTES_SIZE);
+        assertEquals(4, FLOAT_BYTES_SIZE);
+        assertEquals(8, LONG_BYTES_SIZE);
+        assertEquals(8, DOUBLE_BYTES_SIZE);
     }
 
     @Test
