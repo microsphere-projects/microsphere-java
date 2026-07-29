@@ -34,6 +34,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class SerializersTest {
 
+    private static final Class<?>[] SUPPORTED_CLASSES = {
+            Boolean.class,
+            Character.class,
+            Short.class,
+            Integer.class,
+            Long.class,
+            Float.class,
+            Double.class,
+            String.class,
+            Object.class
+    };
+
     private Serializers serializers;
 
     @BeforeEach
@@ -42,57 +54,54 @@ class SerializersTest {
     }
 
     @Test
-    void testLoadSPI() {
-        assertEquals(emptyList(), this.serializers.get(String.class));
-        assertEquals(emptyList(), this.serializers.get(Object.class));
+    void testtGet() {
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertEquals(emptyList(), this.serializers.get(supportedClass));
+        }
 
         this.serializers.loadSPI();
 
-        assertNotNull(this.serializers.get(String.class));
-        assertNotNull(this.serializers.get(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNotNull(this.serializers.get(supportedClass));
+        }
     }
 
     @Test
     void testGetMostCompatible() {
-        assertNull(this.serializers.getMostCompatible(String.class));
-        assertNull(this.serializers.getMostCompatible(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNull(this.serializers.getMostCompatible(supportedClass));
+        }
 
         this.serializers.loadSPI();
 
-        assertNotNull(this.serializers.getMostCompatible(String.class));
-        assertNotNull(this.serializers.getMostCompatible(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNotNull(this.serializers.getMostCompatible(supportedClass));
+        }
     }
 
     @Test
     void testGetHighestPriority() {
-        assertNull(this.serializers.getHighestPriority(String.class));
-        assertNull(this.serializers.getHighestPriority(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNull(this.serializers.getHighestPriority(supportedClass));
+        }
 
         this.serializers.loadSPI();
 
-        assertNotNull(this.serializers.getHighestPriority(String.class));
-        assertNotNull(this.serializers.getHighestPriority(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNotNull(this.serializers.getHighestPriority(supportedClass));
+        }
     }
 
     @Test
     void testGetLowestPriority() {
-        assertNull(this.serializers.getLowestPriority(String.class));
-        assertNull(this.serializers.getLowestPriority(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNull(this.serializers.getLowestPriority(supportedClass));
+        }
 
         this.serializers.loadSPI();
 
-        assertNotNull(this.serializers.getLowestPriority(String.class));
-        assertNotNull(this.serializers.getLowestPriority(Object.class));
-    }
-
-    @Test
-    void testGet() {
-        assertEquals(emptyList(), this.serializers.get(String.class));
-        assertEquals(emptyList(), this.serializers.get(Object.class));
-
-        this.serializers.loadSPI();
-
-        assertNotNull(this.serializers.getMostCompatible(String.class));
-        assertNotNull(this.serializers.getMostCompatible(Object.class));
+        for (Class<?> supportedClass : SUPPORTED_CLASSES) {
+            assertNotNull(this.serializers.getLowestPriority(supportedClass));
+        }
     }
 }
