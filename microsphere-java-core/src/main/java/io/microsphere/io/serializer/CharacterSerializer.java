@@ -17,7 +17,7 @@
 
 package io.microsphere.io.serializer;
 
-import static io.microsphere.io.IOUtils.CHAR_BYTES_SIZE;
+import static io.microsphere.util.SizeUtils.CHAR_BYTES_SIZE;
 
 /**
  * Java {@code char} or {@link Character} type {@link Serializer} and {@link Deserializer} Class

@@ -514,12 +514,32 @@ class UnsafeUtilsTest {
 
     @Test
     void testByteOpsInOffHeap() {
-        long address = allocateMemory(1);
-        byte b = 1;
-        putByte(address, b);
-        byte returnValue = getByte(address);
-        assertEquals(b, returnValue);
-        freeMemory(address);
+        long address = -1L;
+        try {
+            address = allocateMemory(1);
+            byte b = 1;
+            putByte(address, b);
+            byte returnValue = getByte(address);
+            assertEquals(b, returnValue);
+        } finally {
+            freeMemory(address);
+        }
+    }
+
+    void testNumberInOffHeap(short s) {
+        long address = -1L;
+        try {
+            address = allocateMemory(2);
+            putShort(address, s);
+            short returnValue = getShort(address);
+            assertEquals(s, returnValue);
+        } finally {
+            freeMemory(address);
+        }
+    }
+
+    void testInOffHeap(Number n) {
+
     }
 
     @Test

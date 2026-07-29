@@ -17,8 +17,8 @@
 
 package io.microsphere.io.serializer;
 
-import static io.microsphere.io.IOUtils.FLOAT_BYTES_SIZE;
 import static io.microsphere.io.serializer.IntegerSerializer.INTEGER_SERIALIZER;
+import static io.microsphere.util.SizeUtils.FLOAT_BYTES_SIZE;
 import static java.lang.Float.floatToIntBits;
 
 /**

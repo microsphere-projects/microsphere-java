@@ -1,6 +1,6 @@
 package io.microsphere.io.serializer;
 
-import static io.microsphere.io.IOUtils.SHORT_BYTES_SIZE;
+import static io.microsphere.util.SizeUtils.SHORT_BYTES_SIZE;
 
 /**
  * Java {@code boolean} or {@link Boolean} type {@link Serializer} and {@link Deserializer} Class

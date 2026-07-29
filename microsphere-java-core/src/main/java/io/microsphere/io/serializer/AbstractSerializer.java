@@ -6,8 +6,8 @@ import io.microsphere.reflect.JavaType;
 
 import java.io.IOException;
 
-import static io.microsphere.io.IOUtils.UNBOUND_BYTES_SIZE;
 import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.util.SizeUtils.UNBOUND_BYTES_SIZE;
 
 /**
  * Convenience base class for {@link Serializer} and {@liink Deserializer} implementations that handles null-safety
