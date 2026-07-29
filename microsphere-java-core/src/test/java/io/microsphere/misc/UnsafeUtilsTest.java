@@ -38,6 +38,7 @@ import static io.microsphere.misc.UnsafeUtils.arrayIndexScale;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapInt;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapLong;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapObject;
+import static io.microsphere.misc.UnsafeUtils.copyMemory;
 import static io.microsphere.misc.UnsafeUtils.freeMemory;
 import static io.microsphere.misc.UnsafeUtils.getAndAddInt;
 import static io.microsphere.misc.UnsafeUtils.getAndAddLong;
@@ -106,6 +107,7 @@ import static io.microsphere.misc.UnsafeUtils.putShort;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatile;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatileIntoArray;
 import static io.microsphere.misc.UnsafeUtils.reallocateMemory;
+import static io.microsphere.misc.UnsafeUtils.setMemory;
 import static io.microsphere.misc.UnsafeUtils.throwException;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
@@ -658,10 +660,27 @@ class UnsafeUtilsTest {
 
     @Test
     void testMemoryOps() {
-        long address = allocateMemory(8);
-        long newAddress = reallocateMemory(address, 16);
-        assertEquals(newAddress, address);
+        long length = 8;
+        long address = allocateMemory(length);
+        length = 16;
+        assertEquals(address, reallocateMemory(address, length));
+
+        long newAddress = allocateMemory(length);
+
+        setMemory(address, length, (byte) 1);
+
+        for (int i = 0; i < length; i++) {
+            assertEquals((byte) 1, getByte(address + i));
+        }
+
+        copyMemory(address, newAddress, length);
+
+        for (int i = 0; i < length; i++) {
+            assertEquals((byte) 1, getByte(newAddress + i));
+        }
+
         freeMemory(address);
+        freeMemory(newAddress);
     }
 
     @Test
