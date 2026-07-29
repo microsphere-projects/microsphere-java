@@ -116,9 +116,7 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
      *
      * @return the fixed byte length, or {@link IOUtils#UNBOUND_BYTES_SIZE} ({@code -1}) for variable-length
      */
-    protected int calcBytesLength() {
-        return UNBOUND_BYTES_SIZE;
-    }
+    protected abstract int calcBytesLength();
 
     /**
      * Performs the actual serialization of a non-null {@code t} value.

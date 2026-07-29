@@ -16,9 +16,9 @@
  */
 package io.microsphere.convert;
 
-import io.microsphere.io.serializer.DefaultSerializer;
-
 import java.io.Serializable;
+
+import static io.microsphere.io.serializer.DefaultSerializer.DEFAULT_SERIALIZER;
 
 /**
  * The class coverts the {@link Object} instance to be {@link byte[] byte array} object.
@@ -36,6 +36,6 @@ public class ObjectToByteArrayConverter extends AbstractConverter<Object, byte[]
 
     @Override
     protected byte[] doConvert(Object source) throws Throwable {
-        return DefaultSerializer.INSTANCE.serialize(source);
+        return DEFAULT_SERIALIZER.serialize(source);
     }
 }

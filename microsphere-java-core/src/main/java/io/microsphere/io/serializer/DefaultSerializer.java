@@ -46,7 +46,7 @@ import java.io.Serializable;
  */
 public class DefaultSerializer implements Serializer<Object> {
 
-    public static final DefaultSerializer INSTANCE = new DefaultSerializer();
+    public static final DefaultSerializer DEFAULT_SERIALIZER = new DefaultSerializer();
 
     @Override
     public byte[] serialize(Object source) throws IOException {
@@ -59,9 +59,5 @@ public class DefaultSerializer implements Serializer<Object> {
             bytes = outputStream.toByteArray();
         }
         return bytes;
-    }
-
-    public Class<?> getTargetType() {
-        return Object.class;
     }
 }

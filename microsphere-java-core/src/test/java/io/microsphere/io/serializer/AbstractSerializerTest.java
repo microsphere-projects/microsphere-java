@@ -35,6 +35,8 @@ abstract class AbstractSerializerTest<T> {
         AbstractSerializer<T> serializer = getSerializer();
         byte[] bytes = serializer.serialize(value);
         T deserialized = serializer.deserialize(bytes);
+        assertEquals(serializer.calcBytesLength(), serializer.getBytesLength());
+
         if (value != null && deserialized != null) {
             assertEquals(getTestData(value), getTestData(deserialized));
         } else {

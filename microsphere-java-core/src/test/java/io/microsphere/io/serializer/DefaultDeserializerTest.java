@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class DefaultDeserializerTest {
 
-    private DefaultDeserializer deserializer = DefaultDeserializer.INSTANCE;
+    private DefaultDeserializer deserializer = DefaultDeserializer.DEFAULT_DESERIALIZER;
 
     @Test
     void testDeserializeOnNull() throws IOException {

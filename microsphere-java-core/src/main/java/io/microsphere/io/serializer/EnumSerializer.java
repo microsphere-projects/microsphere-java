@@ -3,12 +3,13 @@ package io.microsphere.io.serializer;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+import static io.microsphere.io.IOUtils.BYTE_BYTES_SIZE;
+import static io.microsphere.io.IOUtils.SHORT_BYTES_SIZE;
 import static io.microsphere.io.serializer.ShortSerializer.SHORT_SERIALIZER;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static java.lang.Byte.MAX_VALUE;
-import static java.util.Objects.hash;
 
 /**
  * {@link Enum} {@link Serializer} and {@link Deserializer} Class
@@ -19,10 +20,6 @@ import static java.util.Objects.hash;
 public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializer<E> {
 
     private static final String VALUES_METHOD_NAME = "values";
-
-    private static final int BYTE_BYTES_LENGTH = 1;
-
-    private static final int SHORT_BYTES_LENGTH = 2;
 
     private final Class<E> enumType;
 
@@ -44,7 +41,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
 
     static <E extends Enum<E>> int calcBytesLength(E[] enums) {
         int enumsLength = enums.length;
-        return enumsLength < MAX_VALUE ? BYTE_BYTES_LENGTH : SHORT_BYTES_LENGTH;
+        return enumsLength < MAX_VALUE ? BYTE_BYTES_SIZE : SHORT_BYTES_SIZE;
     }
 
     private E[] invokeValues(Method valuesMethod) {
@@ -61,7 +58,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
         int ordinal = e.ordinal();
         final byte[] bytes;
 
-        if (bytesLength == BYTE_BYTES_LENGTH) { // Most scenarios match
+        if (bytesLength == BYTE_BYTES_SIZE) { // Most scenarios match
             bytes = new byte[1];
             bytes[0] = (byte) ordinal;
         } else {
@@ -78,7 +75,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
             return null;
         }
 
-        int ordinal = bytesLength == BYTE_BYTES_LENGTH ? bytes[0] : SHORT_SERIALIZER.deserialize(bytes);
+        int ordinal = bytesLength == BYTE_BYTES_SIZE ? bytes[0] : SHORT_SERIALIZER.deserialize(bytes);
         return enums[ordinal];
     }
 
@@ -88,19 +85,6 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
 
     public int getBytesLength() {
         return bytesLength;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EnumSerializer)) return false;
-        EnumSerializer that = (EnumSerializer) o;
-        return enumType.equals(that.enumType);
-    }
-
-    @Override
-    public int hashCode() {
-        return hash(enumType);
     }
 
     public Class<E> getTargetType() {
