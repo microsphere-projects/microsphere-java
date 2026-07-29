@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.io;
+package io.microsphere.io.serializer;
+
+import io.microsphere.io.FastByteArrayInputStream;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

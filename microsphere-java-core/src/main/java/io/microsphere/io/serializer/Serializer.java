@@ -14,28 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.convert;
+package io.microsphere.io.serializer;
 
-import io.microsphere.io.serializer.DefaultSerializer;
-
-import java.io.Serializable;
+import java.io.IOException;
 
 /**
- * The class coverts the {@link Object} instance to be {@link byte[] byte array} object.
+ * A strategy interface for serializing objects of type {@code S} into a byte array.
+ * <p>
+ * Implementations of this interface must be thread-safe and should also ensure that the serialization process is consistent
+ * and efficient.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Serializable
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class StringSerializer implements Serializer<String> {
+ *     public byte[] serialize(String source) throws IOException {
+ *         return source.getBytes(StandardCharsets.UTF_8);
+ *     }
+ * }
+ * }</pre>
+ *
+ * @param <S> the type of the object that will be serialized
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ObjectToByteArrayConverter extends AbstractConverter<Object, byte[]> {
+public interface Serializer<S> {
 
-    /**
-     * Singleton instance of {@link ObjectToByteArrayConverter}
-     */
-    public static final ObjectToByteArrayConverter INSTANCE = new ObjectToByteArrayConverter();
-
-    @Override
-    protected byte[] doConvert(Object source) throws Throwable {
-        return DefaultSerializer.INSTANCE.serialize(source);
-    }
+    byte[] serialize(S source) throws IOException;
 }

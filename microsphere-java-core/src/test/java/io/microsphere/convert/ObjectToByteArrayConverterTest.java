@@ -16,7 +16,7 @@
  */
 package io.microsphere.convert;
 
-import io.microsphere.io.DefaultSerializer;
+import io.microsphere.io.serializer.DefaultSerializer;
 
 import org.junit.jupiter.api.Test;
 
