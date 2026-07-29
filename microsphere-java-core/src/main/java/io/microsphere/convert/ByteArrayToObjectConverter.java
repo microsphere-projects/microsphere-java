@@ -16,7 +16,7 @@
  */
 package io.microsphere.convert;
 
-import io.microsphere.io.DefaultDeserializer;
+import io.microsphere.io.serializer.DefaultDeserializer;
 
 import java.io.IOException;
 import java.io.Serializable;

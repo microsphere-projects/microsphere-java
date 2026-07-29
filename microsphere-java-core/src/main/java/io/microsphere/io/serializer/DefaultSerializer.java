@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.io;
+package io.microsphere.io.serializer;
+
+import io.microsphere.io.FastByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -57,5 +59,9 @@ public class DefaultSerializer implements Serializer<Object> {
             bytes = outputStream.toByteArray();
         }
         return bytes;
+    }
+
+    public Class<?> getTargetType() {
+        return Object.class;
     }
 }
