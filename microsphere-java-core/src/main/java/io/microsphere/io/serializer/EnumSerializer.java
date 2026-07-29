@@ -3,12 +3,12 @@ package io.microsphere.io.serializer;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-import static io.microsphere.io.IOUtils.BYTE_BYTES_SIZE;
-import static io.microsphere.io.IOUtils.SHORT_BYTES_SIZE;
 import static io.microsphere.io.serializer.ShortSerializer.SHORT_SERIALIZER;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.util.SizeUtils.BYTE_BYTES_SIZE;
+import static io.microsphere.util.SizeUtils.SHORT_BYTES_SIZE;
 import static java.lang.Byte.MAX_VALUE;
 
 /**
