@@ -70,7 +70,7 @@ public class Serializers {
     }
 
     public void loadSPI() {
-        for (Serializer serializer : loadServicesList(Serializer.class, classLoader)) {
+        for (Serializer serializer : loadServicesList(Serializer.class, classLoader, true)) {
             List<Class<?>> typeArguments = resolveTypeArgumentClasses(serializer.getClass());
             Class<?> targetClass = first(typeArguments);
             List<Serializer> serializers = typedSerializers.computeIfAbsent(targetClass, k -> new LinkedList());

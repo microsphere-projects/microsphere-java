@@ -1,2 +1,9 @@
-io.microsphere.io.serializer.DefaultSerializer
+io.microsphere.io.serializer.BooleanSerializer
+io.microsphere.io.serializer.CharacterSerializer
+io.microsphere.io.serializer.ShortSerializer
+io.microsphere.io.serializer.IntegerSerializer
+io.microsphere.io.serializer.LongSerializer
+io.microsphere.io.serializer.FloatSerializer
+io.microsphere.io.serializer.DoubleSerializer
 io.microsphere.io.serializer.StringSerializer
+io.microsphere.io.serializer.DefaultSerializer
