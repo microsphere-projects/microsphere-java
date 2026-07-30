@@ -72,7 +72,8 @@ public class Compiler {
 
     private static final Logger logger = getLogger(Compiler.class);
 
-    public static final String[] DEFAULT_OPTIONS = ofArray("-parameters", "-Xlint:unchecked", "-nowarn", "-Xlint:deprecation");
+    public static final String[] DEFAULT_OPTIONS = ofArray("-parameters", "-Xlint:-unchecked", "-nowarn",
+            "-Xlint:deprecation");
 
     private final Set<File> sourcePaths;
 
