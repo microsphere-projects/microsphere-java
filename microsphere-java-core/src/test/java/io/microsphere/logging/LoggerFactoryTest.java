@@ -59,7 +59,7 @@ class LoggerFactoryTest {
     }
 
     private void testLoggerFactory(LoggerFactory loggerFactory) {
-        Logger logger = loggerFactory.createLogger("test");
+        Logger logger = loggerFactory.createLogger("io.microsphere");
         log(logger);
     }
 
