@@ -1,11 +1,8 @@
 package io.microsphere.io.serializer;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 import static io.microsphere.io.serializer.ShortSerializer.SHORT_SERIALIZER;
-import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
-import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.util.SizeUtils.BYTE_BYTES_SIZE;
 import static io.microsphere.util.SizeUtils.SHORT_BYTES_SIZE;
@@ -29,14 +26,8 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
 
     public EnumSerializer(Class<E> enumType) {
         this.enumType = enumType;
-        this.enums = invokeValues(getValuesMethod(enumType));
+        this.enums = invokeValues();
         this.bytesLength = calcBytesLength(enums);
-    }
-
-    private Method getValuesMethod(Class<E> enumType) {
-        Method valuesMethod = findMethod(enumType, VALUES_METHOD_NAME);
-        trySetAccessible(valuesMethod);
-        return valuesMethod;
     }
 
     static <E extends Enum<E>> int calcBytesLength(E[] enums) {
@@ -44,8 +35,8 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
         return enumsLength < MAX_VALUE ? BYTE_BYTES_SIZE : SHORT_BYTES_SIZE;
     }
 
-    private E[] invokeValues(Method valuesMethod) {
-        return invokeStaticMethod(valuesMethod);
+    private E[] invokeValues() {
+        return invokeStaticMethod(enumType, VALUES_METHOD_NAME);
     }
 
     @Override
