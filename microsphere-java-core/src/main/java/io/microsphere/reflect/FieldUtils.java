@@ -38,6 +38,7 @@ import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Collections.unmodifiableSet;
 
@@ -1027,7 +1028,7 @@ public abstract class FieldUtils implements Utils {
                 field.set(instance, value);
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
-            failure = new IllegalArgumentException(e);
+            failure = wrap(e, IllegalArgumentException.class);
         } finally {
             if (logger.isTraceEnabled()) {
                 logger.trace("Set the value of field[signature : '{}' , forceAccess : {} , trySetAccessible : {} , instance : {}] : {} -> {}",
