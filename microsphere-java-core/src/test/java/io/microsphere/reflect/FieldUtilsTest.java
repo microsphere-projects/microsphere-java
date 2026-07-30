@@ -30,13 +30,11 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
-import static io.microsphere.reflect.FieldUtils.handleFieldException;
 import static io.microsphere.reflect.FieldUtils.setFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -239,7 +237,7 @@ class FieldUtilsTest extends LoggingTest {
 
     @Test
     void testSetFieldValueOnFieldNotFound() {
-        assertThrows(IllegalArgumentException.class, () -> setFieldValue(test, "notFoundField", null));
+        assertNull(setFieldValue(test, "notFoundField", null));
     }
 
     @Test
@@ -269,12 +267,6 @@ class FieldUtilsTest extends LoggingTest {
     @Test
     void testAssertFieldMatchTypeOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> assertFieldMatchType(test, "privateField", Integer.class));
-    }
-
-    @Test
-    void testHandleFieldException() {
-        Field field = findField(ReflectionTest.class, "staticField");
-        assertDoesNotThrow(() -> handleFieldException(new IllegalAccessException(), test, field));
     }
 
     private void assertFindField(Object object, String fieldName) {
