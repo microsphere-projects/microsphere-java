@@ -68,6 +68,7 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringBefore;
@@ -1103,9 +1104,9 @@ public abstract class MethodUtils implements Utils {
             }
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException | IllegalArgumentException e) {
-            failure = new IllegalArgumentException(e);
+            failure = wrap(e, IllegalArgumentException.class);
         } catch (InvocationTargetException e) {
-            failure = new RuntimeException(e.getTargetException());
+            failure = wrap(e.getTargetException(), RuntimeException.class);
         } finally {
             if (logger.isTraceEnabled()) {
                 logger.trace("Invoked the method[signature : '{}' , forceAccess : {} ,  trySetAccessible : {} , instance : {} , arguments : {}] : {}",
