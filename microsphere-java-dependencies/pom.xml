@@ -47,6 +47,12 @@
 
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
+                <artifactId>microsphere-annotation-test</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-lang-model</artifactId>
                 <version>${revision}</version>
             </dependency>

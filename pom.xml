@@ -61,6 +61,7 @@
         <module>microsphere-java-core</module>
         <module>microsphere-jdk-tools</module>
         <module>microsphere-java-test</module>
+        <module>microsphere-annotation-test</module>
         <module>microsphere-lang-model</module>
         <module>microsphere-annotation-processor</module>
     </modules>

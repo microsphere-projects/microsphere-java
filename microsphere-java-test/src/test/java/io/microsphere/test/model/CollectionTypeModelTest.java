@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.test.model.Color.BLUE;
 import static io.microsphere.test.model.Color.RED;
 import static io.microsphere.test.model.Color.YELLOW;
@@ -91,7 +90,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetModelArrays() {
-        HashSet<Model[]> testSet = newHashSet();
+        HashSet<Model[]> testSet = new HashSet<>();
         testSet.add(new Model[]{new Model(), new Model()});
         testSet.add(new Model[]{new Model()});
 

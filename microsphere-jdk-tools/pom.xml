@@ -40,6 +40,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Microsphere Java Test -->
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-java-test</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Mockito Core -->
         <dependency>
             <groupId>org.mockito</groupId>
