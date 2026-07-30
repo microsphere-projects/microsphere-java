@@ -37,7 +37,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
-import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Collections.unmodifiableSet;
@@ -767,17 +766,16 @@ public abstract class FieldUtils implements Utils {
      *
      * @param <V>      The type of the field value
      * @param instance The object instance from which to retrieve the field value
-     * @param field    The {@link Field} object representing the field to retrieve
+     * @param field    The {@link Field} object representing the field to retrieve (nullable)
      * @return The field value, or {@code null} if the field is {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible
      * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
-     *                                  the underlying field (or a subclass or implementor thereof), or if the field
-     *                                  is <code>null</code>.
+     *                                  the underlying field (or a subclass or implementor thereof)
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(@Nullable Object instance, @Nonnull Field field) throws IllegalStateException,
+    public static <V> V getFieldValue(@Nullable Object instance, @Nullable Field field) throws IllegalStateException,
             IllegalArgumentException, NullPointerException {
         return getFieldValue(false, instance, field);
     }
@@ -804,19 +802,21 @@ public abstract class FieldUtils implements Utils {
      * @param <V>         The type of the field value
      * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param instance    The object instance from which to retrieve the field value
-     * @param field       The {@link Field} object representing the field to retrieve
+     * @param field       The {@link Field} object representing the field to retrieve (nullable)
      * @return The value of the field if found and accessible; otherwise, {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible.
      * @throws IllegalArgumentException if the specified object is not an
      *                                  instance of the class or interface declaring the underlying field (or a subclass
-     *                                  or implementor thereof). or if the field is <code>null</code>.
+     *                                  or implementor thereof).
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(boolean forceAccess, @Nullable Object instance, @Nonnull Field field) throws
+    public static <V> V getFieldValue(boolean forceAccess, @Nullable Object instance, @Nullable Field field) throws
             IllegalStateException, IllegalArgumentException, NullPointerException {
-        assertNotNull(field, () -> "The 'field' must not be null");
+        if (field == null) {
+            return null;
+        }
 
         V fieldValue = null;
         RuntimeException failure = null;
@@ -830,7 +830,7 @@ public abstract class FieldUtils implements Utils {
             failure = new IllegalStateException(e);
         } finally {
             if (logger.isTraceEnabled()) {
-                logger.trace("The value of field[signature : '{}' , forceAccess : {} , trySetAccessible : {} , instance : {}] : {}",
+                logger.trace("Got the value of field[signature : '{}' , forceAccess : {} , trySetAccessible : {} , instance : {}] : {}",
                         field, forceAccess, trySetAccessible, instance, fieldValue, failure);
             }
         }
@@ -971,7 +971,7 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V setFieldValue(@Nullable Object instance, @Nonnull Field field, @Nullable V value) throws IllegalStateException, IllegalArgumentException {
+    public static <V> V setFieldValue(@Nullable Object instance, @Nullable Field field, @Nullable V value) throws IllegalStateException, IllegalArgumentException {
         return setFieldValue(false, instance, field, value);
     }
 
@@ -1009,22 +1009,34 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field
      */
     @Nullable
-    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nonnull Field field, @Nullable V value)
+    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nullable Field field, @Nullable V value)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
-        assertNotNull(field, () -> "The 'field' must not be null");
+        if (field == null) {
+            return null;
+        }
 
         V previousValue = null;
+        RuntimeException failure = null;
+        boolean trySetAccessible = false;
         try {
             if (forceAccess) {
-                trySetAccessible(field);
+                trySetAccessible = trySetAccessible(field);
             }
             previousValue = (V) field.get(instance);
             if (!Objects.equals(previousValue, value)) {
                 field.set(instance, value);
             }
         } catch (IllegalAccessException | IllegalArgumentException e) {
-            handleFieldException(e, instance, field);
-            throw new IllegalArgumentException(e);
+            failure = new IllegalArgumentException(e);
+        } finally {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Set the value of field[signature : '{}' , forceAccess : {} , trySetAccessible : {} , instance : {}] : {} -> {}",
+                        field, forceAccess, trySetAccessible, instance, previousValue, value, failure);
+            }
+        }
+
+        if (failure != null) {
+            throw failure;
         }
 
         return previousValue;
@@ -1070,12 +1082,6 @@ public abstract class FieldUtils implements Utils {
         if (!expectedType.isAssignableFrom(fieldType)) {
             String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
             throw new IllegalArgumentException(message);
-        }
-    }
-
-    static void handleFieldException(Exception e, Object instance, Field field) {
-        if (logger.isTraceEnabled()) {
-            logger.trace("The instance[object : {}] can't match the field[{}]", instance, field, e);
         }
     }
 
