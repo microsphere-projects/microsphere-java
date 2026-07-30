@@ -36,7 +36,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
     }
 
     private E[] invokeValues() {
-        return invokeStaticMethod(enumType, VALUES_METHOD_NAME);
+        return invokeStaticMethod(true, enumType, VALUES_METHOD_NAME);
     }
 
     @Override
