@@ -37,6 +37,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Collections.unmodifiableSet;
@@ -766,16 +767,17 @@ public abstract class FieldUtils implements Utils {
      *
      * @param <V>      The type of the field value
      * @param instance The object instance from which to retrieve the field value
-     * @param field    The {@link Field} object representing the field to retrieve (nullable)
+     * @param field    The {@link Field} object representing the field to retrieve
      * @return The field value, or {@code null} if the field is {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible
      * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
-     *                                  the underlying field (or a subclass or implementor thereof)
+     *                                  the underlying field (or a subclass or implementor thereof), or if the field
+     *                                  is <code>null</code>.
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(@Nullable Object instance, @Nullable Field field) throws IllegalStateException,
+    public static <V> V getFieldValue(@Nullable Object instance, @Nonnull Field field) throws IllegalStateException,
             IllegalArgumentException, NullPointerException {
         return getFieldValue(false, instance, field);
     }
@@ -802,21 +804,19 @@ public abstract class FieldUtils implements Utils {
      * @param <V>         The type of the field value
      * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param instance    The object instance from which to retrieve the field value
-     * @param field       The {@link Field} object representing the field to retrieve (nullable)
+     * @param field       The {@link Field} object representing the field to retrieve
      * @return The value of the field if found and accessible; otherwise, {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible.
      * @throws IllegalArgumentException if the specified object is not an
      *                                  instance of the class or interface declaring the underlying field (or a subclass
-     *                                  or implementor thereof).
+     *                                  or implementor thereof). or if the field is <code>null</code>.
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(boolean forceAccess, @Nullable Object instance, @Nullable Field field) throws
+    public static <V> V getFieldValue(boolean forceAccess, @Nullable Object instance, @Nonnull Field field) throws
             IllegalStateException, IllegalArgumentException, NullPointerException {
-        if (field == null) {
-            return null;
-        }
+        assertNotNull(field, () -> "The 'field' must not be null");
 
         V fieldValue = null;
         RuntimeException failure = null;
@@ -971,7 +971,7 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V setFieldValue(@Nullable Object instance, @Nullable Field field, @Nullable V value) throws IllegalStateException, IllegalArgumentException {
+    public static <V> V setFieldValue(@Nullable Object instance, @Nonnull Field field, @Nullable V value) throws IllegalStateException, IllegalArgumentException {
         return setFieldValue(false, instance, field, value);
     }
 
@@ -1009,11 +1009,9 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field
      */
     @Nullable
-    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nullable Field field, @Nullable V value)
+    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nonnull Field field, @Nullable V value)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
-        if (field == null) {
-            return null;
-        }
+        assertNotNull(field, () -> "The 'field' must not be null");
 
         V previousValue = null;
         try {

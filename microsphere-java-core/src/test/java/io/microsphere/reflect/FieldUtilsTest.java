@@ -222,8 +222,7 @@ class FieldUtilsTest extends LoggingTest {
 
     @Test
     void testGetFieldValueOnNull() {
-        Object fieldValue = getFieldValue(null, (Field) null);
-        assertNull(fieldValue);
+        assertThrows(NullPointerException.class, () -> getFieldValue(null, (String) null));
     }
 
     @Test
@@ -240,7 +239,7 @@ class FieldUtilsTest extends LoggingTest {
 
     @Test
     void testSetFieldValueOnFieldNotFound() {
-        assertNull(setFieldValue(test, "notFoundField", null));
+        assertThrows(IllegalArgumentException.class, () -> setFieldValue(test, "notFoundField", null));
     }
 
     @Test
