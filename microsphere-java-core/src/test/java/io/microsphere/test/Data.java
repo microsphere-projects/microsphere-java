@@ -179,16 +179,16 @@ public class Data {
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + age;
+        int result = Objects.hashCode(name);
+        result = 31 * result + Integer.hashCode(age);
         result = 31 * result + Boolean.hashCode(male);
         result = 31 * result + Double.hashCode(height);
         result = 31 * result + Float.hashCode(weight);
         result = 31 * result + Long.hashCode(birth);
-        result = 31 * result + index;
-        result = 31 * result + grade;
-        result = 31 * result + sex;
-        result = 31 * result + object.hashCode();
+        result = 31 * result + Short.hashCode(index);
+        result = 31 * result + Byte.hashCode(grade);
+        result = 31 * result + Character.hashCode(sex);
+        result = 31 * result + Objects.hashCode(object);
         result = 31 * result + Arrays.hashCode(names);
         return result;
     }

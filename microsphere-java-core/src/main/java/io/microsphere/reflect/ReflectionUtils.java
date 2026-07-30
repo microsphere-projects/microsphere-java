@@ -15,16 +15,18 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
-import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
@@ -445,25 +447,33 @@ public abstract class ReflectionUtils implements Utils {
         if (object == null) {
             return emptyMap();
         }
+        Set<Object> visitedInstances = newHashSet();
+        return readFieldsAsMap(object, visitedInstances);
+    }
+
+    static Map<String, Object> readFieldsAsMap(Object object, Set<Object> visitedInstances) {
+        if (object == null) {
+            return emptyMap();
+        }
         Class<?> type = object.getClass();
-        Field[] fields = type.getDeclaredFields();
-        LinkedHashMap<String, Object> fieldsAsMap = newLinkedHashMap(fields.length);
-        for (Field field : fields) {
-
-            if (isStatic(field)) { // To filter static fields
-                continue;
-            }
-
+        Set<Field> allDeclaredFields = findAllDeclaredFields(type, MemberUtils::isNonStatic);
+        visitedInstances.add(object);
+        LinkedHashMap<String, Object> fieldsAsMap = newLinkedHashMap(allDeclaredFields.size());
+        for (Field field : allDeclaredFields) {
             String fieldName = field.getName();
-            Object fieldValue = getFieldValue(true, object, field);
             Class<?> fieldValueType = field.getType();
-            if (fieldValue != object) {
-                if (!isPrimitive(fieldValueType) && !isSimpleType(fieldValueType)
-                        && !object.getClass().equals(fieldValueType)) {
-                    fieldValue = readFieldsAsMap(fieldValue);
+            Object fieldValue = getFieldValue(true, object, field);
+            if (fieldValue != null) {
+                if (!visitedInstances.add(fieldValue)) {
+                    continue;
                 }
-                fieldsAsMap.put(fieldName, fieldValue);
             }
+
+            if (!isPrimitive(fieldValueType) && !isSimpleType(fieldValueType)) {
+                fieldValue = readFieldsAsMap(fieldValue, visitedInstances);
+            }
+
+            fieldsAsMap.put(fieldName, fieldValue);
         }
         return unmodifiableMap(fieldsAsMap);
     }
