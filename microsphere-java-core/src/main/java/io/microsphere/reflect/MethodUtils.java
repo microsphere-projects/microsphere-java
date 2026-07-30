@@ -1096,9 +1096,10 @@ public abstract class MethodUtils implements Utils {
         assertNotNull(method, () -> "The 'method' must not be null");
         R result = null;
         RuntimeException failure = null;
+        boolean trySetAccessible = false;
         try {
             if (forceAccess) {
-                trySetAccessible(method);
+                trySetAccessible = trySetAccessible(method);
             }
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException | IllegalArgumentException e) {
@@ -1107,10 +1108,11 @@ public abstract class MethodUtils implements Utils {
             failure = new RuntimeException(e.getTargetException());
         } finally {
             if (logger.isTraceEnabled()) {
-                logger.trace("Invoked the method[signature : '{}' , forceAccess : {} , instance : {} , arguments : {}] : {}",
-                        getSignature(method), forceAccess, instance, arrayToString(arguments), result, failure);
+                logger.trace("Invoked the method[signature : '{}' , forceAccess : {} ,  trySetAccessible : {} , instance : {} , arguments : {}] : {}",
+                        getSignature(method), forceAccess, trySetAccessible, instance, arrayToString(arguments), result, failure);
             }
         }
+        
         if (failure != null) {
             throw failure;
         }

@@ -830,8 +830,8 @@ public abstract class FieldUtils implements Utils {
             failure = new IllegalStateException(e);
         } finally {
             if (logger.isTraceEnabled()) {
-                logger.trace("The value of field[signature : '{}' , forceAccess : {} , instance : {} , trySetAccessible : {}] : {}",
-                        field, forceAccess, instance, trySetAccessible, fieldValue, failure);
+                logger.trace("The value of field[signature : '{}' , forceAccess : {} , trySetAccessible : {} , instance : {}] : {}",
+                        field, forceAccess, trySetAccessible, instance, fieldValue, failure);
             }
         }
 
