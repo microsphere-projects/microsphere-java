@@ -25,4 +25,8 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+    <logger name="io.microsphere.logging" level="TRACE" additivity="false">
+        <appender-ref ref="FILE"/>
+    </logger>
+
 </configuration>
