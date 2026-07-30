@@ -1,0 +1,7 @@
+<configuration>
+
+    <logger name="io.microsphere.logging" level="TRACE" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+</configuration>
