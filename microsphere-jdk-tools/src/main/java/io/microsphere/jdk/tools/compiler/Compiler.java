@@ -16,6 +16,7 @@
  */
 package io.microsphere.jdk.tools.compiler;
 
+import io.microsphere.io.StringBuilderWriter;
 import io.microsphere.logging.Logger;
 
 import javax.annotation.processing.Processor;
@@ -154,11 +155,14 @@ public class Compiler {
 
     public boolean compile(Class<?>... sourceClasses) throws IOException {
         JavaCompiler javaCompiler = getJavaCompiler();
+        StringBuilderWriter writer = new StringBuilderWriter();
         try (StandardJavaFileManager javaFileManager = getJavaFileManager()) {
-            CompilationTask task = javaCompiler.getTask(null, javaFileManager,
+            CompilationTask task = javaCompiler.getTask(writer, javaFileManager,
                     getDiagnosticListener(), getOptions(), null, getJavaFileObjects(javaFileManager, sourceClasses));
             task.setProcessors(this.getProcessors());
             return task.call();
+        } finally {
+            logger.trace("The output of the Java compiler:\n{}", writer);
         }
     }
 
