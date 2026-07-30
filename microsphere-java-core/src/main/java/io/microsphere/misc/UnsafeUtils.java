@@ -2224,8 +2224,29 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return base
      */
-    public static long staticFieldBase(Class<?> type, String fieldName) {
+    public static Object staticFieldBase(Class<?> type, String fieldName) {
         Field field = findField(type, fieldName);
+        return staticFieldBase(field);
+    }
+
+    /**
+     * Reports the location of a given static field, in conjunction with {@link
+     * #staticFieldOffset}.
+     * <p>Fetch the base "Object", if any, with which static fields of the
+     * given class can be accessed via methods like {@link #getInt(Object,
+     * long)}.  This value may be null.  This value may refer to an object
+     * which is a "cookie", not guaranteed to be a real Object, and it should
+     * not be used in any way except as argument to the get and put routines in
+     * this class.
+     *
+     * @param field
+     * @return
+     * @deprecated The guarantee that a field will always have the same offset
+     * and base may not be true in a future release. The ability to provide an
+     * offset and object reference to a heap memory accessor will be removed
+     * in a future release. Use {@link java.lang.invoke.VarHandle} instead.
+     */
+    public static Object staticFieldBase(Field field) {
         return invokeMethod(unsafe, staticFieldBaseMethod, field);
     }
 
