@@ -2,17 +2,30 @@
 
     <property name="ENCODER_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} %level %logger{0} [%t] %m%n"/>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>test.log</file>
+        <append>false</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>${ENCODER_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${ENCODER_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
+    <root level="TRACE" additivity="false">
+        <appender-ref ref="FILE"/>
     </root>
 
-    <logger name="io.microsphere" level="TRACE" additivity="false">
+    <logger name="io.microsphere" level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="io.microsphere.logging" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
