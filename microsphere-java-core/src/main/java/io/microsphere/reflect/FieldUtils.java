@@ -819,15 +819,24 @@ public abstract class FieldUtils implements Utils {
         }
 
         V fieldValue = null;
-        boolean accessible = false;
+        RuntimeException failure = null;
+        boolean trySetAccessible = false;
         try {
             if (forceAccess) {
-                accessible = trySetAccessible(field);
+                trySetAccessible = trySetAccessible(field);
             }
             fieldValue = (V) field.get(instance);
         } catch (IllegalAccessException e) {
-            handleFieldException(e, instance, field);
-            throw new IllegalStateException(e);
+            failure = new IllegalStateException(e);
+        } finally {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The value of field[signature : '{}' , forceAccess : {} , trySetAccessible : {} , instance : {}] : {}",
+                        field, forceAccess, trySetAccessible, instance, fieldValue, failure);
+            }
+        }
+
+        if (failure != null) {
+            throw failure;
         }
 
         return fieldValue;
