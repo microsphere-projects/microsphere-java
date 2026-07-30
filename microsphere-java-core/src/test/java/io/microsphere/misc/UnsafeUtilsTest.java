@@ -34,12 +34,14 @@ import static io.microsphere.misc.UnsafeUtils.addressSize;
 import static io.microsphere.misc.UnsafeUtils.allocateInstance;
 import static io.microsphere.misc.UnsafeUtils.allocateMemory;
 import static io.microsphere.misc.UnsafeUtils.arrayBaseOffset;
+import static io.microsphere.misc.UnsafeUtils.arrayIndexOffset;
 import static io.microsphere.misc.UnsafeUtils.arrayIndexScale;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapInt;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapLong;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapObject;
 import static io.microsphere.misc.UnsafeUtils.copyMemory;
 import static io.microsphere.misc.UnsafeUtils.freeMemory;
+import static io.microsphere.misc.UnsafeUtils.getAddress;
 import static io.microsphere.misc.UnsafeUtils.getAndAddInt;
 import static io.microsphere.misc.UnsafeUtils.getAndAddLong;
 import static io.microsphere.misc.UnsafeUtils.getAndSetInt;
@@ -73,6 +75,7 @@ import static io.microsphere.misc.UnsafeUtils.getShort;
 import static io.microsphere.misc.UnsafeUtils.getShortVolatile;
 import static io.microsphere.misc.UnsafeUtils.getShortVolatileFromArray;
 import static io.microsphere.misc.UnsafeUtils.pageSize;
+import static io.microsphere.misc.UnsafeUtils.putAddress;
 import static io.microsphere.misc.UnsafeUtils.putBoolean;
 import static io.microsphere.misc.UnsafeUtils.putBooleanVolatile;
 import static io.microsphere.misc.UnsafeUtils.putBooleanVolatileIntoArray;
@@ -108,9 +111,12 @@ import static io.microsphere.misc.UnsafeUtils.putShortVolatile;
 import static io.microsphere.misc.UnsafeUtils.putShortVolatileIntoArray;
 import static io.microsphere.misc.UnsafeUtils.reallocateMemory;
 import static io.microsphere.misc.UnsafeUtils.setMemory;
+import static io.microsphere.misc.UnsafeUtils.staticFieldBase;
+import static io.microsphere.misc.UnsafeUtils.staticFieldOffset;
 import static io.microsphere.misc.UnsafeUtils.throwException;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -547,15 +553,17 @@ class UnsafeUtilsTest {
     }
 
     @Test
-    void testGetStaticFieldOffset() throws Throwable {
-//        Field field = findField(AccessibleObject.class, "override");
-//        Lookup implLookup = getStaticFieldValue(Lookup.class, "IMPL_LOOKUP", true);
-//
-//        final MethodHandle overrideSetter = implLookup.findSetter(AccessibleObject.class, "override", boolean.class);
-//        overrideSetter.invokeWithArguments(field, true);
-//        String fieldName = "value";
-//        long offset = getStaticFieldOffset(Integer.class, fieldName);
-//        assertNotNull(offset);
+    void testStaticFieldOffset() {
+        String fieldName = "MIN_VALUE";
+        long offset = staticFieldOffset(Integer.class, fieldName);
+        assertNotNull(offset);
+    }
+
+    @Test
+    void testStaticFieldBase() {
+        String fieldName = "MIN_VALUE";
+        Object base = staticFieldBase(Integer.class, fieldName);
+        assertNotNull(base);
     }
 
     @Test
@@ -679,8 +687,33 @@ class UnsafeUtilsTest {
             assertEquals((byte) 1, getByte(newAddress + i));
         }
 
+        setMemory(null, newAddress, length, (byte) 2);
+
+        for (int i = 0; i < length; i++) {
+            assertEquals((byte) 2, getByte(newAddress + i));
+        }
+
+        long value = Long.MAX_VALUE;
+
+        putAddress(address, value);
+        assertEquals(value, getAddress(address));
+
         freeMemory(address);
         freeMemory(newAddress);
+    }
+
+    @Test
+    void testObjectMemoryOps() throws IOException {
+
+        long value = Long.MAX_VALUE;
+
+        Serializer<Long> serializer = (Serializer<Long>) this.serializers.getMostCompatible(Long.class);
+        byte[] bytes = serializer.serialize(value);
+        byte[] bytesCopy = new byte[bytes.length];
+
+        copyMemory(bytes, BOOLEAN_ARRAY_BASE_OFFSET, bytesCopy, BOOLEAN_ARRAY_BASE_OFFSET, 8);
+
+        assertArrayEquals(bytes, bytesCopy);
     }
 
     @Test
@@ -688,6 +721,11 @@ class UnsafeUtilsTest {
         assertDoesNotThrow(UnsafeUtils::loadFence);
         assertDoesNotThrow(UnsafeUtils::storeFence);
         assertDoesNotThrow(UnsafeUtils::fullFence);
+    }
+
+    @Test
+    void testArrayIndexOffsetOnIndexOutOfBoundsException() {
+        assertThrows(IndexOutOfBoundsException.class, () -> arrayIndexOffset(-1, 0, 0));
     }
 
     private static class Model {
