@@ -1096,22 +1096,27 @@ public abstract class MethodUtils implements Utils {
         assertNotNull(method, () -> "The 'method' must not be null");
         R result = null;
         RuntimeException failure = null;
+        boolean trySetAccessible = false;
         try {
             if (forceAccess) {
-                trySetAccessible(method);
+                trySetAccessible = trySetAccessible(method);
             }
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException | IllegalArgumentException e) {
-            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, arrayToString(arguments));
-            failure = new IllegalArgumentException(errorMessage, e);
+            failure = new IllegalArgumentException(e);
         } catch (InvocationTargetException e) {
-            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, arrayToString(arguments));
-            failure = new RuntimeException(errorMessage, e.getTargetException());
+            failure = new RuntimeException(e.getTargetException());
+        } finally {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Invoked the method[signature : '{}' , forceAccess : {} ,  trySetAccessible : {} , instance : {} , arguments : {}] : {}",
+                        getSignature(method), forceAccess, trySetAccessible, instance, arrayToString(arguments), result, failure);
+            }
         }
+        
         if (failure != null) {
-            logger.error(failure.getMessage(), failure.getCause());
             throw failure;
         }
+
         return result;
     }
 
