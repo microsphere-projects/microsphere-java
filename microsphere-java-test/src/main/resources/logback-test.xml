@@ -5,7 +5,7 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>test.log</file>
         <append>false</append>
-        <immediateFlush>true</immediateFlush>
+        <immediateFlush>false</immediateFlush>
         <encoder>
             <pattern>${ENCODER_PATTERN}</pattern>
         </encoder>
