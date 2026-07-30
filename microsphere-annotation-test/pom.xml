@@ -11,33 +11,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-lang-model</artifactId>
+    <artifactId>microsphere-annotation-test</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere :: Java :: Language Model</name>
-    <description>Microsphere Language Model</description>
+    <name>Microsphere :: Annotation :: Test</name>
+    <description>Microsphere Annotation Test</description>
 
     <dependencies>
 
-        <!-- Microsphere Java Core -->
+        <!-- Microsphere Java Test -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-java-core</artifactId>
+            <artifactId>microsphere-java-test</artifactId>
             <version>${revision}</version>
-        </dependency>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- Microsphere JDK Tools -->
@@ -45,49 +32,60 @@
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-jdk-tools</artifactId>
             <version>${revision}</version>
-            <scope>test</scope>
         </dependency>
 
-        <!-- Microsphere Annotation Test -->
+        <!-- Testing -->
         <dependency>
-            <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-annotation-test</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- JAX-RS API -->
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- JAX-WS API-->
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>

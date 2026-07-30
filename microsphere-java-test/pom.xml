@@ -20,17 +20,10 @@
 
     <dependencies>
 
-        <!-- Microsphere Java Core -->
+        <!-- Microsphere Java Annotations -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-java-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <!-- Microsphere JDK Tools -->
-        <dependency>
-            <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-jdk-tools</artifactId>
+            <artifactId>microsphere-java-annotations</artifactId>
             <version>${revision}</version>
             <optional>true</optional>
         </dependency>

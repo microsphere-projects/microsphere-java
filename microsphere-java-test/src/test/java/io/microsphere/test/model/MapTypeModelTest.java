@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-import static io.microsphere.collection.MapUtils.newHashMap;
-import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.test.model.Color.BLUE;
 import static io.microsphere.test.model.Color.RED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +37,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetStrings() {
-        HashMap<String, String> testMap = newHashMap();
+        HashMap<String, String> testMap = new HashMap<>();
         testMap.put("key1", "value1");
         testMap.put("key2", "value2");
 
@@ -52,7 +50,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetColors() {
-        TreeMap<String, Color> testMap = newTreeMap();
+        TreeMap<String, Color> testMap = new TreeMap<>();
         testMap.put("red_key", RED);
         testMap.put("blue_key", BLUE);
 
@@ -65,7 +63,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetPrimitiveTypeModels() {
-        TreeMap<Color, PrimitiveTypeModel> testMap = newTreeMap();
+        TreeMap<Color, PrimitiveTypeModel> testMap = new TreeMap<>();
         testMap.put(RED, new PrimitiveTypeModel());
         testMap.put(BLUE, new PrimitiveTypeModel());
 
@@ -78,7 +76,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetModels() {
-        HashMap<String, Model> testMap = newHashMap();
+        HashMap<String, Model> testMap = new HashMap<>();
         testMap.put("model1", new Model());
         testMap.put("model2", new Model());
 
@@ -123,7 +121,7 @@ class MapTypeModelTest {
 
     @Test
     void testMapMutability() {
-        HashMap<String, String> originalMap = newHashMap();
+        HashMap<String, String> originalMap = new HashMap<>();
         originalMap.put("initial", "value");
         model.setStrings(originalMap);
 

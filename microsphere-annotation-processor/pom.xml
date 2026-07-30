@@ -47,18 +47,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Microsphere JDK Tools -->
+        <!-- Microsphere Annotation Test -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-jdk-tools</artifactId>
-            <version>${revision}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Microsphere Java Test -->
-        <dependency>
-            <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-java-test</artifactId>
+            <artifactId>microsphere-annotation-test</artifactId>
             <version>${revision}</version>
             <scope>test</scope>
         </dependency>
