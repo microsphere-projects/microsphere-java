@@ -196,6 +196,10 @@ class FieldUtilsTest extends LoggingTest {
         assertGetFieldValue(test, "packagePrivateField", false);
         assertGetFieldValue(test, "protectedField", false);
         assertGetFieldValue(test, "publicField", false);
+
+        assertNotNull(getFieldValue(test, "packagePrivateField", String.class));
+        assertNotNull(getFieldValue(test, "protectedField", String.class));
+        assertNotNull(getFieldValue(test, "publicField", String.class));
     }
 
     @Test
