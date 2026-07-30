@@ -17,15 +17,11 @@
         </encoder>
     </appender>
 
-    <root level="TRACE" additivity="false">
+    <root level="TRACE">
         <appender-ref ref="FILE"/>
     </root>
 
     <logger name="io.microsphere" level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-
-    <logger name="io.microsphere.logging" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
