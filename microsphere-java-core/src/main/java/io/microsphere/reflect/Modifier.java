@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import java.util.function.Supplier;
+
 /**
  * The enumeration class for Java Reflection {@link java.lang.reflect.Modifier}
  *
@@ -336,4 +338,59 @@ public enum Modifier {
         return MANDATED.matches(modifiers);
     }
 
+    /**
+     * Checks if the specified modifiers contain any of the specified modifiers to match.
+     *
+     * @param modifiersSupplier a supplier that provides the bit mask of modifiers to check
+     * @param modifiersToMatch  the modifiers to match against
+     * @return {@code true} if any of the specified modifiers to match are present, otherwise {@code false}
+     */
+    public static boolean matchesAny(Supplier<Integer> modifiersSupplier, Modifier... modifiersToMatch) {
+        int modifiers = modifiersSupplier.get();
+        return matchesAny(modifiers, modifiersToMatch);
+    }
+
+    /**
+     * Checks if the specified modifiers contain any of the specified modifiers to match.
+     *
+     * @param modifiers        the bit mask of modifiers to check
+     * @param modifiersToMatch the modifiers to match against
+     * @return {@code true} if any of the specified modifiers to match are present, otherwise {@code false}
+     */
+    public static boolean matchesAny(int modifiers, Modifier... modifiersToMatch) {
+        for (Modifier modifier : modifiersToMatch) {
+            if (modifier.matches(modifiers)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the specified modifiers contain all of the specified modifiers to match.
+     *
+     * @param modifiersSupplier a supplier that provides the bit mask of modifiers to check
+     * @param modifiersToMatch  the modifiers to match against
+     * @return {@code true} if all of the specified modifiers to match are present, otherwise {@code false}
+     */
+    public static boolean matchesAll(Supplier<Integer> modifiersSupplier, Modifier... modifiersToMatch) {
+        int modifiers = modifiersSupplier.get();
+        return matchesAll(modifiers, modifiersToMatch);
+    }
+
+    /**
+     * Checks if the specified modifiers contain all of the specified modifiers to match.
+     *
+     * @param modifiers        the bit mask of modifiers to check
+     * @param modifiersToMatch the modifiers to match against
+     * @return {@code true} if all of the specified modifiers to match are present, otherwise {@code false}
+     */
+    public static boolean matchesAll(int modifiers, Modifier... modifiersToMatch) {
+        for (Modifier modifier : modifiersToMatch) {
+            if (!modifier.matches(modifiers)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
