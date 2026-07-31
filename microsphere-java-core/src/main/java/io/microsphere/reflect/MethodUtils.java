@@ -1466,6 +1466,29 @@ public abstract class MethodUtils implements Utils {
         return isAnnotationPresent(method, CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
 
+    /**
+     * Checks if the specified method is a JavaBean "is" getter method.
+     *
+     * <p>A method is considered an "is" getter if it starts with "is", has no parameters, and returns a boolean type.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Example {
+     *     private boolean active;
+     *
+     *     public boolean isActive() {
+     *         return active;
+     *     }
+     * }
+     *
+     * Method isActiveMethod = Example.class.getMethod("isActive");
+     * boolean isIsMethod = MethodUtils.isIsMethod(isActiveMethod);
+     * System.out.println(isIsMethod); // Output: true
+     * }</pre>
+     *
+     * @param method the method to check, may be null
+     * @return true if the method is an "is" getter; false otherwise or if the method is null
+     */
     public static boolean isIsMethod(@Nullable Method method) {
         if (startsWith(getMethodName(method), IS_METHOD_NAME_PREFIX)) {
             if (isNoArgMethod(method)) {
@@ -1475,6 +1498,29 @@ public abstract class MethodUtils implements Utils {
         return false;
     }
 
+    /**
+     * Checks if the specified method is a JavaBean getter method.
+     *
+     * <p>A method is considered a getter if it starts with "get", has no parameters, and does not return void.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Example {
+     *     private String name;
+     *
+     *     public String getName() {
+     *         return name;
+     *     }
+     * }
+     *
+     * Method getNameMethod = Example.class.getMethod("getName");
+     * boolean isGetter = MethodUtils.isGetterMethod(getNameMethod);
+     * System.out.println(isGetter); // Output: true
+     * }</pre>
+     *
+     * @param method the method to check, may be null
+     * @return true if the method is a getter; false otherwise or if the method is null
+     */
     public static boolean isGetterMethod(@Nullable Method method) {
         if (startsWith(getMethodName(method), GET_METHOD_NAME_PREFIX)) {
             if (isNoArgMethod(method)) {
@@ -1484,6 +1530,29 @@ public abstract class MethodUtils implements Utils {
         return false;
     }
 
+    /**
+     * Checks if the specified method is a JavaBean setter method.
+     *
+     * <p>A method is considered a setter if it starts with "set", has exactly one parameter, and returns void.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Example {
+     *     private String name;
+     *
+     *     public void setName(String name) {
+     *         this.name = name;
+     *     }
+     * }
+     *
+     * Method setNameMethod = Example.class.getMethod("setName", String.class);
+     * boolean isSetter = MethodUtils.isSetterMethod(setNameMethod);
+     * System.out.println(isSetter); // Output: true
+     * }</pre>
+     *
+     * @param method the method to check, may be null
+     * @return true if the method is a setter; false otherwise or if the method is null
+     */
     public static boolean isSetterMethod(@Nullable Method method) {
         if (startsWith(getMethodName(method), SET_METHOD_NAME_PREFIX)) {
             if (matchesParameterCount(method, 1)) {
@@ -1493,15 +1562,85 @@ public abstract class MethodUtils implements Utils {
         return false;
     }
 
+    /**
+     * Retrieves the name of the specified method.
+     *
+     * <p>This utility method safely retrieves the name of a method, returning {@code null} if the method is {@code null}.
+     * It is useful for logging or debugging purposes where method names are needed without risking a {@code NullPointerException}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Method method = String.class.getMethod("substring", int.class, int.class);
+     * String methodName = MethodUtils.getMethodName(method);
+     * System.out.println(methodName); // Output: substring
+     *
+     * Method nullMethod = null;
+     * String nullMethodName = MethodUtils.getMethodName(nullMethod);
+     * System.out.println(nullMethodName); // Output: null
+     * }</pre>
+     *
+     * @param method the method from which to retrieve the name, may be null
+     * @return the name of the method, or {@code null} if the method is {@code null}
+     */
     @Nullable
     public static String getMethodName(@Nullable Method method) {
         return method == null ? null : method.getName();
     }
 
+    /**
+     * Checks if the specified method has the given number of parameters.
+     *
+     * <p>This utility method is useful for validating method signatures, especially when working with reflection
+     * to ensure that a method matches expected parameter counts.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Method method = String.class.getMethod("substring", int.class, int.class);
+     * boolean hasTwoParameters = MethodUtils.matchesParameterCount(method, 2);
+     * System.out.println(hasTwoParameters); // Output: true
+     *
+     * Method noArgMethod = String.class.getMethod("isEmpty");
+     * boolean hasNoParameters = MethodUtils.matchesParameterCount(noArgMethod, 0);
+     * System.out.println(hasNoParameters); // Output: true
+     *
+     * Method nullMethod = null;
+     * boolean resultForNull = MethodUtils.matchesParameterCount(nullMethod, 1);
+     * System.out.println(resultForNull); // Output: false
+     * }</pre>
+     *
+     * @param method         the method to check, may be null
+     * @param parameterCount the expected number of parameters
+     * @return true if the method has the specified number of parameters; false if the method is null or does not match
+     */
     public static boolean matchesParameterCount(@Nullable Method method, int parameterCount) {
         return method == null ? false : method.getParameterCount() == parameterCount;
     }
 
+    /**
+     * Checks if the specified method has the given return type.
+     *
+     * <p>This utility method is useful for validating method signatures, especially when working with reflection
+     * to ensure that a method matches expected return types.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Method method = String.class.getMethod("substring", int.class, int.class);
+     * boolean returnsString = MethodUtils.matchesReturnType(method, String.class);
+     * System.out.println(returnsString); // Output: true
+     *
+     * Method voidMethod = System.class.getMethod("gc");
+     * boolean returnsVoid = MethodUtils.matchesReturnType(voidMethod, void.class);
+     * System.out.println(returnsVoid); // Output: true
+     *
+     * Method nullMethod = null;
+     * boolean resultForNull = MethodUtils.matchesReturnType(nullMethod, Object.class);
+     * System.out.println(resultForNull); // Output: false
+     * }</pre>
+     *
+     * @param method     the method to check, may be null
+     * @param returnType the expected return type, may be null
+     * @return true if the method has the specified return type; false if the method is null or does not match
+     */
     public static boolean matchesReturnType(@Nullable Method method, @Nullable Class<?> returnType) {
         return method == null ? false : Objects.equals(returnType, method.getReturnType());
     }
