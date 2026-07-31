@@ -39,6 +39,7 @@ import static io.microsphere.AbstractTestCase.makeLinkFile;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
@@ -91,6 +92,7 @@ import static io.microsphere.util.ClassUtils.isFunctionalInterface;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
 import static io.microsphere.util.ClassUtils.isInterface;
 import static io.microsphere.util.ClassUtils.isLambdaClass;
+import static io.microsphere.util.ClassUtils.isLambdaClassName;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
@@ -256,8 +258,21 @@ class ClassUtilsTest extends LoggingTest {
         Runnable r = () -> {
         };
         assertTrue(isLambdaClass(r));
+        assertTrue(isLambdaClass(DIRECT_EXECUTOR));
         assertFalse(isLambdaClass(new Object()));
         assertFalse(isLambdaClass(null));
+
+        ValueSource valueSource = LoggingTest.class.getAnnotation(ValueSource.class);
+        assertFalse(isLambdaClass(valueSource));
+    }
+
+    @Test
+    void testIsLambdaClassName() {
+        assertFalse(isLambdaClassName(null));
+        assertFalse(isLambdaClassName("io.microsphere.util.ClassUtilsTest"));
+        assertFalse(isLambdaClassName("io.microsphere.util.ClassUtilsTest$$Lambda"));
+        assertFalse(isLambdaClassName("io.microsphere.util.ClassUtilsTest/"));
+        assertTrue(isLambdaClassName("io.microsphere.util.ClassUtilsTest$$Lambda$1/0x0000000800b00440"));
     }
 
     @Test
