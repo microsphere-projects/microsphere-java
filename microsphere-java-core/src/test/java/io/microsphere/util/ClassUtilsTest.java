@@ -7,6 +7,7 @@ import io.microsphere.LoggingTest;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.test.A;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -20,6 +21,7 @@ import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Date;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,6 +31,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.createRandomTempFile;
@@ -84,7 +87,9 @@ import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.ClassUtils.isDerived;
 import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isFinal;
+import static io.microsphere.util.ClassUtils.isFunctionalInterface;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
+import static io.microsphere.util.ClassUtils.isInterface;
 import static io.microsphere.util.ClassUtils.isLambdaClass;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isPrimitive;
@@ -192,6 +197,13 @@ class ClassUtilsTest extends LoggingTest {
     }
 
     @Test
+    void testIsInterface() {
+        assertTrue(isInterface(List.class));
+        assertFalse(isInterface(String.class));
+        assertFalse(isInterface(null));
+    }
+
+    @Test
     void testIsGeneralClass() {
         // test null
         assertFalse(isGeneralClass(null));
@@ -246,6 +258,25 @@ class ClassUtilsTest extends LoggingTest {
         assertTrue(isLambdaClass(r));
         assertFalse(isLambdaClass(new Object()));
         assertFalse(isLambdaClass(null));
+    }
+
+    @Test
+    void testIsFunctionalInterface() {
+        assertFalse(isFunctionalInterface(null));
+        assertFalse(isFunctionalInterface(Object.class));
+        assertFalse(isFunctionalInterface(Serializable.class));
+        assertFalse(isFunctionalInterface(EventListener.class));
+        assertFalse(isFunctionalInterface(Collection.class));
+        // Runnable is annotated with @FunctionalInterface
+        assertTrue(isFunctionalInterface(Runnable.class));
+        // Comparable is not annotated with @FunctionalInterface, and it has only one abstract method compareTo(T o)
+        assertTrue(isFunctionalInterface(Comparable.class));
+        // Annotation
+        assertFalse(isFunctionalInterface(ValueSource.class));
+
+        assertTrue(isFunctionalInterface(StringDescriptive.class));
+        //
+        assertFalse(isFunctionalInterface(Calculator.class));
     }
 
     @Test
@@ -992,5 +1023,28 @@ class ClassUtilsTest extends LoggingTest {
         String path = location.toString();
         Set<String> classNamesInClassPath = findClassNamesInClassPath(path, true);
         assertFalse(classNamesInClassPath.isEmpty());
+    }
+
+    interface Descriptive {
+
+        CharSequence getDescription();
+    }
+
+    interface StringDescriptive extends Descriptive {
+
+        @Override
+        String getDescription();
+
+        static String name() {
+            return "StringDescriptive";
+        }
+    }
+
+    interface Calculator {
+        // A default method containing a lambda expression
+        default int getAdder() {
+            BinaryOperator<Integer> adder = (a, b) -> a + b;
+            return adder.apply(5, 10);
+        }
     }
 }
