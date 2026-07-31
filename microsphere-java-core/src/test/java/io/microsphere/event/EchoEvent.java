@@ -21,7 +21,7 @@ package io.microsphere.event;
  *
  * @since 1.0.0
  */
-class EchoEvent extends Event {
+public class EchoEvent extends Event {
 
     public EchoEvent(Object source) {
         super(source);
