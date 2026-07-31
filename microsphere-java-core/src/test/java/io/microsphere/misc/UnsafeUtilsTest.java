@@ -556,7 +556,7 @@ class UnsafeUtilsTest {
     void testStaticFieldOffset() {
         String fieldName = "MIN_VALUE";
         long offset = staticFieldOffset(Integer.class, fieldName);
-        assertNotNull(offset);
+        assertTrue(offset > 0L);
     }
 
     @Test
