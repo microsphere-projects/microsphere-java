@@ -29,8 +29,10 @@ import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
@@ -58,6 +60,7 @@ import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.findAllMethods;
 import static io.microsphere.reflect.MethodUtils.findDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.findFunctionalInterfaceMethod;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.findMethods;
 import static io.microsphere.reflect.MethodUtils.findNearestOverriddenMethod;
@@ -630,10 +633,18 @@ class MethodUtilsTest extends LoggingTest {
     }
 
     @Test
-    void test() {
-        Method[] methods = TestSubInterface.class.getDeclaredMethods();
-        methods = TestInterface.class.getDeclaredMethods();
-        assertNotNull(methods);
+    void testFindFunctionalInterfaceMethod() {
+        Method method = findMethod(Consumer.class, "accept", Object.class);
+        assertEquals(method, findFunctionalInterfaceMethod(Consumer.class));
+
+        // non-interface type
+        assertNull(findFunctionalInterfaceMethod(Object.class));
+        // No method was declared on the interface
+        assertNull(findFunctionalInterfaceMethod(EventListener.class));
+        // More than one methods were declared on the interface
+        assertNull(findFunctionalInterfaceMethod(CharSequence.class));
+        // Only default method(s) were declared on the interface
+        assertNull(findFunctionalInterfaceMethod(OnlyDefaultMethodsInterface.class));
     }
 
     /**
@@ -888,6 +899,17 @@ class MethodUtilsTest extends LoggingTest {
 
     interface TestSubInterface extends TestInterface {
         void subMethod();
+    }
+
+    interface OnlyDefaultMethodsInterface {
+        default void method1() {
+        }
+
+        default void method2() {
+        }
+
+        default void method3() {
+        }
     }
 
     void isMethod() {
