@@ -1421,6 +1421,31 @@ public abstract class MethodUtils implements Utils {
     }
 
     /**
+     * Checks whether the given method overrides a method declared in the {@link Object} class.
+     *
+     * <p>This utility method is useful for identifying methods that provide custom implementations
+     * of standard {@code Object} methods (like {@code toString}, {@code equals}, etc.) in subclasses.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Method toStringMethod = MyClass.class.getMethod("toString");
+     * boolean isOverridden = MethodUtils.isOverridenObjectMethod(toStringMethod);
+     * System.out.println(isOverridden); // Output: true if MyClass overrides toString, false otherwise
+     * }</pre>
+     *
+     * @param method the method to check, may be null
+     * @return true if the method overrides a method from the {@link Object} class; false otherwise or if the method is null
+     */
+    public static boolean isOverridenObjectMethod(@Nullable Method method) {
+        if (method != null && method.getDeclaringClass() != Object.class && !isPrivate(method)) {
+            String methodName = method.getName();
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            return findMethod(Object.class, methodName, parameterTypes) != null;
+        }
+        return false;
+    }
+
+    /**
      * Checks if the specified method is annotated with {@link jdk.internal.reflect.CallerSensitive}.
      *
      * <p>The {@code CallerSensitive} annotation indicates that the method's behavior may be influenced by the caller's context.

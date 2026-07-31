@@ -75,6 +75,7 @@ import static io.microsphere.reflect.MethodUtils.isCallerSensitiveMethod;
 import static io.microsphere.reflect.MethodUtils.isGetterMethod;
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.reflect.MethodUtils.isObjectMethod;
+import static io.microsphere.reflect.MethodUtils.isOverridenObjectMethod;
 import static io.microsphere.reflect.MethodUtils.isSetterMethod;
 import static io.microsphere.reflect.MethodUtils.matchesParameterCount;
 import static io.microsphere.reflect.MethodUtils.matchesReturnType;
@@ -670,6 +671,15 @@ class MethodUtilsTest extends LoggingTest {
     }
 
     @Test
+    void testIsOverridenObjectMethod() {
+        assertFalse(isOverridenObjectMethod(null));
+        assertIsOverridenObjectMethod(false, Object.class, "hashCode");
+        assertIsOverridenObjectMethod(true, String.class, "hashCode");
+        assertIsOverridenObjectMethod(true, Collection.class, "equals", Object.class);
+        assertIsOverridenObjectMethod(false, MethodUtilsTest.class, "getMethod", String.class, Class[].class);
+    }
+
+    @Test
     void testIsIsMethod() {
         Method method = findMethod(RuntimeMXBean.class, "isBootClassPathSupported");
         assertTrue(isIsMethod(method));
@@ -746,47 +756,6 @@ class MethodUtilsTest extends LoggingTest {
         assertMatchesReturnType(void.class, "not-found-method");
     }
 
-    private void assertMatchesReturnType(Class<?> expectedReturnType, String methodName, Class<?>... parameterTypes) {
-        Method method = getMethod(methodName, parameterTypes);
-        if (method == null) {
-            assertFalse(matchesReturnType(method, expectedReturnType));
-        } else {
-            assertTrue(matchesReturnType(method, expectedReturnType));
-        }
-    }
-
-    void assertMatchesParameterCount(int execptedCount, String methodName, Class<?>... parameterTypes) {
-        Method method = getMethod(methodName, parameterTypes);
-        int parameterCount = parameterTypes.length;
-        if (method == null) {
-            assertFalse(matchesParameterCount(method, execptedCount));
-        } else {
-            if (execptedCount == parameterCount) {
-                assertTrue(matchesParameterCount(method, execptedCount));
-            } else {
-                assertFalse(matchesParameterCount(method, execptedCount));
-            }
-        }
-    }
-
-    void assertGetMethodName(String methodName) {
-        Method method = getMethod(methodName);
-        if (method == null) {
-            assertNull(getMethodName(method));
-        } else {
-            assertEquals(methodName, getMethodName(method));
-        }
-    }
-
-    Method getMethod(String methodName, Class<?>... parameterTypes) {
-        return findMethod(MethodUtilsTest.class, methodName, parameterTypes);
-    }
-
-    private void assertIsObjectMethod(boolean expected, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        Method method = findMethod(declaredClass, methodName, parameterTypes);
-        assertEquals(expected, isObjectMethod(method));
-    }
-
     @Test
     void testBuildKey() {
         assertMethodKey(String.class, "toString");
@@ -810,6 +779,52 @@ class MethodUtilsTest extends LoggingTest {
         for (Method method : methods) {
             assertFalse(isCallerSensitiveMethod(method));
         }
+    }
+
+    private void assertMatchesReturnType(Class<?> expectedReturnType, String methodName, Class<?>... parameterTypes) {
+        Method method = getMethod(methodName, parameterTypes);
+        if (method == null) {
+            assertFalse(matchesReturnType(method, expectedReturnType));
+        } else {
+            assertTrue(matchesReturnType(method, expectedReturnType));
+        }
+    }
+
+    private void assertMatchesParameterCount(int execptedCount, String methodName, Class<?>... parameterTypes) {
+        Method method = getMethod(methodName, parameterTypes);
+        int parameterCount = parameterTypes.length;
+        if (method == null) {
+            assertFalse(matchesParameterCount(method, execptedCount));
+        } else {
+            if (execptedCount == parameterCount) {
+                assertTrue(matchesParameterCount(method, execptedCount));
+            } else {
+                assertFalse(matchesParameterCount(method, execptedCount));
+            }
+        }
+    }
+
+    void assertGetMethodName(String methodName) {
+        Method method = getMethod(methodName);
+        if (method == null) {
+            assertNull(getMethodName(method));
+        } else {
+            assertEquals(methodName, getMethodName(method));
+        }
+    }
+
+    private Method getMethod(String methodName, Class<?>... parameterTypes) {
+        return findMethod(MethodUtilsTest.class, methodName, parameterTypes);
+    }
+
+    private void assertIsObjectMethod(boolean expected, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        Method method = findMethod(declaredClass, methodName, parameterTypes);
+        assertEquals(expected, isObjectMethod(method));
+    }
+
+    private void assertIsOverridenObjectMethod(boolean expected, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        Method method = findMethod(declaredClass, methodName, parameterTypes);
+        assertEquals(expected, isOverridenObjectMethod(method));
     }
 
     private void assertMethodKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
