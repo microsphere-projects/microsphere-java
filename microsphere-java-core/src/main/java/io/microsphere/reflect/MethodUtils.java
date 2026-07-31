@@ -1369,7 +1369,7 @@ public abstract class MethodUtils implements Utils {
         return count == 1 ? methods[0] : null;
     }
 
-    static boolean isFunctionalInterfaceMethod(@Nullable Method method) {
+    static boolean isFunctionalInterfaceMethod(Method method) {
         int modifiers = method.getModifiers();
         if (matchesAny(modifiers, STATIC, BRIDGE, SYNTHETIC) || method.isDefault() || isOverridenObjectMethod(method)) {
             return false;
