@@ -55,6 +55,10 @@ import static io.microsphere.reflect.ExecutableUtils.matchParameterTypes;
 import static io.microsphere.reflect.MemberUtils.isInvalidDeclaringClass;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
+import static io.microsphere.reflect.Modifier.BRIDGE;
+import static io.microsphere.reflect.Modifier.STATIC;
+import static io.microsphere.reflect.Modifier.SYNTHETIC;
+import static io.microsphere.reflect.Modifier.matchesAny;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
@@ -68,6 +72,7 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isInterface;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
@@ -1309,6 +1314,67 @@ public abstract class MethodUtils implements Utils {
     public static Method findOverriddenMethod(@Nullable Method overrider, @Nullable Class<?> targetClass) {
         List<Method> matchedMethods = findDeclaredMethods(targetClass, method -> overrides(overrider, method));
         return first(matchedMethods);
+    }
+
+    /**
+     * Finds the single abstract method (SAM) of a functional interface.
+     *
+     * <p>This method checks if the provided {@code type} is an interface and not annotated with
+     * {@link FunctionalInterface}. It then searches for a single abstract method that is not static,
+     * default, synthetic, or a bridge method. If such a method is found, it is returned; otherwise,
+     * this method returns {@code null}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @FunctionalInterface
+     * interface MyFunctionalInterface {
+     *     void execute();
+     * }
+     *
+     * Method sam = MethodUtils.findFunctionalInterfaceMethod(MyFunctionalInterface.class);
+     * if (sam != null) {
+     *     System.out.println("Found SAM: " + sam.getName());
+     * } else {
+     *     System.out.println("No SAM found.");
+     * }
+     * }</pre>
+     *
+     * @param type the class to inspect for a functional interface method
+     * @return the single abstract method if found; otherwise, {@code null}
+     */
+    @Nullable
+    public static Method findFunctionalInterfaceMethod(@Nonnull Class<?> type) {
+        if (!isInterface(type)) {
+            return null;
+        }
+
+        Method[] methods = type.getMethods();
+        int length = methods.length;
+        if (length == 0) {
+            return null;
+        }
+
+        int count = 0;
+
+        for (int i = 0; i < length; i++) {
+            Method method = methods[i];
+            if (isFunctionalInterfaceMethod(method)) {
+                if (count > 0) { // More than one functional interface method found, return null immediately
+                    return null;
+                }
+                count++;
+            }
+        }
+
+        return count == 1 ? methods[0] : null;
+    }
+
+    static boolean isFunctionalInterfaceMethod(@Nullable Method method) {
+        int modifiers = method.getModifiers();
+        if (matchesAny(modifiers, STATIC, BRIDGE, SYNTHETIC) || method.isDefault() || isOverridenObjectMethod(method)) {
+            return false;
+        }
+        return true;
     }
 
     /**
