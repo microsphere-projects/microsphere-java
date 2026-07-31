@@ -15,7 +15,6 @@ import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ConstructorUtils;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -57,11 +56,8 @@ import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
-import static io.microsphere.reflect.MethodUtils.findMethods;
-import static io.microsphere.reflect.MethodUtils.isOverridenObjectMethod;
+import static io.microsphere.reflect.MethodUtils.findFunctionalInterfaceMethod;
 import static io.microsphere.reflect.Modifier.isAnnotation;
-import static io.microsphere.reflect.Modifier.isBridge;
-import static io.microsphere.reflect.Modifier.isStatic;
 import static io.microsphere.reflect.Modifier.isSynthetic;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
@@ -698,22 +694,11 @@ public abstract class ClassUtils implements Utils {
         if (!isInterface(type)) {
             return false;
         }
-
         // Trusted by the Java compiler, if the interface is annotated with @FunctionalInterface, it is a functional interface.
         if (type.isAnnotationPresent(FunctionalInterface.class)) {
             return true;
         }
-
-        List<Method> methods = findMethods(type, false, true, method -> {
-            int modifiers = method.getModifiers();
-            if (isStatic(modifiers) || isBridge(modifiers) || isSynthetic(modifiers) || method.isDefault()
-                    || isOverridenObjectMethod(method)) {
-                return false;
-            }
-            return true;
-        });
-
-        return methods.size() == 1;
+        return findFunctionalInterfaceMethod(type) != null;
     }
 
     /**

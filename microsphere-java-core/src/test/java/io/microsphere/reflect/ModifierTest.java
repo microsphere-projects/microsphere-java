@@ -24,7 +24,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.Modifier.FINAL;
 import static io.microsphere.reflect.Modifier.MANDATED;
+import static io.microsphere.reflect.Modifier.PUBLIC;
+import static io.microsphere.reflect.Modifier.SYNCHRONIZED;
+import static io.microsphere.reflect.Modifier.VOLATILE;
 import static io.microsphere.reflect.Modifier.isAbstract;
 import static io.microsphere.reflect.Modifier.isAnnotation;
 import static io.microsphere.reflect.Modifier.isBridge;
@@ -43,6 +47,8 @@ import static io.microsphere.reflect.Modifier.isSynthetic;
 import static io.microsphere.reflect.Modifier.isTransient;
 import static io.microsphere.reflect.Modifier.isVarArgs;
 import static io.microsphere.reflect.Modifier.isVolatile;
+import static io.microsphere.reflect.Modifier.matchesAll;
+import static io.microsphere.reflect.Modifier.matchesAny;
 import static io.microsphere.reflect.Modifier.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -194,6 +200,30 @@ class ModifierTest {
     void testIsMandated() {
         assertTrue(isMandated(MANDATED.getValue()));
         assertFalse(isMandated(Object.class.getModifiers()));
+    }
+
+    @Test
+    void testMatchesAny() {
+        for (Modifier modifier : values()) {
+            assertFalse(matchesAny(modifier::getValue));
+        }
+
+        assertTrue(matchesAny(String.class::getModifiers, PUBLIC));
+        assertTrue(matchesAny(String.class::getModifiers, FINAL));
+        assertTrue(matchesAny(Object.class::getModifiers, PUBLIC, FINAL));
+        assertTrue(matchesAny(Object.class::getModifiers, FINAL, PUBLIC));
+        assertFalse(matchesAny(String.class::getModifiers, SYNCHRONIZED));
+        assertFalse(matchesAny(String.class::getModifiers, SYNCHRONIZED, VOLATILE));
+    }
+
+    @Test
+    void testMatchesAll() {
+        for (Modifier modifier : values()) {
+            assertTrue(matchesAll(modifier::getValue));
+        }
+
+        assertTrue(matchesAll(String.class::getModifiers, PUBLIC, FINAL));
+        assertFalse(matchesAll(Object.class::getModifiers, PUBLIC, FINAL));
     }
 
     private int findModifierValue(String name) {
