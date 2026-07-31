@@ -29,74 +29,116 @@ public enum Modifier {
 
     /**
      * The {@code public} modifier.
+     *
+     * @see java.lang.reflect.Modifier#PUBLIC
      */
     PUBLIC(java.lang.reflect.Modifier.PUBLIC),
 
     /**
      * The {@code private} modifier.
+     *
+     * @see java.lang.reflect.Modifier#PRIVATE
      */
     PRIVATE(java.lang.reflect.Modifier.PRIVATE),
 
     /**
      * The {@code protected} modifier.
+     *
+     * @see java.lang.reflect.Modifier#PROTECTED
      */
     PROTECTED(java.lang.reflect.Modifier.PROTECTED),
 
     /**
      * The {@code static} modifier.
+     *
+     * @see java.lang.reflect.Modifier#STATIC
      */
     STATIC(java.lang.reflect.Modifier.STATIC),
 
     /**
      * The {@code final} modifier.
+     *
+     * @see java.lang.reflect.Modifier#FINAL
      */
     FINAL(java.lang.reflect.Modifier.FINAL),
 
     /**
      * The {@code synchronized} modifier.
+     *
+     * @see java.lang.reflect.Modifier#SYNCHRONIZED
      */
     SYNCHRONIZED(java.lang.reflect.Modifier.SYNCHRONIZED),
 
     /**
      * The {@code volatile} modifier.
+     *
+     * @see java.lang.reflect.Modifier#VOLATILE
      */
     VOLATILE(java.lang.reflect.Modifier.VOLATILE),
 
     /**
      * The {@code transient} modifier.
+     *
+     * @see java.lang.reflect.Modifier#TRANSIENT
      */
     TRANSIENT(java.lang.reflect.Modifier.TRANSIENT),
 
     /**
      * The {@code native} modifier.
+     *
+     * @see java.lang.reflect.Modifier#NATIVE
      */
     NATIVE(java.lang.reflect.Modifier.NATIVE),
 
     /**
      * The {@code interface} modifier.
+     *
+     * @see java.lang.reflect.Modifier#INTERFACE
      */
     INTERFACE(java.lang.reflect.Modifier.INTERFACE),
 
     /**
      * The {@code abstract} modifier.
+     *
+     * @see java.lang.reflect.Modifier#ABSTRACT
      */
     ABSTRACT(java.lang.reflect.Modifier.ABSTRACT),
 
     /**
      * The {@code strictfp} modifier.
+     *
+     * @see java.lang.reflect.Modifier#STRICT
      */
     STRICT(java.lang.reflect.Modifier.STRICT),
 
+    /**
+     * @see java.lang.reflect.Modifier#BRIDGE
+     */
     BRIDGE(0x00000040),
 
+    /**
+     * @see java.lang.reflect.Modifier#VARARGS
+     */
     VARARGS(0x00000080),
 
+    /**
+     * @see java.lang.reflect.Modifier#SYNTHETIC
+     */
     SYNTHETIC(0x00001000),
 
+    /**
+     * @see java.lang.reflect.Modifier#ANNOTATION
+     */
     ANNOTATION(0x00002000),
 
+    /**
+     * @see java.lang.reflect.Modifier#ENUM
+     */
     ENUM(0x00004000),
 
+    /**
+     * @see java.lang.reflect.Modifier#MANDATED
+     */
     MANDATED(0x00008000);
 
     private final int value;
