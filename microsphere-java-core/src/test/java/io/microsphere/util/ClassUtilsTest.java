@@ -54,6 +54,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
+import static io.microsphere.util.ClassUtils.LAMBDA_CLASS_NAME_PREFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.cast;
@@ -130,6 +131,7 @@ class ClassUtilsTest extends LoggingTest {
     @Test
     void testConstants() {
         assertEquals("[]", ARRAY_SUFFIX);
+        assertEquals("$$Lambda", LAMBDA_CLASS_NAME_PREFIX);
     }
 
     @Test
