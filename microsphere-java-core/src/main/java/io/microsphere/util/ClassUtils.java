@@ -15,6 +15,7 @@ import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ConstructorUtils;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -56,7 +57,11 @@ import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
+import static io.microsphere.reflect.MethodUtils.findMethods;
+import static io.microsphere.reflect.MethodUtils.isOverridenObjectMethod;
 import static io.microsphere.reflect.Modifier.isAnnotation;
+import static io.microsphere.reflect.Modifier.isBridge;
+import static io.microsphere.reflect.Modifier.isStatic;
 import static io.microsphere.reflect.Modifier.isSynthetic;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
@@ -73,7 +78,6 @@ import static io.microsphere.util.TypeFinder.classFinder;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.reflect.Modifier.isAbstract;
-import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Collections.addAll;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -416,6 +420,24 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
+     * Checks if the specified type is an interface.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isInterface(List.class);    // returns true
+     * boolean result2 = ClassUtils.isInterface(String.class);  // returns false
+     * boolean result3 = ClassUtils.isInterface(null);          // returns false
+     * }</pre>
+     *
+     * @param type the type to check, may be {@code null}
+     * @return {@code true} if the specified type is an interface, {@code false} otherwise
+     * @see Class#isInterface()
+     */
+    public static boolean isInterface(@Nullable Class<?> type) {
+        return type != null && type.isInterface();
+    }
+
+    /**
      * Checks if the specified type is a general class.
      * <p>
      * A general class is a class that:
@@ -467,7 +489,7 @@ public abstract class ClassUtils implements Utils {
         int mod = type.getModifiers();
         if (isAnnotation(mod)
                 || io.microsphere.reflect.Modifier.isEnum(mod)
-                || isInterface(mod)
+                || io.microsphere.reflect.Modifier.isInterface(mod)
                 || isSynthetic(mod)
                 || isPrimitive(type)
                 || isArray(type)) {
@@ -615,6 +637,55 @@ public abstract class ClassUtils implements Utils {
      */
     public static boolean isLambdaClass(@Nullable Class<?> type) {
         return isSyntheticClass(type) && getTypeName(type).contains("$$Lambda/");
+    }
+
+
+    /**
+     * Checks if the specified class is a functional interface.
+     * <p>
+     * A functional interface is an interface that has exactly one abstract method.
+     * This method returns {@code true} if the given class is an interface and has exactly one abstract method,
+     * or if it is annotated with {@link FunctionalInterface}. It returns {@code false} otherwise, including for
+     * non-interface classes or interfaces with more than one abstract method. It also returns {@code false} if
+     * the class is {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @FunctionalInterface
+     * interface MyFunctionalInterface {
+     *     void doSomething();
+     * }
+     *
+     * boolean result1 = ClassUtils.isFunctionalInterface(MyFunctionalInterface.class); // returns true
+     * boolean result2 = ClassUtils.isFunctionalInterface(Runnable.class);              // returns true
+     * boolean result3 = ClassUtils.isFunctionalInterface(List.class);                  // returns false (not a functional interface)
+     * boolean result4 = ClassUtils.isFunctionalInterface(null);                        // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the specified class is a functional interface, {@code false} otherwise
+     */
+    public static boolean isFunctionalInterface(@Nullable Class<?> type) {
+        if (!isInterface(type)) {
+            return false;
+        }
+
+        // Trusted by the Java compiler, if the interface is annotated with @FunctionalInterface, it is a functional interface.
+        if (type.isAnnotationPresent(FunctionalInterface.class)) {
+            return true;
+        }
+
+        List<Method> methods = findMethods(type, false, true, method -> {
+            int modifiers = method.getModifiers();
+            if (isStatic(modifiers) || isOverridenObjectMethod(method) || isBridge(modifiers) || isSynthetic(modifiers)
+                    || method.isDefault()) {
+                return false;
+            }
+            return true;
+        });
+
+        return methods.size() == 1;
     }
 
     /**
@@ -1104,7 +1175,7 @@ public abstract class ClassUtils implements Utils {
      * </p>
      * <p>
      * Note: This method does <i>not</i> support the "[]" suffix notation for
-     * primitive arrays; this is only supported by {@link #forName(String)}.
+     * primitive arrays; this is only supported by {@link Class#forName(String)}.
      * </p>
      *
      * <h3>Example Usage</h3>
