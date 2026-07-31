@@ -32,7 +32,6 @@ import java.util.Collection;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
@@ -634,8 +633,8 @@ class MethodUtilsTest extends LoggingTest {
 
     @Test
     void testFindFunctionalInterfaceMethod() {
-        Method method = findMethod(Consumer.class, "accept", Object.class);
-        assertEquals(method, findFunctionalInterfaceMethod(Consumer.class));
+        Method method = findMethod(Runnable.class, "run");
+        assertEquals(method, findFunctionalInterfaceMethod(Runnable.class));
 
         // non-interface type
         assertNull(findFunctionalInterfaceMethod(Object.class));
