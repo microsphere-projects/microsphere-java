@@ -101,6 +101,11 @@ public abstract class ClassUtils implements Utils {
     @Immutable
     public static final String ARRAY_SUFFIX = "[]";
 
+    /**
+     * Prefix for lambda class names: "$$Lambda"
+     */
+    public static final String LAMBDA_CLASS_NAME_PREFIX = "$$Lambda";
+
     @Nonnull
     @Immutable
     private static final Class<?>[] PRIMITIVE_TYPES_ARRAY = ofArray(
@@ -661,7 +666,7 @@ public abstract class ClassUtils implements Utils {
      * @return {@code true} if the specified class name is a lambda class name, {@code false} otherwise
      */
     public static boolean isLambdaClassName(@Nullable String className) {
-        return substringBetween(className, "$$Lambda", SLASH) != null;
+        return substringBetween(className, LAMBDA_CLASS_NAME_PREFIX, SLASH) != null;
     }
 
     /**
