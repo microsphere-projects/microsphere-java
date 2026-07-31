@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.SortedMap;
@@ -84,9 +85,11 @@ import static io.microsphere.util.ClassUtils.isDerived;
 import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isFinal;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
+import static io.microsphere.util.ClassUtils.isLambdaClass;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
+import static io.microsphere.util.ClassUtils.isSyntheticClass;
 import static io.microsphere.util.ClassUtils.isTopLevelClass;
 import static io.microsphere.util.ClassUtils.isWrapperType;
 import static io.microsphere.util.ClassUtils.resolveClassName;
@@ -218,13 +221,31 @@ class ClassUtilsTest extends LoggingTest {
         assertFalse(isTopLevelClass(null));
         assertTrue(isTopLevelClass(Object.class));
         assertTrue(isTopLevelClass(String.class));
-        assertFalse(isTopLevelClass(Map.Entry.class));
+        assertFalse(isTopLevelClass(Entry.class));
 
         class A {
 
         }
 
         assertFalse(isTopLevelClass(A.class));
+    }
+
+    @Test
+    void testIsSyntheticClass() {
+        Runnable r = () -> {
+        };
+        assertTrue(isSyntheticClass(r));
+        assertFalse(isSyntheticClass(new Object()));
+        assertFalse(isSyntheticClass(null));
+    }
+
+    @Test
+    void testIsLambdaClass() {
+        Runnable r = () -> {
+        };
+        assertTrue(isLambdaClass(r));
+        assertFalse(isLambdaClass(new Object()));
+        assertFalse(isLambdaClass(null));
     }
 
     @Test
@@ -754,7 +775,7 @@ class ClassUtilsTest extends LoggingTest {
         assertEquals("java.lang.String", getTypeName(String.class));
 
         // b) Nested classes (static member classes)
-        assertEquals("java.util.Map$Entry", getTypeName(Map.Entry.class));
+        assertEquals("java.util.Map$Entry", getTypeName(Entry.class));
 
         // c) Inner classes (non-static member classes)
         assertEquals("java.lang.Thread$State", getTypeName(Thread.State.class));
@@ -795,7 +816,7 @@ class ClassUtilsTest extends LoggingTest {
         assertEquals("String", getSimpleName(String.class));
 
         // b) Nested classes (static member classes)
-        assertEquals("Entry", getSimpleName(Map.Entry.class));
+        assertEquals("Entry", getSimpleName(Entry.class));
 
         // c) Inner classes (non-static member classes)
         assertEquals("State", getSimpleName(Thread.State.class));
