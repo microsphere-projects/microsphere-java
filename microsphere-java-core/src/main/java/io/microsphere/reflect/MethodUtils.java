@@ -1355,6 +1355,7 @@ public abstract class MethodUtils implements Utils {
         }
 
         int count = 0;
+        int index = -1;
 
         for (int i = 0; i < length; i++) {
             Method method = methods[i];
@@ -1363,10 +1364,11 @@ public abstract class MethodUtils implements Utils {
                     return null;
                 }
                 count++;
+                index = i;
             }
         }
 
-        return count == 1 ? methods[0] : null;
+        return index == -1 ? null : methods[index];
     }
 
     static boolean isFunctionalInterfaceMethod(Method method) {
