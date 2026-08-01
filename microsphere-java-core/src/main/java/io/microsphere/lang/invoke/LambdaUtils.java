@@ -85,8 +85,8 @@ public abstract class LambdaUtils implements Utils {
      * @return a lambda instance implementing the specified functional interface
      * @throws Throwable if an error occurs during lambda creation
      */
-    public static <F> F lambda(Class<F> functionalInterface, Class<?> functionInputType,
-                               Class<?> targetClass, String methodName, Class<?>... parameterTypes) throws Throwable {
+    public static <T, F> F lambda(Class<F> functionalInterface, Class<T> functionInputType,
+                                  Class<T> targetClass, String methodName, Class<?>... parameterTypes) throws Throwable {
         // 1. Set up the target method lookup context
         Lookup lookup = lookup();
 
