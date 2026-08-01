@@ -17,6 +17,8 @@
 
 package io.microsphere.lang.invoke;
 
+import io.microsphere.annotation.Nullable;
+import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
 
 import java.lang.invoke.CallSite;
@@ -29,9 +31,14 @@ import java.util.List;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.internal.reflect.ConstantPoolUtils.getMethodAt;
 import static io.microsphere.internal.reflect.ConstantPoolUtils.getSize;
+import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.findFunctionalInterfaceMethod;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ClassUtils.findAllInterfaces;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.isLambdaClass;
+import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
+import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
 import static java.util.Collections.emptyList;
 
 /**
@@ -45,13 +52,56 @@ import static java.util.Collections.emptyList;
  */
 public abstract class LambdaUtils implements Utils {
 
-    public static List<Class<?>> resolveParameterTypes(Class<?> type, Class<?> functionalInterface) {
+    /**
+     * Resolve the parameter types of the lambda method
+     *
+     * @param object the lambda object
+     * @return the parameter types of the lambda method
+     */
+    public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Object object) {
+        return resolveLambdaMethodParameterTypes(getType(object));
+    }
+
+    /**
+     * Resolve the parameter types of the lambda method
+     *
+     * @param type the lambda class type
+     * @return the parameter types of the lambda method
+     */
+    public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Class<?> type) {
+        List<Class<?>> allInterfaces = findAllInterfaces(type, ClassUtils::isFunctionalInterface);
+        if (allInterfaces.size() == 1) {
+            Class<?> functionalInterface = allInterfaces.get(0);
+            return resolveLambdaMethodParameterTypes(type, functionalInterface);
+        }
+        return emptyList();
+    }
+
+    /**
+     * Resolve the parameter types of the lambda method
+     *
+     * @param object              the lambda object
+     * @param functionalInterface the functional interface type
+     * @return the parameter types of the lambda method
+     */
+    public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Object object, @Nullable Class<?> functionalInterface) {
+        return resolveLambdaMethodParameterTypes(getType(object), functionalInterface);
+    }
+
+    /**
+     * Resolve the parameter types of the lambda method
+     *
+     * @param type                the lambda class type
+     * @param functionalInterface the functional interface type
+     * @return the parameter types of the lambda method
+     */
+    public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Class<?> type, @Nullable Class<?> functionalInterface) {
         if (!isLambdaClass(type)) {
             return emptyList();
         }
 
-        Method functionalInterfaceMethod = findFunctionalInterfaceMethod(functionalInterface);
-        if (functionalInterfaceMethod == null) {
+        Method declaredMethod = findFunctionalInterfaceMethod(functionalInterface);
+        if (declaredMethod == null) {
             return emptyList();
         }
 
@@ -59,16 +109,15 @@ public abstract class LambdaUtils implements Utils {
             return emptyList();
         }
 
-        Class<?>[] declaredParameterTypes = functionalInterfaceMethod.getParameterTypes();
+        Class<?>[] declaredParameterTypes = declaredMethod.getParameterTypes();
         List<Class<?>> actualParameterTypes = emptyList();
 
-
         int size = getSize(type);
-        for (int i = size - 1; i >= 0; i--) {
+        for (int i = size - 1; i > -1; i--) {
             Member member = getMethodAt(type, i);
             if (member instanceof Method) {
-                Method method = (Method) member;
-                Class<?>[] resolvedParameterTypes = resolveParameterTypes(method, declaredParameterTypes);
+                Method actualMethod = (Method) member;
+                Class<?>[] resolvedParameterTypes = resolveParameterTypes(actualMethod, declaredParameterTypes);
                 if (resolvedParameterTypes != EMPTY_CLASS_ARRAY) {
                     actualParameterTypes = ofList(resolvedParameterTypes);
                     break;
@@ -79,25 +128,42 @@ public abstract class LambdaUtils implements Utils {
         return actualParameterTypes;
     }
 
-    private static Class<?>[] resolveParameterTypes(Method method, Class<?>[] declaredParameterTypes) {
-        Class<?>[] actualParameterTypes = method.getParameterTypes();
+    static Class<?>[] resolveParameterTypes(Method actualMethod, Class<?>... declaredParameterTypes) {
+        Class<?>[] actualParameterTypes = actualMethod.getParameterTypes();
         int actualLength = actualParameterTypes.length;
         int length = declaredParameterTypes.length;
-        if (actualLength < length) {
-            return EMPTY_CLASS_ARRAY;
-        }
-
         Class<?>[] matchedParameterTypes = new Class<?>[length];
-
-        for (int i = 0; i < length; i++) {
-            Class<?> declaredParameterType = declaredParameterTypes[length - 1 + i];
-            Class<?> actualParameterType = actualParameterTypes[actualLength - 1 + i];
-            if (!declaredParameterType.isAssignableFrom(actualParameterType)) {
+        if (actualLength < length) {
+            if (isStatic(actualMethod)) {
+                // static method must have the same length of parameters with the functional interface method
                 return EMPTY_CLASS_ARRAY;
             }
-            matchedParameterTypes[i] = actualParameterType;
-        }
 
+            matchedParameterTypes[0] = actualMethod.getDeclaringClass();
+            for (int i = 1; i < length; i++) {
+                matchedParameterTypes[i] = tryResolveWrapperType(actualParameterTypes[i - 1]);
+            }
+
+        } else {
+            for (int i = 0; i < length; i++) {
+                int index = length - 1 - i;
+                Class<?> declaredParameterType = declaredParameterTypes[index];
+                Class<?> actualParameterType = actualParameterTypes[actualLength - 1 - i];
+                if (declaredParameterType.isPrimitive()) {
+                    actualParameterType = resolvePrimitiveType(actualParameterType);
+                    if (declaredParameterType != actualParameterType) {
+                        return EMPTY_CLASS_ARRAY;
+                    }
+                } else {
+                    actualParameterType = tryResolveWrapperType(actualParameterType);
+                    if (!declaredParameterType.isAssignableFrom(actualParameterType)) {
+                        return EMPTY_CLASS_ARRAY;
+                    }
+                }
+
+                matchedParameterTypes[index] = actualParameterType;
+            }
+        }
         return matchedParameterTypes;
     }
 
