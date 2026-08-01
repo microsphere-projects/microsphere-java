@@ -16,6 +16,7 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.io.event.FileChangedEvent;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.event.EventListener.findEventType;
@@ -31,12 +32,27 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class EventListenerTest {
 
     @Test
-    void testFindEventHierarchicalTypes() {
+    void testFindEventTypeOnHierarchicalClasses() {
         assertEquals(EchoEvent.class, findEventType(new EchoEventListener()));
         assertEquals(Event.class, findEventType(new EchoEventListener2()));
 
         assertEquals(EchoEvent.class, findEventType(EchoEventListener.class));
         assertEquals(Event.class, findEventType(EchoEventListener2.class));
+    }
+
+    @Test
+    void testFindEventTypeOnLambda() {
+        EventListener<Event> listener = (event) -> {
+        };
+        assertEquals(Event.class, findEventType(listener));
+
+        EventListener<EchoEvent> listener2 = (event) -> {
+        };
+        assertEquals(EchoEvent.class, findEventType(listener2));
+
+        EventListener<FileChangedEvent> listener3 = (event) -> {
+        };
+        assertEquals(FileChangedEvent.class, findEventType(listener3));
     }
 
     @Test

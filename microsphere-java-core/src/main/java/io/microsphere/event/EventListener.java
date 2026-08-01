@@ -20,8 +20,10 @@ import io.microsphere.lang.Prioritized;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Objects;
 
+import static io.microsphere.lang.invoke.LambdaUtils.resolveLambdaMethodParameterTypes;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
@@ -130,14 +132,20 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
         Class<? extends Event> eventType = null;
 
         if (isAssignableFrom(EventListener.class, listenerClass)) {
-            eventType = getAllParameterizedTypes(listenerClass)
-                    .stream()
-                    .map(EventListener::findEventType)
-                    .filter(Objects::nonNull)
-                    .findAny()
-                    .orElse((Class) findEventType(listenerClass.getSuperclass()));
+            List<Class<?>> parameterTypes = resolveLambdaMethodParameterTypes(listenerClass, EventListener.class);
+            if (parameterTypes.size() == 1) {
+                // Lambda Case
+                eventType = (Class<? extends Event>) parameterTypes.get(0);
+            } else {
+                // Normal Case
+                eventType = getAllParameterizedTypes(listenerClass)
+                        .stream()
+                        .map(EventListener::findEventType)
+                        .filter(Objects::nonNull)
+                        .findAny()
+                        .orElse((Class) findEventType(listenerClass.getSuperclass()));
+            }
         }
-
         return eventType;
     }
 
