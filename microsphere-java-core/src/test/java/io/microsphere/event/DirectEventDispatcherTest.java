@@ -16,13 +16,17 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.lang.MutableInteger;
+import io.microsphere.util.ValueHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.util.ValueHolder.of;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -146,41 +150,35 @@ class DirectEventDispatcherTest {
         assertEquals(3, echoEventListener2.getEventOccurs());
     }
 
-//    @Test
-//    void testAddEventListenerOnLambdaForm() {
-//        ValueHolder<Event> eventHolder = of(null);
-//
-//        EventListener<?> eventListener = event -> {
-//            eventHolder.setValue(event);
-//        };
-//
-//        EventListener<EchoEvent> echoEventEventListener = event -> {
-//            eventHolder.setValue(event);
-//        };
-//
-////        JavaLangAccess javaLangAccess = SharedSecrets.getJavaLangAccess();
-////        ConstantPool constantPool = javaLangAccess.getConstantPool(echoEventEventListener.getClass());
-////        for (int i = 0; i < constantPool.getSize(); i++) {
-////            Member member = null;
-////            try {
-////                member = constantPool.getMethodAt(i);
-////            } catch (Throwable e) {
-////
-////            }
-////            System.out.println(member);
-////        }
-//
-//        Class<?> eventType = findEventType(eventListener);
-//        assertInstanceOf(Event.class, eventType);
-//
-//
-//        this.dispatcher.addEventListener(eventListener);
-//
-//        Event event = new Event("Test") {
-//        };
-//
-//        this.dispatcher.dispatch(event);
-//
-//        assertSame(eventHolder.getValue(), event);
-//    }
+    @Test
+    void testAddEventListenerOnLambdaForm() {
+        ValueHolder<Event> eventHolder = of(null);
+
+        MutableInteger counter = new MutableInteger(0);
+
+        EventListener<?> eventListener = event -> {
+            eventHolder.setValue(event);
+            counter.incrementAndGet();
+        };
+
+        EventListener<EchoEvent> echoEventEventListener = event -> {
+            eventHolder.setValue(event);
+            counter.incrementAndGet();
+        };
+
+        this.dispatcher.addEventListener(eventListener);
+        this.dispatcher.addEventListener(echoEventEventListener);
+
+        Event event = new Event("Test") {
+        };
+
+        this.dispatcher.dispatch(event);
+        assertSame(eventHolder.getValue(), event);
+        assertEquals(1, counter.get());
+
+        event = new EchoEvent("Hello,World");
+        this.dispatcher.dispatch(event);
+        assertSame(eventHolder.getValue(), event);
+        assertEquals(3, counter.get());
+    }
 }
