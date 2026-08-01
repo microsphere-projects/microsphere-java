@@ -349,7 +349,7 @@ public abstract class MethodHandleUtils implements Utils {
         if (method == null) {
             return NOT_FOUND_METHOD_HANDLE;
         }
-        if (isiCandidateMethod(method)) {
+        if (isCandidateMethod(method)) {
             return findPublic(method, function);
         }
         Lookup lookup = lookup(requestedClass);
@@ -363,7 +363,7 @@ public abstract class MethodHandleUtils implements Utils {
         return newInstance(true, lookupConstructor2, key.requestedClass, key.allowedModes);
     }
 
-    private static boolean isiCandidateMethod(Method method) {
+    private static boolean isCandidateMethod(Method method) {
         return isPublic(method) && !isCallerSensitiveMethod(method);
     }
 
