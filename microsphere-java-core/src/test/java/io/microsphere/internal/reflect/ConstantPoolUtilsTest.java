@@ -18,10 +18,15 @@
 package io.microsphere.internal.reflect;
 
 
+import io.microsphere.event.EchoEvent;
+import io.microsphere.event.EventListener;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.function.Function;
 
 import static io.microsphere.internal.reflect.ConstantPoolUtils.CONSTANT_POOL_CLASS;
 import static io.microsphere.internal.reflect.ConstantPoolUtils.getClassAt;
@@ -42,9 +47,11 @@ import static io.microsphere.internal.reflect.ConstantPoolUtils.getNameAndTypeRe
 import static io.microsphere.internal.reflect.ConstantPoolUtils.getSize;
 import static io.microsphere.internal.reflect.ConstantPoolUtils.getStringAt;
 import static io.microsphere.internal.reflect.ConstantPoolUtils.getUTF8At;
+import static io.microsphere.lang.invoke.LambdaUtils.function;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -96,4 +103,44 @@ class ConstantPoolUtilsTest {
             assertDoesNotThrow(() -> getUTF8At(targetClass, index));
         }
     }
+
+    @Test
+    void testDeduceGenericTypeFromLambda() {
+        EventListener<EchoEvent> e = event -> {
+        };
+
+        Class<? extends EventListener> targetClass = e.getClass();
+
+        int count = 0;
+
+        int size = getSize(targetClass);
+        for (int i = 0; i < size; i++) {
+            Member member = getMethodAt(targetClass, i);
+            if (member instanceof Method) {
+                count++;
+            }
+        }
+
+        assertEquals(1, count);
+    }
+
+    @Test
+    void testDeduceGenericTypeFromLambda2() throws Throwable {
+        Function<String, String> toUpperCase = function(String.class, String.class, "toUpperCase");
+
+        Class<?> targetClass = toUpperCase.getClass();
+
+        int count = 0;
+
+        int size = getSize(targetClass);
+        for (int i = size - 1; i >= 0; i--) {
+            Member member = getMethodAt(targetClass, i);
+            if (member instanceof Method) {
+                count++;
+            }
+        }
+
+        assertEquals(1, count);
+    }
+
 }

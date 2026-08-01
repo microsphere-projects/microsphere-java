@@ -20,12 +20,14 @@ package io.microsphere.lang.invoke;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static io.microsphere.lang.invoke.LambdaUtils.consumer;
 import static io.microsphere.lang.invoke.LambdaUtils.function;
 import static io.microsphere.lang.invoke.LambdaUtils.lambda;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,22 +42,22 @@ public class LambdaUtilsTest {
 
     @Test
     void testFunction() throws Throwable {
-        Function<String, String> toUpperCase = function(String.class, "toUpperCase");
+        Function<String, String> toUpperCase = function(String.class, String.class, "toUpperCase");
         assertEquals("HELLO WORLD", toUpperCase.apply("hello world"));
 
-        Function<String, Integer> lengthFunction = function(String.class, "length");
+        Function<String, Integer> lengthFunction = function(String.class, String.class, "length");
         assertEquals(11, lengthFunction.apply("hello world"));
     }
 
     @Test
     void testConsumer() throws Throwable {
-        Consumer<String> consumer = consumer(String.class, "toString");
+        Consumer<String> consumer = consumer(String.class, String.class, "toString");
         assertDoesNotThrow(() -> consumer.accept("hello world"));
     }
 
     @Test
     void testLambda() throws Throwable {
-        Function<String, String> toUpperCase = lambda(Function.class, String.class, "toUpperCase");
-        assertEquals("HELLO WORLD", toUpperCase.apply("hello world"));
+        BiFunction<String, String, byte[]> getBytes = lambda(BiFunction.class, String.class, String.class, "getBytes", String.class);
+        assertArrayEquals("hello world".getBytes("UTF-8"), getBytes.apply("hello world", "UTF-8"));
     }
 }
