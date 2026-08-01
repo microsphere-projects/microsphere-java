@@ -24,7 +24,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static io.microsphere.lang.invoke.LambdaUtils.consumer;
+import static io.microsphere.lang.invoke.LambdaUtils.function;
 import static io.microsphere.lang.invoke.LambdaUtils.lambda;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link LambdaUtils} Test
@@ -33,25 +36,26 @@ import static io.microsphere.lang.invoke.LambdaUtils.lambda;
  * @see LambdaUtils
  * @since 1.0.0
  */
-class LambdaUtilsTest {
+public class LambdaUtilsTest {
 
     @Test
-    void testFunction() {
+    void testFunction() throws Throwable {
+        Function<String, String> toUpperCase = function(String.class, "toUpperCase");
+        assertEquals("HELLO WORLD", toUpperCase.apply("hello world"));
+
+        Function<String, Integer> lengthFunction = function(String.class, "length");
+        assertEquals(11, lengthFunction.apply("hello world"));
     }
 
     @Test
     void testConsumer() throws Throwable {
-        Consumer<String> consumer = consumer(String.class, LambdaUtilsTest.class, "println", String.class);
-        consumer.accept("hello world");
+        Consumer<String> consumer = consumer(String.class, "toString");
+        assertDoesNotThrow(() -> consumer.accept("hello world"));
     }
 
     @Test
     void testLambda() throws Throwable {
-        Function<String, String> toUpperCase = lambda(Function.class, String.class, String.class, "toUpperCase");
-        System.out.println(toUpperCase.apply("hello world"));
-    }
-
-    void println(String message) {
-        System.out.println(message);
+        Function<String, String> toUpperCase = lambda(Function.class, String.class, "toUpperCase");
+        assertEquals("HELLO WORLD", toUpperCase.apply("hello world"));
     }
 }
