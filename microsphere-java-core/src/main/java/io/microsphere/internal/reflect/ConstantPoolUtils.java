@@ -147,7 +147,8 @@ public abstract class ConstantPoolUtils implements Utils {
     static final Method getUTF8AtMethod = findMethod(CONSTANT_POOL_CLASS, "getUTF8At", int.class);
 
     public static int getSize(Class<?> targetClass) {
-        return invoke(targetClass, getSizeMethod);
+        Integer size = invoke(targetClass, getSizeMethod);
+        return size != null ? size : 0;
     }
 
     @Nullable
@@ -238,9 +239,9 @@ public abstract class ConstantPoolUtils implements Utils {
 
     @Nullable
     static <T> T invoke(Class<?> targetClass, Method method, Object... args) {
-        Object constantPool = getConstantPool(targetClass);
         T returnValue = null;
         try {
+            Object constantPool = getConstantPool(targetClass);
             returnValue = invokeMethod(true, constantPool, method, args);
         } catch (Throwable e) {
             logger.trace(e.getMessage());

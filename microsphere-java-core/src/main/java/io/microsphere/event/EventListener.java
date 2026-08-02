@@ -18,6 +18,7 @@ package io.microsphere.event;
 
 import io.microsphere.lang.Prioritized;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -69,7 +70,7 @@ import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
  * @since 1.0.0
  */
 @FunctionalInterface
-public interface EventListener<E extends Event> extends java.util.EventListener, Prioritized {
+public interface EventListener<E extends Event> extends java.util.EventListener, Prioritized, Serializable {
 
     /**
      * Find the {@link Class type} of the {@link Event} from the specified {@link EventListener} instance.
@@ -99,7 +100,16 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * @return the {@link Class} object representing the type of event this listener handles, or {@code null} if not found
      */
     static Class<? extends Event> findEventType(EventListener<?> listener) {
-        return findEventType(listener.getClass());
+        Class<?> listenerClass = listener.getClass();
+        if (!isAssignableFrom(EventListener.class, listenerClass)) {
+            return null;
+        }
+        // Pass the instance so that SerializedLambda can be used for lambda listeners
+        List<Class<?>> parameterTypes = resolveLambdaMethodParameterTypes(listener, EventListener.class);
+        if (parameterTypes.size() == 1) {
+            return (Class<? extends Event>) parameterTypes.get(0);
+        }
+        return findEventType(listenerClass);
     }
 
     /**

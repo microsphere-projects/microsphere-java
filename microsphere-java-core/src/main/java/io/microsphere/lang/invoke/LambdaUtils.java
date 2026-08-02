@@ -21,9 +21,12 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
 
+import java.io.Serializable;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -85,7 +88,11 @@ public abstract class LambdaUtils implements Utils {
      * @return the parameter types of the lambda method
      */
     public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Object object, @Nullable Class<?> functionalInterface) {
-        return resolveLambdaMethodParameterTypes(getType(object), functionalInterface);
+        List<Class<?>> parameterTypes = resolveLambdaMethodParameterTypes(getType(object), functionalInterface);
+        if (parameterTypes.isEmpty() && object instanceof Serializable && isLambdaClass(getType(object))) {
+            parameterTypes = resolveSerializableLambdaParameterTypes((Serializable) object, functionalInterface);
+        }
+        return parameterTypes;
     }
 
     /**
@@ -165,6 +172,40 @@ public abstract class LambdaUtils implements Utils {
             }
         }
         return matchedParameterTypes;
+    }
+
+    /**
+     * Resolve the parameter types of a serializable lambda using {@link SerializedLambda}.
+     * <p>
+     * This method provides a reliable alternative to constant-pool inspection for lambda types
+     * that implement {@link Serializable}. It invokes the lambda's {@code writeReplace()} method
+     * to obtain a {@link SerializedLambda} descriptor containing the instantiated method type,
+     * from which the exact parameter types (including erased generic types) can be recovered.
+     * </p>
+     *
+     * @param lambda              the serializable lambda object
+     * @param functionalInterface the functional interface type
+     * @return the parameter types of the lambda method, or an empty list if they cannot be resolved
+     */
+    private static List<Class<?>> resolveSerializableLambdaParameterTypes(Serializable lambda, Class<?> functionalInterface) {
+        Method functionalInterfaceMethod = findFunctionalInterfaceMethod(functionalInterface);
+        if (functionalInterfaceMethod == null) {
+            return emptyList();
+        }
+        try {
+            Method writeReplace = lambda.getClass().getDeclaredMethod("writeReplace");
+            SerializedLambda sl = (SerializedLambda) writeReplace.invoke(lambda);
+            String instantiatedMethodType = sl.getInstantiatedMethodType();
+            ClassLoader classLoader = lambda.getClass().getClassLoader();
+            MethodType methodType = MethodType.fromMethodDescriptorString(instantiatedMethodType, classLoader);
+            List<Class<?>> parameterTypes = methodType.parameterList();
+            if (parameterTypes.size() == functionalInterfaceMethod.getParameterCount()) {
+                return parameterTypes;
+            }
+        } catch (Exception e) {
+            // silently ignore if SerializedLambda cannot be obtained
+        }
+        return emptyList();
     }
 
     private LambdaUtils() {

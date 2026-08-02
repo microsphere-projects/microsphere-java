@@ -18,6 +18,14 @@
     <name>Microsphere :: Java :: Core</name>
     <description>Microsphere Java Core</description>
 
+    <properties>
+        <!-- Allow reflective access to JDK internals needed by ConstantPoolUtils -->
+        <jvm.argLine>
+            --add-opens java.base/java.lang=ALL-UNNAMED
+            --add-opens java.base/jdk.internal.reflect=ALL-UNNAMED
+        </jvm.argLine>
+    </properties>
+
     <dependencies>
 
         <!-- Microsphere Java Annotations -->
