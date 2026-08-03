@@ -758,7 +758,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nullable
     public static <R> R invokeMethod(boolean forceAccess, @Nonnull Object object, @Nonnull String methodName, @Nonnull Object... arguments) {
-        return invokeMethod(object, forceAccess, object.getClass(), methodName, arguments);
+        return invokeMethod(forceAccess, object, object.getClass(), methodName, arguments);
     }
 
     /**
@@ -797,7 +797,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nullable
     public static <R> R invokeMethod(@Nonnull Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
-        return invokeMethod(object, false, type, methodName, arguments);
+        return invokeMethod(false, object, type, methodName, arguments);
     }
 
     /**
@@ -815,13 +815,13 @@ public abstract class MethodUtils implements Utils {
      * }
      *
      * BaseService service = new BaseService();
-     * String result = MethodUtils.invokeMethod(service, true, BaseService.class, "ping", "Microsphere");
+     * String result = MethodUtils.invokeMethod(true, service, BaseService.class, "ping", "Microsphere");
      * System.out.println(result); // Output: pong Microsphere
      * }</pre>
      *
      * @param <R>         the expected return type
-     * @param object      the target object (can be {@code null} for static methods)
      * @param forceAccess whether to force method accessibility
+     * @param object      the target object (can be {@code null} for static methods)
      * @param type        the type used to resolve the method
      * @param methodName  the method name
      * @param arguments   method arguments
@@ -830,7 +830,7 @@ public abstract class MethodUtils implements Utils {
      * @throws RuntimeException         if the underlying method throws an exception
      */
     @Nullable
-    public static <R> R invokeMethod(@Nonnull Object object, boolean forceAccess, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
+    public static <R> R invokeMethod(boolean forceAccess, @Nonnull Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
         List<Method> allDeclaredMethods = findAllDeclaredMethods(type, method -> {
             if (Objects.equals(methodName, method.getName()) && matchParameterTypes(method, arguments)) {
                 return true;
@@ -910,7 +910,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nullable
     public static <R> R invokeStaticMethod(boolean forceAccess, @Nonnull Class<?> targetClass, @Nonnull String methodName, @Nonnull Object... arguments) {
-        return invokeMethod(null, forceAccess, targetClass, methodName, arguments);
+        return invokeMethod(forceAccess, null, targetClass, methodName, arguments);
     }
 
     /**
