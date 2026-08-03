@@ -543,11 +543,7 @@ public abstract class MethodUtils implements Utils {
             return emptyList();
         }
 
-        if (isArray(targetClass)) {
-            return doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter);
-        }
-
-        if (isObjectClass(targetClass)) {
+        if (isArray(targetClass) || isObjectClass(targetClass)) {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
