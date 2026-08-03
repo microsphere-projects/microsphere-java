@@ -114,5 +114,8 @@ class ExecutableUtilsTest {
         assertTrue(matchParameterTypes(method, 1));
         assertFalse(matchParameterTypes(method, 1L));
         assertFalse(matchParameterTypes(method));
+
+        method = findMethod(Object.class, "hashCode");
+        assertTrue(matchParameterTypes(method));
     }
 }
