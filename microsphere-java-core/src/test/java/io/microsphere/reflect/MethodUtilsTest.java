@@ -83,10 +83,12 @@ import static io.microsphere.reflect.MethodUtils.matchesParameterCount;
 import static io.microsphere.reflect.MethodUtils.matchesReturnType;
 import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.lang.Integer.valueOf;
 import static java.lang.System.setProperty;
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -487,6 +489,9 @@ class MethodUtilsTest extends LoggingTest {
         TestClass testClass = new TestClass();
         assertEquals(valueOf(0), invokeMethod(true, testClass, "intMethod"));
         assertEquals(testClass, invokeMethod(true, testClass, "objectMethod"));
+
+        String[] values = ofArray("1", "2", "3");
+        assertArrayEquals(values, invokeMethod(true, values, "clone"));
     }
 
     @Test

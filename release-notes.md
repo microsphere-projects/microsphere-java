@@ -383,4 +383,178 @@ For complete details, see the [full changelog](#).
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.14...0.3.15
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.14...0.3.15## v0.3.16
+
+_Release notes generation failed. Raw commits since 0.3.15:_
+
+```
+9fca9561 chore: merge main into release [skip ci]
+3631cc86 Restore lambda listener dispatcher test
+b36fe068 chore: merge main into release [skip ci]
+affc59b6 Support lambda event type resolution
+d84c76f4 chore: merge main into release [skip ci]
+892ad21c Improve lambda parameter type resolution
+d9acdf89 chore: merge main into release [skip ci]
+f2ca1f5f Add lambda parameter type resolution utility
+6c526acf Fix functional method selection in MethodUtils
+885c817e chore: merge main into release [skip ci]
+74e2eaeb Tighten LambdaUtils generic typing
+eb08167d chore: merge main into release [skip ci]
+b134fd58 Fix lambda instantiated method signatures
+cb0eb29a chore: merge main into release [skip ci]
+2fe70ac0 Add LambdaUtils for runtime lambda creation
+d99ac051 Fix typo in method candidate helper name
+ca8827e6 chore: merge main into release [skip ci]
+17c14ee4 Update UnsafeUtilsTest.java
+54c5932c Update MethodUtils.java
+6966ad37 chore: merge main into release [skip ci]
+fb31a0f1 Extract lambda class name prefix constant
+858fe5f9 chore: merge main into release [skip ci]
+3ed4c254 Use Runnable in functional method test
+62242b52 chore: merge main into release [skip ci]
+6245ce7b Add @see links to Modifier enum constants
+610e1c97 chore: merge main into release [skip ci]
+6655c096 Add functional interface method lookup
+9c7d22ec Add aggregate modifier match helpers
+f4fb37a7 Add Javadocs for bean method helpers
+61841dfa chore: merge main into release [skip ci]
+b68334d7 Refine lambda class detection in ClassUtils
+1a3df1ae chore: merge main into release [skip ci]
+a812fed9 Add interface checks to ClassUtils
+102461a8 Add Object override check to MethodUtils
+aedae9f5 chore: merge main into release [skip ci]
+d6bfd347 Add synthetic and lambda class checks
+2b444df9 Make EchoEvent public in tests
+814076a2 chore: merge main into release [skip ci]
+6db932c1 Use package-style logger name in test
+c5208bb9 chore: merge main into release [skip ci]
+3b4ed744 Tune test logging with async file appender
+863a0b11 chore: merge main into release [skip ci]
+773b19f5 Capture and trace Java compiler output
+9fb795be chore: merge main into release [skip ci]
+03077b0b Disable immediate flush in test logback config
+fd1e4cb3 chore: merge main into release [skip ci]
+d338a3ed Disable unchecked lint in default options
+d46569af chore: merge main into release [skip ci]
+caed26bb Remove test logback config file
+e06bf8b5 chore: merge main into release [skip ci]
+331a777d Consolidate test logback logger config
+f88777b3 chore: merge main into release [skip ci]
+3dfeb5ca Remove JavaLangAccessUtils and adjust test logging
+fc44f22e chore: merge main into release [skip ci]
+5839118a Extract annotation testing into new module
+40f5528b chore: merge main into release [skip ci]
+9d4f02c1 Relax constant pool constants test
+44bc6561 chore: merge main into release [skip ci]
+ae46d68d Add ConstantPool reflection utilities and tests
+7d05d7c7 chore: merge main into release [skip ci]
+b9eb1bd7 Use ExceptionUtils.wrap in FieldUtils
+3bc47e11 Wrap invocation target exceptions consistently
+b369d506 chore: merge main into release [skip ci]
+89ed04e3 Handle null fields and prevent reflection cycles
+bb7cd0d2 Add JavaLangAccess utility and basic test
+327ece9b chore: merge main into release [skip ci]
+dfc97f48 Enforce non-null Field in FieldUtils accessors
+47a6df96 chore: merge main into release [skip ci]
+98ff2172 Improve reflection trace log details
+70373b4f Add trace logging for reflective field reads
+27de5700 Simplify invokeMethod exception handling
+8641fc8d chore: merge main into release [skip ci]
+6522801a Bump microsphere-bom to 0.3.8
+27550bce chore: merge main into release [skip ci]
+f62399e0 Bump microsphere-build parent to 0.3.11
+b9884353 chore: merge main into release [skip ci]
+51a2fc93 Add typed getFieldValue test assertions
+12cde2f7 chore: merge main into release [skip ci]
+b548ee3d Use declared static call for enum values
+98e32de9 chore: merge main into release [skip ci]
+c8940ee1 Simplify enum values lookup in serializer
+8fc8754d Update staticFieldBase API and unsafe tests
+1db3ef3d chore: merge main into release [skip ci]
+b36dff18 Expand memory ops coverage in UnsafeUtilsTest
+39157731 chore: merge main into release [skip ci]
+c83ebb82 Add field-name atomic ops to UnsafeUtils
+f2d3c205 chore: merge main into release [skip ci]
+8773057e Add ByteSerializer and expand UnsafeUtils tests
+6c497129 chore: merge main into release [skip ci]
+13073943 Extract byte-size constants into SizeUtils
+5f23c901 chore: merge main into release [skip ci]
+acd7b83a Add char and float SPI serializers
+82a3969b chore: merge main into release [skip ci]
+2bea2862 Refine serializer APIs and enum tests
+7efb13c1 chore: merge main into release [skip ci]
+5855ab24 Refactor serializer API and add primitive codecs
+6e899528 chore: merge main into release [skip ci]
+30078e58 Add primitive byte-size constants to IOUtils
+ae1124f7 chore: merge main into release [skip ci]
+9b3f60fd Add UnsafeUtils off-heap and size tests
+e9c4bf21 chore: merge main into release [skip ci]
+013c5956 Add field-name CAS helpers to UnsafeUtils
+4df3275e chore: merge main into release [skip ci]
+4ada2439 Align UnsafeUtils volatile API naming
+3f4c2872 chore: merge main into release [skip ci]
+7817fa2c Expand UnsafeUtils with full Unsafe wrappers
+4bf25614 chore: merge main into release [skip ci]
+8a327f36 Add null supplier test for execute()
+91f8f846 Align UnsafeUtils volatile array exceptions
+4e483472 chore: merge main into release [skip ci]
+e1ddc25e Decouple UnsafeUtils from BaseUtils
+e95e46ad chore: merge main into release [skip ci]
+8ced8d98 Force accessible URL handler instantiation
+f8815056 chore: merge main into release [skip ci]
+df520478 Fix builder test instantiation path
+2079d27e chore: merge main into release [skip ci]
+ca486e0f Use static import for LookupMode.ALL
+d7a134f5 Remove IMPL_LOOKUP trusted lookup fallback
+623cd454 chore: merge main into release [skip ci]
+12f96db0 Add newInstance exception behavior tests
+1c527757 chore: merge main into release [skip ci]
+d09c0e70 Fix invokeMethod argument type matching
+1f9c1799 Refactor constructor instantiation utilities
+0210787f chore: merge main into release [skip ci]
+8525afb6 Add force-access constructor instantiation APIs
+864085b2 chore: merge main into release [skip ci]
+0ad5bce9 Reorder FieldUtils forceAccess arguments
+ebcc5df3 chore: merge main into release [skip ci]
+aedeabb9 Use accessible reflective calls in type utilities
+50de0bb2 chore: merge main into release [skip ci]
+eeb5cd60 Fix JavaFileManager field access in FilerProcessor
+d81e24fc chore: merge main into release [skip ci]
+f79eba1a Fix class loader field access for loaded classes
+57b269ed chore: merge main into release [skip ci]
+fe62b348 Force reflective access for JDK internals
+c01ed8ae chore: merge main into release [skip ci]
+a6de3683 Use MethodHandle in AccessibleObjectUtils
+a318cc09 chore: merge main into release [skip ci]
+7dfff8d1 Add forceAccess support in reflection helpers
+a3350b2b chore: merge main into release [skip ci]
+44c11a46 Bump microsphere BOM to 0.3.7
+60ea9946 chore: merge main into release [skip ci]
+d30db57a Refactor UnsafeUtils to reflective invocation
+d25da10d Fix expected exception in PID resolver test
+0ed9df20 Refine MethodUtils invocation and cache APIs
+2252b512 Add declaring class validity helper
+4877130a Use IllegalArgumentException in assertNotNull
+15b07d2f Remove final-class check in listener assertion
+0ff89c22 chore: merge main into release [skip ci]
+e897430d Switch access helpers from MethodHandle to Method
+926331ed Remove obsolete reflection access APIs
+90f90931 Align MethodUtils invocation error handling
+408e0de3 Throw NPE when invokeMethod target not found
+fb14aa4c Use Lookup type alias in lookup utils
+2660950e Use NPE for Assert.assertNotNull failures
+43c17a02 chore: merge main into release [skip ci]
+35f7a64e Bump microsphere BOM to 0.3.6
+97ccc4d8 chore: merge main into release [skip ci]
+b7a31b77 Bump microsphere-bom to 0.3.5
+de76e18f chore: merge main into release [skip ci]
+13698392 Bump microsphere-build parent to 0.3.10
+eac75869 chore: merge main into release [skip ci]
+f3a9f009 Refine listener loading in event dispatcher
+94478638 Add nullable EventDispatcher factory
+02981d65 Bump microsphere-build parent to 0.3.9
+f40ba0f0 chore: merge release into main [skip ci]
+5ded0961 chore: bump version to next patch after publishing 0.3.15
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.15...0.3.16
