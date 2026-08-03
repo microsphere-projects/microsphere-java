@@ -352,10 +352,10 @@ class MethodUtilsTest extends LoggingTest {
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = findMethods(arrayClass, true, false);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+        assertEquals(OBJECT_DECLARED_METHODS, methods);
 
         methods = findMethods(arrayClass, false, false);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+        assertEquals(OBJECT_DECLARED_METHODS, methods);
     }
 
     @Test
