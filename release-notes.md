@@ -557,4 +557,19 @@ f40ba0f0 chore: merge release into main [skip ci]
 5ded0961 chore: bump version to next patch after publishing 0.3.15
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.15...0.3.16
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.15...0.3.16## v0.3.17
+
+_Release notes generation failed. Raw commits since 0.3.16:_
+
+```
+2d43ab21 chore: merge main into release [skip ci]
+1da7b5dd Fix array method expectations in MethodUtilsTest
+1aa91811 chore: merge main into release [skip ci]
+8f155dc6 Fix array method filtering with force access
+18d3fbe6 Align invokeMethod overload parameter order
+1e6ed431 Add zero-arg method case to parameter match test
+a118f68b chore: merge release into main [skip ci]
+eb7cc735 chore: bump version to next patch after publishing 0.3.16
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.16...0.3.17
