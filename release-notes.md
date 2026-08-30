@@ -572,4 +572,31 @@ a118f68b chore: merge release into main [skip ci]
 eb7cc735 chore: bump version to next patch after publishing 0.3.16
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.16...0.3.17
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.16...0.3.17## v0.3.18
+
+_Release notes generation failed. Raw commits since 0.3.17:_
+
+```
+71cdf79c chore: merge main into release [skip ci]
+9d8e21cb Merge pull request #293 from microsphere-projects/dependabot/maven/org.springframework-spring-framework-bom-7.0.9
+5fe0d803 Merge branch 'main' into dependabot/maven/org.springframework-spring-framework-bom-7.0.9
+05706174 chore: merge main into release [skip ci]
+def48b78 Bump microsphere BOM to 0.3.10
+98a7b8d6 Bump microsphere-build to 0.3.14
+bdcb1610 Bump org.springframework:spring-framework-bom from 7.0.8 to 7.0.9
+089c4e7f chore: merge main into release [skip ci]
+552cea36 Merge pull request #292 from microsphere-projects/dependabot/maven/org.apache.maven-apache-maven-3.9.16
+22787132 Bump org.apache.maven:apache-maven from 3.9.15 to 3.9.16
+b8a3732a chore: merge main into release [skip ci]
+66682b1c Update pom.xml
+61c5b4ad chore: merge main into release [skip ci]
+4edf64b7 Bump microsphere-build to 0.3.12
+39f2c6ab chore: merge main into release [skip ci]
+5af1f547 Add NIO Files readLines utility and tests
+ec442946 chore: merge main into release [skip ci]
+7358c625 Add LoggerUtils with level-aware lazy logging
+1cae8575 chore: merge release into main [skip ci]
+95f13f3f chore: bump version to next patch after publishing 0.3.17
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.17...0.3.18

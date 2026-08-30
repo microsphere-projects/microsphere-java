@@ -67,7 +67,7 @@ public abstract class ObjectUtils implements Utils {
      * @return the object if non-null, otherwise the value provided by the supplier
      */
     public static <T> T defaultIfNull(@Nullable T object, Supplier<T> defaultValueSupplier) {
-        return defaultIfNull(object, defaultValueSupplier.get());
+        return object == null ? defaultValueSupplier.get() : object;
     }
 
     /**
