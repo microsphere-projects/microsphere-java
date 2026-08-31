@@ -599,4 +599,15 @@ ec442946 chore: merge main into release [skip ci]
 95f13f3f chore: bump version to next patch after publishing 0.3.17
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.17...0.3.18
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.17...0.3.18## v0.3.19
+
+_Release notes generation failed. Raw commits since 0.3.18:_
+
+```
+7b8bce60 chore: merge main into release [skip ci]
+821dc49e Fix defaultIfNull null handling
+fee46a15 chore: merge release into main [skip ci]
+9604ad40 chore: bump version to next patch after publishing 0.3.18
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.18...0.3.19
