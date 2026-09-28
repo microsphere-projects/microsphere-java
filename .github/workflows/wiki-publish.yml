@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout source repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 1
 
@@ -36,7 +36,7 @@ jobs:
           echo "Total pages: $(ls wiki-output/*.md | wc -l)"
 
       - name: Checkout wiki repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7.0.1
         with:
           repository: ${{ github.repository }}.wiki
           path: wiki-repo
