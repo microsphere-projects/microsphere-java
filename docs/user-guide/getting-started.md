@@ -146,8 +146,13 @@ dependencies {
 
 | JDK | Spring Framework | JUnit Jupiter / Mockito |
 |---|---|---|
-| `[1.8, 17)` — profile `java8-16` | `5.3.39` | `5.14.4` / `4.11.0` |
-| `[17, ∞)` | `7.0.9` | `6.1.3` / `5.23.0` |
+| `[1.8, 17)` — profile `java8-16` | `5.3.39` | JUnit 5.x / Mockito 4.x |
+| `[17, ∞)` | `7.0.9` | JUnit 6.x / Mockito 5.x |
+
+The Spring column is set in `microsphere-java-parent/pom.xml` (property `spring-framework.version`, overridden by the
+`java8-16` profile). The JUnit/Mockito columns are *not* set here: this repository inherits the versions from
+`microsphere-all-bom` → `microsphere-testing-bom`, which switches the pins with the same `[1.8,17)` JDK profile. Run
+`./mvnw dependency:tree -Dincludes=org.junit.jupiter,org.mockito` if you need the exact resolved versions.
 
 > [!IMPORTANT]
 > This is *build-time* alignment inside this repository, not a requirement on your application.
