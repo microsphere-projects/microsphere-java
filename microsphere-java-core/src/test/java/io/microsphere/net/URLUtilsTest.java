@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
@@ -86,6 +87,7 @@ import static io.microsphere.util.SystemUtils.USER_DIR;
 import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
 import static java.nio.file.Paths.get;
 import static java.util.Collections.emptyMap;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -585,19 +587,21 @@ class URLUtilsTest extends LoggingTest {
     void testClose() throws IOException {
         URL url = ofURL("http://localhost");
         URLConnection urlConnection = url.openConnection();
-        close(urlConnection);
+        assertTrue(urlConnection instanceof HttpURLConnection);
+        assertDoesNotThrow(() -> close(urlConnection));
     }
 
     @Test
     void testCloseOnNonHttp() throws IOException {
         URL url = ofURL("ftp://localhost");
         URLConnection urlConnection = url.openConnection();
-        close(urlConnection);
+        assertFalse(urlConnection instanceof HttpURLConnection);
+        assertDoesNotThrow(() -> close(urlConnection));
     }
 
     @Test
     void testCloseOnNull() {
-        close(null);
+        assertDoesNotThrow(() -> close(null));
     }
 
     @Test
