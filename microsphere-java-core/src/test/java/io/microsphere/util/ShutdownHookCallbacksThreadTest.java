@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ShutdownHookCallbacksThread.INSTANCE;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
+import static io.microsphere.util.ShutdownHookUtils.getShutdownHookCallbacks;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ShutdownHookCallbacksThread} Test
@@ -27,5 +29,6 @@ class ShutdownHookCallbacksThreadTest extends LoggingTest {
         }
 
         thread.run();
+        assertTrue(getShutdownHookCallbacks().isEmpty());
     }
 }

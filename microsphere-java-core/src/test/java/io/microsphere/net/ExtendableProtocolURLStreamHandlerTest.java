@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -138,7 +139,10 @@ class ExtendableProtocolURLStreamHandlerTest {
 
     @Test
     void testInit() {
+        String packageName = handler.getClass().getPackage().getName();
+        String handlePackage = packageName.substring(0, packageName.lastIndexOf('.'));
         handler.init();
+        assertTrue(getHandlePackages().contains(handlePackage));
     }
 
     @Test
@@ -169,9 +173,13 @@ class ExtendableProtocolURLStreamHandlerTest {
 
     @Test
     void testCustomizeSubProtocolURLConnectionFactories() {
+        CompositeSubProtocolURLConnectionFactory factory = new CompositeSubProtocolURLConnectionFactory();
+        List<SubProtocolURLConnectionFactory> customizedFactories = new ArrayList<>();
         handler.customizeSubProtocolURLConnectionFactories(factories -> {
-            factories.add(new CompositeSubProtocolURLConnectionFactory());
+            factories.add(factory);
+            customizedFactories.addAll(factories);
         });
+        assertTrue(customizedFactories.contains(factory));
     }
 
     @Test

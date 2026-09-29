@@ -129,7 +129,10 @@ class StopWatchTest implements Loggable {
     @Test
     void testStartOnReentrant() {
         this.stopWatch.start("1", true);
+        Task runningTask = this.stopWatch.getCurrentTask();
+        assertEquals("1", runningTask.getTaskName());
         this.stopWatch.start("1");
+        assertSame(runningTask, this.stopWatch.getCurrentTask());
     }
 
     @Test

@@ -12,6 +12,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.io.IOUtils.BUFFER_SIZE;
@@ -27,9 +28,11 @@ import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link IOUtils} Test
@@ -200,18 +203,20 @@ class IOUtilsTest extends LoggingTest {
     @Test
     void testClose() {
         tearDown();
-        close(new FastByteArrayOutputStream(0));
+        AtomicBoolean closed = new AtomicBoolean(false);
+        close(() -> closed.set(true));
+        assertTrue(closed.get());
     }
 
     @Test
     void testCloseOnNull() {
-        close(null);
+        assertDoesNotThrow(() -> close(null));
     }
 
     @Test
     void testCloseOnIOException() {
-        close(() -> {
+        assertDoesNotThrow(() -> close(() -> {
             throw new IOException("For testing");
-        });
+        }));
     }
 }
