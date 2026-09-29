@@ -31,6 +31,7 @@ import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.invoke.MethodHandleUtils.handleInvokeExactFailure;
 import static io.microsphere.invoke.MethodHandleUtils.lookup;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -99,7 +100,7 @@ public class MethodHandleUtilsTest {
     @Test
     void testHandleInvokeExactFailure() {
         MethodHandle methodHandle = findVirtual(MethodHandleUtilsTest.class, "privateMethod");
-        handleInvokeExactFailure(new Throwable("testing"), methodHandle);
+        assertDoesNotThrow(() -> handleInvokeExactFailure(new Throwable("testing"), methodHandle));
     }
 
     @Test

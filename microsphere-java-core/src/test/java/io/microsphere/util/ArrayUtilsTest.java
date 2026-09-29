@@ -23,6 +23,7 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -905,145 +906,226 @@ class ArrayUtilsTest implements Loggable {
     @Test
     void testForEachWithConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
+        List<Boolean> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList(true), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
+        List<Byte> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList((byte) 1), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnCharArray() {
         char[] values = ofChars('A');
+        List<Character> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList('A'), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
+        List<Short> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList((short) 1), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnIntArray() {
         int[] values = ofInts(1);
+        List<Integer> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList(1), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnLongArray() {
         long[] values = ofLongs(1L);
+        List<Long> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList(1L), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
+        List<Float> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList(1F), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
+        List<Double> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList(1D), visitedValues);
     }
 
     @Test
     void testForEachWithConsumerOnObjectArray() {
         Object[] values = of("A");
+        List<Object> visitedValues = new ArrayList<>();
         forEach(values, (value) -> {
+            visitedValues.add(value);
             log("forEach(value : {})", value);
         });
+        assertEquals(ofList("A"), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Boolean> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList(true), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Byte> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList((byte) 1), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnCharArray() {
         char[] values = ofChars('A');
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Character> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList('A'), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Short> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList((short) 1), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnIntArray() {
         int[] values = ofInts(1);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Integer> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList(1), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnLongArray() {
         long[] values = ofLongs(1L);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Long> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList(1L), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Float> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList(1F), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Double> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList(1D), visitedValues);
     }
 
     @Test
     void testForEachWithBiConsumerOnObjectArray() {
         Object[] values = of("A");
+        List<Integer> visitedIndices = new ArrayList<>();
+        List<Object> visitedValues = new ArrayList<>();
         forEach(values, (index, value) -> {
+            visitedIndices.add(index);
+            visitedValues.add(value);
             log("forEach(index : {} , value : {})", index, value);
         });
+        assertEquals(ofList(0), visitedIndices);
+        assertEquals(ofList("A"), visitedValues);
     }
 
     @Test

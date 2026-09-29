@@ -31,6 +31,7 @@ import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.out;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -74,11 +75,13 @@ class DelegatingURLConnectionTest {
     @Test
     void testConnect() throws IOException {
         this.urlConnection.connect();
+        assertTrue(copyToString(this.urlConnection.getInputStream()).length() > 0);
     }
 
     @Test
     void testSetConnectTimeout() {
         this.urlConnection.setConnectTimeout(100);
+        assertEquals(100, this.urlConnection.getConnectTimeout());
     }
 
     @Test
@@ -90,6 +93,7 @@ class DelegatingURLConnectionTest {
     @Test
     void testSetReadTimeout() {
         this.urlConnection.setReadTimeout(200);
+        assertEquals(200, this.urlConnection.getReadTimeout());
     }
 
     @Test
@@ -224,6 +228,7 @@ class DelegatingURLConnectionTest {
     @Test
     void testSetDoInput() {
         this.urlConnection.setDoInput(true);
+        assertTrue(this.urlConnection.getDoInput());
     }
 
     @Test
@@ -235,6 +240,7 @@ class DelegatingURLConnectionTest {
     @Test
     void testSetDoOutput() {
         this.urlConnection.setDoOutput(true);
+        assertTrue(this.urlConnection.getDoOutput());
     }
 
     @Test
@@ -246,6 +252,7 @@ class DelegatingURLConnectionTest {
     @Test
     void testSetAllowUserInteraction() {
         this.urlConnection.setAllowUserInteraction(true);
+        assertTrue(this.urlConnection.getAllowUserInteraction());
     }
 
     @Test
@@ -257,6 +264,7 @@ class DelegatingURLConnectionTest {
     @Test
     void testSetUseCaches() {
         this.urlConnection.setUseCaches(true);
+        assertTrue(this.urlConnection.getUseCaches());
     }
 
     @Test
@@ -269,6 +277,7 @@ class DelegatingURLConnectionTest {
     void testSetIfModifiedSince() {
         long now = currentTimeMillis();
         this.urlConnection.setIfModifiedSince(now);
+        assertEquals(now, this.urlConnection.getIfModifiedSince());
     }
 
     @Test
@@ -280,6 +289,7 @@ class DelegatingURLConnectionTest {
     @Test
     void testSetDefaultUseCaches() {
         this.urlConnection.setDefaultUseCaches(true);
+        assertTrue(this.urlConnection.getDefaultUseCaches());
     }
 
     @Test
@@ -290,13 +300,15 @@ class DelegatingURLConnectionTest {
 
     @Test
     void testSetRequestProperty() {
-        this.urlConnection.setRequestProperty("key-1", "value-1");
+        // The "file:" URL handler does not retain request properties, so getRequestProperty()
+        // stays null; the delegating call itself must be forwarded without failing.
+        assertDoesNotThrow(() -> this.urlConnection.setRequestProperty("key-1", "value-1"));
     }
 
     @Test
     void testAddRequestProperty() {
-        this.urlConnection.addRequestProperty("key-1", "value-1-1");
-        this.urlConnection.addRequestProperty("key-2", "value-2");
+        assertDoesNotThrow(() -> this.urlConnection.addRequestProperty("key-1", "value-1-1"));
+        assertDoesNotThrow(() -> this.urlConnection.addRequestProperty("key-2", "value-2"));
     }
 
     @Test

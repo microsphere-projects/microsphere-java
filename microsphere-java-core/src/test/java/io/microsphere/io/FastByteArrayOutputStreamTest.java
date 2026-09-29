@@ -109,7 +109,9 @@ class FastByteArrayOutputStreamTest {
 
     @Test
     void testClose() {
+        byte[] bytes = this.outputStream.toByteArray();
         tearDown();
+        assertArrayEquals(bytes, this.outputStream.toByteArray());
     }
 
     @Test

@@ -19,6 +19,7 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
@@ -33,6 +34,7 @@ import static io.microsphere.util.IterableUtils.isIterable;
 import static io.microsphere.util.IterableUtils.iterate;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -71,25 +73,37 @@ class IterableUtilsTest {
 
     @Test
     public void testIterate() {
+        List<Object> visited = new ArrayList<>();
         iterate(ofList(1, 2, 3), i -> {
+            visited.add(i);
         });
+        assertEquals(ofList(1, 2, 3), visited);
     }
 
     @Test
     public void testIterateWithNullElements() {
+        List<Object> visited = new ArrayList<>();
         iterate(null, i -> {
+            visited.add(i);
         });
+        assertEquals(emptyList(), visited);
     }
 
     @Test
     public void testForEach() {
+        List<Object> visited = new ArrayList<>();
         forEach(ofList(1, 2, 3), i -> {
+            visited.add(i);
         });
+        assertEquals(ofList(1, 2, 3), visited);
     }
 
     @Test
     public void testForEachWithNullElements() {
+        List<Object> visited = new ArrayList<>();
         forEach(null, i -> {
+            visited.add(i);
         });
+        assertEquals(emptyList(), visited);
     }
 }

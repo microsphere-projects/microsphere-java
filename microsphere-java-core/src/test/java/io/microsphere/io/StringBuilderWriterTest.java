@@ -70,6 +70,7 @@ class StringBuilderWriterTest {
     void testWriteWithCharsOnEmpty() {
         writer.write((char[]) null);
         writer.write(new char[0]);
+        assertEquals("", writer.toString());
     }
 
     @Test
@@ -82,6 +83,7 @@ class StringBuilderWriterTest {
     void testWriteWithCharsAndRangeOnNull() {
         writer.write((char[]) null, 0, 0);
         writer.write(new char[0], 0, 0);
+        assertEquals("", writer.toString());
     }
 
     @Test
@@ -94,6 +96,7 @@ class StringBuilderWriterTest {
     void testWriteWithStringOnEmpty() {
         writer.write(TEST_NULL_STRING);
         writer.write(EMPTY_STRING);
+        assertEquals("", writer.toString());
     }
 
     @Test
@@ -106,6 +109,7 @@ class StringBuilderWriterTest {
     void testWriteWithStringAndRangeOnEmpty() {
         writer.write(TEST_NULL_STRING, 0, 0);
         writer.write(EMPTY_STRING, 0, 0);
+        assertEquals("", writer.toString());
     }
 
     @Test
@@ -140,11 +144,15 @@ class StringBuilderWriterTest {
 
     @Test
     void testClose() {
+        writer.write("Hello");
         writer.close();
+        assertEquals("Hello", writer.toString());
     }
 
     @Test
     void testFlush() {
+        writer.write("Hello");
         writer.flush();
+        assertEquals("Hello", writer.toString());
     }
 }
