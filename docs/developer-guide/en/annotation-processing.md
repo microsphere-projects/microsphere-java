@@ -11,7 +11,6 @@
 | Bundled processor | `io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor` |
 | Generated resource | `META-INF/microsphere/configuration-properties.json`, written into `CLASS_OUTPUT` |
 | Auto-discovery | service file `META-INF/services/javax.annotation.processing.Processor` inside the processor jar |
-| Self-build flag | the processor module compiles itself with `-proc:none` |
 
 This page covers the compile-time half of `@ConfigurationProperty`, the `javax.lang.model` helper layer,
 how to write and enable your own processor, and the in-process Java compiler (`microsphere-jdk-tools`) used to
@@ -32,11 +31,8 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
 ```
 
 Registered for auto-discovery at
-`microsphere-annotation-processor/src/main/resources/META-INF/services/javax.annotation.processing.Processor`:
-
-```
-io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor
-```
+`microsphere-annotation-processor/src/main/resources/META-INF/services/javax.annotation.processing.Processor`
+with the single line `io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor`.
 
 ---
 
@@ -44,7 +40,7 @@ io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor
 
 ### 2.1 Maven: classpath discovery (default)
 
-Because the jar carries the `Processor` service file, plain javac discovers the processor from the **compile
+The jar carries the `Processor` service file, so plain javac discovers the processor from the **compile
 classpath** — no compiler-plugin configuration is needed:
 
 ```xml
@@ -57,9 +53,8 @@ classpath** — no compiler-plugin configuration is needed:
 
 ### 2.2 Maven: `maven-compiler-plugin` `<annotationProcessorPaths>`
 
-Use this when the processor must **not** sit on the compile classpath (e.g. your own processor depends on
-libraries you do not want to compile against), or when the compiler plugin is configured with
-`<proc>` and an explicit path:
+Use this when the processor must **not** sit on the compile classpath, or when the compiler plugin is
+configured with `<proc>` and an explicit processor path:
 
 ```xml
 <plugin>
@@ -107,8 +102,7 @@ A module that *contains* a processor must not let that processor run on its own 
 </plugin>
 ```
 
-In Gradle, the equivalent is `tasks.withType(JavaCompile) { options.compilerArgs << "-proc:none" }` for the
-module that defines the processor.
+In Gradle, use `tasks.withType(JavaCompile) { options.compilerArgs << "-proc:none" }` for that module.
 
 > [!IMPORTANT]
 > `microsphere-annotation-processor` **shades `microsphere-java-core` into its own jar** (maven-shade-plugin,
@@ -133,8 +127,8 @@ public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment 
 ```
 
 * `resolveMetadata` visits **every root element** of the round (`roundEnv.getRootElements()`, not
-  `getElementsAnnotatedWith`) with `ConfigurationPropertyJSONElementVisitor`. Walking roots means annotated
-  classes *and* classes referenced in the same compilation are handled.
+  `getElementsAnnotatedWith`) with `ConfigurationPropertyJSONElementVisitor` — annotated classes *and* classes
+  referenced in the same compilation are handled.
 * Returning `false` lets other processors still see `@ConfigurationProperty`.
 * `writeMetadata` runs once on `processingOver()`: the accumulated `StringBuilder` is reparsed as a `JSONArray`,
   pretty-printed with two-space indentation (`jsonArray.toString(2)`), and written through `ResourceProcessor`
@@ -150,9 +144,6 @@ Field-level resolution rules (applied by the visitor in `visitVariableAsField`):
 | `metadata.declaredClass` / `declaredField` | always derived from the field and its enclosing type |
 | `metadata.sources` | the annotation's `source()` array |
 
-Annotation members: `name`, `type` (`Class<?>`, default `String.class`), `defaultValue`, `required`,
-`description`, `source`.
-
 After the annotation-derived entries, the processor appends whatever the runtime SPI chain produces —
 `ConfigurationPropertyLoader.loadAll()` (priority-sorted) rendered by the first
 `ConfigurationPropertyGenerator` service (`DefaultConfigurationPropertyGenerator`, registered by
@@ -167,18 +158,16 @@ After the annotation-derived entries, the processor appends whatever the runtime
 > `src/test/resources/META-INF/services/io.microsphere.metadata.ConfigurationPropertyLoader`
 > (`io.microsphere.annotation.processor.TestConfigurationPropertyLoader`).
 
-Output path: `META-INF/microsphere/configuration-properties.json`
-(`ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE`). The JSON shape is documented in
-[Configuration Property Metadata](configuration-metadata.md).
+Output: `META-INF/microsphere/configuration-properties.json`
+(`ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE`); JSON shape in [Configuration Property Metadata](configuration-metadata.md).
 
 ---
 
 ## 4. `microsphere-lang-model` — helpers over `javax.lang.model.*`
 
 16 types in `io.microsphere.lang.model.element` and `io.microsphere.lang.model.util`. Ten are `interface` types
-that `extends io.microsphere.util.Utils` and expose **static interface methods** (Java 8+ allows this); you call
-them via static import, e.g. `import static io.microsphere.lang.model.util.ElementUtils.matchesElementType;` —
-no `INSTANCE`, no factory:
+that `extends io.microsphere.util.Utils` and expose **static interface methods** (Java 8+ allows this); call them
+via static import (e.g. `ElementUtils.matchesElementType`) — no `INSTANCE`, no factory.
 
 > [!NOTE]
 > Do not confuse these with `io.microsphere.reflect.TypeUtils` (runtime `java.lang.reflect.Type`) or the JDK's
@@ -192,8 +181,7 @@ no `INSTANCE`, no factory:
 | `util.TypeUtils` | interface | large static surface over `TypeMirror`/`DeclaredType`/`TypeElement`, incl. `getTypeName`, `getTypeMirror(processingEnv, Type)`, `ofTypeElement` |
 | `util.ClassUtils` | interface | `getClassName(TypeMirror)`, `loadClass(TypeMirror)`, `loadClass(String)` |
 | `util.MethodUtils` / `FieldUtils` / `ConstructorUtils` / `MemberUtils` | interface | member-element queries (`findMethod`, `findField`, `findConstructor`) |
-| `util.MessagerUtils` | interface | `printNote` / `printWarning` / `printMandatoryWarning` / `printError` / `printMessage`, each in `(ProcessingEnvironment, ...)` and `(Messager, ...)` form — routes to javac *and* the logger, `{}` placeholders |
-| `util.LoggerUtils` | interface | `trace/debug/info/warn/error(String format, Object... args)` |
+| `util.MessagerUtils` / `LoggerUtils` | interface | `printNote` / `printWarning` / `printMandatoryWarning` / `printError` / `printMessage`, each in `(ProcessingEnvironment, ...)` and `(Messager, ...)` form — routes to javac *and* the logger, `{}` placeholders; `LoggerUtils` adds `trace/debug/info/warn/error(String format, Object... args)` |
 | `util.ExecutableElementComparator` | `Comparator<ExecutableElement>` | `public static final INSTANCE`; orders by simple name, then parameter count, then parameter type names |
 | `util.JSONElementVisitor` | `abstract class extends ElementKindVisitor6<Boolean, StringBuilder>` | AST→JSON visitor base |
 | `util.AnnotatedElementJSONElementVisitor` | `abstract class extends JSONElementVisitor` | same, restricted to elements annotated with one annotation type |
@@ -205,11 +193,10 @@ no `INSTANCE`, no factory:
 
 ### 5.1 The visitor: extend `AnnotatedElementJSONElementVisitor`
 
-`JSONElementVisitor` makes its `visitPackage/visitVariable/visitExecutable/visitType/visitTypeParameter`
-methods **final**: the template walks the tree, decides membership through `supports`/`supportsPackage`/
-`supportsVariable`/`supportsExecutable`/`supportsType`/`supportsTypeParameter`, and dispatches to your
-`doVisit*` hooks (plus `visitMembers(List<? extends Element>, StringBuilder)` for types). So you override
-`doVisit*` and `supports*` — never `visit*`.
+`JSONElementVisitor` makes `visitPackage/visitVariable/visitExecutable/visitType/visitTypeParameter` **final**:
+the template walks the tree, decides membership through `supports`/`supportsPackage`/`supportsVariable`/
+`supportsExecutable`/`supportsType`/`supportsTypeParameter`, and dispatches to your `doVisit*` hooks (plus
+`visitMembers(List<? extends Element>, StringBuilder)` for types). Override `doVisit*`/`supports*` — never `visit*`.
 
 ```java
 public class MyElementJSONVisitor extends AnnotatedElementJSONElementVisitor {
@@ -220,7 +207,6 @@ public class MyElementJSONVisitor extends AnnotatedElementJSONElementVisitor {
 
     @Override
     protected boolean doVisitType(TypeElement e, StringBuilder jsonBuilder) {
-        // e.getEnclosedElements(), getAnnotation(...), getAttributesMap(...), ...
         return true;
     }
 }
@@ -274,7 +260,6 @@ Gradle `annotationProcessor`), and compile the processor module itself with `-pr
 
 `io.microsphere.jdk.tools.compiler.Compiler` wraps `javax.tools.JavaCompiler` for in-process compilation, which
 is how processor tests run. Fluent setters each return `this`:
-
 ```java
 public class Compiler {
 
@@ -333,16 +318,14 @@ Constraints you must respect:
 
 Two options, in increasing fidelity:
 
-1. **Direct**: drive `Compiler` yourself — construct it, add your processor, compile classes carrying your
-   annotation, then assert on the generated resource. Good for "does it produce the file".
-2. **Harness**: extend `AbstractAnnotationProcessingTest` from `microsphere-annotation-test`; it compiles the
-   test class before each test method and injects live `ProcessingEnvironment`/`Elements`/`Types`/
-   `RoundEnvironment` instances — full contract, worked examples and caveats on
-   [Testing Support](testing.md).
+1. **Direct**: drive `Compiler` yourself — add your processor, compile classes carrying your annotation, then
+   assert on the generated resource. Good for "does it produce the file".
+2. **Harness**: extend `AbstractAnnotationProcessingTest` (`microsphere-annotation-test`); it compiles the test
+   class before each test method and injects live `ProcessingEnvironment`/`Elements`/`Types`/`RoundEnvironment`
+   instances — full contract, worked examples and caveats on [Testing Support](testing.md).
 
-For the harness to see your processor, register it in
-`src/test/resources/META-INF/services/javax.annotation.processing.Processor` — the harness adds every
-`Processor` found by `ServiceLoader` on the test classpath.
+Register your processor in `src/test/resources/META-INF/services/javax.annotation.processing.Processor`; the
+harness adds every `Processor` found by `ServiceLoader` on the test classpath.
 
 ---
 
@@ -352,6 +335,5 @@ For the harness to see your processor, register it in
 * [Configuration Property Metadata](configuration-metadata.md) — the runtime reader/loader/generator chain
 * [Annotations](annotations.md) — the `@ConfigurationProperty` contract being processed
 * [Getting Started](getting-started.md) — BOM import, JDK matrix, build profiles
-* [Reference](reference.md) — service file inventory
 
 [← Handbook index](../README.md) · [Previous: Configuration Property Metadata](configuration-metadata.md) · [Next: Testing Support →](testing.md)
