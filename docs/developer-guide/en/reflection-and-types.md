@@ -36,10 +36,9 @@
 
 ## 2. `MethodUtils`
 
-`getX` returns everything; `findX` applies your predicates while walking. `getAll*` / `findAll*` include
-inherited members; the unprefixed forms are declared-only.
-
 ```java
+// getX = everything; findX = apply your predicates while walking.
+// getAll*/findAll* include inherited members; unprefixed forms are declared-only.
 List<Method> getDeclaredMethods / getMethods / getAllDeclaredMethods / getAllMethods(Class<?> targetClass)
 List<Method> findDeclaredMethods / findMethods / findAllDeclaredMethods / findAllMethods(
         Class<?> targetClass, Predicate<? super Method>... methodsToFilter)
@@ -54,13 +53,7 @@ Predicate     OBJECT_METHOD_PREDICATE, PUBLIC_METHOD_PREDICATE, STATIC_METHOD_PR
               NON_STATIC_METHOD_PREDICATE, FINAL_METHOD_PREDICATE, NON_PRIVATE_METHOD_PREDICATE;
 String        GET_METHOD_NAME_PREFIX, SET_METHOD_NAME_PREFIX, IS_METHOD_NAME_PREFIX; // "get" "set" "is"
 Predicate<? super Method> excludedDeclaredClass(Class<?> declaredClass);
-```
-
-```java
-// Every public method anywhere in the hierarchy that carries @Exported
-List<Method> exported = MethodUtils.findAllMethods(Foo.class,
-        MethodUtils.PUBLIC_METHOD_PREDICATE,
-        method -> method.isAnnotationPresent(Exported.class));
+// e.g. findAllMethods(Foo.class, PUBLIC_METHOD_PREDICATE, m -> m.isAnnotationPresent(Exported.class))
 ```
 
 ### Invocation
@@ -71,11 +64,9 @@ R invokeMethod(Object object, Class<?> type, String methodName, Object... argume
 R invokeMethod(Object instance, Method method, Object... arguments)
 R invokeStaticMethod(Class<?> targetClass, String methodName, Object... arguments)
 R invokeStaticMethod(Method method, Object... arguments)
-// every form above also exists with a leading `boolean forceAccess`
+// every form above also exists with a leading `boolean forceAccess`, which calls
+// AccessibleObjectUtils.trySetAccessible — returns false instead of throwing on JDK 9+
 ```
-
-`forceAccess` variants call `AccessibleObjectUtils.trySetAccessible` (returns `false` instead of throwing) —
-this is how you reach non-public members on JDK 9+ without crashing on strong encapsulation.
 
 ### Overriding, signatures, classification
 
@@ -102,8 +93,7 @@ void     clearMethodsCache() / clearBannedMethodsCache() / clearDeclaredMethodsC
 ```
 
 `initBannedMethods()` removes the property-listed methods from discovery results and **is not called
-automatically** — invoke it once at startup if you rely on the property. Caches: `methodsCache` 256,
-`declaredMethodsCache` 256, `bannedMethodsCache` 16; the `clear*Cache()` methods are the only eviction hooks.
+automatically**. The `clear*Cache()` methods are the only eviction hooks (sizes: 256/256/16).
 
 ---
 
@@ -122,9 +112,7 @@ V setFieldValue(Object instance, String fieldName | Field field, V value)
 T getStaticFieldValue(Class<?> klass, String fieldName | Field field)
 V setStaticFieldValue(Class<?> klass, String fieldName, V fieldValue)
 void assertFieldMatchType(Object instance, String fieldName, Class<?> expectedType)
-```
 
-```java
 // ConstructorUtils
 Constructor NOT_FOUND_CONSTRUCTOR;                    // null
 boolean isNonPrivateConstructorWithoutParameters(Constructor<?>) / hasNonPrivateConstructorWithoutParameters(Class<?>)
@@ -174,10 +162,9 @@ Class<?> elementType = TypeUtils.resolveActualTypeArgumentClass(StringArrayList.
 // elementType == String.class
 ```
 
-This same call is how `Converter<S, T>` and `MultiValueConverter<S>` discover their own type parameters
-without declarative metadata — see [Type Conversion](type-conversion.md). Results are cached in a
-concurrent map keyed by `MultipleType.of(type, baseType)`, sized at class load by
-`-Dmicrosphere.reflect.resolved-generic-types.cache.size` (default 256).
+This same call is how `Converter<S, T>` and `MultiValueConverter<S>` discover their own type parameters —
+see [Type Conversion](type-conversion.md). Results are cached keyed by `MultipleType.of(type, baseType)`,
+sized at class load by `-Dmicrosphere.reflect.resolved-generic-types.cache.size` (default 256).
 
 ### Shape tests, narrowing, hierarchy walking
 
@@ -198,8 +185,8 @@ List<ParameterizedType> getAllParameterizedTypes / findAllParameterizedTypes(Typ
 List<Type> getHierarchicalTypes / findHierarchicalTypes / getAllTypes / findAllTypes(Type [, ...])
 ```
 
-`get*` is `find*` with an empty filter; the narrowing helpers return `null` when the shape does not match.
-Reusable predicates: `NON_OBJECT_TYPE_FILTER`, `NON_OBJECT_CLASS_FILTER`, `TYPE_VARIABLE_FILTER`,
+`get*` is `find*` with an empty filter; narrowing helpers return `null` on shape mismatch. Reusable
+predicates: `NON_OBJECT_TYPE_FILTER`, `NON_OBJECT_CLASS_FILTER`, `TYPE_VARIABLE_FILTER`,
 `PARAMETERIZED_TYPE_FILTER`, `WILDCARD_TYPE_FILTER`, `GENERIC_ARRAY_TYPE_FILTER`.
 
 ### Building a `ParameterizedType` by hand
@@ -207,11 +194,9 @@ Reusable predicates: `NON_OBJECT_TYPE_FILTER`, `NON_OBJECT_CLASS_FILTER`, `TYPE_
 ```java
 ParameterizedType listOfStrings = ParameterizedTypeImpl.of(List.class, String.class);
 // TypeUtils.getTypeName(...) renders it as java.util.List<java.lang.String>
+// of(rawType, Type... args) / of(rawType, Type[] args, ownerType) are the only entry points
+// (private constructor); TypeArgument.create(Type, int) pairs a type with its index
 ```
-
-`ParameterizedTypeImpl.of(rawType, Type... args)` and `of(rawType, Type[] args, Type ownerType)` are the
-only entry points (private constructor); `TypeArgument.create(Type type, int index)` pairs a type with its
-index.
 
 ---
 
@@ -245,9 +230,9 @@ enum Kind { CLASS, PARAMETERIZED_TYPE, TYPE_VARIABLE, WILDCARD_TYPE, GENERIC_ARR
 ```
 
 > [!NOTE]
-> The test is `isWildCardType()` (capital `C`) while the narrowing method is `toWildcardType()` (lowercase
-> `c`). `as(Class)` re-roots a view: `javaType.as(Map.class)` expresses the same type against `Map`, so its
-> `getGenericTypes()` are `Map`'s `K`/`V`.
+> `as(Class)` re-roots a view: `javaType.as(Map.class)` expresses the same type against `Map`, so its
+> `getGenericTypes()` are `Map`'s `K`/`V`. Use `JavaType` when generics must be walked as *objects with
+> provenance* (`getSource()` / `getRootSource()`); raw `Type`s from `TypeUtils` suffice otherwise.
 
 ```java
 JavaType type = JavaType.fromField(Order.class, "lines");
@@ -255,9 +240,6 @@ type.getKind();                        // PARAMETERIZED_TYPE
 type.getRawType();                     // java.util.List
 type.getGenericTypes()[0].getType();   // java.lang.String  (for List<String> lines)
 ```
-
-Use `JavaType` when generics must be walked as *objects with provenance*; raw `Type`s from `TypeUtils`
-suffice otherwise.
 
 ---
 
@@ -293,9 +275,8 @@ final class FieldDefinition extends MemberDefinition<Field> {
 final class ConstructorDefinition extends ExecutableDefinition<Constructor> {
     Constructor<?> getConstructor();  T newInstance(Object... args)
 }
-```
 
-```java
+// Usage — parameters are class NAMES, resolution is deferred:
 MethodDefinition optionalEmpty = new MethodDefinition("1.8.0", "java.util.Optional", "empty");
 if (optionalEmpty.isPresent()) {
     Object empty = optionalEmpty.invoke(null);        // static: instance is null
@@ -320,9 +301,8 @@ enum Modifier {   // java.lang.reflect.Modifier bits as an enum
 }
 ```
 
-The last six constants (`BRIDGE 0x40`, `VARARGS 0x80`, `SYNTHETIC 0x1000`, `ANNOTATION 0x2000`,
-`ENUM 0x4000`, `MANDATED 0x8000`) are bits `java.lang.reflect.Modifier` does not expose as named helpers —
-which is why filtering generated/synthetic members needs this enum.
+The last six constants (`BRIDGE 0x40` … `MANDATED 0x8000`) are bits `java.lang.reflect.Modifier` does not
+expose as named helpers — filtering generated/synthetic members needs this enum.
 
 ```java
 boolean ProxyUtils.isProxyable(Class<?> type)
@@ -338,11 +318,10 @@ R       ExecutableUtils.execute(E, ThrowableSupplier<R> | ThrowableFunction<E, R
 boolean ExecutableUtils.matchParameterTypes(Executable, Object... arguments)
 ```
 
-`ConstantPoolUtils` (`io.microsphere.internal.reflect`) reads a class's constant pool through
-`jdk.internal.reflect.ConstantPool` (JDK 9+) or `sun.reflect.ConstantPool` (JDK 8): `getSize`,
-`getClassAt`, `getMethodAt`, `getFieldAt`, `getStringAt`, ... all `(Class<?>, int index)`. It requires
-`--add-opens java.base/jdk.internal.reflect=ALL-UNNAMED` and is **internal** — stay off it unless you write
-bytecode tooling.
+`ConstantPoolUtils` (`io.microsphere.internal.reflect`) reads a class's constant pool via
+`jdk.internal.reflect.ConstantPool` (JDK 9+) or `sun.reflect.ConstantPool` (JDK 8): `getSize`, `getClassAt`,
+`getMethodAt`, `getStringAt`, ... all `(Class<?>, int index)`. It needs
+`--add-opens java.base/jdk.internal.reflect=ALL-UNNAMED` and is **internal** — stay off it.
 
 ---
 
@@ -363,13 +342,13 @@ BeanProperty.of(Object bean, String propertyName)  // getName/getValue/setValue/
 ```
 
 > [!NOTE]
-> `BeanMetadata` wraps `Introspector.getBeanInfo(beanClass, Object.class)`, so the four `Object` methods are
+> `BeanMetadata` wraps `Introspector.getBeanInfo(beanClass, Object.class)`: the four `Object` methods are
 > excluded and property keys are **uncapitalized** (`getName` → `"name"`). `resolvePropertiesAsMap` is the
 > engine behind `ReflectiveConfigurationPropertyGenerator`
 > ([Configuration Property Metadata](configuration-metadata.md)).
 
 `io.microsphere.beans.ConfigurationProperty` is the POJO shared by the annotation, the metadata SPI and the
-annotation processor. Note `getType()` returns a **`String`** type name, not a `Class`:
+annotation processor; `getType()` returns a **`String`** type name, not a `Class`:
 
 ```java
 ConfigurationProperty(String name)                      // type defaults to String.class
@@ -383,14 +362,10 @@ Metadata getMetadata();   // getSources()/getTargets() lazily created Sets; getD
 
 ## 10. Pitfalls
 
-* **Banning is opt-in** — `initBannedMethods()` is never called for you; reflection caches (256/256/16) are
-  evicted only via the three `clear*Cache()` hooks.
-* **Real typos, forever API:** `isOverridenObjectMethod` (one `r`); `JavaType.isWildCardType()` vs
-  `toWildcardType()`.
-* **Declared vs inherited reach:** `findField` walks superclasses but `getDeclaredField` returns `null` for
-  inherited fields; `getConstructor` throws when absent but `findConstructor` returns `null`.
-* **Java 8 source level:** you cannot catch `InaccessibleObjectException` by type — use
-  `ReflectionUtils.isInaccessibleObjectException(...)`.
+* **Banning is opt-in** — `initBannedMethods()` is never called for you; reflection caches (256/256/16) only shrink via the `clear*Cache()` hooks.
+* **Real typos, forever API:** `isOverridenObjectMethod` (one `r`); `JavaType.isWildCardType()` vs `toWildcardType()`.
+* **Declared vs inherited reach:** `findField` walks superclasses, `getDeclaredField` returns `null` for inherited fields; `getConstructor` throws when absent, `findConstructor` returns `null`.
+* **Java 8 source level:** you cannot catch `InaccessibleObjectException` by type — use `ReflectionUtils.isInaccessibleObjectException(...)`.
 
 ---
 

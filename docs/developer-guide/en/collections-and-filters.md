@@ -276,7 +276,7 @@ public abstract class FilterUtils implements Utils {
 
 ```java
 List<Class> found = FilterUtils.filter(scannedClasses, FilterOperator.AND,
-        type -> type.isAnnotationPresent(Service.class),
+        type -> Modifier.isPublic(type.getModifiers()),
         type -> !Modifier.isAbstract(type.getModifiers()));
 // FilterUtils.filter(...) returns an unmodifiable List and iterates the source eagerly.
 ```
