@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract {@link ExtendableProtocolURLStreamHandler} Test
@@ -82,6 +84,7 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
     @Test
     final void testInit() {
         handler.init();
+        assertTrue(getHandlePackages().contains(resolveHandlePackage(handler)));
     }
 
     @Test
@@ -94,9 +97,13 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
 
     @Test
     final void testCustomizeSubProtocolURLConnectionFactories() {
+        CompositeSubProtocolURLConnectionFactory factory = new CompositeSubProtocolURLConnectionFactory();
+        List<SubProtocolURLConnectionFactory> customizedFactories = new ArrayList<>();
         handler.customizeSubProtocolURLConnectionFactories(factories -> {
-            factories.add(new CompositeSubProtocolURLConnectionFactory());
+            factories.add(factory);
+            customizedFactories.addAll(factories);
         });
+        assertTrue(customizedFactories.contains(factory));
     }
 
     @Test

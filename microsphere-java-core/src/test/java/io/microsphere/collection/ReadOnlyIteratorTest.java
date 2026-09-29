@@ -19,11 +19,15 @@ package io.microsphere.collection;
 import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -61,7 +65,12 @@ public abstract class ReadOnlyIteratorTest implements Loggable {
 
     @Test
     void testForEachRemaining() {
-        instance.forEachRemaining(this::log);
+        List<Object> consumedValues = new ArrayList<>();
+        instance.forEachRemaining(value -> {
+            consumedValues.add(value);
+            log("value : {}", value);
+        });
+        assertTrue(consumedValues.stream().allMatch(Objects::nonNull));
+        assertFalse(instance.hasNext());
     }
-
 }

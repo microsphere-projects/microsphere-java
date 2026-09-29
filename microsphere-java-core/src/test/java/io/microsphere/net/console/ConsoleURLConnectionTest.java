@@ -29,6 +29,7 @@ class ConsoleURLConnectionTest {
     @Test
     void testConnect() throws IOException {
         connection.connect();
+        assertSame(System.in, connection.getInputStream());
     }
 
     @Test
