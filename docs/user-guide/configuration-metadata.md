@@ -188,10 +188,10 @@ A document is simply an array of the objects described in [§1](#1-the-data-mode
 ## 6. Generating a `ConfigurationProperty` from a bean
 
 ```java
-public abstract class ConfigurationProperty implements /* io.microsphere.beans */ { ... }
-
 // Generate JSON text for one property
-ConfigurationPropertyGenerator generator = ServiceLoaderUtils.loadFirstService(ConfigurationPropertyGenerator.class);
+ConfigurationPropertyGenerator generator =
+        ServiceLoaderUtils.loadFirstService(ConfigurationPropertyGenerator.class);
+
 String json = generator.generate(property);
 ```
 
