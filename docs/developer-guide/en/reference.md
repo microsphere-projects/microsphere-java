@@ -7,7 +7,7 @@
 
 | Fact | Value |
 |---|---|
-| SPI files in `microsphere-java-core` | 13 service files, 78 implementation lines (77 unique classes) |
+| SPI files in `microsphere-java-core` | 13 service files, 86 implementation lines → 69 distinct class names (the `Converter` file repeats one entry; the 8 primitive serializers appear in both serializer files) |
 | SPI files in `microsphere-annotation-processor` | 1 — `javax.annotation.processing.Processor` |
 | `microsphere.*` system properties | 10 keys, all read once in a `static` initializer |
 | Microsphere resource root | `META-INF/microsphere/` |
@@ -265,6 +265,8 @@ compile dependencies; JUnit, Logback, Spring Core and JMH appear only in `test` 
 | Reader / Loader / Generator chain | [Configuration Property Metadata](configuration-metadata.md) |
 | Processor registration and `--add-opens` | [Annotation Processing](annotation-processing.md) |
 | Surefire include/exclude rules | [Testing Support](testing.md) |
+
+---
 
 ## See also
 

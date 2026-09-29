@@ -1,6 +1,6 @@
 # Language Abstractions
 
-> Read this page in: [中文](../zh/language-abstractions.md) · [English](../en/language-abstractions.md)
+> Read this page in: [中文](../zh/language-abstractions.md) · [English](language-abstractions.md)
 > [← Handbook index](../README.md)
 
 ## At a glance
@@ -10,7 +10,7 @@
 | Module | `io.github.microsphere-projects:microsphere-java-core` |
 | Packages | `io.microsphere.lang`, `io.microsphere.lang.function`, `io.microsphere.lang.invoke`, `io.microsphere.invoke`, `io.microsphere.util` |
 | Contracts | `Prioritized` (ordering), `Wrapper` / `DelegatingWrapper` (decorator chains), `Deprecation` (structured deprecation data) |
-| Functional | eight throwable-aware interfaces in `io.microsphere.lang.function`, plus `Predicates` and `Streams` |
+| Functional | six throwable-aware interfaces in `io.microsphere.lang.function`, plus `Predicates` and `Streams` |
 | Low level | `LambdaUtils`, `MethodHandleUtils`, `MethodHandlesLookupUtils`, `UnsafeUtils` |
 | Ordering rule | **a smaller priority value always wins** — `Prioritized.MAX_PRIORITY == Integer.MIN_VALUE` |
 
@@ -129,11 +129,11 @@ match the requested type. It never hands the original object back. Always null-c
 3. otherwise → `IllegalArgumentException`.
 
 ```java
-MetricsDataSource metrics = new MetricsDataSource(realDataSource);   // your own decorator
-
-HikariDataSource pool = Wrapper.tryUnwrap(metrics, HikariDataSource.class);
-if (pool != null) {
-    pool.setMaximumPoolSize(32);    // configure the object behind the decorator
+// decorated wraps a CacheDataSource, which itself wraps a RawDataSource
+CacheDataSource cache = Wrapper.tryUnwrap(decorated, CacheDataSource.class);   // found — one hop away
+RawDataSource raw = Wrapper.tryUnwrap(decorated, RawDataSource.class);         // null — two hops away
+if (raw == null && cache != null) {
+    raw = Wrapper.tryUnwrap(cache, RawDataSource.class);                       // walk deeper yourself
 }
 ```
 
@@ -148,9 +148,10 @@ if (pool != null) {
 rewrites a wrapper chain:
 
 ```java
-WrapperProcessor<DelegatingWrapper> unwrapAll = wrapper -> {
+WrapperProcessor<DelegatingWrapper> processor = wrapper -> {
     Object delegate = wrapper.getDelegate();
-    return delegate instanceof Wrapper ? ((Wrapper) delegate).unwrap(Object.class) : wrapper;
+    System.out.println(wrapper.getClass().getSimpleName() + " -> " + delegate);
+    return wrapper;    // return the wrapper to keep the chain, or a replacement instance
 };
 ```
 
@@ -292,7 +293,7 @@ public interface ThrowableFunction<T, R> {
 | Interface | Abstract method | Instance helpers | Static helpers |
 |---|---|---|---|
 | `ThrowableFunction<T, R>` | `R apply(T) throws Throwable` | `execute(T)`, `execute(T, BiFunction<T, Throwable, R>)`, `handleException`, `compose`, `andThen` | `execute(t, fn)`, `execute(t, fn, handler)` |
-| `ThrowableBiFunction<T, U, R>` | `R apply(T, U) throws Throwable` | `handleException` is absent | `execute(a, b, fn)`, `execute(a, b, fn, ExceptionHandler)`, nested `interface ExceptionHandler<T, U, R> { R handle(T, U, Throwable); }` |
+| `ThrowableBiFunction<T, U, R>` | `R apply(T, U) throws Throwable` | none (no instance `execute`) | `execute(a, b, fn)`, `execute(a, b, fn, ExceptionHandler)`, nested `interface ExceptionHandler<T, U, R> { R handle(T, U, Throwable); }` |
 | `ThrowableConsumer<T>` | `void accept(T) throws Throwable` | `execute(T)`, `execute(T, BiConsumer<T, Throwable>)`, `handleException` | `execute(t, consumer)` ×2 |
 | `ThrowableBiConsumer<T, U>` | `void accept(T, U) throws Throwable` | `andThen(ThrowableBiConsumer)` — itself declared `throws Throwable` | none |
 | `ThrowableSupplier<T>` | `T get() throws Throwable` | `execute()`, `execute(Function<Throwable, T>)`, `handleException` | `execute(supplier)` ×2 |
@@ -366,11 +367,12 @@ out, so you skip the `collect(toList())` boilerplate. `filterAll*` means "matche
 `null` when nothing matches.
 
 ```java
-List<Class<?>> services = Streams.filterList(scanned,
-        type -> type.isAnnotationPresent(Service.class),
-        type -> !Modifier.isAbstract(type.getModifiers()));
-
-Optional<Bean> bean = Stream.of(beans).filter(Predicates.and(byName, byType)).findFirst();
+// One predicate per call; combine predicates with Predicates.and / Predicates.or
+List<Class<?>> concrete = Streams.filterList(scanned, type -> !Modifier.isAbstract(type.getModifiers()));
+Set<Class<?>> exported = Streams.filterSet(scanned, type -> Modifier.isPublic(type.getModifiers()));
+Class<?> firstConcretePublic = Streams.filterFirst(scanned,
+        type -> Modifier.isPublic(type.getModifiers()),
+        type -> !Modifier.isAbstract(type.getModifiers()));   // filterFirst combines all predicates with AND
 ```
 
 > [!WARNING]
@@ -398,16 +400,16 @@ and you need to know what it consumes. The declared parameters only carry `Objec
 the resolved list carries the real types.
 
 ```java
-List<Class<?>> types = LambdaUtils.resolveLambdaMethodParameterTypes(
-        (Comparator<User>) (a, b) -> a.getName().compareTo(b.getName()));
-// [User, User]
+ToLongBiFunction<String, Long> counter = (name, total) -> total;
+List<Class<?>> types = LambdaUtils.resolveLambdaMethodParameterTypes(counter, ToLongBiFunction.class);
+// [String, Long] — the erased parameter types of the lambda's own method
 ```
 
 The methods are annotated `@Nullable` but in practice return an **empty** `List` when the input is `null`, is not a
-lambda class, has no single functional interface, or when the functional interface is not assignable from the lambda
-type. Non-empty results depend on reading the class's constant pool, i.e. JDK internals; on JDK 16+ the required
-`--add-opens` entries are already configured by the build — see
-[Getting Started](getting-started.md#61-jdk-16-的注意事项) (en: [Getting Started](getting-started.md)).
+lambda class, when the lambda type implements more than one functional interface, or when the given functional
+interface is not assignable from the lambda class. Non-empty results depend on reading the class's constant pool,
+i.e. JDK internals; on JDK 16+ the required `--add-opens` entries are already configured by the build — see
+[Getting Started](getting-started.md#61-jdk-16-specifics).
 
 ### `MethodHandlesLookupUtils` and `MethodHandleUtils` (`io.microsphere.invoke`)
 
@@ -445,14 +447,14 @@ Choose between them by how much access you need and how you want failure reporte
 |---|---|---|
 | `MethodHandlesLookupUtils.findPublicVirtual / findPublicStatic` | returns `null` (compare with `NOT_FOUND_METHOD_HANDLE`), logged at trace | only public members are acceptable and absence is normal |
 | `MethodHandleUtils.findVirtual / findStatic` | returns `null` when the method is not found; otherwise picks a public lookup or a privileged `Lookup` | you may need a private/protected handle |
-| `MethodHandleUtils.lookup(type, modes)` | cached `Lookup` built reflectively on `java.lang.invoke.Lookup` | you call `Lookup` APIs yourself |
+| `MethodHandleUtils.lookup(type, modes)` | cached `Lookup`, constructed reflectively through a `MethodHandles.Lookup` constructor | you call `Lookup` APIs yourself |
 | `MethodHandleUtils.handleInvokeExactFailure(...)` | logs a `warn` with the handle and the arguments, returns `void` | in the `catch (Throwable)` around `invokeExact` |
 
 ```java
 MethodHandle handle = MethodHandleUtils.findStatic(StringUtils.class, "trimWhitespace", String.class);
 if (handle != null) {
     try {
-        Object trimmed = handle.invokeExact("  x  ");
+        String trimmed = (String) handle.invokeExact("  x  ");   // static handle: (String)String
     } catch (Throwable failure) {
         MethodHandleUtils.handleInvokeExactFailure(failure, handle, "  x  ");
     }
@@ -460,8 +462,9 @@ if (handle != null) {
 ```
 
 > [!IMPORTANT]
-> `invokeExact` is signature-strict: the receiver, parameter and return types must match the handle exactly, so the
-> call usually needs a cast of the handle (`(Function<String, String>) handle.asType(...)`) or precise static types.
+> `invokeExact` is signature-strict: the call site's static types (receiver, arguments, and the assignment target of
+> the result) must match the handle's `MethodType` exactly, otherwise you get `WrongMethodTypeException`. Give the
+> result a precise target type, or normalize the handle first with `asType(...)` / `invokeWithArguments(...)`.
 > Prefer `MethodHandleUtils` / `MethodHandlesLookupUtils` over raw `MethodHandles.lookup()` when you want code that
 > degrades gracefully across JDK 8 → 25 rather than throwing on the first restricted access.
 

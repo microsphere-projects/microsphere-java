@@ -228,44 +228,40 @@ The pid is resolved **once** into a static field when the class initialises: the
 
 ### 3.2 `JmxUtils`
 
+MXBean accessors — all `public static`, each lazily resolved once and cached in a static field, lists unmodifiable:
+
+| Method | Return |
+|---|---|
+| `getClassLoadingMXBean()` / `getMemoryMXBean()` / `getThreadMXBean()` / `getRuntimeMXBean()` / `getOperatingSystemMXBean()` | the matching `java.lang.management` bean, never `Optional` |
+| `getCompilationMXBean()` | `Optional<CompilationMXBean>` — some JVMs ship without a compiler MBean |
+| `getMemoryPoolMXBeans()` / `getMemoryManagerMXBeans()` / `getGarbageCollectorMXBeans()` | unmodifiable `List<...>` |
+
+Attribute inspection — these never throw:
+
 ```java
-public abstract class JmxUtils implements Utils {
-
-    // MXBean accessors — lazily resolved once, cached in static fields
-    public static ClassLoadingMXBean getClassLoadingMXBean()
-    public static MemoryMXBean getMemoryMXBean()
-    public static ThreadMXBean getThreadMXBean()
-    public static RuntimeMXBean getRuntimeMXBean()
-    public static Optional<CompilationMXBean> getCompilationMXBean()   // may be absent
-    public static OperatingSystemMXBean getOperatingSystemMXBean()
-    public static List<MemoryPoolMXBean> getMemoryPoolMXBeans()
-    public static List<MemoryManagerMXBean> getMemoryManagerMXBeans()
-    public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans()
-
-    // attribute inspection, never throws
-    public static MBeanInfo getMBeanInfo(MBeanServer server, ObjectName objectName)
-    public static MBeanAttribute[] getMBeanAttributes(MBeanServer server, ObjectName objectName)
-    public static Map<String, MBeanAttribute> getMBeanAttributesMap(MBeanServer server, ObjectName objectName)
-    public static Object getAttribute(MBeanServer server, ObjectName objectName, String attributeName)
-    public static Object getAttribute(MBeanServer server, ObjectName objectName, MBeanAttributeInfo attributeInfo)
-    public static MBeanAttributeInfo findMBeanAttributeInfo(MBeanServer server, ObjectName objectName, String attributeName)
-
-    // DynamicMBean metadata helpers
-    public static MBeanParameterInfo[] methodSignature(Method method)
-    public static MBeanParameterInfo[] signature(Parameter[] parameters)
-    public static Descriptor descriptorForElement(AnnotatedElement annotatedElement)
-    public static Descriptor descriptorForAnnotations(Annotation[] annotations)
-}
+public static MBeanInfo getMBeanInfo(MBeanServer server, ObjectName objectName)
+public static MBeanAttribute[] getMBeanAttributes(MBeanServer server, ObjectName objectName)
+public static Map<String, MBeanAttribute> getMBeanAttributesMap(MBeanServer server, ObjectName objectName)
+public static Object getAttribute(MBeanServer server, ObjectName objectName, String attributeName)
+public static Object getAttribute(MBeanServer server, ObjectName objectName, MBeanAttributeInfo attributeInfo)
+public static MBeanAttributeInfo findMBeanAttributeInfo(MBeanServer server, ObjectName objectName, String attributeName)
 ```
 
-| Contract detail | Reality |
+`DynamicMBean` metadata helpers, on `JmxUtils` and its sub-builders:
+
+```java
+public static MBeanParameterInfo[] methodSignature(Method method)   // delegates to signature(...)
+public static MBeanParameterInfo[] signature(Parameter[] parameters)
+public static Descriptor descriptorForElement(AnnotatedElement annotatedElement)
+public static Descriptor descriptorForAnnotations(Annotation[] annotations)
+```
+
+| Behaviour detail | Reality |
 |---|---|
-| `getCompilationMXBean()` | `Optional` — some JVMs ship without a compiler MBean; the other beans are returned directly |
 | `getMBeanInfo(...)` | `null` when the MBean is missing: `InstanceNotFoundException`, `IntrospectionException` and `ReflectionException` are caught and logged |
-| `getMBeanAttributes(...)` / `getMBeanAttributesMap(...)` | never `null` — `EMPTY_MBEAN_ATTRIBUTE_ARRAY` / `emptyMap()` when the MBean has no attributes |
+| `getMBeanAttributes(...)` / `getMBeanAttributesMap(...)` | never `null` — `EMPTY_MBEAN_ATTRIBUTE_ARRAY` / `emptyMap()` when nothing is readable |
 | `getAttribute(...)` | `null` when the attribute is unreadable or the read failed |
-| `descriptorForElement` / `descriptorForAnnotations` | reimplementations of `com.sun.jmx.mbeanserver.Introspector`, so no `sun.*` import is needed in your code |
-| all beans and lists | lazily resolved once and cached in static fields; lists are unmodifiable |
+| `descriptorForElement` / `descriptorForAnnotations` | reimplementations of `com.sun.jmx.mbeanserver.Introspector`, so your code needs no `sun.*` import |
 
 ```java
 MBeanServer server = ManagementFactory.getPlatformMBeanServer();
@@ -342,21 +338,24 @@ class as legacy-support surface, not a place to build new integrations.
 
 ## 5. JDK version boundaries you will actually hit
 
+Only the process-id path touches JDK internals; `io.microsphere.concurrent`, `JmxUtils`, `management.builder` and
+`SecurityUtils` behave identically on every JDK from 8 to 25.
+
 | API | JDK 8 | JDK 9 – 15 | JDK 16+ |
 |---|---|---|---|
-| `ManagementUtils.getCurrentProcessId()` | `VirtualMachineProcessIdResolver` (reflection on `sun.management`, no module system) | `ModernProcessIdResolver` (`ProcessHandle`) | `ModernProcessIdResolver` |
-| `VirtualMachineProcessIdResolver` used directly | works | works, with warning logs | needs `--add-opens java.management/sun.management=ALL-UNNAMED` |
-| `CustomizedThreadFactory`, `ExecutorUtils`, delegating types | no difference | no difference | no difference |
-| `JmxUtils` MXBean accessors | no difference | no difference | no difference; note `HotSpotOperatingSystemMXBean` is still `com.sun.management.*` and not covered here |
-| `management.builder` types | no difference | no difference | no difference |
-| `SecurityUtils` | works | works | property only; `SecurityManager` deprecated for removal |
+| `ManagementUtils.getCurrentProcessId()` | `VirtualMachineProcessIdResolver` (`sun.management` reflection; no module system, so no flags) | `ModernProcessIdResolver` (`ProcessHandle`) | `ModernProcessIdResolver` |
+| `VirtualMachineProcessIdResolver` called directly | works | works | fails without `--add-opens java.management/sun.management=ALL-UNNAMED` |
+| `SecurityUtils` | works | works | property only; `SecurityManager` is deprecated for removal |
 
 > [!TIP]
-> `AccessibleObjectUtils` (used by the reflective resolvers) logs the exact JVM flag it needs when a
-> `setAccessible(...)` call fails: `"It's require to add JVM Options '--add-opens=<module>/<package>=ALL-UNNAMED'"`,
-> referencing JEP 396. Read that line before guessing which module to open — see
-> [Class Loading and Artifacts](classloading-and-artifacts.md) for the classpath-side equivalents
-> (`java.base/java.net` and `java.base/jdk.internal.loader`).
+> On JDK 9+ the library makes members accessible through `AccessibleObject#trySetAccessible()`, which returns `false`
+> instead of throwing; the later `Field#get` / `Method#invoke` then raises `IllegalAccessException`, which
+> `FieldUtils` rewraps as `IllegalStateException` and `MethodUtils` as `IllegalArgumentException`. So a locked JDK 16+
+> internal shows up as one of those two exceptions, not as `InaccessibleObjectException`. The descriptive
+> `"It's require to add JVM Options '--add-opens=<module>/<package>=ALL-UNNAMED'"` log line (JEP 396) is emitted on the
+> `setAccessible(boolean)` path only. The classpath-side flags are listed in
+> [Class Loading and Artifacts](classloading-and-artifacts.md) (`java.base/java.net`,
+> `java.base/jdk.internal.loader`).
 
 ---
 

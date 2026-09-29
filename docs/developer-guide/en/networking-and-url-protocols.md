@@ -32,11 +32,9 @@ you only ever call its static methods. The constants that matter for handler wor
 |---|---|
 | `HANDLER_PACKAGES_PROPERTY_NAME` | `"java.protocol.handler.pkgs"` — the JDK's handler-package search property |
 | `DEFAULT_HANDLER_PACKAGE_PREFIX` | `"sun.net.www.protocol"` — the JDK's builtin prefix, forbidden for custom handlers |
-| `HANDLER_PACKAGES_SEPARATOR_CHAR` | `'|'` |
 | `HANDLER_CONVENTION_CLASS_NAME` | `"Handler"` — the class-name convention per protocol sub-package |
 | `SUB_PROTOCOL_MATRIX_NAME` | `"_sp"` — matrix-parameter name carrying the sub-protocol list |
 | `DEFAULT_ENCODING` | taken from `SystemUtils.FILE_ENCODING` (`file.encoding`), used by `encode`/`decode` |
-| `FILE_URL_PREFIX` | `"file:/"` |
 
 Representative methods (all verified against source):
 
@@ -48,7 +46,7 @@ URLUtils.buildURI("context", "sub", "resource.yml");                       // "/
 URLUtils.isArchiveURL(url);             // true: jar|zip|war|ear protocols, or a readable jar file: URL
 URLUtils.resolveArchiveFile(url);       // File(/libs/app.jar) — null if absent
 URLUtils.resolveArchiveEntryPath(url);  // "META-INF/MANIFEST.MF"
-// parameters: unmodifiable Map<name, List<value>>
+// parameters: unmodifiable Map<name, List<value>>; matrix parameters round-trip with buildMatrixString
 URLUtils.resolveQueryParameters("http://h/p?a=1&a=2&b=3");  // {a=[1, 2], b=[3]}
 URLUtils.resolveMatrixParameters("/p;a=1;b=2?q");           // {a=[1], b=[2]}
 URLUtils.buildMatrixString("k", "v1", "v2");                // ";k=v1;k=v2"
@@ -59,22 +57,13 @@ URLUtils.registerURLStreamHandler(handler);                 // keyed by handler.
 URLUtils.close(connection);                                 // HttpURLConnection.disconnect(); ignores other types
 ```
 
-> [!NOTE]
-> Sub-protocols are stored in the `_sp` matrix parameter (`SUB_PROTOCOL_MATRIX_NAME`), so
-> `resolveMatrixParameters` and `buildMatrixString` round-trip exactly what the sub-protocol
-> parser produces.
-
 `attachURLStreamHandlerFactory` exists because the JDK method it wraps
-(`java.net.URL.setURLStreamHandlerFactory`) throws an `Error` on a second call — the global
-factory slot is write-once per JVM. The Microsphere version composes instead:
-
-1. no factory installed yet → install the given one directly;
-2. current factory is already a `CompositeURLStreamHandlerFactory` → append to it;
-3. a foreign factory is installed → wrap it plus yours in a new composite, reflectively clear
-   `URL.factory` (`clearURLStreamHandlerFactory`), re-install the composite, then append.
-
-That is why application code should always go through `URLUtils.attachURLStreamHandlerFactory(...)`
-rather than the JDK method directly.
+(`java.net.URL.setURLStreamHandlerFactory`) throws an `Error` on a second call — the global factory
+slot is write-once per JVM, so application code should always go through the Microsphere method,
+which composes instead: (1) no factory installed yet → install the given one directly;
+(2) current factory is already a `CompositeURLStreamHandlerFactory` → append to it; (3) a foreign
+factory is installed → wrap it plus yours in a new composite, reflectively clear `URL.factory`
+(`clearURLStreamHandlerFactory`), re-install the composite, then append.
 
 ---
 
@@ -113,15 +102,10 @@ rather than the JDK method directly.
 
 ## 3. `classpath:` protocol
 
-Registered in `META-INF/services/io.microsphere.net.ExtendableProtocolURLStreamHandler`:
-
-```
-io.microsphere.net.classpath.Handler
-io.microsphere.net.console.Handler
-```
-
-Protocol names match `io.microsphere.constants.ProtocolConstants`: `CLASSPATH_PROTOCOL = "classpath"`,
-`CONSOLE_PROTOCOL = "console"`.
+`META-INF/services/io.microsphere.net.ExtendableProtocolURLStreamHandler` registers two handlers —
+`io.microsphere.net.classpath.Handler` and `io.microsphere.net.console.Handler` — whose protocol
+names come from `io.microsphere.constants.ProtocolConstants` (`CLASSPATH_PROTOCOL = "classpath"`,
+`CONSOLE_PROTOCOL = "console"`, derived from the last package segment by the no-arg constructor).
 
 `io.microsphere.net.classpath.Handler` resolves a URL by joining its authority and path into a
 resource name, stripping leading slashes, and asking the class loader that loaded the Microsphere
@@ -129,10 +113,8 @@ core classes (`ClassLoaderUtils.getClassLoader(Handler.class)`) via `getResource
 
 ```java
 ServiceLoaderURLStreamHandlerFactory.attach();
-
 URL url = new URL("classpath://META-INF/microsphere/configuration-properties.json");
 try (InputStream in = url.openStream()) { /* ... */ }
-
 // authority + path are concatenated, so the split point does not matter;
 // leading-slash forms are normalized as well
 URL other = new URL("classpath:////META-INF/services/io.microsphere.convert.Converter");
@@ -143,9 +125,8 @@ silently returns an empty stream. A hit delegates to the connection of the *foun
 so reading the same resource from inside a jar works exactly like `jar:` does.
 
 > [!NOTE]
-> Resolution uses the loader of the `Handler` class, not the thread-context class loader. In a
-> flat application classpath the two usually see the same resources; in container/module setups,
-> keep that distinction in mind.
+> Resolution uses the loader of the `Handler` class, not the thread-context class loader — usually
+> the same view on a flat application classpath, but distinct in container/module setups.
 
 ---
 
@@ -167,7 +148,6 @@ Any console URL maps onto the process's standard streams; host, port, and path a
 
 ```java
 ServiceLoaderURLStreamHandlerFactory.attach();
-
 URL out = new URL("console://localhost:12345/abc");
 try (OutputStream os = out.openConnection().getOutputStream()) {
     os.write("printed via a URL\n".getBytes());
@@ -177,8 +157,7 @@ try (OutputStream os = out.openConnection().getOutputStream()) {
 > [!WARNING]
 > The protocol is `console` — **there are no `out:` or `err:` protocols** in this codebase, and
 > `getOutputStream()` always returns `System.out`, never `System.err`. The `console://host:port`
-> authority form used in tests is convention, not requirement: the streams are chosen regardless
-> of what the URL says.
+> authority form used in tests is convention only: the streams are chosen regardless of the URL.
 
 ---
 
@@ -197,8 +176,8 @@ console://...;_sp=text  →  openConnection(URL)[final] → openConnection(URL, 
 ```
 
 The dispatch lives in the default implementation of `openConnection(URL, Proxy)`, which subclasses
-may not override if they want chaining. The `final` methods are `openConnection(URL)`, `parseURL`,
-`equals`, `hostsEqual`, `hashCode`, `toExternalForm` — parsing and equality of chained URLs are not
+must not override if they want chaining. `openConnection(URL)`, `parseURL`, `equals`, `hostsEqual`,
+`hashCode` and `toExternalForm` are `final` — parsing and equality of chained URLs are not
 overridable by design. Extension points:
 
 ```java
@@ -220,23 +199,22 @@ public interface SubProtocolURLConnectionFactory {
 ```
 
 `CompositeSubProtocolURLConnectionFactory` (`add(...)`, `add(varargs)`, `remove(...)`) aggregates
-several factories behind one `SubProtocolURLConnectionFactory`, and `DelegatingURLConnection`
-wraps a produced connection while forwarding `connect`, timeouts, content, and header calls.
+several factories behind one `SubProtocolURLConnectionFactory`; `DelegatingURLConnection` wraps a
+produced connection while forwarding `connect`, timeout, content, and header calls.
 
 > [!IMPORTANT]
-> Two facts correct what older documentation claims: (1) `init()` does **not** scan any SPI for
-> `SubProtocolURLConnectionFactory` — it invokes the empty-by-default
-> `initSubProtocolURLConnectionFactories(List)` hook, so factories appear only because a subclass
-> overrides that hook; (2) `attach()` constructs SPI-registered handlers but never calls `init()`
-> on them, so chaining handlers must be initialized explicitly
-> (`new MyHandler(); handler.init();` or `customizeSubProtocolURLConnectionFactories(...)`).
+> Two corrections to older documentation: (1) `init()` does **not** scan any SPI for
+> `SubProtocolURLConnectionFactory` — it only invokes the empty-by-default
+> `initSubProtocolURLConnectionFactories(List)` hook, so factories exist only because a subclass
+> overrides it; (2) `attach()` constructs SPI-registered handlers but never calls `init()` on them,
+> so chaining handlers must self-initialize (`handler.init()` or
+> `customizeSubProtocolURLConnectionFactories(...)`).
 
 > [!NOTE]
-> The built-in `classpath` and `console` handlers override `openConnection(URL, Proxy)` directly
-> (per the class javadoc, "if there is no requirement to support the sub-protocol, the subclass
-> only needs to override `openConnection(URL, Proxy)`"). They therefore never run the chaining
-> dispatch: `console:text://...` opens a plain `ConsoleURLConnection` and `text` is only visible
-> as the parsed `_sp` matrix parameter, not as a behavior selector.
+> The built-in `classpath` and `console` handlers override `openConnection(URL, Proxy)` directly —
+> the javadoc's prescribed shortcut when sub-protocol support is not required. They never run the
+> chaining dispatch: `console:text://...` opens a plain `ConsoleURLConnection`, and `text` remains
+> only as the parsed `_sp` matrix parameter.
 
 ---
 

@@ -17,7 +17,8 @@ Never instantiate a `XxxUtils` class — call the static methods. Exceptions by 
 **not** implement `Utils`; `StopWatch`, `ValueHolder` and `Version` are ordinary instantiable
 classes. Two placeholders to avoid: `NumberUtils` declares **no** public methods, and `BaseUtils` is
 `@Deprecated` and empty. The shorthand `getType(Object obj | Class<?> type)` below means two
-overloads; brackets mark optional trailing parameters.
+overloads; brackets mark parameters that appear in additional overloads —
+`resolveClass(String className[, ClassLoader loader])` covers both the one- and two-argument forms.
 
 ---
 
@@ -27,21 +28,17 @@ overloads; brackets mark optional trailing parameters.
 (alias of `EMPTY`), `EMPTY_STRING_ARRAY`, `INDEX_NOT_FOUND` (`-1`).
 
 ```java
-public static boolean isBlank(String value)     public static boolean isNotBlank(String value)
-public static boolean isNumeric(String str)     public static boolean containsWhitespace(String str)
-// contains() is the only method that accepts a CharSequence argument
-public static boolean contains(String value, CharSequence part)
-public static boolean startsWith(String value, String part)   public static boolean endsWith(String value, String part)
+public static boolean isBlank(String value)     public static boolean isNotBlank(String value)     public static boolean isNumeric(String str)
+public static boolean containsWhitespace(String str)     public static boolean startsWith(String value, String part)     public static boolean endsWith(String value, String part)
+public static boolean contains(String value, CharSequence part)   // the only method that accepts a CharSequence argument
 public static String[] split(String value, char delimiter | String delimiter)
 public static String replace(String text, String searchString, String replacement | ..., int max)
 public static String substringBetween(String str, String tag | String open, String close)
-public static String substringBefore(String str, String separator)   public static String substringAfter(String str, String separator)
-public static String substringBeforeLast(String str, String separator)   public static String substringAfterLast(String str, String separator)
-public static String trimWhitespace(String str)         // both ends; also trimLeadingWhitespace / trimTrailingWhitespace
-public static String trimAllWhitespace(String str)      // every occurrence
-public static String capitalize(String str)             public static String uncapitalize(String str)
-public static String[] toStringArray(Collection<String> collection)
-public static String arrayToString(Object[] values, String delimiter)
+public static String substringBefore(String str, String separator)     public static String substringAfter(String str, String separator)
+public static String substringBeforeLast(String str, String separator)     public static String substringAfterLast(String str, String separator)
+public static String trimWhitespace(String str)     public static String trimLeadingWhitespace(String str)     public static String trimTrailingWhitespace(String str)     // trimWhitespace: both ends
+public static String trimAllWhitespace(String str)     public static String capitalize(String str)     public static String uncapitalize(String str)     // trimAllWhitespace: every occurrence
+public static String[] toStringArray(Collection<String> collection)     public static String arrayToString(Object[] values, String delimiter)
 ```
 
 > [!WARNING]
@@ -56,8 +53,7 @@ returns `[value]`; trim/case methods return `null` or `""` input as-is.
 
 ```java
 StringUtils.split("a,b,c", ',')                // ["a","b","c"]
-StringUtils.split(null, ',')                   // String[0]
-StringUtils.trimAllWhitespace(" a b ")         // "ab"
+StringUtils.split(null, ',')                   // String[0]  (never null)
 StringUtils.substringBefore("key=value", "=")  // "key"
 ```
 
@@ -71,11 +67,12 @@ StringUtils.substringBefore("key=value", "=")  // "key"
 // Kind tests; "Object obj | Class<?>" means both overloads exist
 public static boolean isWrapperType(Object obj | Class<?>)   public static boolean isArray(Object obj | Class<?>)   public static boolean isEnum(Object obj | Class<?>)
 public static boolean isNumber(Object obj | Class<?>)   public static boolean isCharSequence(Object obj | Class<?>)   public static boolean isSimpleType(Object obj | Class<?>)
-public static boolean isPrimitive(Class<?>)   public static boolean isSyntheticClass(Object obj | Class<?>)   public static boolean isClass(Object)
-public static boolean isLambdaClass(Object obj | Class<?>)   public static boolean isLambdaClassName(String)   public static boolean isFunctionalInterface(Class<?>)
+public static boolean isPrimitive(Class<?>)   public static boolean isInterface(Class<?>)   public static boolean isClass(Object)
+public static boolean isLambdaClass(Object obj | Class<?>)   public static boolean isSyntheticClass(Object obj | Class<?>)   public static boolean isLambdaClassName(String)
 public static boolean isAbstractClass(Class<?>)   public static boolean isFinal(Class<?>)   public static boolean isConcreteClass(Class<?>)
 public static boolean isGeneralClass(Class<?>)   public static boolean isTopLevelClass(Class<?>)   public static boolean arrayTypeEquals(Class<?> one, Class<?> two)
-public static boolean isDerived(Class<?> sourceType, Class<?>... superTypes)   public static boolean isAssignableFrom(Class<?> superType, Class<?> targetType)
+public static boolean isFunctionalInterface(Class<?>)   public static boolean isDerived(Class<?> sourceType, Class<?>... superTypes)
+public static boolean isAssignableFrom(Class<?> superType, Class<?> targetType)
 // Primitive / wrapper mapping
 public static Class<?> resolvePrimitiveType(Class<?> type)   public static Class<?> resolveWrapperType(Class<?> primitiveType)   public static Class<?> tryResolveWrapperType(Class<?> type)
 public static Class<?> resolvePrimitiveClassForName(String className)
@@ -120,31 +117,23 @@ ClassUtils.resolveClassName("io/microsphere/util/StringUtils.class");  // "io.mi
 ```java
 // Which loader?
 public static ClassLoader getDefaultClassLoader()               // never null
-public static ClassLoader getClassLoader(Class<?> type)         public static ClassLoader getCallerClassLoader()
-public static ClassLoader nullSafeClassLoader(ClassLoader classLoader)   // null -> default
-public static Set<ClassLoader> getInheritableClassLoaders(ClassLoader classLoader)
+public static ClassLoader getClassLoader(Class<?> type)     public static ClassLoader getCallerClassLoader()
+public static ClassLoader nullSafeClassLoader(ClassLoader classLoader)     // null -> default; also getInheritableClassLoaders(ClassLoader)
 // Loading
-public static Class<?> loadClass(ClassLoader loader, String className[, boolean cached])
-public static Class<?> resolveClass(String className[, ClassLoader loader][, boolean cached])
+public static Class<?> loadClass(ClassLoader loader, String className[, boolean cached])     public static Class<?> resolveClass(String className[, ClassLoader loader][, boolean cached])
 public static boolean isPresent(String className[, ClassLoader loader])
 // Already-loaded introspection (HotSpot only)
-public static Class<?> findLoadedClass(ClassLoader loader, String className)
-public static boolean isLoadedClass(ClassLoader loader, Class<?> type | String className)
+public static Class<?> findLoadedClass(ClassLoader loader, String className)     public static boolean isLoadedClass(ClassLoader loader, Class<?> type | String className)
 public static Set<Class<?>> findLoadedClasses(ClassLoader loader, String... packageNames | Iterable<String> packageNames)
-public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader loader)   // and ...InClassPaths
-public static Set<Class<?>> getAllLoadedClasses(ClassLoader loader)            // and getLoadedClasses, getAllLoadedClassesMap
-public static int getLoadedClassCount()      public static long getUnloadedClassCount()      public static long getTotalLoadedClassCount()
-public static boolean isVerbose()            public static void setVerbose(boolean verbose)
+public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader loader)     // and ...InClassPaths; also getAllLoadedClasses, getLoadedClasses, getAllLoadedClassesMap
+public static int getLoadedClassCount()     public static long getUnloadedClassCount()     public static long getTotalLoadedClassCount()     public static boolean isVerbose()     public static void setVerbose(boolean verbose)
 // Resources
-public static URL getResource(String resource[, ClassLoader loader][, ResourceType resourceType])
-public static Set<URL> getResources(ClassLoader loader, String resource)
-public static String getResourceAsString(String resource[, ClassLoader loader])
-public static URL getClassResource(ClassLoader loader, Class<?> type | String className)
+public static URL getResource(String resource | ClassLoader loader, String resource | ClassLoader loader, ResourceType resourceType, String resource)     public static Set<URL> getResources(ClassLoader loader, String resource)
+public static String getResourceAsString(String resource | ClassLoader loader, String resource)     public static URL getClassResource(ClassLoader loader, Class<?> type | String className)
 // URLClassLoader plumbing
-public static URLClassLoader findURLClassLoader(ClassLoader loader)            // also resolveURLClassLoader
+public static URLClassLoader findURLClassLoader(ClassLoader loader)     // also resolveURLClassLoader
 public static URLClassLoader newURLClassLoader(URL... urls)     // + parent and/or initializedLoaders leading params
-public static Set<URL> findAllClassPathURLs(ClassLoader loader)
-public static boolean removeClassPathURL(ClassLoader loader, URL url)
+public static Set<URL> findAllClassPathURLs(ClassLoader loader)     public static boolean removeClassPathURL(ClassLoader loader, URL url)
 ```
 
 `ResourceType` is a nested enum (`io.microsphere.util.ClassLoaderUtils.ResourceType`) that normalizes
@@ -186,10 +175,8 @@ public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType[, ClassLo
 public static Set<String> getServiceClassNames(Class<?> serviceType[, ClassLoader loader])
 public static Set<URL> getServiceResoources(Class<?> serviceType, ClassLoader loader) throws IOException
 // Loading instances; result sorted by Prioritized.COMPARATOR (ascending getPriority())
-public static <S> List<S> loadServicesList(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException
-public static <S> S[] loadServices(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException
-public static <S> S loadFirstService(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException
-public static <S> S loadLastService(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException
+public static <S> List<S> loadServicesList(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException   public static <S> S[] loadServices(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException
+public static <S> S loadFirstService(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException   public static <S> S loadLastService(Class<S> serviceType[, ClassLoader loader][, boolean cached]) throws IllegalArgumentException
 ```
 
 The first element is the highest-priority implementation — which is what `Converters`,
@@ -301,8 +288,8 @@ StopWatch watch = new StopWatch("bootstrap");
 watch.start("spi");
 ServiceLoaderUtils.loadServicesList(Converter.class);
 watch.stop();
-System.out.println(watch.getTotalTime(TimeUnit.MILLISECONDS));
-System.out.println(watch);   // id + per-task elapsed nanos
+System.out.println(watch);                                     // id + per-task elapsed nanos
+System.out.println(watch.getTotalTime(TimeUnit.MILLISECONDS)); // the number
 ```
 
 ---
@@ -342,11 +329,7 @@ public interface Constants extends FileConstants, PathConstants, PropertyConstan
 public static final String DEFAULT_PLACEHOLDER = "{}";
 public static String format(String pattern, Object... args)
 public static String formatWithPlaceholder(String pattern, String placeholder, Object... args)
-```
-
-```java
-FormatUtils.format("No Resource[{}] found in {}", "app.yml", "classpath:");
-// "No Resource[app.yml] found in classpath:"
+FormatUtils.format("No Resource[{}] found in {}", "app.yml", "classpath:");  // "No Resource[app.yml] found in classpath:"
 ```
 
 ---
@@ -362,14 +345,11 @@ public static List<JarEntry> filter(JarFile jarFile, JarEntryFilter filter)
 public static boolean isDirectoryEntry(URL url)
 public static void extract(File jarSourceFile, File targetDirectory[, JarEntryFilter filter]) throws IOException
 public static void extract(JarFile jarFile | URL jarResourceURL, File targetDirectory, JarEntryFilter jarEntryFilter) throws IOException
+JarUtils.extract(new File("libs/app.jar"), new File("target/unpacked"), ClassFileJarEntryFilter.INSTANCE);
 ```
 
 `JarEntryFilter` is a `Filter<JarEntry>` (see [Collections and Filters](collections-and-filters.md)),
-and `ClassFileJarEntryFilter.INSTANCE` (in `io.microsphere.filter`) is the usual argument:
-
-```java
-JarUtils.extract(new File("libs/app.jar"), new File("target/unpacked"), ClassFileJarEntryFilter.INSTANCE);
-```
+and `ClassFileJarEntryFilter.INSTANCE` (in `io.microsphere.filter`) is the usual argument.
 
 ---
 
