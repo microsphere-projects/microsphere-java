@@ -63,6 +63,7 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.newArray;
+import static io.microsphere.util.ArrayUtils.nullSafeArray;
 import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ArrayUtils.ofBooleans;
@@ -189,6 +190,15 @@ class ArrayUtilsTest implements Loggable {
         assertArrayEquals(of("A"), ofArray("A"));
         assertArrayEquals(of("A", "B"), ofArray("A", "B"));
         assertArrayEquals(of("A", "B", "C"), ofArray("A", "B", "C"));
+    }
+
+    @Test
+    void testNullSafeArray() {
+        assertArrayEquals(ofArray("A"), nullSafeArray("A"));
+        assertArrayEquals(ofArray("A", "B"), nullSafeArray("A", "B"));
+        assertArrayEquals(ofArray("A", "B", "C"), nullSafeArray("A", "B", "C"));
+        assertArrayEquals(EMPTY_OBJECT_ARRAY, nullSafeArray());
+        assertArrayEquals(EMPTY_OBJECT_ARRAY, nullSafeArray((Object[]) null));
     }
 
     // Test size(...) methods

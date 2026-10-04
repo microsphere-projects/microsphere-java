@@ -97,12 +97,12 @@ public class ConfigurationProperty {
     @Nullable
     private String description;
 
-    @Nonnull
+    @Nullable
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 

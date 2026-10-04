@@ -33,6 +33,7 @@ import java.util.function.Consumer;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.lang.System.arraycopy;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Arrays.binarySearch;
@@ -373,6 +374,27 @@ public abstract class ArrayUtils implements Utils {
      */
     public static <T> T[] ofArray(T... values) {
         return values;
+    }
+
+    /**
+     * Returns a non-null array. If the provided array is {@code null}, an empty array is returned instead.
+     *
+     * <p>This method is useful for avoiding {@code NullPointerException} when working with arrays that may be
+     * {@code null}. It ensures that you always have a valid array to work with, even if the original array was
+     * {@code null}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String[] nonNullArray = ArrayUtils.nullSafeArray(null); // returns an empty String array
+     * String[] anotherNonNullArray = ArrayUtils.nullSafeArray(new String[] {"one", "two"}); // returns the original array
+     * }</pre>
+     *
+     * @param values the array to check for nullity
+     * @param <T>   the class of the objects in the array
+     * @return the original array if it is non-null, otherwise an empty array of the same type
+     */
+    public static <T> T[] nullSafeArray(T... values) {
+        return defaultIfNull(values, (T[]) EMPTY_OBJECT_ARRAY);
     }
 
     /**
@@ -1264,7 +1286,7 @@ public abstract class ArrayUtils implements Utils {
      * @return an array containing all elements from the enumeration
      */
     public static <E> E[] asArray(Enumeration<E> enumeration, Class<?> componentType) {
-        return asArray(list(enumeration), componentType);
+        return enumeration == null ? newArray(componentType, 0) : asArray(list(enumeration), componentType);
     }
 
     /**
@@ -1308,6 +1330,9 @@ public abstract class ArrayUtils implements Utils {
      * @return an array containing all elements from the collection
      */
     public static <E> E[] asArray(Collection<E> collection, Class<?> componentType) {
+        if (collection == null) {
+            return newArray(componentType, 0);
+        }
         return collection.toArray(newArray(componentType, 0));
     }
 
@@ -1329,7 +1354,7 @@ public abstract class ArrayUtils implements Utils {
      * @return a newly created array of the specified component type and length
      */
     public static <E> E[] newArray(Class<?> componentType, int length) {
-        return (E[]) newInstance(componentType, length);
+        return (E[]) newInstance(componentType == null ? Object.class : componentType, length);
     }
 
     /**
@@ -1358,17 +1383,19 @@ public abstract class ArrayUtils implements Utils {
      */
     public static <E> E[] combine(E one, E... others) {
         int othersLength = length(others);
-        Class<?> oneType = one.getClass();
-        boolean oneIsArray = isArray(oneType);
+        Class<?> oneType = one == null ? null : one.getClass();
+        boolean oneIsArray = oneType != null && isArray(oneType);
 
         if (oneIsArray) {
             return combineArray((E[]) oneType.cast(one), others);
         } else {
-            Class<?> componentType = oneType;
+            Class<?> componentType = oneType != null ? oneType : (others == null ? Object.class : others.getClass().getComponentType());
             int length = 1 + othersLength;
             E[] values = newArray(componentType, length);
             values[0] = one;
-            arraycopy(others, 0, values, 1, othersLength);
+            if (othersLength > 0) {
+                arraycopy(others, 0, values, 1, othersLength);
+            }
             return values;
         }
     }
@@ -1441,12 +1468,14 @@ public abstract class ArrayUtils implements Utils {
             size += otherLength;
         }
 
-        Class<?> componentType = one.getClass().getComponentType();
+        Class<?> componentType = one == null ? Object.class : one.getClass().getComponentType();
         E[] newArray = newArray(componentType, size);
 
         int pos = 0;
-        arraycopy(one, 0, newArray, pos, oneSize);
-        pos += oneSize;
+        if (oneSize > 0) {
+            arraycopy(one, 0, newArray, pos, oneSize);
+            pos += oneSize;
+        }
 
         for (int i = 0; i < othersSize; i++) {
             E[] other = others[i];
