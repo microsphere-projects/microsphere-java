@@ -97,6 +97,9 @@ public class Artifact {
     }
 
     public boolean matches(Artifact artifact) {
+        if (artifact == null) {
+            return false;
+        }
         return matchesArtifactId(artifact)
                 && matchesVersion(artifact);
     }
@@ -115,7 +118,7 @@ public class Artifact {
             return true;
         }
         String value = getterFunction.apply(artifact);
-        return configuredValue.equals(value);
+        return Objects.equals(configuredValue, value);
     }
 
     @Override
