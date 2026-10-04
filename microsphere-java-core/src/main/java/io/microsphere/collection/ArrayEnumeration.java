@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nullable;
+
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
@@ -25,6 +27,7 @@ import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static io.microsphere.util.ArrayUtils.nullSafeArray;
 import static java.lang.String.valueOf;
 import static java.util.Objects.hash;
 
@@ -56,9 +59,9 @@ public class ArrayEnumeration<E> implements Enumeration<E> {
 
     private int position;
 
-    public ArrayEnumeration(E[] elements) {
-        this.elements = elements;
-        this.size = elements.length;
+    public ArrayEnumeration(@Nullable E... elements) {
+        this.elements = nullSafeArray(elements);
+        this.size = this.elements.length;
         this.position = 0;
     }
 

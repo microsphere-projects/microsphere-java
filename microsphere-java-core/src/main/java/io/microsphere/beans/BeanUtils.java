@@ -470,6 +470,9 @@ public abstract class BeanUtils implements Utils {
 
     static Object resolveProperty(Object instance, PropertyDescriptor propertyDescriptor, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Method readMethod = propertyDescriptor.getReadMethod();
+        if (readMethod == null) {
+            return null;
+        }
         trySetAccessible(readMethod);
         Object propertyValue = invokeMethod(instance, readMethod);
         Class<?> propertyType = propertyDescriptor.getPropertyType();

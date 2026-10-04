@@ -110,5 +110,6 @@ class ArtifactTest {
         assertTrue(create(ARTIFACT_ID, VERSION).matches(artifact));
         assertFalse(create(VERSION).matches(artifact));
         assertFalse(create(ARTIFACT_ID, HYPHEN).matches(artifact));
+        assertFalse(create(ARTIFACT_ID, HYPHEN).matches(null));
     }
 }
