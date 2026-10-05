@@ -17,6 +17,7 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.Thread.currentThread;
@@ -58,6 +59,7 @@ public abstract class StackTraceUtils implements Utils {
      * @return Caller Class
      * @see #getCallerClassInStatckTrace(int)
      */
+    @Nullable
     public static Class<?> getCallerClassInStatckTrace() {
         // Plus 1 , because Invocation getStackTrace() method was considered as increment invocation frame
         // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
@@ -71,6 +73,7 @@ public abstract class StackTraceUtils implements Utils {
      * @return call class name
      * @see #getCallerClassNameInStackTrace(int)
      */
+    @Nullable
     public static String getCallerClassNameInStackTrace() {
         // Plus 1 , because Invocation getStackTrace() method was considered as increment invocation frame
         // Plus 1 , because Invocation getCallerClassNameInStackTrace() method was considered as increment invocation frame
@@ -85,6 +88,7 @@ public abstract class StackTraceUtils implements Utils {
      * @return caller class
      * @see #getCallerClassNameInStackTrace(int)
      */
+    @Nullable
     public static Class<?> getCallerClassInStatckTrace(int invocationFrame) {
         // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
         String className = getCallerClassNameInStackTrace(invocationFrame + 1);
@@ -97,6 +101,7 @@ public abstract class StackTraceUtils implements Utils {
      * @param invocationFrame invocation frame
      * @return specified invocation frame class
      */
+    @Nullable
     public static String getCallerClassNameInStackTrace(int invocationFrame) throws IndexOutOfBoundsException {
         StackTraceElement[] elements = getStackTrace();
         if (invocationFrame < elements.length) {
