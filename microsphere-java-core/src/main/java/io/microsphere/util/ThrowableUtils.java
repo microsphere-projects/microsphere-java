@@ -17,6 +17,8 @@
 
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The uitlities class for {@link Throwable}
  *
@@ -41,7 +43,8 @@ public abstract class ThrowableUtils implements Utils {
      * @param throwable the throwable whose root cause is to be determined; must not be {@code null}
      * @return the root cause of the throwable chain
      */
-    public static Throwable getRootCause(Throwable throwable) {
+    @Nonnull
+    public static Throwable getRootCause(@Nonnull Throwable throwable) {
         Throwable rootCause = throwable;
         while (rootCause.getCause() != null) {
             rootCause = rootCause.getCause();

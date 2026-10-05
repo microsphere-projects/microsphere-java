@@ -136,6 +136,7 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
      *
      * @return the resolved priority as an {@link Integer}, negative value indicates higher priority
      */
+    @Nonnull
     protected Integer resolvePriority() {
         Class<S> sourceType = getSourceType();
         Class<T> targetType = getTargetType();
@@ -152,7 +153,7 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }

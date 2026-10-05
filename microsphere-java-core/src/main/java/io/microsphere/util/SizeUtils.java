@@ -17,6 +17,8 @@
 
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -100,7 +102,7 @@ public abstract class SizeUtils implements Utils {
      * @param type the type to get the size in bytes for
      * @return the size in bytes of the specified type, or {@link #UNBOUND_BYTES_SIZE} if the type is unbounded
      */
-    public static int bytesSize(Class<?> type) {
+    public static int bytesSize(@Nonnull Class<?> type) {
         return BYTES_SIZE_MAP.getOrDefault(type, UNBOUND_BYTES_SIZE);
     }
 
