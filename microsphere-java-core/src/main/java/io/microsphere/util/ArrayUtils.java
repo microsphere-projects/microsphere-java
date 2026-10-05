@@ -1286,7 +1286,7 @@ public abstract class ArrayUtils implements Utils {
      * @return an array containing all elements from the enumeration
      */
     public static <E> E[] asArray(Enumeration<E> enumeration, Class<?> componentType) {
-        return enumeration == null ? newArray(componentType, 0) : asArray(list(enumeration), componentType);
+        return asArray(list(enumeration), componentType);
     }
 
     /**
@@ -1330,9 +1330,6 @@ public abstract class ArrayUtils implements Utils {
      * @return an array containing all elements from the collection
      */
     public static <E> E[] asArray(Collection<E> collection, Class<?> componentType) {
-        if (collection == null) {
-            return newArray(componentType, 0);
-        }
         return collection.toArray(newArray(componentType, 0));
     }
 
@@ -1354,7 +1351,7 @@ public abstract class ArrayUtils implements Utils {
      * @return a newly created array of the specified component type and length
      */
     public static <E> E[] newArray(Class<?> componentType, int length) {
-        return (E[]) newInstance(componentType == null ? Object.class : componentType, length);
+        return (E[]) newInstance(componentType, length);
     }
 
     /**
@@ -1383,19 +1380,17 @@ public abstract class ArrayUtils implements Utils {
      */
     public static <E> E[] combine(E one, E... others) {
         int othersLength = length(others);
-        Class<?> oneType = one == null ? null : one.getClass();
-        boolean oneIsArray = oneType != null && isArray(oneType);
+        Class<?> oneType = one.getClass();
+        boolean oneIsArray = isArray(oneType);
 
         if (oneIsArray) {
             return combineArray((E[]) oneType.cast(one), others);
         } else {
-            Class<?> componentType = oneType != null ? oneType : (others == null ? Object.class : others.getClass().getComponentType());
+            Class<?> componentType = oneType;
             int length = 1 + othersLength;
             E[] values = newArray(componentType, length);
             values[0] = one;
-            if (othersLength > 0) {
-                arraycopy(others, 0, values, 1, othersLength);
-            }
+            arraycopy(others, 0, values, 1, othersLength);
             return values;
         }
     }
@@ -1468,14 +1463,12 @@ public abstract class ArrayUtils implements Utils {
             size += otherLength;
         }
 
-        Class<?> componentType = one == null ? Object.class : one.getClass().getComponentType();
+        Class<?> componentType = one.getClass().getComponentType();
         E[] newArray = newArray(componentType, size);
 
         int pos = 0;
-        if (oneSize > 0) {
-            arraycopy(one, 0, newArray, pos, oneSize);
-            pos += oneSize;
-        }
+        arraycopy(one, 0, newArray, pos, oneSize);
+        pos += oneSize;
 
         for (int i = 0; i < othersSize; i++) {
             E[] other = others[i];
