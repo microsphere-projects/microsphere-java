@@ -20,6 +20,7 @@ package io.microsphere.beans;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.MutableInteger;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
@@ -200,7 +201,7 @@ public abstract class BeanUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, Object> resolvePropertiesAsMap(Object bean) {
+    public static Map<String, Object> resolvePropertiesAsMap(@Nullable Object bean) {
         return resolvePropertiesAsMap(bean, BEAN_PROPERTIES_MAX_RESOLVED_DEPTH);
     }
 
@@ -269,7 +270,7 @@ public abstract class BeanUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, Object> resolvePropertiesAsMap(Object bean, int maxResolvedDepth) {
+    public static Map<String, Object> resolvePropertiesAsMap(@Nullable Object bean, int maxResolvedDepth) {
         return resolvePropertiesAsMap(bean, of(0), maxResolvedDepth);
     }
 
@@ -281,7 +282,7 @@ public abstract class BeanUtils implements Utils {
      * @throws RuntimeException if an exception occurs during introspection
      */
     @Nonnull
-    public static BeanMetadata getBeanMetadata(Class<?> beanClass) throws RuntimeException {
+    public static BeanMetadata getBeanMetadata(@Nonnull Class<?> beanClass) throws RuntimeException {
         return beanMetadataCache.computeIfAbsent(beanClass, BeanMetadata::of);
     }
 
@@ -316,7 +317,8 @@ public abstract class BeanUtils implements Utils {
      * if no such method exists or the property is not found
      * @throws IllegalArgumentException if {@code beanMetadata} or {@code propertyName} is {@code null}
      */
-    public static Method findWriteMethod(BeanMetadata beanMetadata, String propertyName) {
+    @Nullable
+    public static Method findWriteMethod(@Nonnull BeanMetadata beanMetadata, @Nullable String propertyName) {
         PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanMetadata, propertyName);
         if (propertyDescriptor == null) {
             return null;
@@ -363,7 +365,8 @@ public abstract class BeanUtils implements Utils {
      * if no such descriptor exists or the property is not found
      * @throws IllegalArgumentException if {@code beanMetadata} or {@code propertyName} is {@code null}
      */
-    public static PropertyDescriptor findPropertyDescriptor(BeanMetadata beanMetadata, String propertyName) {
+    @Nullable
+    public static PropertyDescriptor findPropertyDescriptor(@Nonnull BeanMetadata beanMetadata, @Nullable String propertyName) {
         PropertyDescriptor propertyDescriptor = beanMetadata.getPropertyDescriptor(propertyName);
         if (propertyDescriptor == null) {
             if (logger.isTraceEnabled()) {
@@ -446,7 +449,7 @@ public abstract class BeanUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    protected static Map<String, Object> resolvePropertiesAsMap(Object bean, MutableInteger resolvedDepth, int maxResolvedDepth) {
+    protected static Map<String, Object> resolvePropertiesAsMap(@Nullable Object bean, @Nonnull MutableInteger resolvedDepth, int maxResolvedDepth) {
         if (bean == null) {
             return emptyMap();
         }

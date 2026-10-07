@@ -112,11 +112,11 @@ public class ConfigurationProperty {
     @Nonnull
     private final Metadata metadata;
 
-    public ConfigurationProperty(String name) {
+    public ConfigurationProperty(@Nonnull String name) {
         this(name, String.class);
     }
 
-    public ConfigurationProperty(String name, Class<?> type) {
+    public ConfigurationProperty(@Nonnull String name, @Nonnull Class<?> type) {
         assertNotNull(name, () -> "the property name must not null");
         this.name = name;
         setType(type);
@@ -138,7 +138,7 @@ public class ConfigurationProperty {
         setType(getTypeName(type));
     }
 
-    public void setType(String type) {
+    public void setType(@Nonnull String type) {
         assertNotEmpty(type, () -> "the property type must not null");
         this.type = type;
     }
@@ -175,7 +175,7 @@ public class ConfigurationProperty {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (!(o instanceof ConfigurationProperty)) return false;
 
         ConfigurationProperty that = (ConfigurationProperty) o;
@@ -325,7 +325,7 @@ public class ConfigurationProperty {
         }
 
         @Override
-        public final boolean equals(Object o) {
+        public final boolean equals(@Nullable Object o) {
             if (!(o instanceof Metadata)) return false;
 
             Metadata metadata = (Metadata) o;

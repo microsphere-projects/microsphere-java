@@ -16,6 +16,7 @@
  */
 package io.microsphere.test.annotation.processing;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -129,10 +130,10 @@ public abstract class AbstractAnnotationProcessingTest {
      *
      * @param compiledClasses the mutable {@link Set} for classes to be compiled
      */
-    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
+    protected void addCompiledClasses(@Nonnull Set<Class<?>> compiledClasses) {
     }
 
-    protected void initTestClass(Class<?> testClass) {
+    protected void initTestClass(@Nonnull Class<?> testClass) {
         this.testClass = testClass;
         this.testClassName = testClass.getName();
         this.testTypeElement = this.elements.getTypeElement(this.testClassName);
@@ -146,7 +147,7 @@ public abstract class AbstractAnnotationProcessingTest {
      * @param invocationContext {@link ReflectiveInvocationContext}
      * @param extensionContext  {@link ExtensionContext}
      */
-    protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+    protected void beforeTest(@Nonnull ReflectiveInvocationContext<Method> invocationContext, @Nonnull ExtensionContext extensionContext) {
     }
 
     /**
@@ -157,7 +158,7 @@ public abstract class AbstractAnnotationProcessingTest {
      * @param result            the result after test method returning
      * @param failure           the failure after the test methods' execution
      */
-    protected void afterTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
+    protected void afterTest(@Nonnull ReflectiveInvocationContext<Method> invocationContext, @Nonnull ExtensionContext extensionContext,
                              @Nullable Object result, @Nullable Throwable failure) {
     }
 }
