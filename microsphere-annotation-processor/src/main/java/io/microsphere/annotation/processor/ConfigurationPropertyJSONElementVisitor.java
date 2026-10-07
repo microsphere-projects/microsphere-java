@@ -18,6 +18,7 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor;
 import io.microsphere.metadata.ConfigurationPropertyGenerator;
@@ -65,7 +66,8 @@ class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElemen
     }
 
     @Override
-    public Boolean visitVariableAsField(VariableElement field, StringBuilder jsonBuilder) {
+    @Nonnull
+    public Boolean visitVariableAsField(@Nonnull VariableElement field, @Nonnull StringBuilder jsonBuilder) {
         AnnotationMirror annotation = getAnnotation(field, getAnnotationClassName());
         if (annotation != null) {
             io.microsphere.beans.ConfigurationProperty configurationProperty = null;
@@ -105,10 +107,11 @@ class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElemen
     }
 
     @Override
-    protected boolean supportsType(TypeElement e) {
+    protected boolean supportsType(@Nonnull TypeElement e) {
         return true;
     }
 
+    @Nonnull
     public ConfigurationPropertyGenerator getGenerator() {
         return generator;
     }

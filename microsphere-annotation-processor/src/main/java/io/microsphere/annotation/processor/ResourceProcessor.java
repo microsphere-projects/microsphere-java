@@ -17,6 +17,8 @@
 
 package io.microsphere.annotation.processor;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.lang.function.ThrowableFunction;
 
@@ -95,11 +97,11 @@ public class ResourceProcessor {
 
     private final Map<String, FileObject> fileObjectsCache;
 
-    public ResourceProcessor(ProcessingEnvironment processingEnv, Location location) {
+    public ResourceProcessor(@Nonnull ProcessingEnvironment processingEnv, @Nonnull Location location) {
         this(processingEnv, location, "");
     }
 
-    public ResourceProcessor(ProcessingEnvironment processingEnv, Location location, CharSequence moduleAndPackage) {
+    public ResourceProcessor(@Nonnull ProcessingEnvironment processingEnv, @Nonnull Location location, @Nullable CharSequence moduleAndPackage) {
         this.processingEnv = processingEnv;
         this.location = location;
         this.filerProcessor = new FilerProcessor(processingEnv);
@@ -107,15 +109,17 @@ public class ResourceProcessor {
         this.fileObjectsCache = newHashMap();
     }
 
-    public <T> T processInResource(String resourceName, boolean forWriting, ThrowableFunction<Optional<FileObject>, T> resourceCallback) {
+    @Nullable
+    public <T> T processInResource(@Nonnull String resourceName, boolean forWriting, @Nonnull ThrowableFunction<Optional<FileObject>, T> resourceCallback) {
         return processInResource(resourceName, forWriting, resourceCallback, e -> {
             printWarning(processingEnv, "[ResourceProcessor] Failed to process the resource[name : '{}' , forWriting : {}]", resourceName, forWriting, e);
             throw wrap(e, RuntimeException.class);
         });
     }
 
-    public <T> T processInResource(String resourceName, boolean forWriting, ThrowableFunction<Optional<FileObject>, T> resourceCallback,
-                                   Function<Throwable, T> exceptionHandler) {
+    @Nullable
+    public <T> T processInResource(@Nonnull String resourceName, boolean forWriting, @Nonnull ThrowableFunction<Optional<FileObject>, T> resourceCallback,
+                                   @Nonnull Function<Throwable, T> exceptionHandler) {
         return filerProcessor.processInFiler(filer -> {
             String key = (forWriting ? "W" : "R") + "@" + resourceName;
             FileObject resource = fileObjectsCache.get(key);
@@ -144,19 +148,22 @@ public class ResourceProcessor {
         });
     }
 
-    public Optional<FileObject> getResource(String resourceName, boolean forWriting) {
+    @Nonnull
+    public Optional<FileObject> getResource(@Nonnull String resourceName, boolean forWriting) {
         return processInResource(resourceName, forWriting, resource -> resource);
     }
 
-    public <T> Optional<T> processInResourceInputStream(String resourceName, ThrowableFunction<InputStream, T> streamCallback) {
+    @Nonnull
+    public <T> Optional<T> processInResourceInputStream(@Nonnull String resourceName, @Nonnull ThrowableFunction<InputStream, T> streamCallback) {
         return processInResourceInputStream(resourceName, streamCallback, (resource, e) -> {
             printWarning(processingEnv, "[ResourceProcessor] Failed to process the InputStream of the resource[relative : '{}' , name : '{}']", resourceName, resource.getName(), e);
             throw wrap(e, RuntimeException.class);
         });
     }
 
-    public <T> Optional<T> processInResourceInputStream(String resourceName, ThrowableFunction<InputStream, T> streamCallback,
-                                                        BiFunction<FileObject, Throwable, T> exceptionHandler) {
+    @Nonnull
+    public <T> Optional<T> processInResourceInputStream(@Nonnull String resourceName, @Nonnull ThrowableFunction<InputStream, T> streamCallback,
+                                                        @Nonnull BiFunction<FileObject, Throwable, T> exceptionHandler) {
         return processInResource(resourceName, FOR_READING, resourceRef -> resourceRef.map(resource -> {
             try (InputStream inputStream = resource.openInputStream()) {
                 return streamCallback.apply(inputStream);
@@ -166,14 +173,16 @@ public class ResourceProcessor {
         }));
     }
 
-    public <T> Optional<T> processInResourceReader(String resourceName, ThrowableFunction<Reader, T> readerCallback) {
+    @Nonnull
+    public <T> Optional<T> processInResourceReader(@Nonnull String resourceName, @Nonnull ThrowableFunction<Reader, T> readerCallback) {
         return processInResourceReader(resourceName, readerCallback, (resource, e) -> {
             printWarning(processingEnv, "[ResourceProcessor] Failed to process the Reader of the resource[relative : '{}' , name : '{}']", resourceName, resource.getName(), e);
             throw wrap(e, RuntimeException.class);
         });
     }
 
-    public <T> Optional<T> processInResourceReader(String resourceName, ThrowableFunction<Reader, T> readerCallback, BiFunction<FileObject, Throwable, T> exceptionHandler) {
+    @Nonnull
+    public <T> Optional<T> processInResourceReader(@Nonnull String resourceName, @Nonnull ThrowableFunction<Reader, T> readerCallback, @Nonnull BiFunction<FileObject, Throwable, T> exceptionHandler) {
         return processInResource(resourceName, FOR_READING, resourceRef -> resourceRef.map(resource -> {
             try (Reader reader = resource.openReader(true)) {
                 return readerCallback.apply(reader);
@@ -183,14 +192,16 @@ public class ResourceProcessor {
         }));
     }
 
-    public <T> Optional<T> processInResourceContent(String resourceName, ThrowableFunction<CharSequence, T> contentCallback) {
+    @Nonnull
+    public <T> Optional<T> processInResourceContent(@Nonnull String resourceName, @Nonnull ThrowableFunction<CharSequence, T> contentCallback) {
         return processInResourceContent(resourceName, contentCallback, (resource, e) -> {
             printWarning(processingEnv, "[ResourceProcessor] Failed to process the content of the resource[relative : '{}' , name : '{}']", resourceName, resource.getName(), e);
             throw wrap(e, RuntimeException.class);
         });
     }
 
-    public <T> Optional<T> processInResourceContent(String resourceName, ThrowableFunction<CharSequence, T> contentCallback, BiFunction<FileObject, Throwable, T> exceptionHandler) {
+    @Nonnull
+    public <T> Optional<T> processInResourceContent(@Nonnull String resourceName, @Nonnull ThrowableFunction<CharSequence, T> contentCallback, @Nonnull BiFunction<FileObject, Throwable, T> exceptionHandler) {
         return processInResource(resourceName, FOR_READING, resourceRef -> resourceRef.map(resource -> {
             try {
                 CharSequence content = resource.getCharContent(true);
@@ -201,15 +212,15 @@ public class ResourceProcessor {
         }));
     }
 
-    public void processInResourceOutputStream(String resourceName, ThrowableConsumer<OutputStream> streamConsumer) {
+    public void processInResourceOutputStream(@Nonnull String resourceName, @Nonnull ThrowableConsumer<OutputStream> streamConsumer) {
         processInResourceOutputStream(resourceName, streamConsumer, (resource, e) -> {
             printWarning(processingEnv, "[ResourceProcessor] Failed to process the OutputStream of the resource[relative : '{}' , name : '{}']", resourceName, resource.getName(), e);
             throw wrap(e, RuntimeException.class);
         });
     }
 
-    public void processInResourceOutputStream(String resourceName, ThrowableConsumer<OutputStream> streamConsumer,
-                                              BiConsumer<FileObject, Throwable> exceptionHandler) {
+    public void processInResourceOutputStream(@Nonnull String resourceName, @Nonnull ThrowableConsumer<OutputStream> streamConsumer,
+                                              @Nonnull BiConsumer<FileObject, Throwable> exceptionHandler) {
         processInResource(resourceName, FOR_WRITING, resourceRef -> resourceRef.map(resource -> {
             try (OutputStream outputStream = resource.openOutputStream()) {
                 streamConsumer.accept(outputStream);
@@ -221,14 +232,14 @@ public class ResourceProcessor {
         }));
     }
 
-    public void processInResourceWriter(String resourceName, ThrowableConsumer<Writer> writerConsumer) {
+    public void processInResourceWriter(@Nonnull String resourceName, @Nonnull ThrowableConsumer<Writer> writerConsumer) {
         processInResourceWriter(resourceName, writerConsumer, (resource, e) -> {
             printWarning(processingEnv, "[ResourceProcessor] Failed to process the Writer of the resource[relative : '{}' , name : '{}']", resourceName, resource.getName(), e);
             throw wrap(e, RuntimeException.class);
         });
     }
 
-    public void processInResourceWriter(String resourceName, ThrowableConsumer<Writer> writerConsumer, BiConsumer<FileObject, Throwable> exceptionHandler) {
+    public void processInResourceWriter(@Nonnull String resourceName, @Nonnull ThrowableConsumer<Writer> writerConsumer, @Nonnull BiConsumer<FileObject, Throwable> exceptionHandler) {
         processInResource(resourceName, FOR_WRITING, resourceRef -> resourceRef.map(resource -> {
             try (Writer writer = resource.openWriter()) {
                 writerConsumer.accept(writer);
@@ -240,7 +251,7 @@ public class ResourceProcessor {
         }));
     }
 
-    public static boolean exists(FileObject resource) {
+    public static boolean exists(@Nullable FileObject resource) {
         return resource != null && resource.getLastModified() > 0;
     }
 }

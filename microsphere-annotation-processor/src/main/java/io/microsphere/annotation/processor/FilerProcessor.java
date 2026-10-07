@@ -17,6 +17,8 @@
 
 package io.microsphere.annotation.processor;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableFunction;
 
 import javax.annotation.processing.Filer;
@@ -75,18 +77,20 @@ public class FilerProcessor {
 
     private final ProcessingEnvironment processingEnv;
 
-    public FilerProcessor(ProcessingEnvironment processingEnv) {
+    public FilerProcessor(@Nonnull ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
     }
 
-    public <T> T processInFiler(ThrowableFunction<Filer, T> filerCallback) {
+    @Nullable
+    public <T> T processInFiler(@Nonnull ThrowableFunction<Filer, T> filerCallback) {
         return processInFiler(filerCallback, (filer, e) -> {
             printMandatoryWarning(this.processingEnv, "[FilerProcessor] Failed to process in Filer : {}", filer, e);
             return null;
         });
     }
 
-    public <T> T processInFiler(ThrowableFunction<Filer, T> filerCallback, BiFunction<Filer, Throwable, T> exceptionHandler) {
+    @Nullable
+    public <T> T processInFiler(@Nonnull ThrowableFunction<Filer, T> filerCallback, @Nonnull BiFunction<Filer, Throwable, T> exceptionHandler) {
         Filer filer = processingEnv.getFiler();
         return filerCallback.execute(filer, exceptionHandler);
     }
@@ -96,6 +100,7 @@ public class FilerProcessor {
      *
      * @return the {@link JavaFileManager}
      */
+    @Nullable
     public JavaFileManager getJavaFileManager() {
         return processInFiler(filer -> getFieldValue(true, filer, "fileManager"));
     }
