@@ -64,7 +64,7 @@ public class BeanProperty {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(@Nullable Object value) {
         this.value = value;
     }
 
@@ -79,7 +79,7 @@ public class BeanProperty {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (!(o instanceof BeanProperty)) return false;
 
@@ -119,6 +119,7 @@ public class BeanProperty {
      * @return a {@link BeanProperty} instance
      * @throws IllegalArgumentException if the bean or propertyName is null
      */
+    @Nonnull
     public static BeanProperty of(@Nonnull Object bean, @Nonnull String propertyName) {
         assertNotNull(bean, "The 'bean' argument must not be null");
         assertNotNull(propertyName, "The 'propertyName' argument must not be null");
