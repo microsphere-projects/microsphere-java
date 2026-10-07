@@ -19,6 +19,7 @@ package io.microsphere.beans;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -54,7 +55,7 @@ public class BeanMetadata {
         this(execute(() -> Introspector.getBeanInfo(beanClass, Object.class)));
     }
 
-    protected BeanMetadata(BeanInfo beanInfo) {
+    protected BeanMetadata(@Nonnull BeanInfo beanInfo) {
         this.beanInfo = beanInfo;
         this.propertyDescriptorsMap = buildPropertyDescriptorsMap(beanInfo);
         this.beanClass = beanInfo.getBeanDescriptor().getBeanClass();
@@ -74,6 +75,7 @@ public class BeanMetadata {
         return unmodifiableMap(propertyDescriptorsMap);
     }
 
+    @Nonnull
     public BeanInfo getBeanInfo() {
         return this.beanInfo;
     }
@@ -91,7 +93,8 @@ public class BeanMetadata {
      *                     (e.g., "propertyName" for a property named "PropertyName")
      * @return the {@link PropertyDescriptor} if found, otherwise {@code null}
      */
-    public PropertyDescriptor getPropertyDescriptor(String propertyName) {
+    @Nullable
+    public PropertyDescriptor getPropertyDescriptor(@Nullable String propertyName) {
         return this.propertyDescriptorsMap.get(propertyName);
     }
 
@@ -101,12 +104,13 @@ public class BeanMetadata {
         return this.propertyDescriptorsMap;
     }
 
+    @Nonnull
     public Class<?> getBeanClass() {
         return this.beanClass;
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (!(o instanceof BeanMetadata)) return false;
 
         BeanMetadata that = (BeanMetadata) o;
@@ -140,6 +144,7 @@ public class BeanMetadata {
      * @throws RuntimeException if the {@link BeanInfo} cannot be obtained from the specified bean class
      * @see Introspector#getBeanInfo(Class, Class)
      */
+    @Nonnull
     public static BeanMetadata of(@Nonnull Class<?> beanClass) throws RuntimeException {
         return new BeanMetadata(beanClass);
     }
