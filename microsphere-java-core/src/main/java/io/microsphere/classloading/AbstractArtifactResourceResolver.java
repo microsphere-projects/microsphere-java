@@ -16,11 +16,13 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.nullSafeClassLoader;
 
 /**
  * An abstract base class for implementing {@link ArtifactResourceResolver}.
@@ -86,18 +88,20 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
  */
 public abstract class AbstractArtifactResourceResolver implements ArtifactResourceResolver {
 
+    @Nonnull
     protected final Logger logger = getLogger(getClass());
 
+    @Nonnull
     protected final ClassLoader classLoader;
 
     protected final int priority;
 
     public AbstractArtifactResourceResolver(int priority) {
-        this(getDefaultClassLoader(), priority);
+        this(null, priority);
     }
 
-    public AbstractArtifactResourceResolver(ClassLoader classLoader, int priority) {
-        this.classLoader = classLoader;
+    public AbstractArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
+        this.classLoader = nullSafeClassLoader(classLoader);
         this.priority = priority;
     }
 
@@ -106,6 +110,7 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
         return priority;
     }
 
+    @Nonnull
     @Override
     public final String toString() {
         final StringBuilder sb = new StringBuilder(getClass().getSimpleName());
