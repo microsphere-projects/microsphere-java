@@ -17,6 +17,7 @@
 
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.util.Iterator;
@@ -38,7 +39,7 @@ public abstract class Iterators implements Utils {
      * @param another {@link Iterator}
      * @return <code>true</code> if equals
      */
-    public static boolean equals(Iterator<?> one, Iterator<?> another) {
+    public static boolean equals(@Nullable Iterator<?> one, @Nullable Iterator<?> another) {
         if (one == another) {
             return true;
         }
