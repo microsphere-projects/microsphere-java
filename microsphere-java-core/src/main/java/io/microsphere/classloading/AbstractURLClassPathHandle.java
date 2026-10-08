@@ -17,8 +17,10 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -118,17 +120,18 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
 
     @Nonnull
     @Override
-    public URL[] getURLs(ClassLoader classLoader) {
+    public URL[] getURLs(@Nullable ClassLoader classLoader) {
         if (classLoader == null) {
             return EMPTY_URL_ARRAY;
         }
 
         Object ucp = getFieldValue(true, classLoader, findUcpField(classLoader));
+
         return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(true, ucp, "getURLs");
     }
 
     @Override
-    public final boolean removeURL(ClassLoader classLoader, URL url) {
+    public final boolean removeURL(@Nullable ClassLoader classLoader, @Nullable URL url) {
         if (classLoader == null || url == null) {
             return false;
         }
@@ -175,6 +178,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return priority;
     }
 
+    @Nullable
     protected final Class<?> getUrlClassPathClass() {
         Class<?> urlClassPathClass = this.urlClassPathClass;
         if (urlClassPathClass == null) {
@@ -185,6 +189,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return urlClassPathClass;
     }
 
+    @Nullable
     protected final Class<?> getLoaderClass() {
         Class<?> loaderClass = this.loaderClass;
         if (loaderClass == null) {
@@ -195,10 +200,12 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return loaderClass;
     }
 
-    protected final Field findUcpField(ClassLoader classLoader) {
+    @Nullable
+    protected final Field findUcpField(@Nonnull ClassLoader classLoader) {
         return findField(classLoader, "ucp");
     }
 
+    @Nullable
     protected final Field getPathField() {
         Field pathField = this.pathField;
         if (pathField == null) {
@@ -208,6 +215,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return pathField;
     }
 
+    @Nullable
     protected final Field getUrlsField() {
         Field urlsField = this.urlsField;
         if (urlsField == null) {
@@ -217,6 +225,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return urlsField;
     }
 
+    @Nullable
     protected final Field getLoadersField() {
         Field loadersField = this.loadersField;
         if (loadersField == null) {
@@ -226,6 +235,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return loadersField;
     }
 
+    @Nullable
     protected final Field getBaseField() {
         Field baseField = this.baseField;
         if (baseField == null) {
@@ -235,7 +245,9 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         return baseField;
     }
 
+    @Nonnull
     protected abstract String getURLClassPathClassName();
 
+    @Nonnull
     protected abstract String getUrlsFieldName();
 }
