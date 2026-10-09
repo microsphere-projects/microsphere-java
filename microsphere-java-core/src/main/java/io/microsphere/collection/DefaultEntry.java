@@ -17,6 +17,9 @@
 
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,7 +41,7 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
 
     private V value;
 
-    public DefaultEntry(K key, V value) {
+    public DefaultEntry(@Nullable K key, @Nullable V value) {
         this.key = key;
         this.value = value;
     }
@@ -52,29 +55,33 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
      * @param <V>   the type of the value
      * @return a new instance of {@link DefaultEntry}
      */
-    public static <K, V> DefaultEntry<K, V> of(K key, V value) {
+    @Nonnull
+    public static <K, V> DefaultEntry<K, V> of(@Nullable K key, @Nullable V value) {
         return new DefaultEntry<>(key, value);
     }
 
     @Override
+    @Nullable
     public final K getKey() {
         return key;
     }
 
     @Override
+    @Nullable
     public final V getValue() {
         return value;
     }
 
     @Override
-    public V setValue(V value) {
+    @Nullable
+    public V setValue(@Nullable V value) {
         V oldValue = this.value;
         this.value = value;
         return oldValue;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (!(o instanceof DefaultEntry)) return false;
 
         DefaultEntry<?, ?> that = (DefaultEntry<?, ?>) o;
@@ -89,6 +96,7 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return key + "=" + value;
     }
