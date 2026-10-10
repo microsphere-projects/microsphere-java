@@ -1,5 +1,8 @@
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 
 import static io.microsphere.io.serializer.ShortSerializer.SHORT_SERIALIZER;
@@ -24,7 +27,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
 
     private final int bytesLength;
 
-    public EnumSerializer(Class<E> enumType) {
+    public EnumSerializer(@Nonnull Class<E> enumType) {
         this.enumType = enumType;
         this.enums = invokeValues();
         this.bytesLength = calcBytesLength(enums);
@@ -40,7 +43,8 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
     }
 
     @Override
-    public byte[] serialize(Enum e) throws IOException {
+    @Nullable
+    public byte[] serialize(@Nullable Enum e) throws IOException {
         // null compatible case
         if (e == null) {
             return null;
@@ -60,7 +64,8 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
     }
 
     @Override
-    public E deserialize(byte[] bytes) throws IOException {
+    @Nullable
+    public E deserialize(@Nullable byte[] bytes) throws IOException {
         // null compatible case
         if (bytes == null) {
             return null;
@@ -70,6 +75,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
         return enums[ordinal];
     }
 
+    @Nonnull
     public Class<E> getEnumType() {
         return enumType;
     }
@@ -78,6 +84,7 @@ public class EnumSerializer<E extends Enum> implements Serializer<E>, Deserializ
         return bytesLength;
     }
 
+    @Nonnull
     public Class<E> getTargetType() {
         return enumType;
     }

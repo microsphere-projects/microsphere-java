@@ -1,5 +1,7 @@
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import static io.microsphere.util.SizeUtils.SHORT_BYTES_SIZE;
 
 /**
@@ -18,7 +20,8 @@ public class ShortSerializer extends AbstractSerializer<Short> {
     }
 
     @Override
-    protected byte[] doSerialize(Short aShort) {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Short aShort) {
         short shortValue = aShort.shortValue();
         byte[] bytes = new byte[]{
                 (byte) (shortValue >>> 8),
@@ -27,7 +30,8 @@ public class ShortSerializer extends AbstractSerializer<Short> {
     }
 
     @Override
-    protected Short doDeserialize(byte[] bytes) {
+    @Nonnull
+    protected Short doDeserialize(@Nonnull byte[] bytes) {
         return (short) ((bytes[0] << 8) | (bytes[1] & 0xFF));
     }
 

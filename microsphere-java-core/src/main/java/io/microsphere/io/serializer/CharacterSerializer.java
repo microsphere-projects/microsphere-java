@@ -17,6 +17,8 @@
 
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import static io.microsphere.util.SizeUtils.CHAR_BYTES_SIZE;
 
 /**
@@ -36,7 +38,8 @@ public class CharacterSerializer extends AbstractSerializer<Character> {
     }
 
     @Override
-    protected byte[] doSerialize(Character character) {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Character character) {
         char c = character.charValue();
         return new byte[]{
                 (byte) (c >>> 8), // High byte
@@ -45,7 +48,8 @@ public class CharacterSerializer extends AbstractSerializer<Character> {
     }
 
     @Override
-    protected Character doDeserialize(byte[] bytes) {
+    @Nonnull
+    protected Character doDeserialize(@Nonnull byte[] bytes) {
         char c = (char) ((bytes[0] << 8) | (bytes[1] & 0xFF));
         return c;
     }

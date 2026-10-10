@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -39,5 +41,6 @@ import java.io.IOException;
  */
 public interface Serializer<S> {
 
-    byte[] serialize(S source) throws IOException;
+    @Nullable
+    byte[] serialize(@Nullable S source) throws IOException;
 }
