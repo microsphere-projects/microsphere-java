@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -137,8 +138,8 @@ public class TypeFinder<T> {
      * @param includeSuperclass        whether to include the direct superclass
      * @param includeInterfaces        whether to include the directly implemented interfaces
      */
-    public TypeFinder(T type, Function<T, T> getSuperClassFunction,
-                      Function<T, T[]> getInterfacesFunction, boolean includeSelf,
+    public TypeFinder(@Nonnull T type, @Nonnull Function<T, T> getSuperClassFunction,
+                      @Nonnull Function<T, T[]> getInterfacesFunction, boolean includeSelf,
                       boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         assertNotNull(type, () -> "The 'type' must not be null");
         assertNotNull(getSuperClassFunction, () -> "The 'getSuperClassFunction' must not be null");
@@ -204,7 +205,8 @@ public class TypeFinder<T> {
      * @param typeFilters an array of predicates to filter the found types
      * @return a mutable list of types matching the filters
      */
-    protected List<T> doFindTypes(Predicate<? super T>[] typeFilters) {
+    @Nonnull
+    protected List<T> doFindTypes(@Nullable Predicate<? super T>[] typeFilters) {
 
         List<T> allTypes = newLinkedList();
 
@@ -240,7 +242,8 @@ public class TypeFinder<T> {
      * @param includedGenericInterfaces whether to include the directly implemented interfaces
      * @return a list of direct super types, or an empty list if none are found
      */
-    protected List<T> getSuperTypes(T type, boolean includeSuperclass, boolean includedGenericInterfaces) {
+    @Nonnull
+    protected List<T> getSuperTypes(@Nullable T type, boolean includeSuperclass, boolean includedGenericInterfaces) {
 
         T superclass = includeSuperclass && type != null ? getSuperClass(type) : null;
 
@@ -284,7 +287,8 @@ public class TypeFinder<T> {
      * @param type the type whose superclass is to be retrieved
      * @return the superclass of the given type, or {@code null} if none exists
      */
-    protected T getSuperClass(T type) {
+    @Nullable
+    protected T getSuperClass(@Nullable T type) {
         return (T) getSuperClassFunction.apply(type);
     }
 
@@ -300,7 +304,8 @@ public class TypeFinder<T> {
      * @param type the type whose interfaces are to be retrieved
      * @return an array of interfaces implemented by the given type
      */
-    protected T[] getInterfaces(T type) {
+    @Nullable
+    protected T[] getInterfaces(@Nullable T type) {
         return (T[]) getInterfacesFunction.apply(type);
     }
 
@@ -320,7 +325,7 @@ public class TypeFinder<T> {
      * @param includeSuperclass        whether to include superclasses
      * @param includeInterfaces        whether to include interfaces
      */
-    protected void addSuperTypes(List<T> allTypes, T type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+    protected void addSuperTypes(@Nonnull List<T> allTypes, @Nullable T type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         if (isObjectType(type)) {
             return;
         }
@@ -380,7 +385,8 @@ public class TypeFinder<T> {
      * @param includes one or more {@link Include} options specifying which types to include
      * @return a new {@code TypeFinder} configured for the given class and options
      */
-    public static TypeFinder<Class<?>> classFinder(Class type, TypeFinder.Include... includes) {
+    @Nonnull
+    public static TypeFinder<Class<?>> classFinder(@Nonnull Class type, TypeFinder.Include... includes) {
         assertNotEmpty(includes, () -> "The 'includes' must not be empty");
         assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
         return classFinder(type, contains(includes, SELF), contains(includes, HIERARCHICAL),
@@ -409,7 +415,8 @@ public class TypeFinder<T> {
      * @param includeInterfaces        whether to include interfaces
      * @return a new {@code TypeFinder} configured for the given class and options
      */
-    public static TypeFinder<Class<?>> classFinder(Class type, boolean includeSelf, boolean includeHierarchicalTypes,
+    @Nonnull
+    public static TypeFinder<Class<?>> classFinder(@Nonnull Class type, boolean includeSelf, boolean includeHierarchicalTypes,
                                                    boolean includeSuperclass, boolean includeInterfaces) {
         return new TypeFinder(type, classGetSuperClassFunction, classGetInterfacesFunction, includeSelf,
                 includeHierarchicalTypes, includeSuperclass, includeInterfaces);
@@ -432,7 +439,8 @@ public class TypeFinder<T> {
      * @param includes one or more {@link Include} options specifying which types to include
      * @return a new {@code TypeFinder} configured for the given generic type and options
      */
-    public static TypeFinder<Type> genericTypeFinder(Type type, TypeFinder.Include... includes) {
+    @Nonnull
+    public static TypeFinder<Type> genericTypeFinder(@Nonnull Type type, TypeFinder.Include... includes) {
         assertNotEmpty(includes, () -> "The 'includes' must not be empty");
         assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
         return genericTypeFinder(type, contains(includes, SELF), contains(includes, HIERARCHICAL),
@@ -463,7 +471,8 @@ public class TypeFinder<T> {
      * @param includeInterfaces        whether to include interfaces
      * @return a new {@code TypeFinder} configured for the given generic type and options
      */
-    public static TypeFinder<Type> genericTypeFinder(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
+    @Nonnull
+    public static TypeFinder<Type> genericTypeFinder(@Nonnull Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                                      boolean includeSuperclass, boolean includeInterfaces) {
         return new TypeFinder(type, genericTypeGetSuperClassFunction, genericTypeGetInterfacesFunction, includeSelf,
                 includeHierarchicalTypes, includeSuperclass, includeInterfaces);

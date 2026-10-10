@@ -17,6 +17,7 @@
 
 package io.microsphere.metadata;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.BeanUtils;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.json.JSONObject;
@@ -73,7 +74,8 @@ import static io.microsphere.util.Assert.assertNotNull;
 public class ReflectiveConfigurationPropertyGenerator implements ConfigurationPropertyGenerator {
 
     @Override
-    public String generate(ConfigurationProperty configurationProperty) throws IllegalArgumentException {
+    @Nonnull
+    public String generate(@Nonnull ConfigurationProperty configurationProperty) throws IllegalArgumentException {
         assertNotNull(configurationProperty, () -> "The 'ConfigurationProperty' argument must not be null");
         return writeBeanAsString(configurationProperty);
     }

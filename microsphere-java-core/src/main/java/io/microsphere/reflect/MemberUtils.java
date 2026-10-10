@@ -89,7 +89,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Constructor}, {@link Method}, or {@link Field}
      * @return <code>true</code> if the member is static; <code>false</code> otherwise
      */
-    public static boolean isStatic(Member member) {
+    public static boolean isStatic(@Nullable Member member) {
         return member != null && Modifier.isStatic(member.getModifiers());
     }
 
@@ -122,7 +122,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Method} or {@link Class}
      * @return <code>true</code> if the member is abstract; <code>false</code> otherwise
      */
-    public static boolean isAbstract(Member member) {
+    public static boolean isAbstract(@Nullable Member member) {
         return member != null && Modifier.isAbstract(member.getModifiers());
     }
 
@@ -155,7 +155,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Constructor}, {@link Method}, or {@link Field}
      * @return <code>true</code> if the member is non-static; <code>false</code> otherwise
      */
-    public static boolean isNonStatic(Member member) {
+    public static boolean isNonStatic(@Nullable Member member) {
         return member != null && !Modifier.isStatic(member.getModifiers());
     }
 
@@ -188,7 +188,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Constructor}, {@link Method}, or {@link Field}
      * @return <code>true</code> if the member is final; <code>false</code> otherwise
      */
-    public static boolean isFinal(Member member) {
+    public static boolean isFinal(@Nullable Member member) {
         return member != null && Modifier.isFinal(member.getModifiers());
     }
 
@@ -221,7 +221,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Constructor}, {@link Method}, or {@link Field}
      * @return <code>true</code> if the member is private; <code>false</code> otherwise
      */
-    public static boolean isPrivate(Member member) {
+    public static boolean isPrivate(@Nullable Member member) {
         return member != null && Modifier.isPrivate(member.getModifiers());
     }
 
@@ -250,7 +250,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Constructor}, {@link Method}, or {@link Field}
      * @return <code>true</code> if the member is public; <code>false</code> otherwise
      */
-    public static boolean isPublic(Member member) {
+    public static boolean isPublic(@Nullable Member member) {
         return member != null && Modifier.isPublic(member.getModifiers());
     }
 
@@ -305,7 +305,7 @@ public abstract class MemberUtils implements Utils {
      * @param member the {@link Member} instance to check, such as a {@link Constructor}, {@link Method}, or {@link Field}
      * @return <code>true</code> if the member is non-private; <code>false</code> otherwise
      */
-    public static boolean isNonPrivate(Member member) {
+    public static boolean isNonPrivate(@Nullable Member member) {
         return member != null && !Modifier.isPrivate(member.getModifiers());
     }
 
@@ -335,7 +335,8 @@ public abstract class MemberUtils implements Utils {
      * @return the casted {@link Member} instance if the object is a valid {@link Member}; otherwise,
      * returns {@code null}
      */
-    public static Member asMember(Object object) {
+    @Nullable
+    public static Member asMember(@Nullable Object object) {
         return object instanceof Member ? (Member) object : null;
     }
 

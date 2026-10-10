@@ -16,6 +16,9 @@
  */
 package io.microsphere.io.filter;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -36,12 +39,12 @@ public class TrueFileFilter implements IOFileFilter {
     }
 
     @Override
-    public boolean accept(File file) {
+    public boolean accept(@Nullable File file) {
         return true;
     }
 
     @Override
-    public boolean accept(File dir, String name) {
+    public boolean accept(@Nullable File dir, @Nonnull String name) {
         return true;
     }
 }

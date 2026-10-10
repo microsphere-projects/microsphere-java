@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.filter;
 
+import io.microsphere.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -31,17 +33,17 @@ public class NameFileFilter implements IOFileFilter {
 
     private final boolean caseSensitive;
 
-    public NameFileFilter(String name) {
+    public NameFileFilter(@Nullable String name) {
         this(name, true);
     }
 
-    public NameFileFilter(String name, boolean caseSensitive) {
+    public NameFileFilter(@Nullable String name, boolean caseSensitive) {
         this.name = name;
         this.caseSensitive = caseSensitive;
     }
 
     @Override
-    public boolean accept(File file) {
+    public boolean accept(@Nullable File file) {
         String fileName = file.getName();
         String name = this.name;
         return caseSensitive ? fileName.equals(name) : fileName.equalsIgnoreCase(name);

@@ -84,7 +84,7 @@ public interface ConstructorUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<ExecutableElement> getDeclaredConstructors(TypeElement type) {
+    static List<ExecutableElement> getDeclaredConstructors(@Nullable TypeElement type) {
         return type == null ? emptyList() : getDeclaredConstructors(type.asType());
     }
 
@@ -120,7 +120,7 @@ public interface ConstructorUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<ExecutableElement> getDeclaredConstructors(TypeMirror type) {
+    static List<ExecutableElement> getDeclaredConstructors(@Nullable TypeMirror type) {
         return type == null ? emptyList() : findDeclaredConstructors(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -148,7 +148,7 @@ public interface ConstructorUtils extends Utils {
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
      */
     @Nullable
-    static ExecutableElement findConstructor(TypeElement type, Type... parameterTypes) {
+    static ExecutableElement findConstructor(@Nullable TypeElement type, Type... parameterTypes) {
         return type == null ? null : findConstructor(type.asType(), parameterTypes);
     }
 
@@ -176,7 +176,7 @@ public interface ConstructorUtils extends Utils {
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
      */
     @Nullable
-    static ExecutableElement findConstructor(TypeMirror type, Type... parameterTypes) {
+    static ExecutableElement findConstructor(@Nullable TypeMirror type, Type... parameterTypes) {
         if (type == null) {
             return null;
         }
@@ -217,7 +217,7 @@ public interface ConstructorUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<ExecutableElement> findDeclaredConstructors(TypeElement type, Predicate<? super ExecutableElement>... constructorFilters) {
+    static List<ExecutableElement> findDeclaredConstructors(@Nullable TypeElement type, Predicate<? super ExecutableElement>... constructorFilters) {
         return type == null ? emptyList() : findDeclaredConstructors(type.asType(), constructorFilters);
     }
 
@@ -236,7 +236,7 @@ public interface ConstructorUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<ExecutableElement> findDeclaredConstructors(TypeMirror type, Predicate<? super ExecutableElement>... constructorFilters) {
+    static List<ExecutableElement> findDeclaredConstructors(@Nullable TypeMirror type, Predicate<? super ExecutableElement>... constructorFilters) {
         return filterDeclaredConstructors(type, constructorFilters);
     }
 
@@ -275,7 +275,7 @@ public interface ConstructorUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<ExecutableElement> filterDeclaredConstructors(TypeMirror type, Predicate<? super ExecutableElement>... constructorFilters) {
+    static List<ExecutableElement> filterDeclaredConstructors(@Nullable TypeMirror type, Predicate<? super ExecutableElement>... constructorFilters) {
         if (type == null) {
             return emptyList();
         }

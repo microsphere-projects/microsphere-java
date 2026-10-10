@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.CharSequenceComparator;
 
 import javax.lang.model.element.ExecutableElement;
@@ -63,7 +64,7 @@ public class ExecutableElementComparator implements Comparator<ExecutableElement
     }
 
     @Override
-    public int compare(ExecutableElement e1, ExecutableElement e2) {
+    public int compare(@Nonnull ExecutableElement e1, @Nonnull ExecutableElement e2) {
 
         if (e1.equals(e2)) {
             return 0;

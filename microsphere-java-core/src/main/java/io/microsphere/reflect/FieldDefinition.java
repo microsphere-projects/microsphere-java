@@ -96,6 +96,7 @@ public final class FieldDefinition extends MemberDefinition<Field> {
     }
 
     @Override
+    @Nullable
     protected Field resolveMember() {
         return findField(getResolvedClass(), getFieldName());
     }
@@ -121,7 +122,8 @@ public final class FieldDefinition extends MemberDefinition<Field> {
      * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
      *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public <T> T get(Object instance) throws IllegalStateException, IllegalArgumentException {
+    @Nullable
+    public <T> T get(@Nullable Object instance) throws IllegalStateException, IllegalArgumentException {
         return getFieldValue(true, instance, getResolvedField());
     }
 
@@ -137,7 +139,8 @@ public final class FieldDefinition extends MemberDefinition<Field> {
      * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
      *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public <T> T set(Object instance, T fieldValue) {
+    @Nullable
+    public <T> T set(@Nullable Object instance, @Nullable T fieldValue) {
         return setFieldValue(true, instance, getResolvedField(), fieldValue);
     }
 }

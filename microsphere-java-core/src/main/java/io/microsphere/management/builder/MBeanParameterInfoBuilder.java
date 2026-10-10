@@ -49,21 +49,25 @@ public class MBeanParameterInfoBuilder extends MBeanFeatureInfoBuilder<MBeanPara
         super();
     }
 
+    @Nonnull
     public MBeanParameterInfo build() {
         return new MBeanParameterInfo(this.name, this.type, this.description, this.descriptor);
     }
 
+    @Nonnull
     public static MBeanParameterInfoBuilder parameter(@Nonnull Class<?> type) {
         return parameter(getTypeName(type));
     }
 
+    @Nonnull
     public static MBeanParameterInfoBuilder parameter(@Nonnull String type) {
         MBeanParameterInfoBuilder builder = new MBeanParameterInfoBuilder();
         builder.type = type;
         return builder;
     }
 
-    public static MBeanParameterInfoBuilder parameter(Parameter parameter) {
+    @Nonnull
+    public static MBeanParameterInfoBuilder parameter(@Nonnull Parameter parameter) {
         Annotation[] annotations = parameter.getAnnotations();
         Descriptor descriptor = descriptorForAnnotations(annotations);
         String name = parameter.getName();

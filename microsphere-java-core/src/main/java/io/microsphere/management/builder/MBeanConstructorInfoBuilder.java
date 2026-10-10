@@ -17,6 +17,8 @@
 
 package io.microsphere.management.builder;
 
+import io.microsphere.annotation.Nonnull;
+
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanFeatureInfo;
 import java.lang.reflect.Constructor;
@@ -36,15 +38,18 @@ public class MBeanConstructorInfoBuilder extends MBeanExecutableInfoBuilder<MBea
         super();
     }
 
+    @Nonnull
     public MBeanConstructorInfo build() {
         return new MBeanConstructorInfo(this.name, this.description, toSignature());
     }
 
+    @Nonnull
     public static MBeanConstructorInfoBuilder constructor() {
         return new MBeanConstructorInfoBuilder();
     }
 
-    public static MBeanConstructorInfoBuilder constructor(Constructor<?> constructor) {
+    @Nonnull
+    public static MBeanConstructorInfoBuilder constructor(@Nonnull Constructor<?> constructor) {
         return constructor().from(constructor);
     }
 }

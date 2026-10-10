@@ -326,7 +326,7 @@ public abstract class ClassUtils implements Utils {
      * @see #isArray(Class)
      * @see Class#isArray()
      */
-    public static boolean isArray(Object object) {
+    public static boolean isArray(@Nullable Object object) {
         return isArray(getClass(object));
     }
 
@@ -1046,6 +1046,7 @@ public abstract class ClassUtils implements Utils {
      * @see #isWrapperType(Class)
      * @see #PRIMITIVE_TO_WRAPPER_TYPES_MAP
      */
+    @Nullable
     public static Class<?> tryResolveWrapperType(@Nullable Class<?> primitiveType) {
         return tryResolveWrapperType(primitiveType, primitiveType);
     }
@@ -1074,6 +1075,7 @@ public abstract class ClassUtils implements Utils {
      * @see #isWrapperType(Class)
      * @see #PRIMITIVE_TO_WRAPPER_TYPES_MAP
      */
+    @Nullable
     protected static Class<?> tryResolveWrapperType(@Nullable Class<?> type, @Nullable Class<?> defaultType) {
         if (isWrapperType(type)) {
             return type;
@@ -1277,7 +1279,7 @@ public abstract class ClassUtils implements Utils {
      * or {@code null} if the input is {@code null}
      * @see StringUtils#substringBeforeLast(String, String)
      */
-    @Nonnull
+    @Nullable
     public static String resolvePackageName(@Nullable String className) {
         return substringBeforeLast(className, DOT);
     }
@@ -1306,7 +1308,7 @@ public abstract class ClassUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<String> findClassNamesInClassPath(@Nullable String classPath, boolean recursive) {
+    public static Set<String> findClassNamesInClassPath(@Nonnull String classPath, boolean recursive) {
         String protocol = resolveProtocol(classPath);
         String resolvedClassPath = classPath;
 
@@ -1494,7 +1496,8 @@ public abstract class ClassUtils implements Utils {
      * @see FileUtils#resolveRelativePath(File, File)
      * @see #resolveClassName(String)
      */
-    protected static String resolveClassName(File classesDirectory, File classFile) {
+    @Nullable
+    protected static String resolveClassName(@Nonnull File classesDirectory, @Nonnull File classFile) {
         String classFileRelativePath = resolveRelativePath(classesDirectory, classFile);
         return resolveClassName(classFileRelativePath);
     }
@@ -1699,6 +1702,7 @@ public abstract class ClassUtils implements Utils {
      * @return non-null read-only {@link List} of all classes related to the specified type
      * @see #findAllClasses(Class, Predicate[])
      */
+    @Nonnull
     public static List<Class<?>> getAllClasses(@Nullable Class<?> type) {
         return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
     }

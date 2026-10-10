@@ -17,6 +17,9 @@
 package io.microsphere.lang;
 
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import static io.microsphere.constants.SymbolConstants.QUOTE;
 
 /**
@@ -82,10 +85,12 @@ public interface DelegatingWrapper extends Wrapper {
      *
      * @return the delegate
      */
+    @Nullable
     Object getDelegate();
 
     @Override
-    default <T> T unwrap(Class<T> type) throws IllegalArgumentException {
+    @Nonnull
+    default <T> T unwrap(@Nonnull Class<T> type) throws IllegalArgumentException {
         if (getClass().equals(type)) {
             return (T) this;
         } else {
@@ -97,7 +102,7 @@ public interface DelegatingWrapper extends Wrapper {
     }
 
     @Override
-    default boolean isWrapperFor(Class<?> type) {
+    default boolean isWrapperFor(@Nonnull Class<?> type) {
         Object delegate = getDelegate();
         return type.isInstance(delegate);
     }

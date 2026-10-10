@@ -106,7 +106,7 @@ public abstract class FieldUtils implements Utils {
      *                          typically wrapped as an unchecked exception
      */
     @Nullable
-    public static Field findField(@Nonnull Class<?> klass, @Nonnull String fieldName) {
+    public static Field findField(@Nullable Class<?> klass, @Nonnull String fieldName) {
         if (klass == null || isObjectClass(klass)) {
             return null;
         }
@@ -218,7 +218,7 @@ public abstract class FieldUtils implements Utils {
      *                                  or implementor thereof).
      */
     @Nullable
-    public static <T> T getStaticFieldValue(@Nonnull Class<?> klass, @Nonnull String fieldName) throws
+    public static <T> T getStaticFieldValue(@Nullable Class<?> klass, @Nonnull String fieldName) throws
             IllegalStateException, IllegalArgumentException {
         return getStaticFieldValue(false, klass, fieldName);
     }
@@ -251,7 +251,7 @@ public abstract class FieldUtils implements Utils {
      *                                  or implementor thereof).
      */
     @Nullable
-    public static <T> T getStaticFieldValue(boolean forceAccess, @Nonnull Class<?> klass, @Nonnull String fieldName)
+    public static <T> T getStaticFieldValue(boolean forceAccess, @Nullable Class<?> klass, @Nonnull String fieldName)
             throws IllegalStateException, IllegalArgumentException {
         Field field = findField(klass, fieldName);
         return getStaticFieldValue(forceAccess, field);
@@ -346,7 +346,7 @@ public abstract class FieldUtils implements Utils {
      * @return The previous value of the static field, or {@code null} if the field could not be accessed or was not found
      */
     @Nullable
-    public static <V> V setStaticFieldValue(@Nonnull Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue) {
+    public static <V> V setStaticFieldValue(@Nullable Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue) {
         Field field = findField(klass, fieldName);
         return setStaticFieldValue(false, klass, fieldName, fieldValue);
     }
@@ -376,7 +376,7 @@ public abstract class FieldUtils implements Utils {
      * @return The previous value of the static field, or {@code null} if the field is not found
      */
     @Nullable
-    public static <V> V setStaticFieldValue(boolean forceAccess, @Nonnull Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue) {
+    public static <V> V setStaticFieldValue(boolean forceAccess, @Nullable Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue) {
         Field field = findField(klass, fieldName);
         return setFieldValue(forceAccess, null, field, fieldValue);
     }
@@ -920,7 +920,7 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nonnull String fieldName, @Nullable V value)
+    public static <V> V setFieldValue(boolean forceAccess, @Nonnull Object instance, @Nonnull String fieldName, @Nullable V value)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
         return setFieldValue(forceAccess, instance, findField(instance, fieldName), value);
     }
@@ -1076,7 +1076,7 @@ public abstract class FieldUtils implements Utils {
      * @param expectedType the expected type the field should be or extend/implement
      * @throws IllegalArgumentException if the field's actual type does not match or is not assignable to the expected type
      */
-    public static void assertFieldMatchType(Object instance, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
+    public static void assertFieldMatchType(@Nonnull Object instance, @Nonnull String fieldName, @Nonnull Class<?> expectedType) throws IllegalArgumentException {
         Class<?> type = instance instanceof Class ? (Class<?>) instance : instance.getClass();
         Field field = findField(type, fieldName);
         Class<?> fieldType = field.getType();

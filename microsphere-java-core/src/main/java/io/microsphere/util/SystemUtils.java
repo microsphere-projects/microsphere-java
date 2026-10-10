@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
@@ -578,7 +579,7 @@ public abstract class SystemUtils implements Utils {
      * @return the string value of the system property, or {@code null} if the property is not found or access is denied
      */
     @Nullable
-    public static String getSystemProperty(String key) {
+    public static String getSystemProperty(@Nonnull String key) {
         return getSystemProperty(key, null);
     }
 
@@ -602,7 +603,7 @@ public abstract class SystemUtils implements Utils {
      * @return the string value of the system property, or the provided default value if the property is inaccessible or not found
      */
     @Nullable
-    public static String getSystemProperty(String key, String defaultValue) {
+    public static String getSystemProperty(@Nonnull String key, @Nullable String defaultValue) {
         String value = getSystemPropertyFromCopy(key);
         return value == null ? getProperty(key, defaultValue) : value;
     }
@@ -631,7 +632,8 @@ public abstract class SystemUtils implements Utils {
      * @return the string value of the system property from the cached copy,
      * or {@code null} if the copy is not available or the property is not found
      */
-    protected static String getSystemPropertyFromCopy(String key) {
+    @Nullable
+    protected static String getSystemPropertyFromCopy(@Nullable String key) {
         return systemPropertiesCopy == null ? null : systemPropertiesCopy.get(key);
     }
 

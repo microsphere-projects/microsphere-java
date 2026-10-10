@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
 /**
@@ -387,7 +389,7 @@ public enum Modifier {
      * @param modifiersToMatch  the modifiers to match against
      * @return {@code true} if any of the specified modifiers to match are present, otherwise {@code false}
      */
-    public static boolean matchesAny(Supplier<Integer> modifiersSupplier, Modifier... modifiersToMatch) {
+    public static boolean matchesAny(@Nonnull Supplier<Integer> modifiersSupplier, Modifier... modifiersToMatch) {
         int modifiers = modifiersSupplier.get();
         return matchesAny(modifiers, modifiersToMatch);
     }
@@ -415,7 +417,7 @@ public enum Modifier {
      * @param modifiersToMatch  the modifiers to match against
      * @return {@code true} if all of the specified modifiers to match are present, otherwise {@code false}
      */
-    public static boolean matchesAll(Supplier<Integer> modifiersSupplier, Modifier... modifiersToMatch) {
+    public static boolean matchesAll(@Nonnull Supplier<Integer> modifiersSupplier, Modifier... modifiersToMatch) {
         int modifiers = modifiersSupplier.get();
         return matchesAll(modifiers, modifiersToMatch);
     }

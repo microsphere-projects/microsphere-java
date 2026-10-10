@@ -16,6 +16,9 @@
  */
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -61,12 +64,13 @@ public class StringDeserializer implements Deserializer<String> {
         this(UTF_8);
     }
 
-    public StringDeserializer(Charset charset) {
+    public StringDeserializer(@Nonnull Charset charset) {
         this.charset = charset;
     }
 
     @Override
-    public String deserialize(byte[] bytes) throws IOException {
+    @Nonnull
+    public String deserialize(@Nullable byte[] bytes) throws IOException {
         return new String(bytes, this.charset);
     }
 }

@@ -16,6 +16,7 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 
@@ -62,7 +63,7 @@ public interface FileWatchService {
      * @param kinds    one or more {@link FileChangedEvent.Kind kinds of File Changed Events},
      *                 all kinds should be interested if blank
      */
-    void watch(File file, FileChangedListener listener, FileChangedEvent.Kind... kinds);
+    void watch(@Nonnull File file, @Nonnull FileChangedListener listener, FileChangedEvent.Kind... kinds);
 
     /**
      * Watch the specified file associating the {@link FileChangedListener listeners} with
@@ -73,7 +74,7 @@ public interface FileWatchService {
      * @param kinds     one or more {@link FileChangedEvent.Kind kinds of File Changed Events},
      *                  all kinds should be interested if blank
      */
-    default void watch(File file, Iterable<FileChangedListener> listeners, FileChangedEvent.Kind... kinds) {
+    default void watch(@Nonnull File file, @Nonnull Iterable<FileChangedListener> listeners, FileChangedEvent.Kind... kinds) {
         listeners.forEach(listener -> watch(file, listener, kinds));
     }
 }

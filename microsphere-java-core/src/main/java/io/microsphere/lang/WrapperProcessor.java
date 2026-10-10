@@ -16,6 +16,8 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * A processor interface for handling {@link Wrapper} instances.
  *
@@ -44,6 +46,7 @@ public interface WrapperProcessor<W extends Wrapper> {
      * @param wrapper {@link W Wrapper} instance
      * @return The processed {@link W Wrapper} instance that may be wrapped again
      */
-    W process(W wrapper);
+    @Nonnull
+    W process(@Nonnull W wrapper);
 
 }

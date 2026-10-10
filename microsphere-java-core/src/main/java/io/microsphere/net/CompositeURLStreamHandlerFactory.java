@@ -16,6 +16,8 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.net.URLStreamHandler;
@@ -61,18 +63,19 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
         this(emptyList());
     }
 
-    public CompositeURLStreamHandlerFactory(Collection<URLStreamHandlerFactory> factories) {
+    public CompositeURLStreamHandlerFactory(@Nonnull Collection<URLStreamHandlerFactory> factories) {
         this((Iterable<URLStreamHandlerFactory>) factories);
     }
 
-    public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
+    public CompositeURLStreamHandlerFactory(@Nonnull Iterable<URLStreamHandlerFactory> factories) {
         LinkedList<URLStreamHandlerFactory> newFactories = newLinkedList(factories);
         sortFactories(newFactories);
         this.factories = newFactories;
     }
 
     @Override
-    public final URLStreamHandler createURLStreamHandler(String protocol) {
+    @Nullable
+    public final URLStreamHandler createURLStreamHandler(@Nonnull String protocol) {
         URLStreamHandler handler = null;
         List<URLStreamHandlerFactory> factories = getFactories();
         for (int i = 0; i < factories.size(); i++) {
@@ -91,7 +94,8 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
      * @param factory {@link URLStreamHandlerFactory}
      * @return
      */
-    public CompositeURLStreamHandlerFactory addURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
+    @Nonnull
+    public CompositeURLStreamHandlerFactory addURLStreamHandlerFactory(@Nullable URLStreamHandlerFactory factory) {
         if (factory != null && factory != this) {
             List<URLStreamHandlerFactory> factories = this.getFactories();
             if (factory instanceof CompositeURLStreamHandlerFactory) {
@@ -111,6 +115,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
      *
      * @return non-null
      */
+    @Nonnull
     protected List<URLStreamHandlerFactory> getFactories() {
         return this.factories;
     }
@@ -120,6 +125,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
      *
      * @return {@link Prioritized#COMPARATOR} as default
      */
+    @Nonnull
     protected Comparator<? super URLStreamHandlerFactory> getComparator() {
         return COMPARATOR;
     }
@@ -129,6 +135,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "CompositeURLStreamHandlerFactory{" + "factories=" + factories + '}';
     }

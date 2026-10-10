@@ -17,6 +17,8 @@
 
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -40,7 +42,7 @@ public abstract class LoggerUtils {
      *
      * @param loggerConsumer the {@link Logger} consumer
      */
-    public static void trace(Consumer<Logger> loggerConsumer) {
+    public static void trace(@Nonnull Consumer<Logger> loggerConsumer) {
         log(Logger::isTraceEnabled, loggerConsumer);
     }
 
@@ -49,7 +51,7 @@ public abstract class LoggerUtils {
      *
      * @param loggerConsumer the {@link Logger} consumer
      */
-    public static void debug(Consumer<Logger> loggerConsumer) {
+    public static void debug(@Nonnull Consumer<Logger> loggerConsumer) {
         log(Logger::isDebugEnabled, loggerConsumer);
     }
 
@@ -58,7 +60,7 @@ public abstract class LoggerUtils {
      *
      * @param loggerConsumer the {@link Logger} consumer
      */
-    public static void info(Consumer<Logger> loggerConsumer) {
+    public static void info(@Nonnull Consumer<Logger> loggerConsumer) {
         log(Logger::isInfoEnabled, loggerConsumer);
     }
 
@@ -67,7 +69,7 @@ public abstract class LoggerUtils {
      *
      * @param loggerConsumer the {@link Logger} consumer
      */
-    public static void warn(Consumer<Logger> loggerConsumer) {
+    public static void warn(@Nonnull Consumer<Logger> loggerConsumer) {
         log(Logger::isWarnEnabled, loggerConsumer);
     }
 
@@ -76,7 +78,7 @@ public abstract class LoggerUtils {
      *
      * @param loggerConsumer the {@link Logger} consumer
      */
-    public static void error(Consumer<Logger> loggerConsumer) {
+    public static void error(@Nonnull Consumer<Logger> loggerConsumer) {
         log(Logger::isErrorEnabled, loggerConsumer);
     }
 

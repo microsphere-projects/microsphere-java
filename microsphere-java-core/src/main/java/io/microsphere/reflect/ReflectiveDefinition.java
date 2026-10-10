@@ -202,7 +202,7 @@ public abstract class ReflectiveDefinition implements Serializable {
     public abstract boolean isPresent();
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -223,6 +223,7 @@ public abstract class ReflectiveDefinition implements Serializable {
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return getClass().getSimpleName() + "{" +
                 "since=" + this.since +

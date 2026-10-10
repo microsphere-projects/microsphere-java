@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 
 /**
@@ -40,5 +42,6 @@ import java.io.IOException;
 @FunctionalInterface
 public interface Deserializer<T> {
 
-    T deserialize(byte[] bytes) throws IOException;
+    @Nullable
+    T deserialize(@Nullable byte[] bytes) throws IOException;
 }

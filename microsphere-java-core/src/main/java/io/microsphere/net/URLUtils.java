@@ -177,7 +177,7 @@ public abstract class URLUtils implements Utils {
      * @throws IllegalArgumentException if the provided string is not a valid URL.
      */
     @Nonnull
-    public static URL ofURL(String url) {
+    public static URL ofURL(@Nonnull String url) {
         try {
             return new URL(url);
         } catch (Exception e) {
@@ -209,12 +209,13 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}
      */
     @Nullable
-    public static String resolveArchiveEntryPath(URL archiveFileURL) throws NullPointerException {
+    public static String resolveArchiveEntryPath(@Nonnull URL archiveFileURL) throws NullPointerException {
         // NPE check
         return doResolveArchiveEntryPath(archiveFileURL.getPath());
     }
 
-    protected static String doResolveArchiveEntryPath(String path) {
+    @Nullable
+    protected static String doResolveArchiveEntryPath(@Nonnull String path) {
         String archiveEntryPath = substringAfter(path, ARCHIVE_ENTRY_SEPARATOR);
         return EMPTY.equals(archiveEntryPath) ? null : decode(archiveEntryPath);
     }
@@ -242,7 +243,7 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}
      */
     @Nonnull
-    public static String resolveBasePath(URL url) throws NullPointerException {
+    public static String resolveBasePath(@Nonnull URL url) throws NullPointerException {
         // NPE check
         return resolvePath(url, false);
     }
@@ -272,7 +273,7 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}
      */
     @Nullable
-    public static File resolveArchiveFile(URL resourceURL) throws NullPointerException {
+    public static File resolveArchiveFile(@Nonnull URL resourceURL) throws NullPointerException {
         String protocol = resourceURL.getProtocol();
         if (FILE_PROTOCOL.equals(protocol)) {
             return resolveArchiveDirectory(resourceURL);
@@ -281,13 +282,15 @@ public abstract class URLUtils implements Utils {
         }
     }
 
-    protected static File doResolveArchiveFile(URL url) throws NullPointerException {
+    @Nullable
+    protected static File doResolveArchiveFile(@Nonnull URL url) throws NullPointerException {
         String basePath = resolveBasePath(url);
         File archiveFile = new File(basePath);
         return archiveFile.exists() ? archiveFile : null;
     }
 
-    protected static File resolveArchiveDirectory(URL resourceURL) {
+    @Nullable
+    protected static File resolveArchiveDirectory(@Nonnull URL resourceURL) {
         String resourcePath = buildPath(resourceURL);
         Set<String> classPaths = getClassPaths();
         File archiveDirectory = null;
@@ -321,7 +324,7 @@ public abstract class URLUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, List<String>> resolveQueryParameters(String url) {
+    public static Map<String, List<String>> resolveQueryParameters(@Nullable String url) {
         String queryString = substringAfterLast(url, QUERY_STRING);
         return resolveParameters(queryString, AND_CHAR);
     }
@@ -361,7 +364,7 @@ public abstract class URLUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, List<String>> resolveMatrixParameters(String url) {
+    public static Map<String, List<String>> resolveMatrixParameters(@Nonnull String url) {
         int startIndex = url.indexOf(SEMICOLON_CHAR);
         if (startIndex == -1) { // The matrix separator ";" was not found
             return emptyMap();
@@ -400,7 +403,7 @@ public abstract class URLUtils implements Utils {
      * @return A newly resolved, normalized path with standardized separators and no redundant segments.
      */
     @Nullable
-    public static String normalizePath(final String path) {
+    public static String normalizePath(@Nullable final String path) {
 
         if (isBlank(path)) {
             return path;
@@ -454,7 +457,7 @@ public abstract class URLUtils implements Utils {
      * @throws IllegalArgumentException if the provided value is null or the default encoding is not supported.
      */
     @Nonnull
-    public static String encode(String value) {
+    public static String encode(@Nonnull String value) {
         return encode(value, DEFAULT_ENCODING);
     }
 
@@ -495,7 +498,7 @@ public abstract class URLUtils implements Utils {
      * @see URLEncoder#encode(String, String)
      */
     @Nonnull
-    public static String encode(String value, String encoding) throws IllegalArgumentException {
+    public static String encode(@Nonnull String value, @Nonnull String encoding) throws IllegalArgumentException {
         String encodedValue = null;
         try {
             encodedValue = URLEncoder.encode(value, encoding);
@@ -540,7 +543,7 @@ public abstract class URLUtils implements Utils {
      * @throws IllegalArgumentException if the provided value is null or if the default encoding is not supported.
      */
     @Nonnull
-    public static String decode(String value) {
+    public static String decode(@Nonnull String value) {
         return decode(value, DEFAULT_ENCODING);
     }
 
@@ -579,7 +582,7 @@ public abstract class URLUtils implements Utils {
      * @throws IllegalArgumentException If character encoding needs to be consulted, but named character encoding is not supported
      */
     @Nonnull
-    public static String decode(String value, String encoding) throws IllegalArgumentException {
+    public static String decode(@Nonnull String value, @Nonnull String encoding) throws IllegalArgumentException {
         String decodedValue = null;
         try {
             decodedValue = URLDecoder.decode(value, encoding);
@@ -619,7 +622,7 @@ public abstract class URLUtils implements Utils {
      * @return {@code true} if the URL refers to a directory; otherwise, {@code false}
      * @throws NullPointerException if the provided URL is {@code null}
      */
-    public static boolean isDirectoryURL(URL url) {
+    public static boolean isDirectoryURL(@Nullable URL url) {
         if (url == null) {
             return false;
         }
@@ -664,7 +667,7 @@ public abstract class URLUtils implements Utils {
      * @return {@code true} if the URL refers to a valid JAR file; otherwise, returns {@code false}.
      * @throws NullPointerException if the provided URL is {@code null}.
      */
-    public static boolean isJarURL(URL url) {
+    public static boolean isJarURL(@Nonnull URL url) {
         String protocol = url.getProtocol();
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
@@ -716,7 +719,7 @@ public abstract class URLUtils implements Utils {
      * @return {@code true} if the URL refers to a valid archive; otherwise, returns {@code false}.
      * @throws NullPointerException if the provided URL is {@code null}.
      */
-    public static boolean isArchiveURL(URL url) {
+    public static boolean isArchiveURL(@Nonnull URL url) {
         if (isJarURL(url)) {
             return true;
         }
@@ -751,7 +754,7 @@ public abstract class URLUtils implements Utils {
      * @param protocol The protocol string to check.
      * @return {@code true} if the protocol is an archive type; otherwise, {@code false}.
      */
-    public static boolean isArchiveProtocol(String protocol) {
+    public static boolean isArchiveProtocol(@Nullable String protocol) {
         return JAR_PROTOCOL.equals(protocol) || ZIP_PROTOCOL.equals(protocol) || WAR_PROTOCOL.equals(protocol)
                 || EAR_PROTOCOL.equals(protocol);
     }
@@ -839,7 +842,7 @@ public abstract class URLUtils implements Utils {
      * @return A string representing the matrix parameters, or null if no valid parameters are provided.
      */
     @Nullable
-    public static String buildMatrixString(Map<String, List<String>> matrixParameters) {
+    public static String buildMatrixString(@Nullable Map<String, List<String>> matrixParameters) {
         if (isEmpty(matrixParameters)) {
             return null;
         }
@@ -883,8 +886,8 @@ public abstract class URLUtils implements Utils {
      * @param values an array of values to associate with the parameter
      * @return a string representing the matrix parameter, or null if no valid values are provided
      */
-    @Nonnull
-    public static String buildMatrixString(String name, String... values) {
+    @Nullable
+    public static String buildMatrixString(@Nullable String name, String... values) {
         return buildString(name, values, SEMICOLON_CHAR, EQUAL_CHAR);
     }
 
@@ -930,7 +933,7 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is null.
      */
     @Nonnull
-    public static String toExternalForm(URL url) throws NullPointerException {
+    public static String toExternalForm(@Nonnull URL url) throws NullPointerException {
         // pre-compute length of StringBuilder
         String protocol = url.getProtocol();
         String authority = url.getAuthority();
@@ -1044,7 +1047,7 @@ public abstract class URLUtils implements Utils {
      * @return The first sub-protocol value if present, or null if none is found.
      */
     @Nullable
-    public static String getSubProtocol(String url) {
+    public static String getSubProtocol(@Nonnull String url) {
         Map<String, List<String>> parameters = resolveMatrixParameters(url);
         return getFirst(parameters, SUB_PROTOCOL_MATRIX_NAME);
     }
@@ -1084,7 +1087,7 @@ public abstract class URLUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<String> resolveSubProtocols(URL url) {
+    public static List<String> resolveSubProtocols(@Nonnull URL url) {
         return resolveSubProtocols(url.toString());
     }
 
@@ -1130,7 +1133,7 @@ public abstract class URLUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<String> resolveSubProtocols(String url) {
+    public static List<String> resolveSubProtocols(@Nonnull String url) {
         String subProtocolsString = findSubProtocolsString(url);
         final List<String> subProtocols;
         if (subProtocolsString == null) {
@@ -1181,7 +1184,7 @@ public abstract class URLUtils implements Utils {
      * @return The resolved protocol if valid; otherwise, returns {@code null}.
      */
     @Nullable
-    public static String resolveProtocol(String url) {
+    public static String resolveProtocol(@Nullable String url) {
         if (isBlank(url)) {
             return null;
         }
@@ -1244,7 +1247,8 @@ public abstract class URLUtils implements Utils {
      * @return A non-null string representing the resolved authority part of the URL.
      * @throws NullPointerException if the provided URL is null.
      */
-    public static String resolveAuthority(URL url) {
+    @Nullable
+    public static String resolveAuthority(@Nonnull URL url) {
         return resolveAuthority(url.getAuthority());
     }
 
@@ -1280,7 +1284,7 @@ public abstract class URLUtils implements Utils {
      * @return the resolved authority string without matrix parameters, or {@code null} if the input is null or blank after processing
      */
     @Nullable
-    public static String resolveAuthority(String authority) {
+    public static String resolveAuthority(@Nullable String authority) {
         return truncateMatrixString(authority);
     }
 
@@ -1313,7 +1317,7 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is null
      */
     @Nonnull
-    public static String resolvePath(URL url) {
+    public static String resolvePath(@Nonnull URL url) {
         return resolvePath(url, true);
     }
 
@@ -1362,7 +1366,7 @@ public abstract class URLUtils implements Utils {
      *
      * @param factory the URLStreamHandlerFactory to be attached; if null, this method has no effect
      */
-    public static void attachURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
+    public static void attachURLStreamHandlerFactory(@Nullable URLStreamHandlerFactory factory) {
         if (factory == null) {
             return;
         }
@@ -1458,7 +1462,7 @@ public abstract class URLUtils implements Utils {
      * @param handler the handler to register for its protocol
      * @throws NullPointerException if the provided handler is null
      */
-    public static void registerURLStreamHandler(ExtendableProtocolURLStreamHandler handler) {
+    public static void registerURLStreamHandler(@Nonnull ExtendableProtocolURLStreamHandler handler) {
         registerURLStreamHandler(handler.getProtocol(), handler);
     }
 
@@ -1499,7 +1503,7 @@ public abstract class URLUtils implements Utils {
      * @param protocol the name of the protocol for which the handler is being registered
      * @param handler  the URLStreamHandler instance to register; if null, this method has no effect
      */
-    public static void registerURLStreamHandler(String protocol, URLStreamHandler handler) {
+    public static void registerURLStreamHandler(@Nullable String protocol, @Nullable URLStreamHandler handler) {
         MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory(true);
         factory.addURLStreamHandler(protocol, handler);
         attachURLStreamHandlerFactory(factory);
@@ -1525,7 +1529,7 @@ public abstract class URLUtils implements Utils {
      *
      * @param conn The URL connection to close; may be null.
      */
-    public static void close(URLConnection conn) {
+    public static void close(@Nullable URLConnection conn) {
         if (conn instanceof HttpURLConnection) {
             ((HttpURLConnection) conn).disconnect();
         }
@@ -1603,14 +1607,17 @@ public abstract class URLUtils implements Utils {
         return path;
     }
 
-    protected static String truncateMatrixString(String value) {
+    @Nullable
+    protected static String truncateMatrixString(@Nullable String value) {
         return substringBefore(value, SEMICOLON);
     }
 
+    @Nullable
     protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory() {
         return getMutableURLStreamHandlerFactory(false);
     }
 
+    @Nullable
     protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory(boolean createIfAbsent) {
         URLStreamHandlerFactory oldFactory = getURLStreamHandlerFactory();
         MutableURLStreamHandlerFactory factory = findMutableURLStreamHandlerFactory(oldFactory);
@@ -1642,12 +1649,14 @@ public abstract class URLUtils implements Utils {
         setStaticFieldValue(true, URL.class, "factory", null);
     }
 
-    protected static String reformProtocol(String protocol, String spec) {
+    @Nullable
+    protected static String reformProtocol(@Nullable String protocol, @Nonnull String spec) {
         List<String> subProtocols = resolveSubProtocols(spec);
         return reformProtocol(protocol, subProtocols);
     }
 
-    protected static String reformProtocol(String protocol, List<String> subProtocols) {
+    @Nullable
+    protected static String reformProtocol(@Nullable String protocol, @Nonnull List<String> subProtocols) {
         int size = size(subProtocols);
         if (size < 1) { // the matrix of sub-protocols was not found
             return protocol;
@@ -1662,7 +1671,8 @@ public abstract class URLUtils implements Utils {
         return protocolJoiner.toString();
     }
 
-    protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
+    @Nonnull
+    protected static Map<String, List<String>> resolveParameters(@Nullable String paramsString, char separatorChar) {
         String[] params = split(paramsString, separatorChar);
         int paramsLen = length(params);
         if (paramsLen == 0) {
@@ -1690,7 +1700,8 @@ public abstract class URLUtils implements Utils {
         return unmodifiableMap(parametersMap);
     }
 
-    protected static String buildString(String name, String[] values, char separator, char joiner) {
+    @Nullable
+    protected static String buildString(@Nullable String name, @Nullable String[] values, char separator, char joiner) {
         int len = length(values);
 
         if (len == 0) {
@@ -1714,7 +1725,8 @@ public abstract class URLUtils implements Utils {
         return stringBuilder.toString();
     }
 
-    protected static String getFirst(Map<String, List<String>> parameters, String name) {
+    @Nullable
+    protected static String getFirst(@Nonnull Map<String, List<String>> parameters, @Nullable String name) {
         List<String> values = parameters.get(name);
         return first(values);
     }

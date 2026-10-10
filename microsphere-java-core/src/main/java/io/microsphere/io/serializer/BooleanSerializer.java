@@ -1,5 +1,7 @@
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import static io.microsphere.util.SizeUtils.BOOLEAN_BYTES_SIZE;
 
 /**
@@ -23,14 +25,16 @@ public final class BooleanSerializer extends AbstractSerializer<Boolean> {
     }
 
     @Override
-    protected byte[] doSerialize(Boolean booleanValue) {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Boolean booleanValue) {
         byte byteValue = booleanValue ? TRUE_VALUE : FALSE_VALUE;
         byte[] bytes = new byte[]{byteValue};
         return bytes;
     }
 
     @Override
-    protected Boolean doDeserialize(byte[] bytes) {
+    @Nonnull
+    protected Boolean doDeserialize(@Nonnull byte[] bytes) {
         byte byteValue = bytes[0];
         return byteValue == TRUE_VALUE;
     }

@@ -17,6 +17,8 @@
 
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nonnull;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -61,7 +63,8 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
     }
 
     @Override
-    public final Boolean visitPackage(PackageElement e, StringBuilder jsonBuilder) {
+    @Nonnull
+    public final Boolean visitPackage(@Nonnull PackageElement e, @Nonnull StringBuilder jsonBuilder) {
         if (!supportsPackage(e)) {
             return false;
         }
@@ -69,7 +72,8 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
     }
 
     @Override
-    public final Boolean visitVariable(VariableElement e, StringBuilder stringBuilder) {
+    @Nonnull
+    public final Boolean visitVariable(@Nonnull VariableElement e, @Nonnull StringBuilder stringBuilder) {
         if (!supportsVariable(e)) {
             return false;
         }
@@ -77,7 +81,8 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
     }
 
     @Override
-    public final Boolean visitExecutable(ExecutableElement e, StringBuilder jsonBuilder) {
+    @Nonnull
+    public final Boolean visitExecutable(@Nonnull ExecutableElement e, @Nonnull StringBuilder jsonBuilder) {
         if (!supportsExecutable(e)) {
             return false;
         }
@@ -85,7 +90,8 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
     }
 
     @Override
-    public final Boolean visitType(TypeElement e, StringBuilder jsonBuilder) {
+    @Nonnull
+    public final Boolean visitType(@Nonnull TypeElement e, @Nonnull StringBuilder jsonBuilder) {
         if (!supportsType(e)) {
             return false;
         }
@@ -101,14 +107,15 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
     }
 
     @Override
-    public final Boolean visitTypeParameter(TypeParameterElement e, StringBuilder jsonBuilder) {
+    @Nonnull
+    public final Boolean visitTypeParameter(@Nonnull TypeParameterElement e, @Nonnull StringBuilder jsonBuilder) {
         if (!supportsTypeParameter(e)) {
             return false;
         }
         return doVisitTypeParameter(e, jsonBuilder);
     }
 
-    protected boolean visitMembers(List<? extends Element> members, StringBuilder jsonBuilder) {
+    protected boolean visitMembers(@Nonnull List<? extends Element> members, @Nonnull StringBuilder jsonBuilder) {
         boolean appended = false;
         for (Element member : members) {
             if (member.accept(this, jsonBuilder)) {
@@ -127,7 +134,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param e the element to check
      * @return {@code true} if the element is supported; {@code false} otherwise
      */
-    protected boolean supports(Element e) {
+    protected boolean supports(@Nonnull Element e) {
         return true;
     }
 
@@ -140,7 +147,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param e the package element to check
      * @return {@code true} if the package element is supported; {@code false} otherwise
      */
-    protected boolean supportsPackage(PackageElement e) {
+    protected boolean supportsPackage(@Nonnull PackageElement e) {
         return supports(e);
     }
 
@@ -153,7 +160,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param e the variable element to check
      * @return {@code true} if the variable element is supported; {@code false} otherwise
      */
-    protected boolean supportsVariable(VariableElement e) {
+    protected boolean supportsVariable(@Nonnull VariableElement e) {
         return supports(e);
     }
 
@@ -166,7 +173,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param e the executable element to check
      * @return {@code true} if the executable element is supported; {@code false} otherwise
      */
-    protected boolean supportsExecutable(ExecutableElement e) {
+    protected boolean supportsExecutable(@Nonnull ExecutableElement e) {
         return supports(e);
     }
 
@@ -179,7 +186,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param e the type element to check
      * @return {@code true} if the type element is supported; {@code false} otherwise
      */
-    protected boolean supportsType(TypeElement e) {
+    protected boolean supportsType(@Nonnull TypeElement e) {
         return supports(e);
     }
 
@@ -192,7 +199,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param e the type parameter element to check
      * @return {@code true} if the type parameter element is supported; {@code false} otherwise
      */
-    protected boolean supportsTypeParameter(TypeParameterElement e) {
+    protected boolean supportsTypeParameter(@Nonnull TypeParameterElement e) {
         return supports(e);
     }
 
@@ -203,7 +210,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param jsonBuilder the string builder used to construct the JSON output
      * @return {@code true} if any content was appended; {@code false} otherwise
      */
-    protected boolean doVisitPackage(PackageElement e, StringBuilder jsonBuilder) {
+    protected boolean doVisitPackage(@Nonnull PackageElement e, @Nonnull StringBuilder jsonBuilder) {
         return super.visitPackage(e, jsonBuilder);
     }
 
@@ -214,7 +221,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
      * @param jsonBuilder the string builder used to construct the JSON output
      * @return {@code true} if any content was appended; {@code false} otherwise
      */
-    protected boolean doVisitTypeParameter(TypeParameterElement e, StringBuilder jsonBuilder) {
+    protected boolean doVisitTypeParameter(@Nonnull TypeParameterElement e, @Nonnull StringBuilder jsonBuilder) {
         return super.visitTypeParameter(e, jsonBuilder);
     }
 }

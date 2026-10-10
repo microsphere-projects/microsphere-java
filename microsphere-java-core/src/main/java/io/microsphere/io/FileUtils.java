@@ -63,7 +63,7 @@ public abstract class FileUtils implements Utils {
      * or {@code null} if the target file is not under the parent directory
      */
     @Nullable
-    public static String resolveRelativePath(File parentDirectory, File targetFile) {
+    public static String resolveRelativePath(@Nonnull File parentDirectory, @Nonnull File targetFile) {
         if (!parentDirectory.isDirectory()) {
             return null;
         }
@@ -97,7 +97,7 @@ public abstract class FileUtils implements Utils {
      * @return the file's extension without the dot (.), or {@code null} if there's no extension or input is blank
      */
     @Nullable
-    public static String getFileExtension(String fileName) {
+    public static String getFileExtension(@Nullable String fileName) {
         return substringAfterLast(fileName, FILE_EXTENSION);
     }
 
@@ -118,7 +118,7 @@ public abstract class FileUtils implements Utils {
      * @throws NullPointerException if the directory is {@code null}
      * @throws IOException          in case deletion is unsuccessful
      */
-    public static int deleteDirectory(File directory) throws IOException {
+    public static int deleteDirectory(@Nonnull File directory) throws IOException {
         if (!directory.exists()) {
             return 0;
         }
@@ -159,7 +159,7 @@ public abstract class FileUtils implements Utils {
      * @throws NullPointerException if the directory is {@code null}
      * @throws IOException          if deletion fails for any file or sub-directory
      */
-    public static int cleanDirectory(File directory) throws IOException {
+    public static int cleanDirectory(@Nullable File directory) throws IOException {
         int deletedFilesCount = 0;
         for (File file : listFiles(directory)) {
             deletedFilesCount += forceDelete(file);
@@ -187,7 +187,7 @@ public abstract class FileUtils implements Utils {
      * @throws NoSuchFileException  if the file does not exist
      * @throws IOException          if deletion fails for any reason
      */
-    public static int forceDelete(File file) throws NoSuchFileException, IOException {
+    public static int forceDelete(@Nonnull File file) throws NoSuchFileException, IOException {
         final int deletedFilesCount;
         if (file.isDirectory()) {
             deletedFilesCount = deleteDirectory(file);
@@ -213,7 +213,7 @@ public abstract class FileUtils implements Utils {
      * @param file the file or directory to schedule for deletion, must not be {@code null}
      * @throws NullPointerException if the file is {@code null}
      */
-    public static void forceDeleteOnExit(File file) {
+    public static void forceDeleteOnExit(@Nonnull File file) {
         if (file.isDirectory()) {
             deleteDirectoryOnExit(file);
         } else {
@@ -237,7 +237,7 @@ public abstract class FileUtils implements Utils {
      * @param directory the directory to schedule for deletion on exit, must not be {@code null}
      * @throws NullPointerException if the directory is {@code null}
      */
-    public static void deleteDirectoryOnExit(File directory) {
+    public static void deleteDirectoryOnExit(@Nonnull File directory) {
         if (!directory.exists()) {
             return;
         }
@@ -289,7 +289,7 @@ public abstract class FileUtils implements Utils {
      * or {@link #EMPTY_FILE_ARRAY} if the directory is not valid
      */
     @Nonnull
-    public static File[] listFiles(File directory) {
+    public static File[] listFiles(@Nullable File directory) {
         if (directory == null || !directory.exists() || !directory.isDirectory()) {
             return EMPTY_FILE_ARRAY;
         }
@@ -314,7 +314,7 @@ public abstract class FileUtils implements Utils {
      * @return {@code true} if the file is a symbolic link, otherwise {@code false}
      * @throws NullPointerException if the file is {@code null}
      */
-    public static boolean isSymlink(File file) {
+    public static boolean isSymlink(@Nonnull File file) {
         return isSymbolicLink(file.toPath());
     }
 
@@ -336,7 +336,7 @@ public abstract class FileUtils implements Utils {
      * @throws RuntimeException     if an I/O error occurs while retrieving the canonical file
      */
     @Nonnull
-    public static File getCanonicalFile(File file) {
+    public static File getCanonicalFile(@Nonnull File file) {
         return execute(file::getCanonicalFile);
     }
 

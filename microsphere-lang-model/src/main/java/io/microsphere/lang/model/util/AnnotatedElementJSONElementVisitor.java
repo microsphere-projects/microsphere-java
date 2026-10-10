@@ -99,7 +99,7 @@ public abstract class AnnotatedElementJSONElementVisitor extends JSONElementVisi
 
     protected final ElementType[] elementTypes;
 
-    protected AnnotatedElementJSONElementVisitor(ProcessingEnvironment processingEnv, String annotationClassName) {
+    protected AnnotatedElementJSONElementVisitor(@Nonnull ProcessingEnvironment processingEnv, @Nonnull String annotationClassName) {
         assertNotNull(processingEnv, () -> "The 'processingEnv' argument must not be null");
         assertNotNull(annotationClassName, () -> "The 'annotationClassName' argument must not be null");
         this.processingEnv = processingEnv;
@@ -121,7 +121,7 @@ public abstract class AnnotatedElementJSONElementVisitor extends JSONElementVisi
         return this.annotationClassName;
     }
 
-    protected boolean supports(Element e) {
+    protected boolean supports(@Nonnull Element e) {
         return matchesElementType(e, this.elementTypes);
     }
 }

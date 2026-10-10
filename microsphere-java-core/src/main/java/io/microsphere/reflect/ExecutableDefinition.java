@@ -18,6 +18,7 @@ package io.microsphere.reflect;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
@@ -88,7 +89,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the parameter class names
      */
-    protected ExecutableDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+    protected ExecutableDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
                                    @Nonnull String name, @Nonnull String... parameterClassNames) {
         this(of(since), deprecation, declaredClassName, name, parameterClassNames);
     }
@@ -111,7 +112,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the parameter class names
      */
-    protected ExecutableDefinition(@Nonnull Version since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+    protected ExecutableDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
                                    @Nonnull String name, @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, name);
         assertNotNull(parameterClassNames, () -> "the class names of parameters of method must not be null.");
@@ -143,7 +144,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (!super.equals(o)) {
             return false;
         }
@@ -159,7 +160,8 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
         return result;
     }
 
-    protected Class<?>[] resolveParameterTypes(String[] parameterClassNames) {
+    @Nonnull
+    protected Class<?>[] resolveParameterTypes(@Nonnull String[] parameterClassNames) {
         ClassLoader classLoader = getClassLoader(getClass());
         int length = parameterClassNames.length;
         Class<?>[] parameterTypes = new Class<?>[length];

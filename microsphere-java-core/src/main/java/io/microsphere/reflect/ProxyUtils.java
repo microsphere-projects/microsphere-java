@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import java.lang.reflect.Method;
@@ -72,7 +73,7 @@ public abstract class ProxyUtils implements Utils {
      * @param type the class to check for proxyability
      * @return {@code true} if the class is proxyable, otherwise {@code false}
      */
-    public static boolean isProxyable(Class<?> type) {
+    public static boolean isProxyable(@Nonnull Class<?> type) {
         if (isArray(type)) {
             return false;
         }

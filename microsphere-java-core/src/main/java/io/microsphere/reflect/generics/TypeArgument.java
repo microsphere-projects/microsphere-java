@@ -16,6 +16,9 @@
  */
 package io.microsphere.reflect.generics;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.lang.reflect.Type;
 import java.util.Objects;
 
@@ -35,7 +38,7 @@ public class TypeArgument {
 
     private final int index;
 
-    protected TypeArgument(Type type, int index) {
+    protected TypeArgument(@Nonnull Type type, int index) {
         assertNotNull(type, () -> "The 'type' must not be null");
         assertTrue(index > -1, () -> "The 'index' must not be positive");
         this.type = type;
@@ -43,6 +46,7 @@ public class TypeArgument {
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "TypeArgument{" +
                 "type=" + type +
@@ -50,6 +54,7 @@ public class TypeArgument {
                 '}';
     }
 
+    @Nonnull
     public Type getType() {
         return type;
     }
@@ -59,7 +64,7 @@ public class TypeArgument {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -82,7 +87,8 @@ public class TypeArgument {
         return hash(this.type, this.index);
     }
 
-    public static TypeArgument create(Type type, int index) {
+    @Nonnull
+    public static TypeArgument create(@Nonnull Type type, int index) {
         return new TypeArgument(type, index);
     }
 }

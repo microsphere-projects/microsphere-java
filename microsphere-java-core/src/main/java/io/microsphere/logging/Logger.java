@@ -16,6 +16,9 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 /**
  * Logger interface for logging messages with different severity levels.
  * <p>
@@ -66,6 +69,7 @@ public interface Logger {
      *
      * @return name of this logger instance
      */
+    @Nonnull
     String getName();
 
     /**
@@ -81,7 +85,7 @@ public interface Logger {
      *
      * @param message the message string to be logged
      */
-    void trace(String message);
+    void trace(@Nullable String message);
 
     /**
      * Log a message at the TRACE level according to the specified format
@@ -95,7 +99,7 @@ public interface Logger {
      * @param format    the format string
      * @param arguments the arguments
      */
-    void trace(String format, Object... arguments);
+    void trace(@Nullable String format, Object... arguments);
 
     /**
      * Log an exception (throwable) at the TRACE level with an
@@ -104,7 +108,7 @@ public interface Logger {
      * @param message the message accompanying the exception
      * @param t       the exception (throwable) to log
      */
-    void trace(String message, Throwable t);
+    void trace(@Nullable String message, @Nullable Throwable t);
 
     /**
      * Is the logger instance enabled for the DEBUG level?
@@ -119,7 +123,7 @@ public interface Logger {
      *
      * @param message the message string to be logged
      */
-    void debug(String message);
+    void debug(@Nullable String message);
 
     /**
      * Log a message at the DEBUG level according to the specified format
@@ -128,7 +132,7 @@ public interface Logger {
      * @param format    the format string
      * @param arguments the arguments
      */
-    void debug(String format, Object... arguments);
+    void debug(@Nullable String format, Object... arguments);
 
     /**
      * Log an exception (throwable) at the DEBUG level with an
@@ -137,7 +141,7 @@ public interface Logger {
      * @param message the message accompanying the exception
      * @param t       the exception (throwable) to log
      */
-    void debug(String message, Throwable t);
+    void debug(@Nullable String message, @Nullable Throwable t);
 
     /**
      * Is the logger instance enabled for the INFO level?
@@ -152,7 +156,7 @@ public interface Logger {
      *
      * @param message the message string to be logged
      */
-    void info(String message);
+    void info(@Nullable String message);
 
     /**
      * Log a message at the INFO level according to the specified format
@@ -161,7 +165,7 @@ public interface Logger {
      * @param format    the format string
      * @param arguments the arguments
      */
-    void info(String format, Object... arguments);
+    void info(@Nullable String format, Object... arguments);
 
     /**
      * Log an exception (throwable) at the INFO level with an
@@ -170,7 +174,7 @@ public interface Logger {
      * @param message the message accompanying the exception
      * @param t       the exception (throwable) to log
      */
-    void info(String message, Throwable t);
+    void info(@Nullable String message, @Nullable Throwable t);
 
     /**
      * Is the logger instance enabled for the WARN level?
@@ -185,7 +189,7 @@ public interface Logger {
      *
      * @param message the message string to be logged
      */
-    void warn(String message);
+    void warn(@Nullable String message);
 
     /**
      * Log a message at the WARN level according to the specified format
@@ -194,7 +198,7 @@ public interface Logger {
      * @param format    the format string
      * @param arguments the arguments
      */
-    void warn(String format, Object... arguments);
+    void warn(@Nullable String format, Object... arguments);
 
     /**
      * Log an exception (throwable) at the WARN level with an
@@ -203,7 +207,7 @@ public interface Logger {
      * @param message the message accompanying the exception
      * @param t       the exception (throwable) to log
      */
-    void warn(String message, Throwable t);
+    void warn(@Nullable String message, @Nullable Throwable t);
 
     /**
      * Is the logger instance enabled for the ERROR level?
@@ -218,7 +222,7 @@ public interface Logger {
      *
      * @param message the message string to be logged
      */
-    void error(String message);
+    void error(@Nullable String message);
 
     /**
      * Log a message at the ERROR level according to the specified format
@@ -227,7 +231,7 @@ public interface Logger {
      * @param format    the format string
      * @param arguments the arguments
      */
-    void error(String format, Object... arguments);
+    void error(@Nullable String format, Object... arguments);
 
     /**
      * Log an exception (throwable) at the ERROR level with an
@@ -236,6 +240,6 @@ public interface Logger {
      * @param message the message accompanying the exception
      * @param t       the exception (throwable) to log
      */
-    void error(String message, Throwable t);
+    void error(@Nullable String message, @Nullable Throwable t);
 
 }

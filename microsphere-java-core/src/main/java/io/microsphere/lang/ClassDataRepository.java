@@ -108,7 +108,7 @@ public class ClassDataRepository {
      * @return class path
      */
     @Nullable
-    public String findClassPath(Class<?> type) {
+    public String findClassPath(@Nonnull Class<?> type) {
         return findClassPath(type.getName());
     }
 
@@ -119,7 +119,7 @@ public class ClassDataRepository {
      * @return class path
      */
     @Nullable
-    public String findClassPath(String className) {
+    public String findClassPath(@Nullable String className) {
         return classNameToClassPathsMap.get(className);
     }
 
@@ -132,7 +132,7 @@ public class ClassDataRepository {
      */
     @Nonnull
     @Immutable
-    public Set<String> getClassNamesInClassPath(String classPath, boolean recursive) {
+    public Set<String> getClassNamesInClassPath(@Nonnull String classPath, boolean recursive) {
         Set<String> classNames = classPathToClassNamesMap.get(classPath);
         if (isEmpty(classNames)) {
             classNames = findClassNamesInClassPath(classPath, recursive);
@@ -148,7 +148,7 @@ public class ClassDataRepository {
      */
     @Nonnull
     @Immutable
-    public Set<String> getClassNamesInPackage(Package onePackage) {
+    public Set<String> getClassNamesInPackage(@Nonnull Package onePackage) {
         return getClassNamesInPackage(onePackage.getName());
     }
 
@@ -160,7 +160,7 @@ public class ClassDataRepository {
      */
     @Nonnull
     @Immutable
-    public Set<String> getClassNamesInPackage(String packageName) {
+    public Set<String> getClassNamesInPackage(@Nullable String packageName) {
         Set<String> classNames = packageNameToClassNamesMap.get(packageName);
         return classNames == null ? emptySet() : unmodifiableSet(classNames);
     }

@@ -369,7 +369,7 @@ public abstract class JmxUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, MBeanAttribute> getMBeanAttributesMap(MBeanServer mBeanServer, ObjectName objectName) {
+    public static Map<String, MBeanAttribute> getMBeanAttributesMap(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName) {
         MBeanAttribute[] mBeanAttributes = getMBeanAttributes(mBeanServer, objectName);
         int length = mBeanAttributes.length;
         if (length == 0) {
@@ -411,7 +411,7 @@ public abstract class JmxUtils implements Utils {
      * @return a non-null array of {@link MBeanAttribute} objects representing the attributes of the specified MBean
      */
     @Nonnull
-    public static MBeanAttribute[] getMBeanAttributes(MBeanServer mBeanServer, ObjectName objectName) {
+    public static MBeanAttribute[] getMBeanAttributes(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName) {
         MBeanInfo mBeanInfo = getMBeanInfo(mBeanServer, objectName);
         if (mBeanInfo == null) {
             return EMPTY_MBEAN_ATTRIBUTE_ARRAY;
@@ -453,7 +453,7 @@ public abstract class JmxUtils implements Utils {
      * @return the current value of the MBean attribute, or {@code null} if the attribute is not readable or an error occurs
      */
     @Nullable
-    public static Object getAttribute(MBeanServer mBeanServer, ObjectName objectName, MBeanAttributeInfo attributeInfo) {
+    public static Object getAttribute(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName, @Nonnull MBeanAttributeInfo attributeInfo) {
         return doGetAttribute(mBeanServer, objectName, attributeInfo.getName());
     }
 
@@ -481,7 +481,7 @@ public abstract class JmxUtils implements Utils {
      * @return the current value of the MBean attribute, or {@code null} if the attribute is not readable or an error occurs
      */
     @Nullable
-    public static Object getAttribute(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
+    public static Object getAttribute(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName, @Nonnull String attributeName) {
         return doGetAttribute(mBeanServer, objectName, attributeName);
     }
 
@@ -511,7 +511,7 @@ public abstract class JmxUtils implements Utils {
      * @return the {@link MBeanAttributeInfo} for the specified attribute if found; {@code null} otherwise
      */
     @Nullable
-    public static MBeanAttributeInfo findMBeanAttributeInfo(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
+    public static MBeanAttributeInfo findMBeanAttributeInfo(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName, @Nullable String attributeName) {
         MBeanInfo mBeanInfo = getMBeanInfo(mBeanServer, objectName);
         if (mBeanInfo == null) {
             return null;
@@ -557,7 +557,8 @@ public abstract class JmxUtils implements Utils {
      * @param objectName  the name of the MBean whose metadata is to be retrieved
      * @return the {@link MBeanInfo} for the specified MBean if found; {@code null} otherwise
      */
-    public static MBeanInfo getMBeanInfo(MBeanServer mBeanServer, ObjectName objectName) {
+    @Nullable
+    public static MBeanInfo getMBeanInfo(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName) {
         MBeanInfo mBeanInfo = null;
         try {
             mBeanInfo = mBeanServer.getMBeanInfo(objectName);
@@ -570,11 +571,13 @@ public abstract class JmxUtils implements Utils {
     /**
      * @see MBeanOperationInfo#methodSignature(Method)
      */
-    public static MBeanParameterInfo[] methodSignature(Method method) {
+    @Nonnull
+    public static MBeanParameterInfo[] methodSignature(@Nonnull Method method) {
         return signature(method.getParameters());
     }
 
-    public static MBeanParameterInfo[] signature(Parameter[] parameters) {
+    @Nonnull
+    public static MBeanParameterInfo[] signature(@Nonnull Parameter[] parameters) {
         return of(parameters)
                 .map(MBeanParameterInfoBuilder::parameter)
                 .map(MBeanParameterInfoBuilder::build)
@@ -585,7 +588,7 @@ public abstract class JmxUtils implements Utils {
      * @see com.sun.jmx.mbeanserver.Introspector#descriptorForElement(AnnotatedElement)
      */
     @Nonnull
-    public static Descriptor descriptorForElement(AnnotatedElement annotatedElement) {
+    public static Descriptor descriptorForElement(@Nonnull AnnotatedElement annotatedElement) {
         Annotation[] annotations = annotatedElement.getAnnotations();
         return descriptorForAnnotations(annotations);
     }
@@ -594,7 +597,7 @@ public abstract class JmxUtils implements Utils {
      * @see com.sun.jmx.mbeanserver.Introspector#descriptorForAnnotations(Annotation[])
      */
     @Nonnull
-    public static Descriptor descriptorForAnnotations(Annotation[] annotations) {
+    public static Descriptor descriptorForAnnotations(@Nullable Annotation[] annotations) {
         int length = length(annotations);
         if (length > 0) {
             HashMap<String, Object> descriptorMap = newFixedHashMap(length);
@@ -618,7 +621,8 @@ public abstract class JmxUtils implements Utils {
         return EMPTY_DESCRIPTOR;
     }
 
-    protected static Object doGetAttribute(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
+    @Nullable
+    protected static Object doGetAttribute(@Nonnull MBeanServer mBeanServer, @Nonnull ObjectName objectName, @Nonnull String attributeName) {
         Object attributeValue = null;
         try {
             attributeValue = mBeanServer.getAttribute(objectName, attributeName);

@@ -17,6 +17,7 @@
 package io.microsphere.io.serializer;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Serializers {
 
     private final ClassLoader classLoader;
 
-    public Serializers(ClassLoader classLoader) {
+    public Serializers(@Nullable ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
@@ -84,7 +85,8 @@ public class Serializers {
      * @param serializedType the type to be serialized
      * @return <code>null</code> if not found
      */
-    public Serializer<?> getMostCompatible(Class<?> serializedType) {
+    @Nullable
+    public Serializer<?> getMostCompatible(@Nullable Class<?> serializedType) {
         Serializer<?> serializer = getHighestPriority(serializedType);
         if (serializer == null) {
             serializer = getLowestPriority(Object.class);
@@ -99,7 +101,8 @@ public class Serializers {
      * @param <S>            the type to be serialized
      * @return <code>null</code> if not found
      */
-    public <S> Serializer<S> getHighestPriority(Class<S> serializedType) {
+    @Nullable
+    public <S> Serializer<S> getHighestPriority(@Nullable Class<S> serializedType) {
         List<Serializer<S>> serializers = get(serializedType);
         return first(serializers);
     }
@@ -111,7 +114,8 @@ public class Serializers {
      * @param <S>            the type to be serialized
      * @return <code>null</code> if not found
      */
-    public <S> Serializer<S> getLowestPriority(Class<S> serializedType) {
+    @Nullable
+    public <S> Serializer<S> getLowestPriority(@Nullable Class<S> serializedType) {
         List<Serializer<S>> serializers = get(serializedType);
         return last(serializers);
     }
@@ -124,7 +128,7 @@ public class Serializers {
      * @return non-null {@link List}
      */
     @Nonnull
-    public <S> List<Serializer<S>> get(Class<S> serializedType) {
+    public <S> List<Serializer<S>> get(@Nullable Class<S> serializedType) {
         return (List) typedSerializers.getOrDefault(serializedType, emptyList());
     }
 }

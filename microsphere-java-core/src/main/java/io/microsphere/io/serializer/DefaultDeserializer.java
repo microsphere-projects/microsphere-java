@@ -16,6 +16,7 @@
  */
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.FastByteArrayInputStream;
 
 import java.io.IOException;
@@ -53,7 +54,8 @@ public class DefaultDeserializer implements Deserializer<Object> {
     public static final DefaultDeserializer DEFAULT_DESERIALIZER = new DefaultDeserializer();
 
     @Override
-    public Object deserialize(byte[] bytes) throws IOException {
+    @Nullable
+    public Object deserialize(@Nullable byte[] bytes) throws IOException {
         if (isEmpty(bytes)) {
             return null;
         }

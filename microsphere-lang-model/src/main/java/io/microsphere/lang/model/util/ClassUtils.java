@@ -17,6 +17,8 @@
 
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.type.TypeMirror;
@@ -54,7 +56,8 @@ public interface ClassUtils extends Utils {
      * @param type the type mirror to extract the class name from
      * @return the fully qualified class name as a String
      */
-    static String getClassName(TypeMirror type) {
+    @Nonnull
+    static String getClassName(@Nonnull TypeMirror type) {
         return ofTypeElement(type).getQualifiedName().toString();
     }
 
@@ -75,7 +78,8 @@ public interface ClassUtils extends Utils {
      * @param type the type mirror representing the class to load
      * @return the resolved {@link Class}, or {@code null} if the class cannot be found
      */
-    static Class loadClass(TypeMirror type) {
+    @Nullable
+    static Class loadClass(@Nonnull TypeMirror type) {
         return loadClass(getClassName(type));
     }
 
@@ -95,7 +99,8 @@ public interface ClassUtils extends Utils {
      * @param className the fully qualified name of the class to load
      * @return the resolved {@link Class}, or {@code null} if the class cannot be found
      */
-    static Class loadClass(String className) {
+    @Nullable
+    static Class loadClass(@Nonnull String className) {
         ClassLoader classLoader = getClassLoader(ClassUtils.class);
         Class<?> klass = resolveClass(className, classLoader);
         if (klass == null) {

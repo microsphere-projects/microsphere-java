@@ -17,6 +17,7 @@
 package io.microsphere.io.serializer;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Deserializers {
 
     private final ClassLoader classLoader;
 
-    public Deserializers(ClassLoader classLoader) {
+    public Deserializers(@Nullable ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
@@ -84,7 +85,8 @@ public class Deserializers {
      * @param deserializedType the type to be deserialized
      * @return <code>null</code> if not found
      */
-    public Deserializer<?> getMostCompatible(Class<?> deserializedType) {
+    @Nullable
+    public Deserializer<?> getMostCompatible(@Nullable Class<?> deserializedType) {
         Deserializer<?> deserializer = getHighestPriority(deserializedType);
         if (deserializer == null) {
             deserializer = getLowestPriority(Object.class);
@@ -99,7 +101,8 @@ public class Deserializers {
      * @param <T>              the type to be serialized
      * @return <code>null</code> if not found
      */
-    public <T> Deserializer<T> getHighestPriority(Class<?> deserializedType) {
+    @Nullable
+    public <T> Deserializer<T> getHighestPriority(@Nullable Class<?> deserializedType) {
         List<Deserializer<T>> serializers = get(deserializedType);
         return first(serializers);
     }
@@ -111,7 +114,8 @@ public class Deserializers {
      * @param <T>              the type to be serialized
      * @return <code>null</code> if not found
      */
-    public <T> Deserializer<T> getLowestPriority(Class<?> deserializedType) {
+    @Nullable
+    public <T> Deserializer<T> getLowestPriority(@Nullable Class<?> deserializedType) {
         List<Deserializer<T>> serializers = get(deserializedType);
         return last(serializers);
     }
@@ -124,7 +128,7 @@ public class Deserializers {
      * @return non-null {@link List}
      */
     @Nonnull
-    public <T> List<Deserializer<T>> get(Class<?> deserializedType) {
+    public <T> List<Deserializer<T>> get(@Nullable Class<?> deserializedType) {
         return (List) typedDeserializers.getOrDefault(deserializedType, emptyList());
     }
 }

@@ -3,6 +3,7 @@
  */
 package io.microsphere.filter;
 
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
 
@@ -36,14 +37,14 @@ public class PackageNameClassFilter implements ClassFilter {
      * @param packageName         the name of package
      * @param includedSubPackages included sub-packages
      */
-    public PackageNameClassFilter(String packageName, boolean includedSubPackages) {
+    public PackageNameClassFilter(@Nullable String packageName, boolean includedSubPackages) {
         this.packageName = packageName;
         this.includedSubPackages = includedSubPackages;
         this.subPackageNamePrefix = includedSubPackages ? packageName + DOT : null;
     }
 
     @Override
-    public boolean accept(Class<?> filteredObject) {
+    public boolean accept(@Nullable Class<?> filteredObject) {
         if (filteredObject == null) {
             return false;
         }

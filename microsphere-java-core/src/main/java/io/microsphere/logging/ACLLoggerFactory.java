@@ -16,6 +16,9 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 /**
  * {@link LoggerFactory} implementation for Apache Commons Logging (ACL).
  *
@@ -50,12 +53,14 @@ public class ACLLoggerFactory extends LoggerFactory {
     public static final String ACL_LOG_CLASS_NAME = "org.apache.commons.logging.Log";
 
     @Override
+    @Nonnull
     protected String getDelegateLoggerClassName() {
         return ACL_LOG_CLASS_NAME;
     }
 
     @Override
-    public Logger createLogger(String name) {
+    @Nonnull
+    public Logger createLogger(@Nonnull String name) {
         return new ACLLogger(name);
     }
 
@@ -79,12 +84,12 @@ public class ACLLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void trace(String message) {
+        public void trace(@Nullable String message) {
             logger.trace(message);
         }
 
         @Override
-        public void trace(String message, Throwable t) {
+        public void trace(@Nullable String message, @Nullable Throwable t) {
             logger.trace(message, t);
         }
 
@@ -94,12 +99,12 @@ public class ACLLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void debug(String message) {
+        public void debug(@Nullable String message) {
             logger.debug(message);
         }
 
         @Override
-        public void debug(String message, Throwable t) {
+        public void debug(@Nullable String message, @Nullable Throwable t) {
             logger.debug(message, t);
         }
 
@@ -109,12 +114,12 @@ public class ACLLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void info(String message) {
+        public void info(@Nullable String message) {
             logger.info(message);
         }
 
         @Override
-        public void info(String message, Throwable t) {
+        public void info(@Nullable String message, @Nullable Throwable t) {
             logger.info(message, t);
         }
 
@@ -124,12 +129,12 @@ public class ACLLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void warn(String message) {
+        public void warn(@Nullable String message) {
             logger.warn(message);
         }
 
         @Override
-        public void warn(String message, Throwable t) {
+        public void warn(@Nullable String message, @Nullable Throwable t) {
             logger.warn(message, t);
         }
 
@@ -139,12 +144,12 @@ public class ACLLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void error(String message) {
+        public void error(@Nullable String message) {
             logger.error(message);
         }
 
         @Override
-        public void error(String message, Throwable t) {
+        public void error(@Nullable String message, @Nullable Throwable t) {
             logger.error(message, t);
         }
     }

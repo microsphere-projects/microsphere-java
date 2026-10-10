@@ -17,6 +17,8 @@
 
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.Comparator;
 
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
@@ -82,7 +84,7 @@ public class HierarchicalClassComparator implements Comparator<Class<?>> {
      * equal to, or greater than the second according to hierarchical ordering.
      */
     @Override
-    public int compare(Class<?> o1, Class<?> o2) {
+    public int compare(@Nonnull Class<?> o1, @Nonnull Class<?> o2) {
         if (o1 == o2) {
             return 0;
         }

@@ -56,7 +56,7 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
 
     protected final ConfigurationPropertyReader configurationPropertyReader;
 
-    protected ClassPathResourceConfigurationPropertyLoader(String resourceName) throws IllegalArgumentException {
+    protected ClassPathResourceConfigurationPropertyLoader(@Nonnull String resourceName) throws IllegalArgumentException {
         this(resourceName, false);
     }
 
@@ -77,6 +77,7 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
     }
 
     @Override
+    @Nonnull
     public final List<ConfigurationProperty> load() throws Throwable {
         LinkedList<ConfigurationProperty> configurationProperties = newLinkedList();
         if (loadedAll) {

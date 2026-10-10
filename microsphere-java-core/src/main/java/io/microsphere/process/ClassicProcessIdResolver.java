@@ -16,6 +16,7 @@
  */
 package io.microsphere.process;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
@@ -80,6 +81,7 @@ public class ClassicProcessIdResolver implements ProcessIdResolver {
     }
 
     @Override
+    @Nonnull
     public Long current() {
         Long processId = valueOf(processIdValue);
         if (logger.isTraceEnabled()) {

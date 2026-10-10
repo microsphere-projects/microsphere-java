@@ -17,6 +17,9 @@
 
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 /**
  * A mutable integer container that provides various atomic operations for integer addition,
  * increment, decrement, and value retrieval. This class extends {@link Number}, allowing it to be used
@@ -81,6 +84,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 10
      * }</pre>
      */
+    @Nonnull
     public final MutableInteger set(int newValue) {
         this.value = newValue;
         return this;
@@ -323,7 +327,7 @@ public class MutableInteger extends Number {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (!(obj instanceof MutableInteger)) {
             return false;
         }
@@ -345,6 +349,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 10
      * }</pre>
      */
+    @Nonnull
     public static MutableInteger of(int value) {
         return new MutableInteger(value);
     }

@@ -16,6 +16,9 @@
  */
 package io.microsphere.lang.function;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -60,7 +63,7 @@ public interface ThrowableFunction<T, R> {
      * @return the function result
      * @throws Throwable if met with any error
      */
-    R apply(T t) throws Throwable;
+    R apply(@Nullable T t) throws Throwable;
 
     /**
      * Executes {@link #apply(T)} with {@link #handleException(T, Throwable) the default exception handling}
@@ -68,7 +71,8 @@ public interface ThrowableFunction<T, R> {
      * @param t the function argument
      * @return the function result
      */
-    default R execute(T t) throws RuntimeException {
+    @Nullable
+    default R execute(@Nullable T t) throws RuntimeException {
         return execute(t, this::handleException);
     }
 
@@ -80,7 +84,8 @@ public interface ThrowableFunction<T, R> {
      *                         the exception that the {@link #apply(T)} method throws
      * @return the function result
      */
-    default R execute(T t, BiFunction<T, Throwable, R> exceptionHandler) throws RuntimeException {
+    @Nullable
+    default R execute(@Nullable T t, @Nonnull BiFunction<T, Throwable, R> exceptionHandler) throws RuntimeException {
         R result;
         try {
             result = apply(t);
@@ -96,7 +101,8 @@ public interface ThrowableFunction<T, R> {
      * @param t       the value to be consumed
      * @param failure the instance of {@link Throwable}
      */
-    default R handleException(T t, Throwable failure) {
+    @Nonnull
+    default R handleException(@Nullable T t, @Nonnull Throwable failure) {
         throw new RuntimeException(failure);
     }
 
@@ -114,7 +120,8 @@ public interface ThrowableFunction<T, R> {
      * @throws NullPointerException if before is null
      * @see #andThen(ThrowableFunction)
      */
-    default <V> ThrowableFunction<V, R> compose(ThrowableFunction<? super V, ? extends T> before) {
+    @Nonnull
+    default <V> ThrowableFunction<V, R> compose(@Nonnull ThrowableFunction<? super V, ? extends T> before) {
         assertNotNull(before, () -> "The 'before' must not be null");
         return (V v) -> apply(before.apply(v));
     }
@@ -133,7 +140,8 @@ public interface ThrowableFunction<T, R> {
      * @throws NullPointerException if after is null
      * @see #compose(ThrowableFunction)
      */
-    default <V> ThrowableFunction<T, V> andThen(ThrowableFunction<? super R, ? extends V> after) {
+    @Nonnull
+    default <V> ThrowableFunction<T, V> andThen(@Nonnull ThrowableFunction<? super R, ? extends V> after) {
         assertNotNull(after, () -> "The 'after' must not be null");
         return (T t) -> after.apply(apply(t));
     }
@@ -163,7 +171,8 @@ public interface ThrowableFunction<T, R> {
      * @return the result of the function execution
      * @throws IllegalArgumentException if the provided function is null
      */
-    static <T, R> R execute(T t, ThrowableFunction<T, R> function) throws IllegalArgumentException {
+    @Nullable
+    static <T, R> R execute(@Nullable T t, @Nonnull ThrowableFunction<T, R> function) throws IllegalArgumentException {
         return execute(t, function, function::handleException);
     }
 
@@ -194,7 +203,8 @@ public interface ThrowableFunction<T, R> {
      * @return the result of the function execution
      * @throws IllegalArgumentException if the provided function or exception handler is null
      */
-    static <T, R> R execute(T t, ThrowableFunction<T, R> function, BiFunction<T, Throwable, R> exceptionHandler)
+    @Nullable
+    static <T, R> R execute(@Nullable T t, @Nonnull ThrowableFunction<T, R> function, @Nonnull BiFunction<T, Throwable, R> exceptionHandler)
             throws IllegalArgumentException {
         assertNotNull(function, () -> "The 'function' must not be null");
         assertNotNull(exceptionHandler, "The 'exceptionHandler' must not be null");

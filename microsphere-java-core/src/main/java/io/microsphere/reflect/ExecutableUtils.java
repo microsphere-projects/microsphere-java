@@ -17,6 +17,7 @@
 package io.microsphere.reflect;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.lang.function.ThrowableFunction;
 import io.microsphere.lang.function.ThrowableSupplier;
@@ -97,7 +98,7 @@ public abstract class ExecutableUtils implements Utils {
      * @throws RuntimeException         if the underlying executable member
      *                                  throws an exception.
      */
-    public static <E extends Executable & Member> void execute(E object, ThrowableConsumer<E> callback)
+    public static <E extends Executable & Member> void execute(@Nonnull E object, @Nonnull ThrowableConsumer<E> callback)
             throws NullPointerException, IllegalStateException, IllegalArgumentException, RuntimeException {
         execute(object, a -> {
             callback.accept(a);
@@ -154,7 +155,8 @@ public abstract class ExecutableUtils implements Utils {
      * @throws RuntimeException         if the underlying executable member
      *                                  throws an exception.
      */
-    public static <E extends Executable & Member, R> R execute(E executable, ThrowableSupplier<R> supplier)
+    @Nullable
+    public static <E extends Executable & Member, R> R execute(@Nonnull E executable, @Nonnull ThrowableSupplier<R> supplier)
             throws NullPointerException, IllegalStateException, IllegalArgumentException, RuntimeException {
         return execute(executable, (ThrowableFunction<E, R>) a -> supplier.execute());
     }
@@ -212,7 +214,8 @@ public abstract class ExecutableUtils implements Utils {
      * @throws RuntimeException         if the underlying executable member
      *                                  throws an exception.
      */
-    public static <E extends Executable & Member, R> R execute(E executableMember, ThrowableFunction<E, R> callback)
+    @Nullable
+    public static <E extends Executable & Member, R> R execute(@Nonnull E executableMember, @Nonnull ThrowableFunction<E, R> callback)
             throws NullPointerException, IllegalStateException, IllegalArgumentException, RuntimeException {
         R result = null;
         RuntimeException failure = null;

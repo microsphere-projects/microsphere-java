@@ -17,6 +17,7 @@
 
 package io.microsphere.management.builder;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassUtils;
 
@@ -46,27 +47,33 @@ public class MBeanNotificationInfoBuilder extends MBeanFeatureInfoBuilder<MBeanN
         super();
     }
 
+    @Nonnull
     public MBeanNotificationInfoBuilder types(@Nullable Class<?>... types) {
         return types(getClassNames(types));
     }
 
+    @Nonnull
     public MBeanNotificationInfoBuilder types(@Nullable String... types) {
         this.types = types;
         return this;
     }
 
+    @Nonnull
     public MBeanNotificationInfo build() {
         return new MBeanNotificationInfo(this.types, this.name, this.description, this.descriptor);
     }
 
+    @Nonnull
     public static MBeanNotificationInfoBuilder notification() {
         return new MBeanNotificationInfoBuilder();
     }
 
+    @Nonnull
     public static MBeanNotificationInfoBuilder notification(@Nullable Class<?>... types) {
         return notification().types(types);
     }
 
+    @Nonnull
     public static MBeanNotificationInfoBuilder notification(@Nullable String... types) {
         return notification().types(types);
     }

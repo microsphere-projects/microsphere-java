@@ -16,6 +16,8 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 /**
@@ -46,12 +48,14 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
     public static final String SLF4J_LOGGER_CLASS_NAME = "org.slf4j.Logger";
 
     @Override
+    @Nonnull
     protected String getDelegateLoggerClassName() {
         return SLF4J_LOGGER_CLASS_NAME;
     }
 
     @Override
-    public Logger createLogger(String name) {
+    @Nonnull
+    public Logger createLogger(@Nonnull String name) {
         return new Sfl4jLogger(name);
     }
 
@@ -64,7 +68,7 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
 
         private final org.slf4j.Logger logger;
 
-        protected Sfl4jLogger(String name) {
+        protected Sfl4jLogger(@Nonnull String name) {
             super(name);
             this.logger = org.slf4j.LoggerFactory.getLogger(name);
         }
@@ -75,17 +79,17 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void trace(String message) {
+        public void trace(@Nullable String message) {
             logger.trace(message);
         }
 
         @Override
-        public void trace(String format, Object... arguments) {
+        public void trace(@Nullable String format, Object... arguments) {
             logger.trace(format, arguments);
         }
 
         @Override
-        public void trace(String message, Throwable t) {
+        public void trace(@Nullable String message, @Nullable Throwable t) {
             logger.trace(message, t);
         }
 
@@ -95,17 +99,17 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void debug(String message) {
+        public void debug(@Nullable String message) {
             logger.debug(message);
         }
 
         @Override
-        public void debug(String format, Object... arguments) {
+        public void debug(@Nullable String format, Object... arguments) {
             logger.debug(format, arguments);
         }
 
         @Override
-        public void debug(String message, Throwable t) {
+        public void debug(@Nullable String message, @Nullable Throwable t) {
             logger.debug(message, t);
         }
 
@@ -115,17 +119,17 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void info(String message) {
+        public void info(@Nullable String message) {
             logger.info(message);
         }
 
         @Override
-        public void info(String format, Object... arguments) {
+        public void info(@Nullable String format, Object... arguments) {
             logger.info(format, arguments);
         }
 
         @Override
-        public void info(String message, Throwable t) {
+        public void info(@Nullable String message, @Nullable Throwable t) {
             logger.info(message, t);
         }
 
@@ -135,17 +139,17 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void warn(String message) {
+        public void warn(@Nullable String message) {
             logger.warn(message);
         }
 
         @Override
-        public void warn(String format, Object... arguments) {
+        public void warn(@Nullable String format, Object... arguments) {
             logger.warn(format, arguments);
         }
 
         @Override
-        public void warn(String message, Throwable t) {
+        public void warn(@Nullable String message, @Nullable Throwable t) {
             logger.warn(message, t);
         }
 
@@ -155,17 +159,17 @@ public class Sfl4jLoggerFactory extends LoggerFactory {
         }
 
         @Override
-        public void error(String message) {
+        public void error(@Nullable String message) {
             logger.error(message);
         }
 
         @Override
-        public void error(String format, Object... arguments) {
+        public void error(@Nullable String format, Object... arguments) {
             logger.error(format, arguments);
         }
 
         @Override
-        public void error(String message, Throwable t) {
+        public void error(@Nullable String message, @Nullable Throwable t) {
             logger.error(message, t);
         }
 

@@ -58,30 +58,36 @@ public class MBeanAttributeInfoBuilder extends MBeanFeatureInfoBuilder<MBeanAttr
         super();
     }
 
+    @Nonnull
     public MBeanAttributeInfoBuilder write(boolean isWritable) {
         this.write = isWritable;
         return this;
     }
 
+    @Nonnull
     public MBeanAttributeInfoBuilder read(boolean isReadable) {
         this.read = isReadable;
         return this;
     }
 
+    @Nonnull
     public MBeanAttributeInfoBuilder is(boolean isIs) {
         this.is = isIs;
         return this;
     }
 
+    @Nonnull
     public MBeanAttributeInfo build() {
         return new MBeanAttributeInfo(this.name, this.type, this.description, this.read, this.write,
                 this.is, this.descriptor);
     }
 
+    @Nonnull
     public static MBeanAttributeInfoBuilder attribute(@Nonnull Class<?> attributeType) {
         return attribute(getTypeName(attributeType));
     }
 
+    @Nonnull
     public static MBeanAttributeInfoBuilder attribute(@Nonnull String attributeType) {
         assertNotNull(attributeType, () -> "The 'attributeType' must not be null");
         MBeanAttributeInfoBuilder builder = new MBeanAttributeInfoBuilder();

@@ -129,7 +129,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the object to check
      * @return {@code true} if the object is a {@link Class}, {@code false} otherwise
      */
-    public static boolean isClass(Object type) {
+    public static boolean isClass(@Nullable Object type) {
         return type instanceof Class;
     }
 
@@ -146,7 +146,7 @@ public abstract class TypeUtils implements Utils {
      * @param klass the class to check
      * @return true if the class is exactly {@link Object}, false otherwise
      */
-    public static boolean isObjectClass(Class<?> klass) {
+    public static boolean isObjectClass(@Nullable Class<?> klass) {
         return isObjectType(klass);
     }
 
@@ -163,7 +163,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the object to check
      * @return true if the object represents the exact {@link Object} class, false otherwise
      */
-    public static boolean isObjectType(Object type) {
+    public static boolean isObjectType(@Nullable Object type) {
         return type == Object.class;
     }
 
@@ -181,7 +181,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the object to check
      * @return true if the object is a {@link ParameterizedType}, false otherwise
      */
-    public static boolean isParameterizedType(Object type) {
+    public static boolean isParameterizedType(@Nullable Object type) {
         return type instanceof ParameterizedType;
     }
 
@@ -201,7 +201,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the object to check
      * @return true if the object is a {@link TypeVariable}, false otherwise
      */
-    public static boolean isTypeVariable(Object type) {
+    public static boolean isTypeVariable(@Nullable Object type) {
         return type instanceof TypeVariable;
     }
 
@@ -222,7 +222,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the object to check
      * @return true if the object is a {@link WildcardType}, false otherwise
      */
-    public static boolean isWildcardType(Object type) {
+    public static boolean isWildcardType(@Nullable Object type) {
         return type instanceof WildcardType;
     }
 
@@ -246,7 +246,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the object to check
      * @return true if the object is a {@link GenericArrayType}, false otherwise
      */
-    public static boolean isGenericArrayType(Object type) {
+    public static boolean isGenericArrayType(@Nullable Object type) {
         return type instanceof GenericArrayType;
     }
 
@@ -282,7 +282,7 @@ public abstract class TypeUtils implements Utils {
      * @param type the type to check
      * @return true if the type is an instance of Class or ParameterizedType, false otherwise
      */
-    public static boolean isActualType(Type type) {
+    public static boolean isActualType(@Nullable Type type) {
         return isClass(type) || isParameterizedType(type);
     }
 
@@ -308,7 +308,7 @@ public abstract class TypeUtils implements Utils {
      * @return the raw type if the input is a {@link ParameterizedType}, otherwise returns the same type
      */
     @Nullable
-    public static Type getRawType(Type type) {
+    public static Type getRawType(@Nullable Type type) {
         if (isParameterizedType(type)) {
             return ((ParameterizedType) type).getRawType();
         } else {
@@ -338,7 +338,7 @@ public abstract class TypeUtils implements Utils {
      * @return the raw class if the input represents a class or parameterized type, otherwise returns null
      */
     @Nullable
-    public static Class<?> getRawClass(Type type) {
+    public static Class<?> getRawClass(@Nullable Type type) {
         Type rawType = getRawType(type);
         if (isClass(rawType)) {
             return (Class) rawType;
@@ -372,7 +372,7 @@ public abstract class TypeUtils implements Utils {
      * @param targetType the type to check as a subtype or implementation
      * @return true if the target type can be assigned to the super type, false otherwise
      */
-    public static boolean isAssignableFrom(Type superType, Type targetType) {
+    public static boolean isAssignableFrom(@Nullable Type superType, @Nullable Type targetType) {
         Class<?> superClass = asClass(superType);
         return isAssignableFrom(superClass, targetType);
     }
@@ -401,7 +401,7 @@ public abstract class TypeUtils implements Utils {
      * @param targetType the type to check as a subtype or implementation
      * @return true if the target type can be assigned to the super class, false otherwise
      */
-    public static boolean isAssignableFrom(Class<?> superClass, Type targetType) {
+    public static boolean isAssignableFrom(@Nullable Class<?> superClass, @Nullable Type targetType) {
         Class<?> targetClass = asClass(targetType);
         return isAssignableFrom(superClass, targetClass);
     }
@@ -413,7 +413,7 @@ public abstract class TypeUtils implements Utils {
      * @param targetType the target type
      * @return see {@link Class#isAssignableFrom(Class)}
      */
-    protected static boolean isAssignableFrom(Class<?> superType, Class<?> targetType) {
+    protected static boolean isAssignableFrom(@Nullable Class<?> superType, @Nullable Class<?> targetType) {
         return ClassUtils.isAssignableFrom(superType, targetType);
     }
 
@@ -445,7 +445,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> resolveActualTypeArguments(Type type, Type baseType) {
+    public static List<Type> resolveActualTypeArguments(@Nullable Type type, @Nullable Type baseType) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseType));
     }
 
@@ -473,7 +473,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     @Nonnull
-    public static Type resolveActualTypeArgument(Type type, Type baseType, int index) {
+    public static Type resolveActualTypeArgument(@Nullable Type type, @Nullable Type baseType, int index) {
         return doResolveActualTypeArguments(type, baseType).get(index);
     }
 
@@ -501,7 +501,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Class> resolveActualTypeArgumentClasses(Type type, Type baseType) {
+    public static List<Class> resolveActualTypeArgumentClasses(@Nullable Type type, @Nullable Type baseType) {
         return unmodifiableList(doResolveActualTypeArgumentClasses(type, baseType));
     }
 
@@ -530,18 +530,20 @@ public abstract class TypeUtils implements Utils {
      * @throws IndexOutOfBoundsException if the index is out of range
      */
     @Nullable
-    public static Class resolveActualTypeArgumentClass(Type type, Class baseType, int index) {
+    public static Class resolveActualTypeArgumentClass(@Nullable Type type, @Nullable Class baseType, int index) {
         return asClass(resolveActualTypeArgument(type, baseType, index));
     }
 
-    protected static List<Class> doResolveActualTypeArgumentClasses(Type type, Type baseType) {
+    @Nonnull
+    protected static List<Class> doResolveActualTypeArgumentClasses(@Nullable Type type, @Nullable Type baseType) {
         return doResolveActualTypeArguments(type, baseType).stream()
                 .map(TypeUtils::asClass)
                 .filter(Objects::nonNull)
                 .collect(toList());
     }
 
-    protected static List<Type> doResolveActualTypeArguments(Type type, Type baseType) {
+    @Nonnull
+    protected static List<Type> doResolveActualTypeArguments(@Nullable Type type, @Nullable Type baseType) {
         Class baseClass = asClass(baseType);
         return doResolveActualTypeArguments(type, baseClass);
     }
@@ -574,11 +576,12 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> resolveActualTypeArguments(Type type, Class baseClass) {
+    public static List<Type> resolveActualTypeArguments(@Nullable Type type, @Nullable Class baseClass) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseClass));
     }
 
-    protected static List<Type> doResolveActualTypeArguments(Type type, Class baseClass) {
+    @Nonnull
+    protected static List<Type> doResolveActualTypeArguments(@Nullable Type type, @Nullable Class baseClass) {
         if (type == null || baseClass == null) { // the raw class of type or baseType is null
             return emptyList();
         }
@@ -760,7 +763,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> getAllGenericSuperclasses(Type type) {
+    public static List<Type> getAllGenericSuperclasses(@Nullable Type type) {
         return findAllGenericSuperclasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -786,7 +789,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> getAllGenericInterfaces(Type type) {
+    public static List<Type> getAllGenericInterfaces(@Nullable Type type) {
         return findAllGenericInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -815,7 +818,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<ParameterizedType> getParameterizedTypes(Type type) {
+    public static List<ParameterizedType> getParameterizedTypes(@Nullable Type type) {
         return findParameterizedTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -842,7 +845,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<ParameterizedType> getAllParameterizedTypes(Type type) {
+    public static List<ParameterizedType> getAllParameterizedTypes(@Nullable Type type) {
         return findAllParameterizedTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -871,7 +874,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> getHierarchicalTypes(Type type) {
+    public static List<Type> getHierarchicalTypes(@Nullable Type type) {
         return findHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -904,7 +907,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> getAllTypes(Type type) {
+    public static List<Type> getAllTypes(@Nullable Type type) {
         return findAllTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -932,7 +935,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> findAllGenericSuperclasses(Type type, Predicate<? super Type>... typeFilters) {
+    public static List<Type> findAllGenericSuperclasses(@Nullable Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, false, typeFilters);
     }
 
@@ -959,7 +962,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> findAllGenericInterfaces(Type type, Predicate<? super Type>... typeFilters) {
+    public static List<Type> findAllGenericInterfaces(@Nullable Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, false, true, typeFilters);
     }
 
@@ -988,7 +991,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<ParameterizedType> findParameterizedTypes(Type type, Predicate<? super ParameterizedType>... typeFilters) {
+    public static List<ParameterizedType> findParameterizedTypes(@Nullable Type type, Predicate<? super ParameterizedType>... typeFilters) {
         return findTypes(type, true, false, true, true, parameterizedTypePredicate(typeFilters));
     }
 
@@ -1016,7 +1019,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<ParameterizedType> findAllParameterizedTypes(Type type, Predicate<? super ParameterizedType>... typeFilters) {
+    public static List<ParameterizedType> findAllParameterizedTypes(@Nullable Type type, Predicate<? super ParameterizedType>... typeFilters) {
         return findAllTypes(type, parameterizedTypePredicate(typeFilters));
     }
 
@@ -1046,7 +1049,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> findHierarchicalTypes(Type type, Predicate<? super Type>... typeFilters) {
+    public static List<Type> findHierarchicalTypes(@Nullable Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, true, typeFilters);
     }
 
@@ -1080,10 +1083,11 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> findAllTypes(Type type, Predicate<? super Type>... typeFilters) {
+    public static List<Type> findAllTypes(@Nullable Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, true, true, true, true, typeFilters);
     }
 
+    @Nonnull
     protected static Predicate parameterizedTypePredicate(Predicate<? super ParameterizedType>... predicates) {
         Predicate predicate = and(predicates);
         return PARAMETERIZED_TYPE_FILTER.and(predicate);
@@ -1091,7 +1095,7 @@ public abstract class TypeUtils implements Utils {
 
     @Nonnull
     @Immutable
-    protected static List<Type> findTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
+    protected static List<Type> findTypes(@Nullable Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                           boolean includeGenericSuperclass, boolean includeGenericInterfaces,
                                           Predicate<? super Type>... typeFilters) {
         if (type == null || isObjectType(type)) {
@@ -1100,7 +1104,8 @@ public abstract class TypeUtils implements Utils {
         return genericTypeFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
     }
 
-    protected static List<Type> doGetHierarchicalTypes(Type type) {
+    @Nonnull
+    protected static List<Type> doGetHierarchicalTypes(@Nonnull Type type) {
         return genericTypeFinder(type, false, true, true, true).findTypes(EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1128,7 +1133,7 @@ public abstract class TypeUtils implements Utils {
      * @return the fully qualified name of the class, or null if the input is null
      */
     @Nullable
-    public static String getClassName(Type type) {
+    public static String getClassName(@Nullable Type type) {
         Type rawType = getRawType(type);
         if (rawType == null) {
             return null;
@@ -1162,7 +1167,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<String> getClassNames(Iterable<? extends Type> types) {
+    public static Set<String> getClassNames(@Nonnull Iterable<? extends Type> types) {
         return unmodifiableSet(stream(types.spliterator(), false)
                 .map(TypeUtils::getClassName)
                 .collect(toSet()));
@@ -1195,7 +1200,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Type> resolveTypeArguments(Class<?> targetClass) {
+    public static List<Type> resolveTypeArguments(@Nullable Class<?> targetClass) {
         if (targetClass == null || targetClass.isPrimitive() || targetClass.isArray()) {
             return emptyList();
         }
@@ -1208,6 +1213,7 @@ public abstract class TypeUtils implements Utils {
         return typeArguments.isEmpty() ? emptyList() : unmodifiableList(typeArguments);
     }
 
+    @Nonnull
     protected static List<Type> resolveTypeArguments(Type... types) {
         int length = length(types);
         if (length < 1) {
@@ -1220,7 +1226,8 @@ public abstract class TypeUtils implements Utils {
         return typeArguments;
     }
 
-    protected static List<Type> getActualTypeArguments(Type type) {
+    @Nonnull
+    protected static List<Type> getActualTypeArguments(@Nullable Type type) {
         if (isObjectType(type)) {
             return emptyList();
         }
@@ -1256,7 +1263,7 @@ public abstract class TypeUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> resolveTypeArgumentClasses(Class<?> targetClass) {
+    public static List<Class<?>> resolveTypeArgumentClasses(@Nullable Class<?> targetClass) {
         List<Type> typeArguments = resolveTypeArguments(targetClass);
         return unmodifiableList(typeArguments.stream()
                 .map(TypeUtils::asClass)
@@ -1296,7 +1303,7 @@ public abstract class TypeUtils implements Utils {
      * @return the corresponding {@link Class} if conversion is possible, otherwise null
      */
     @Nullable
-    public static Class<?> asClass(Type type) {
+    public static Class<?> asClass(@Nullable Type type) {
         Class targetClass = asClass0(type);
         if (targetClass == null) { // try to cast a ParameterizedType if possible
             ParameterizedType parameterizedType = asParameterizedType(type);
@@ -1344,7 +1351,7 @@ public abstract class TypeUtils implements Utils {
      * @return the corresponding {@link GenericArrayType} if conversion is possible, otherwise null
      */
     @Nullable
-    public static GenericArrayType asGenericArrayType(Type type) {
+    public static GenericArrayType asGenericArrayType(@Nullable Type type) {
         if (type instanceof GenericArrayType) {
             return (GenericArrayType) type;
         }
@@ -1384,7 +1391,7 @@ public abstract class TypeUtils implements Utils {
      * @return the corresponding {@link ParameterizedType} if conversion is possible, otherwise null
      */
     @Nullable
-    public static ParameterizedType asParameterizedType(Type type) {
+    public static ParameterizedType asParameterizedType(@Nullable Type type) {
         if (isParameterizedType(type)) {
             return (ParameterizedType) type;
         }
@@ -1423,7 +1430,7 @@ public abstract class TypeUtils implements Utils {
      * @return the corresponding {@link TypeVariable} if conversion is possible, otherwise null
      */
     @Nullable
-    public static TypeVariable asTypeVariable(Type type) {
+    public static TypeVariable asTypeVariable(@Nullable Type type) {
         if (isTypeVariable(type)) {
             return (TypeVariable) type;
         }
@@ -1463,7 +1470,7 @@ public abstract class TypeUtils implements Utils {
      * @return the corresponding {@link WildcardType} if conversion is possible, otherwise null
      */
     @Nullable
-    public static WildcardType asWildcardType(Type type) {
+    public static WildcardType asWildcardType(@Nullable Type type) {
         if (isWildcardType(type)) {
             return (WildcardType) type;
         }
@@ -1506,7 +1513,7 @@ public abstract class TypeUtils implements Utils {
      * @return the component type if the input is an array type, otherwise null
      */
     @Nullable
-    public static Type getComponentType(Type type) {
+    public static Type getComponentType(@Nullable Type type) {
         GenericArrayType genericArrayType = asGenericArrayType(type);
         if (genericArrayType != null) {
             return genericArrayType.getGenericComponentType();

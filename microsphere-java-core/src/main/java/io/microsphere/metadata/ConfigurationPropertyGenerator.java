@@ -63,5 +63,5 @@ public interface ConfigurationPropertyGenerator extends Prioritized {
      * @throws IllegalArgumentException if the configurationProperty is null.
      */
     @Nonnull
-    String generate(ConfigurationProperty configurationProperty) throws IllegalArgumentException;
+    String generate(@Nonnull ConfigurationProperty configurationProperty) throws IllegalArgumentException;
 }

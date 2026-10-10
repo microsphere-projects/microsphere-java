@@ -16,6 +16,8 @@
  */
 package io.microsphere.invoke;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableBiFunction;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
@@ -79,7 +81,8 @@ public abstract class MethodHandlesLookupUtils implements Utils {
      * @param parameterTypes the types of target method parameters
      * @return {@link MethodHandle}
      */
-    public static MethodHandle findPublicVirtual(Class<?> requestedClass, String methodName, Class... parameterTypes) {
+    @Nullable
+    public static MethodHandle findPublicVirtual(@Nullable Class<?> requestedClass, @Nullable String methodName, Class... parameterTypes) {
         return findPublic(requestedClass, methodName, parameterTypes, (lookup, methodType) -> lookup.findVirtual(requestedClass, methodName, methodType));
     }
 
@@ -91,27 +94,32 @@ public abstract class MethodHandlesLookupUtils implements Utils {
      * @param parameterTypes the types of target method parameters
      * @return {@link MethodHandle}
      */
-    public static MethodHandle findPublicStatic(Class<?> requestedClass, String methodName, Class... parameterTypes) {
+    @Nullable
+    public static MethodHandle findPublicStatic(@Nullable Class<?> requestedClass, @Nullable String methodName, Class... parameterTypes) {
         return findPublic(requestedClass, methodName, parameterTypes, (lookup, methodType) -> lookup.findStatic(requestedClass, methodName, methodType));
     }
 
-    protected static MethodHandle findPublic(Class<?> requestedClass, String methodName, Class[] parameterTypes,
-                                             ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
+    @Nullable
+    protected static MethodHandle findPublic(@Nullable Class<?> requestedClass, @Nullable String methodName, @Nullable Class[] parameterTypes,
+                                             @Nonnull ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         return find(PUBLIC_LOOKUP, requestedClass, methodName, parameterTypes, function);
     }
 
-    protected static MethodHandle find(Lookup lookup, Class<?> requestedClass, String methodName, Class[] parameterTypes,
-                                       ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
+    @Nullable
+    protected static MethodHandle find(@Nullable Lookup lookup, @Nullable Class<?> requestedClass, @Nullable String methodName, @Nullable Class[] parameterTypes,
+                                       @Nonnull ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         Method method = findMethod(requestedClass, methodName, parameterTypes);
         return find(lookup, method, function);
     }
 
-    protected static MethodHandle findPublic(Method method, ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
+    @Nullable
+    protected static MethodHandle findPublic(@Nullable Method method, @Nonnull ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         return find(PUBLIC_LOOKUP, method, function);
     }
 
-    protected static MethodHandle find(Lookup lookup, Method method,
-                                       ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
+    @Nullable
+    protected static MethodHandle find(@Nullable Lookup lookup, @Nullable Method method,
+                                       @Nonnull ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         if (method == null) {
             return NOT_FOUND_METHOD_HANDLE;
         }

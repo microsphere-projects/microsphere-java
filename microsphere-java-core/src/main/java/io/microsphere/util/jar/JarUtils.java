@@ -83,7 +83,7 @@ public abstract class JarUtils implements Utils {
      * @throws IllegalArgumentException if the URL protocol is neither "jar" nor "file"
      */
     @Nullable
-    public static JarFile toJarFile(URL jarURL) throws NullPointerException, IllegalArgumentException {
+    public static JarFile toJarFile(@Nonnull URL jarURL) throws NullPointerException, IllegalArgumentException {
         final String jarAbsolutePath = resolveJarAbsolutePath(jarURL);
         if (jarAbsolutePath == null) {
             return null;
@@ -108,7 +108,7 @@ public abstract class JarUtils implements Utils {
      * @throws IllegalArgumentException If {@link URL#getProtocol()} is not {@link ProtocolConstants#JAR_PROTOCOL jar} or {@link ProtocolConstants#FILE_PROTOCOL
      *                                  file}
      */
-    protected static void assertJarURLProtocol(URL jarURL) throws NullPointerException, IllegalArgumentException {
+    protected static void assertJarURLProtocol(@Nonnull URL jarURL) throws NullPointerException, IllegalArgumentException {
         final String protocol = jarURL.getProtocol(); // NPE check
         if (!JAR_PROTOCOL.equals(protocol) && !FILE_PROTOCOL.equals(protocol)) {
             String message = format("the protocol['{}'] of 'jarURL' is unsupported, except '{}' and '{}' ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
@@ -135,7 +135,7 @@ public abstract class JarUtils implements Utils {
      * @throws IllegalArgumentException if the URL protocol is neither "jar" nor "file"
      */
     @Nullable
-    public static String resolveRelativePath(URL jarURL) throws NullPointerException, IllegalArgumentException {
+    public static String resolveRelativePath(@Nonnull URL jarURL) throws NullPointerException, IllegalArgumentException {
         assertJarURLProtocol(jarURL);
         String form = jarURL.toExternalForm();
         String relativePath = substringAfter(form, ARCHIVE_ENTRY_SEPARATOR);
@@ -165,7 +165,7 @@ public abstract class JarUtils implements Utils {
      * @throws IllegalArgumentException if the URL protocol is neither "jar" nor "file"
      */
     @Nullable
-    public static String resolveJarAbsolutePath(URL jarURL) throws NullPointerException, IllegalArgumentException {
+    public static String resolveJarAbsolutePath(@Nonnull URL jarURL) throws NullPointerException, IllegalArgumentException {
         assertJarURLProtocol(jarURL);
         File archiveFile = resolveArchiveFile(jarURL);
         return archiveFile == null ? null : archiveFile.getAbsolutePath();
@@ -190,7 +190,7 @@ public abstract class JarUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<JarEntry> filter(JarFile jarFile, JarEntryFilter jarEntryFilter) {
+    public static List<JarEntry> filter(@Nullable JarFile jarFile, @Nullable JarEntryFilter jarEntryFilter) {
         if (jarFile == null) {
             return emptyList();
         }
@@ -215,7 +215,7 @@ public abstract class JarUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    protected static List<JarEntry> doFilter(Iterable<JarEntry> jarEntries, JarEntryFilter jarEntryFilter) {
+    protected static List<JarEntry> doFilter(@Nonnull Iterable<JarEntry> jarEntries, @Nullable JarEntryFilter jarEntryFilter) {
         LinkedList<JarEntry> jarEntriesList = newLinkedList();
         for (JarEntry jarEntry : jarEntries) {
             if (jarEntryFilter == null || jarEntryFilter.accept(jarEntry)) {
@@ -245,7 +245,7 @@ public abstract class JarUtils implements Utils {
      * @return the resolved {@link JarEntry} if found, or {@code null} if no such entry exists
      */
     @Nullable
-    public static JarEntry findJarEntry(URL jarURL) {
+    public static JarEntry findJarEntry(@Nonnull URL jarURL) {
         JarFile jarFile = null;
         try {
             jarFile = toJarFile(jarURL);
@@ -281,7 +281,7 @@ public abstract class JarUtils implements Utils {
      * @param targetDirectory the target directory where contents will be extracted; must not be {@code null}
      * @throws IOException if an I/O error occurs during extraction or if the provided file is not a valid JAR
      */
-    public static void extract(File jarSourceFile, File targetDirectory) throws IOException {
+    public static void extract(@Nonnull File jarSourceFile, @Nonnull File targetDirectory) throws IOException {
         extract(jarSourceFile, targetDirectory, null);
     }
 
@@ -312,7 +312,7 @@ public abstract class JarUtils implements Utils {
      * @param jarEntryFilter  an optional filter to restrict which entries are extracted; may be {@code null} to extract all entries
      * @throws IOException if an I/O error occurs during extraction or if the provided file is not a valid JAR
      */
-    public static void extract(File jarSourceFile, File targetDirectory, JarEntryFilter jarEntryFilter) throws IOException {
+    public static void extract(@Nonnull File jarSourceFile, @Nonnull File targetDirectory, @Nullable JarEntryFilter jarEntryFilter) throws IOException {
         try (JarFile jarFile = new JarFile(jarSourceFile)) {
             extract(jarFile, targetDirectory, jarEntryFilter);
         }
@@ -343,7 +343,7 @@ public abstract class JarUtils implements Utils {
      * @param jarEntryFilter  an optional filter to determine which entries to extract; if {@code null}, all entries are extracted
      * @throws IOException if an I/O error occurs during extraction or if the JAR file is invalid
      */
-    public static void extract(JarFile jarFile, File targetDirectory, JarEntryFilter jarEntryFilter) throws IOException {
+    public static void extract(@Nullable JarFile jarFile, @Nonnull File targetDirectory, @Nullable JarEntryFilter jarEntryFilter) throws IOException {
         List<JarEntry> jarEntriesList = filter(jarFile, jarEntryFilter);
         doExtract(jarFile, jarEntriesList, targetDirectory);
     }
@@ -441,7 +441,7 @@ public abstract class JarUtils implements Utils {
      * @return {@code true} if the URL points to a directory entry in a JAR file, {@code false} otherwise
      * @throws IOException if an I/O error occurs while resolving the JAR file or entry
      */
-    public static boolean isDirectoryEntry(URL url) {
+    public static boolean isDirectoryEntry(@Nonnull URL url) {
         String protocol = url.getProtocol();
         if (JAR_PROTOCOL.equals(protocol)) {
             final String relativePath = resolveRelativePath(url);
@@ -473,7 +473,7 @@ public abstract class JarUtils implements Utils {
      * @throws NullPointerException if {@code targetDirectory} is {@code null}
      * @throws IOException          if an I/O error occurs during extraction
      */
-    protected static void doExtract(JarFile jarFile, Collection<JarEntry> jarEntries, File targetDirectory) throws IOException {
+    protected static void doExtract(@Nullable JarFile jarFile, @Nullable Collection<JarEntry> jarEntries, @Nonnull File targetDirectory) throws IOException {
         if (jarFile == null || isEmpty(jarEntries)) {
             return;
         }

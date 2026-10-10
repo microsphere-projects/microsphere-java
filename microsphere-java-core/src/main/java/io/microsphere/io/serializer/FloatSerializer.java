@@ -17,6 +17,8 @@
 
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import static io.microsphere.io.serializer.IntegerSerializer.INTEGER_SERIALIZER;
 import static io.microsphere.util.SizeUtils.FLOAT_BYTES_SIZE;
 import static java.lang.Float.floatToIntBits;
@@ -38,13 +40,15 @@ public class FloatSerializer extends AbstractSerializer<Float> {
     }
 
     @Override
-    protected byte[] doSerialize(Float aFloat) {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Float aFloat) {
         int intBits = floatToIntBits(aFloat);
         return INTEGER_SERIALIZER.doSerialize(intBits);
     }
 
     @Override
-    protected Float doDeserialize(byte[] bytes) {
+    @Nonnull
+    protected Float doDeserialize(@Nonnull byte[] bytes) {
         int intBits = INTEGER_SERIALIZER.doDeserialize(bytes);
         return Float.intBitsToFloat(intBits);
     }

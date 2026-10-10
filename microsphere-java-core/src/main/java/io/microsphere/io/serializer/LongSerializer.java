@@ -1,5 +1,7 @@
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import static io.microsphere.util.SizeUtils.LONG_BYTES_SIZE;
 
 /**
@@ -18,7 +20,8 @@ public final class LongSerializer extends AbstractSerializer<Long> {
     }
 
     @Override
-    protected byte[] doSerialize(Long aLong) {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Long aLong) {
         long longValue = aLong.longValue();
         byte[] bytes = new byte[]{
                 (byte) longValue,
@@ -34,7 +37,8 @@ public final class LongSerializer extends AbstractSerializer<Long> {
     }
 
     @Override
-    protected Long doDeserialize(byte[] bytes) {
+    @Nonnull
+    protected Long doDeserialize(@Nonnull byte[] bytes) {
         long longValue = ((long) bytes[7] << 56)
                 | ((long) bytes[6] & 0xff) << 48
                 | ((long) bytes[5] & 0xff) << 40

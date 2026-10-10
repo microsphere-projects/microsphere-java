@@ -792,7 +792,7 @@ public abstract class MethodUtils implements Utils {
      * @throws RuntimeException         If the underlying method throws an exception during invocation.
      */
     @Nullable
-    public static <R> R invokeMethod(@Nonnull Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
+    public static <R> R invokeMethod(@Nullable Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
         return invokeMethod(false, object, type, methodName, arguments);
     }
 
@@ -826,7 +826,7 @@ public abstract class MethodUtils implements Utils {
      * @throws RuntimeException         if the underlying method throws an exception
      */
     @Nullable
-    public static <R> R invokeMethod(boolean forceAccess, @Nonnull Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
+    public static <R> R invokeMethod(boolean forceAccess, @Nullable Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
         List<Method> allDeclaredMethods = findAllDeclaredMethods(type, method -> {
             if (Objects.equals(methodName, method.getName()) && matchParameterTypes(method, arguments)) {
                 return true;
@@ -1420,6 +1420,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null string representing the method signature
      * @throws NullPointerException if any of the provided arguments are null
      */
+    @Nonnull
     public static String buildSignature(@Nonnull Class<?> declaringClass, @Nonnull String methodName, @Nonnull Class<?>... parameterTypes) {
         int parameterCount = length(parameterTypes);
         String[] parameterTypeNames = new String[parameterCount];
@@ -1839,7 +1840,7 @@ public abstract class MethodUtils implements Utils {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -1863,6 +1864,7 @@ public abstract class MethodUtils implements Utils {
         }
 
         @Override
+        @Nonnull
         public String toString() {
             return buildSignature(this.declaredClass, this.methodName, this.parameterTypes);
         }

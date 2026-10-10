@@ -1,5 +1,7 @@
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import static io.microsphere.util.SizeUtils.INTEGER_BYTES_SIZE;
 
 /**
@@ -18,7 +20,8 @@ public class IntegerSerializer extends AbstractSerializer<Integer> {
     }
 
     @Override
-    protected byte[] doSerialize(Integer integer) {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Integer integer) {
         int intValue = integer.intValue();
         byte[] bytes = new byte[]{
                 (byte) ((intValue >> 24) & 0xff),
@@ -30,7 +33,8 @@ public class IntegerSerializer extends AbstractSerializer<Integer> {
     }
 
     @Override
-    protected Integer doDeserialize(byte[] bytes) {
+    @Nonnull
+    protected Integer doDeserialize(@Nonnull byte[] bytes) {
         int intValue = (0xff & bytes[0]) << 24 |
                 (0xff & bytes[1]) << 16 |
                 (0xff & bytes[2]) << 8 |

@@ -16,6 +16,9 @@
  */
 package io.microsphere.reflect.generics;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -87,7 +90,8 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      * @throws MalformedParameterizedTypeException - if the instantiation
      *                                             is invalid
      */
-    public static ParameterizedTypeImpl of(Class<?> rawType, Type... actualTypeArguments) {
+    @Nonnull
+    public static ParameterizedTypeImpl of(@Nonnull Class<?> rawType, Type... actualTypeArguments) {
         return of(rawType, actualTypeArguments, null);
     }
 
@@ -116,7 +120,8 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      * @throws MalformedParameterizedTypeException - if the instantiation
      *                                             is invalid
      */
-    public static ParameterizedTypeImpl of(Class<?> rawType, Type[] actualTypeArguments, Type ownerType) {
+    @Nonnull
+    public static ParameterizedTypeImpl of(@Nonnull Class<?> rawType, @Nonnull Type[] actualTypeArguments, @Nullable Type ownerType) {
         return new ParameterizedTypeImpl(rawType, actualTypeArguments, ownerType);
     }
 
@@ -137,6 +142,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      *                                                      be instantiated for any reason
      * @since 1.5
      */
+    @Nonnull
     public Type[] getActualTypeArguments() {
         return actualTypeArguments.clone();
     }
@@ -148,6 +154,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      * @return the <tt>Type</tt> object representing the class or interface
      * that declared this type
      */
+    @Nonnull
     public Class<?> getRawType() {
         return rawType;
     }
@@ -168,6 +175,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      *                                                      refers to a parameterized type that cannot be instantiated
      *                                                      for any reason
      */
+    @Nullable
     public Type getOwnerType() {
         return ownerType;
     }
@@ -180,7 +188,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      * type parameters."
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -205,6 +213,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
                 Objects.hashCode(this.rawType);
     }
 
+    @Nonnull
     public String toString() {
         StringBuilder sb = new StringBuilder();
 

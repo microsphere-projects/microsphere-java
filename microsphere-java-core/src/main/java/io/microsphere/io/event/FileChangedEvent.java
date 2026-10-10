@@ -17,6 +17,7 @@
 package io.microsphere.io.event;
 
 import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.event.Event;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public class FileChangedEvent extends Event {
      * @param kind the kind of {@link File} changed
      * @throws IllegalArgumentException if <code>file</code> or <code>kind</code> is null.
      */
-    public FileChangedEvent(File file, Kind kind) throws IllegalArgumentException {
+    public FileChangedEvent(@Nonnull File file, @Nonnull Kind kind) throws IllegalArgumentException {
         super(file);
         assertNotNull(kind, () -> "The 'kind' argument must not be null");
         this.kind = kind;
@@ -51,6 +52,7 @@ public class FileChangedEvent extends Event {
     /**
      * @return The file as the event source
      */
+    @Nonnull
     public File getFile() {
         return (File) getSource();
     }
@@ -60,11 +62,13 @@ public class FileChangedEvent extends Event {
      *
      * @return {@link Kind}
      */
+    @Nonnull
     public Kind getKind() {
         return kind;
     }
 
     @Override
+    @Nonnull
     public String toString() {
         String sb = "FileChangedEvent{" + "kind=" + kind +
                 ", file=" + getFile() +

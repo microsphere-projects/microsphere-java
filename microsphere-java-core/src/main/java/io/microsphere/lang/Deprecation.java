@@ -133,7 +133,7 @@ public final class Deprecation implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (o == this) {
             return true;
         }
@@ -203,30 +203,36 @@ public final class Deprecation implements Serializable {
         protected Builder() {
         }
 
-        public Builder since(@Nullable String since) {
+        @Nonnull
+        public Builder since(@Nonnull String since) {
             return since(Version.of(since));
         }
 
+        @Nonnull
         public Builder since(@Nullable Version since) {
             this.since = since;
             return this;
         }
 
+        @Nonnull
         public Builder replacement(@Nullable String replacement) {
             this.replacement = replacement;
             return this;
         }
 
+        @Nonnull
         public Builder reason(@Nullable String reason) {
             this.reason = reason;
             return this;
         }
 
+        @Nonnull
         public Builder link(@Nullable String link) {
             this.link = link;
             return this;
         }
 
+        @Nonnull
         public Builder level(@Nullable Level level) {
             this.level = defaultIfNull(level, DEFAULT);
             return this;
@@ -237,6 +243,7 @@ public final class Deprecation implements Serializable {
          *
          * @return non-null
          */
+        @Nonnull
         public Deprecation build() {
             return new Deprecation(since, replacement, reason, link, level);
         }
@@ -247,27 +254,33 @@ public final class Deprecation implements Serializable {
      *
      * @return non-null
      */
+    @Nonnull
     public static Deprecation.Builder builder() {
         return new Builder();
     }
 
-    public static Deprecation of(String since) {
+    @Nonnull
+    public static Deprecation of(@Nonnull String since) {
         return of(since, null);
     }
 
-    public static Deprecation of(String since, String replacement) {
+    @Nonnull
+    public static Deprecation of(@Nonnull String since, @Nullable String replacement) {
         return of(since, replacement, null);
     }
 
-    public static Deprecation of(String since, String replacement, String reason) {
+    @Nonnull
+    public static Deprecation of(@Nonnull String since, @Nullable String replacement, @Nullable String reason) {
         return of(since, replacement, reason, null);
     }
 
-    public static Deprecation of(String since, String replacement, String reason, String link) {
+    @Nonnull
+    public static Deprecation of(@Nonnull String since, @Nullable String replacement, @Nullable String reason, @Nullable String link) {
         return of(since, replacement, reason, link, DEFAULT);
     }
 
-    public static Deprecation of(String since, String replacement, String reason, String link, Level level) {
+    @Nonnull
+    public static Deprecation of(@Nonnull String since, @Nullable String replacement, @Nullable String reason, @Nullable String link, @Nullable Level level) {
         return builder()
                 .since(since)
                 .replacement(replacement)

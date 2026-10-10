@@ -16,6 +16,8 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.Comparator;
 
 import static java.lang.Integer.MAX_VALUE;
@@ -100,7 +102,7 @@ public interface Prioritized extends Comparable<Prioritized> {
     }
 
     @Override
-    default int compareTo(Prioritized that) {
+    default int compareTo(@Nonnull Prioritized that) {
         return compare(this.getPriority(), that.getPriority());
     }
 }

@@ -67,7 +67,7 @@ public final class ConstructorDefinition extends ExecutableDefinition<Constructo
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the parameter class names
      */
-    public ConstructorDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+    public ConstructorDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
                                  @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, declaredClassName, parameterClassNames);
     }
@@ -88,12 +88,13 @@ public final class ConstructorDefinition extends ExecutableDefinition<Constructo
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the parameter class names
      */
-    public ConstructorDefinition(@Nonnull Version since, @Nonnull Deprecation deprecation,
+    public ConstructorDefinition(@Nonnull Version since, @Nullable Deprecation deprecation,
                                  @Nonnull String declaredClassName, @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, declaredClassName, parameterClassNames);
     }
 
     @Override
+    @Nullable
     protected Constructor resolveMember() {
         return findConstructor(super.getDeclaredClass(), super.getParameterTypes());
     }
@@ -115,6 +116,7 @@ public final class ConstructorDefinition extends ExecutableDefinition<Constructo
      * @param <T>  the type of instance
      * @return non-null
      */
+    @Nonnull
     public <T> T newInstance(Object... args) {
         return ConstructorUtils.newInstance((Constructor<T>) getConstructor(), args);
     }

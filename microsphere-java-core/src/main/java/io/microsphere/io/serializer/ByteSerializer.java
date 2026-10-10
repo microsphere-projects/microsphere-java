@@ -17,6 +17,8 @@
 
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.io.IOException;
 
 import static io.microsphere.util.SizeUtils.BYTE_BYTES_SIZE;
@@ -38,12 +40,14 @@ public class ByteSerializer extends AbstractSerializer<Byte> {
     }
 
     @Override
-    protected byte[] doSerialize(Byte b) throws IOException {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Byte b) throws IOException {
         return new byte[]{b};
     }
 
     @Override
-    protected Byte doDeserialize(byte[] bytes) throws IOException {
+    @Nonnull
+    protected Byte doDeserialize(@Nonnull byte[] bytes) throws IOException {
         return bytes[0];
     }
 }

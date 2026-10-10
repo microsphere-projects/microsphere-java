@@ -95,7 +95,7 @@ public abstract class LoggerFactory implements Prioritized {
      * @return non-null
      */
     @Nonnull
-    public static Logger getLogger(Class<?> type) {
+    public static Logger getLogger(@Nonnull Class<?> type) {
         return getLogger(type.getName());
     }
 
@@ -106,7 +106,7 @@ public abstract class LoggerFactory implements Prioritized {
      * @return {@link Logger}
      */
     @Nonnull
-    public static Logger getLogger(String name) {
+    public static Logger getLogger(@Nonnull String name) {
         return factory.createLogger(name);
     }
 
@@ -149,6 +149,7 @@ public abstract class LoggerFactory implements Prioritized {
      * @param name the name of {@link Logger }
      * @return non-null
      */
-    public abstract Logger createLogger(String name);
+    @Nonnull
+    public abstract Logger createLogger(@Nonnull String name);
 
 }
