@@ -162,7 +162,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param preRelease the optional pre-release identifier (e.g., "SNAPSHOT", "alpha")
      * @throws IllegalArgumentException if major, minor, or patch is negative, or all are zero
      */
-    public Version(int major, int minor, int patch, String preRelease) {
+    public Version(int major, int minor, int patch, @Nullable String preRelease) {
         assertTrue(major >= 0, "The 'major' version must not be a non-negative integer!");
         assertTrue(minor >= 0, "The 'minor' version must not be a non-negative integer!");
         assertTrue(patch >= 0, "The 'patch' version must not be a non-negative integer!");
@@ -217,7 +217,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if greater than, or <code>false</code>
      * @see #isGreaterThan(Version)
      */
-    public boolean gt(Version that) {
+    public boolean gt(@Nullable Version that) {
         return isGreaterThan(that);
     }
 
@@ -228,7 +228,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if greater than, or <code>false</code>
      * @see #gt(Version)
      */
-    public boolean isGreaterThan(Version that) {
+    public boolean isGreaterThan(@Nullable Version that) {
         return GT.test(this, that);
     }
 
@@ -239,7 +239,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if greater than, or <code>false</code>
      * @see #isGreaterOrEqual(Version)
      */
-    public boolean ge(Version that) {
+    public boolean ge(@Nullable Version that) {
         return isGreaterOrEqual(that);
     }
 
@@ -250,7 +250,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if greater than, or <code>false</code>
      * @see #ge(Version)
      */
-    public boolean isGreaterOrEqual(Version that) {
+    public boolean isGreaterOrEqual(@Nullable Version that) {
         return GE.test(this, that);
     }
 
@@ -260,7 +260,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param that the version to be compared
      * @return <code>true</code> if less than, or <code>false</code>
      */
-    public boolean lt(Version that) {
+    public boolean lt(@Nullable Version that) {
         return isLessThan(that);
     }
 
@@ -270,7 +270,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param that the version to be compared
      * @return <code>true</code> if less than, or <code>false</code>
      */
-    public boolean isLessThan(Version that) {
+    public boolean isLessThan(@Nullable Version that) {
         return LT.test(this, that);
     }
 
@@ -281,7 +281,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if less than, or <code>false</code>
      * @see #isLessOrEqual(Version)
      */
-    public boolean le(Version that) {
+    public boolean le(@Nullable Version that) {
         return isLessOrEqual(that);
     }
 
@@ -292,7 +292,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if less than, or <code>false</code>
      * @see #le(Version)
      */
-    public boolean isLessOrEqual(Version that) {
+    public boolean isLessOrEqual(@Nullable Version that) {
         return LE.test(this, that);
     }
 
@@ -302,7 +302,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param that the version to be compared
      * @return <code>true</code> if equals, or <code>false</code>
      */
-    public boolean eq(Version that) {
+    public boolean eq(@Nullable Version that) {
         return this.equals(that);
     }
 
@@ -312,7 +312,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param that the version to be compared
      * @return <code>true</code> if equals, or <code>false</code>
      */
-    public boolean equals(Version that) {
+    public boolean equals(@Nullable Version that) {
         return EQ.test(this, that);
     }
 
@@ -323,7 +323,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return <code>true</code> if equals, or <code>false</code>
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (!(o instanceof Version)) return false;
 
@@ -369,7 +369,7 @@ public class Version implements Comparable<Version>, Serializable {
      * is less than, equal to, or greater than the specified version
      */
     @Override
-    public int compareTo(Version that) {
+    public int compareTo(@Nonnull Version that) {
         int result = compare(this.major, that.major);
 
         if (result != 0) {
@@ -438,6 +438,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param major the major version number
      * @return a new {@link Version} instance
      */
+    @Nonnull
     public static Version of(int major) {
         return ofVersion(major);
     }
@@ -454,6 +455,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param minor the minor version number
      * @return a new {@link Version} instance
      */
+    @Nonnull
     public static Version of(int major, int minor) {
         return ofVersion(major, minor);
     }
@@ -471,6 +473,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param patch the patch version number
      * @return a new {@link Version} instance
      */
+    @Nonnull
     public static Version of(int major, int minor, int patch) {
         return ofVersion(major, minor, patch);
     }
@@ -489,7 +492,8 @@ public class Version implements Comparable<Version>, Serializable {
      * @param preRelease the pre-release identifier
      * @return a new {@link Version} instance
      */
-    public static Version of(int major, int minor, int patch, String preRelease) {
+    @Nonnull
+    public static Version of(int major, int minor, int patch, @Nullable String preRelease) {
         return ofVersion(major, minor, patch, preRelease);
     }
 
@@ -507,7 +511,8 @@ public class Version implements Comparable<Version>, Serializable {
      * @return a new {@link Version} instance
      * @throws IllegalArgumentException if the version string is null, blank, or invalid
      */
-    public static Version of(String version) {
+    @Nonnull
+    public static Version of(@Nonnull String version) {
         return ofVersion(version);
     }
 
@@ -522,6 +527,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param major the major version number
      * @return a new {@link Version} instance
      */
+    @Nonnull
     public static Version ofVersion(int major) {
         return new Version(major);
     }
@@ -538,6 +544,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param minor the minor version number
      * @return a new {@link Version} instance
      */
+    @Nonnull
     public static Version ofVersion(int major, int minor) {
         return new Version(major, minor);
     }
@@ -555,6 +562,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @param patch the patch version number
      * @return a new {@link Version} instance
      */
+    @Nonnull
     public static Version ofVersion(int major, int minor, int patch) {
         return new Version(major, minor, patch);
     }
@@ -573,7 +581,8 @@ public class Version implements Comparable<Version>, Serializable {
      * @param preRelease the pre-release identifier
      * @return a new {@link Version} instance
      */
-    public static Version ofVersion(int major, int minor, int patch, String preRelease) {
+    @Nonnull
+    public static Version ofVersion(int major, int minor, int patch, @Nullable String preRelease) {
         return new Version(major, minor, patch, preRelease);
     }
 
@@ -592,7 +601,8 @@ public class Version implements Comparable<Version>, Serializable {
      * @return a new {@link Version} instance
      * @throws IllegalArgumentException if the version string is null, blank, or contains non-numeric parts
      */
-    public static Version ofVersion(String version) {
+    @Nonnull
+    public static Version ofVersion(@Nonnull String version) {
         assertNotNull(version, () -> "The 'version' argument must not be null!");
         assertNotBlank(version, () -> "The 'version' argument must not be blank!");
 
@@ -623,6 +633,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @return a new {@link Version} instance
      * @throws IllegalArgumentException if the version can't be resolved
      */
+    @Nonnull
     public static Version ofVersion(@Nonnull Class<?> classInResource) {
         assertNotNull(classInResource, () -> "The 'classInResource' argument must not be null!");
         ClassLoader classLoader = classInResource.getClassLoader();
@@ -647,7 +658,7 @@ public class Version implements Comparable<Version>, Serializable {
      * @throws IllegalArgumentException if the "Implementation-Version" manifest attribute can't be fetched from the jar file.
      */
     @Nonnull
-    public static Version getVersion(Class<?> targetClass) throws IllegalArgumentException {
+    public static Version getVersion(@Nonnull Class<?> targetClass) throws IllegalArgumentException {
         Package targetPackage = targetClass.getPackage();
         String version = targetPackage.getImplementationVersion();
         if (version == null) {
@@ -675,7 +686,7 @@ public class Version implements Comparable<Version>, Serializable {
          */
         EQ(EQUAL) {
             @Override
-            public boolean test(Version v1, Version v2) {
+            public boolean test(@Nullable Version v1, @Nullable Version v2) {
                 if (v1 == v2) {
                     return true;
                 }
@@ -691,7 +702,7 @@ public class Version implements Comparable<Version>, Serializable {
          */
         LT(LESS_THAN) {
             @Override
-            public boolean test(Version v1, Version v2) {
+            public boolean test(@Nullable Version v1, @Nullable Version v2) {
                 if (v1 == v2) {
                     return false;
                 }
@@ -707,7 +718,7 @@ public class Version implements Comparable<Version>, Serializable {
          */
         LE(LESS_THAN_OR_EQUAL_TO) {
             @Override
-            public boolean test(Version v1, Version v2) {
+            public boolean test(@Nullable Version v1, @Nullable Version v2) {
                 if (v1 == v2) {
                     return true;
                 }
@@ -723,7 +734,7 @@ public class Version implements Comparable<Version>, Serializable {
          */
         GT(GREATER_THAN) {
             @Override
-            public boolean test(Version v1, Version v2) {
+            public boolean test(@Nullable Version v1, @Nullable Version v2) {
                 if (v1 == v2) {
                     return false;
                 }
@@ -739,7 +750,7 @@ public class Version implements Comparable<Version>, Serializable {
          */
         GE(GREATER_THAN_OR_EQUAL_TO) {
             @Override
-            public boolean test(Version v1, Version v2) {
+            public boolean test(@Nullable Version v1, @Nullable Version v2) {
                 if (v1 == v2) {
                     return true;
                 }
@@ -763,7 +774,8 @@ public class Version implements Comparable<Version>, Serializable {
          * @return <code>null</code> if can't be found
          * @throws IllegalArgumentException if the symbol is not supported, only supports "=", ">=", "<=", "<", ">"
          */
-        public static Operator of(String symbol) {
+        @Nonnull
+        public static Operator of(@Nonnull String symbol) {
             Operator[] operators = values();
             for (Operator operator : operators) {
                 if (Objects.equals(symbol, operator.symbol)) {
