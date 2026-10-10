@@ -16,6 +16,8 @@
  */
 package io.microsphere.invoke;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableBiFunction;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
@@ -262,7 +264,7 @@ public abstract class MethodHandleUtils implements Utils {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -291,7 +293,8 @@ public abstract class MethodHandleUtils implements Utils {
      * @param requestedClass the class to be looked up
      * @return non-null
      */
-    public static Lookup lookup(Class<?> requestedClass) {
+    @Nonnull
+    public static Lookup lookup(@Nonnull Class<?> requestedClass) {
         return lookup(requestedClass, ALL);
     }
 
@@ -302,7 +305,8 @@ public abstract class MethodHandleUtils implements Utils {
      * @param requestedClass the class to be looked up
      * @return non-null
      */
-    public static Lookup lookup(Class<?> requestedClass, LookupMode... lookupModes) {
+    @Nonnull
+    public static Lookup lookup(@Nonnull Class<?> requestedClass, LookupMode... lookupModes) {
         int allowedModes = getModes(lookupModes);
         LookupKey key = buildKey(requestedClass, allowedModes);
         return lookupCache.computeIfAbsent(key, MethodHandleUtils::newLookup);
@@ -316,7 +320,8 @@ public abstract class MethodHandleUtils implements Utils {
      * @param parameterTypes the types of target method parameters
      * @return {@link MethodHandle}
      */
-    public static MethodHandle findVirtual(Class<?> requestedClass, String methodName, Class... parameterTypes) {
+    @Nullable
+    public static MethodHandle findVirtual(@Nullable Class<?> requestedClass, @Nullable String methodName, Class... parameterTypes) {
         return find(requestedClass, methodName, parameterTypes, (lookup, methodType) -> lookup.findVirtual(requestedClass, methodName, methodType));
     }
 
@@ -328,7 +333,8 @@ public abstract class MethodHandleUtils implements Utils {
      * @param parameterTypes the types of target method parameters
      * @return {@link MethodHandle}
      */
-    public static MethodHandle findStatic(Class<?> requestedClass, String methodName, Class... parameterTypes) {
+    @Nullable
+    public static MethodHandle findStatic(@Nullable Class<?> requestedClass, @Nullable String methodName, Class... parameterTypes) {
         return find(requestedClass, methodName, parameterTypes, (lookup, methodType) -> lookup.findStatic(requestedClass, methodName, methodType));
     }
 
@@ -339,12 +345,13 @@ public abstract class MethodHandleUtils implements Utils {
      * @param methodHandle {@link MethodHandle}
      * @param args         the arguments of {@link MethodHandle#invokeExact(Object...)}
      */
-    public static void handleInvokeExactFailure(Throwable e, MethodHandle methodHandle, Object... args) {
+    public static void handleInvokeExactFailure(@Nullable Throwable e, @Nullable MethodHandle methodHandle, Object... args) {
         logger.warn("Failed to invokeExact on the {} with arguments : {}", methodHandle, arrayToString(args), e);
     }
 
-    protected static MethodHandle find(Class<?> requestedClass, String methodName, Class[] parameterTypes,
-                                       ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
+    @Nullable
+    protected static MethodHandle find(@Nullable Class<?> requestedClass, @Nullable String methodName, @Nullable Class[] parameterTypes,
+                                       @Nonnull ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         Method method = findMethod(requestedClass, methodName, parameterTypes);
         if (method == null) {
             return NOT_FOUND_METHOD_HANDLE;
