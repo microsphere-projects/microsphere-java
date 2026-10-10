@@ -1,5 +1,7 @@
 package io.microsphere.filter;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.util.ArrayUtils.length;
 
@@ -46,7 +48,7 @@ public enum FilterOperator {
      */
     AND {
         @Override
-        public <T> boolean accept(T filteredObject, Filter<T>... filters) {
+        public <T> boolean accept(@Nullable T filteredObject, Filter<T>... filters) {
             int length = length(filters);
             if (length == 0)
                 return true;
@@ -63,7 +65,7 @@ public enum FilterOperator {
      */
     OR {
         @Override
-        public <T> boolean accept(T filteredObject, Filter<T>... filters) {
+        public <T> boolean accept(@Nullable T filteredObject, Filter<T>... filters) {
             int length = length(filters);
             if (length == 0)
                 return true;
@@ -79,7 +81,7 @@ public enum FilterOperator {
      */
     XOR {
         @Override
-        public <T> boolean accept(T filteredObject, Filter<T>... filters) {
+        public <T> boolean accept(@Nullable T filteredObject, Filter<T>... filters) {
             int length = length(filters);
             if (length == 0)
                 return true;
@@ -99,7 +101,7 @@ public enum FilterOperator {
      * @param filters        multiple {@link Filter}
      * @return If accepted return <code>true</code>
      */
-    public abstract <T> boolean accept(T filteredObject, Filter<T>... filters);
+    public abstract <T> boolean accept(@Nullable T filteredObject, Filter<T>... filters);
 
     /**
      * Create a combined {@link Filter} from multiple filters
@@ -108,12 +110,13 @@ public enum FilterOperator {
      * @param <T>
      * @return a combined {@link Filter}
      */
+    @Nonnull
     public final <T> Filter<T> createFilter(final Filter<T>... filters) {
         final FilterOperator self = this;
         return new Filter<T>() {
 
             @Override
-            public boolean accept(T filteredObject) {
+            public boolean accept(@Nullable T filteredObject) {
                 return self.accept(filteredObject, filters);
             }
         };

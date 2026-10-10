@@ -59,7 +59,7 @@ public abstract class FilterUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <E> List<E> filter(Iterable<E> iterable, Filter<E> filter) {
+    public static <E> List<E> filter(@Nonnull Iterable<E> iterable, @Nonnull Filter<E> filter) {
         return filter(iterable, FilterOperator.AND, filter);
     }
 
@@ -74,7 +74,7 @@ public abstract class FilterUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <E> List<E> filter(Iterable<E> iterable, FilterOperator filterOperator, Filter<E>... filters) {
+    public static <E> List<E> filter(@Nonnull Iterable<E> iterable, @Nonnull FilterOperator filterOperator, Filter<E>... filters) {
         ArrayList<E> list = newArrayList();
         Iterator<E> iterator = iterable.iterator();
         while (iterator.hasNext()) {
