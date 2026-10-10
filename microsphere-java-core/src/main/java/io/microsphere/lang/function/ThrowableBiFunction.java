@@ -16,6 +16,9 @@
  */
 package io.microsphere.lang.function;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.BiFunction;
 
 import static io.microsphere.text.FormatUtils.format;
@@ -67,7 +70,7 @@ public interface ThrowableBiFunction<T, U, R> {
      * @return the function result
      * @throws Throwable if met with any error
      */
-    R apply(T first, U second) throws Throwable;
+    R apply(@Nullable T first, @Nullable U second) throws Throwable;
 
     /**
      * Executes the given {@link ThrowableBiFunction} with the provided arguments using the default exception handler.
@@ -96,7 +99,8 @@ public interface ThrowableBiFunction<T, U, R> {
      * @return the result of the function after successful execution
      * @throws NullPointerException if the given function is null
      */
-    static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function) throws NullPointerException {
+    @Nullable
+    static <T, U, R> R execute(@Nullable T first, @Nullable U second, @Nonnull ThrowableBiFunction<T, U, R> function) throws NullPointerException {
         return execute(first, second, function, (ExceptionHandler<T, U, R>) DEFAULT_EXCEPTION_HANDLER);
     }
 
@@ -130,7 +134,8 @@ public interface ThrowableBiFunction<T, U, R> {
      * @return the result of the function after execution (either successful or recovered via exception handling)
      * @throws NullPointerException if either the function or exceptionHandler is null
      */
-    static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function, ExceptionHandler<T, U, R> exceptionHandler) throws NullPointerException {
+    @Nullable
+    static <T, U, R> R execute(@Nullable T first, @Nullable U second, @Nonnull ThrowableBiFunction<T, U, R> function, @Nonnull ExceptionHandler<T, U, R> exceptionHandler) throws NullPointerException {
         assertNotNull(function, () -> "The 'function' must not be null");
         assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
         R result;
@@ -159,7 +164,7 @@ public interface ThrowableBiFunction<T, U, R> {
          * @param failure
          * @return
          */
-        R handle(T first, U second, Throwable failure);
+        R handle(@Nullable T first, @Nullable U second, @Nonnull Throwable failure);
 
     }
 }

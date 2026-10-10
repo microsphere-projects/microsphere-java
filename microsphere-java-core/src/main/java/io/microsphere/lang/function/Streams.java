@@ -86,7 +86,7 @@ public interface Streams {
      * @return a sequential {@link Stream} backed by the given iterable
      */
     @Nonnull
-    static <T> Stream<T> stream(Iterable<T> iterable) {
+    static <T> Stream<T> stream(@Nonnull Iterable<T> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
@@ -109,7 +109,7 @@ public interface Streams {
      * @return a filtered stream containing only the elements that satisfy the predicate
      */
     @Nonnull
-    static <T> Stream<T> filterStream(T[] values, Predicate<? super T> predicate) {
+    static <T> Stream<T> filterStream(@Nonnull T[] values, @Nonnull Predicate<? super T> predicate) {
         Stream<T> stream = stream(values);
         return stream.filter(predicate);
     }
@@ -133,7 +133,7 @@ public interface Streams {
      * @return a filtered stream containing only the elements that satisfy the predicate
      */
     @Nonnull
-    static <T, S extends Iterable<T>> Stream<T> filterStream(S values, Predicate<? super T> predicate) {
+    static <T, S extends Iterable<T>> Stream<T> filterStream(@Nonnull S values, @Nonnull Predicate<? super T> predicate) {
         return stream(values).filter(predicate);
     }
 
@@ -156,7 +156,7 @@ public interface Streams {
      * @return a list containing only the elements that satisfy the predicate
      */
     @Nonnull
-    static <T> List<T> filterList(T[] values, Predicate<? super T> predicate) {
+    static <T> List<T> filterList(@Nonnull T[] values, @Nonnull Predicate<? super T> predicate) {
         return filterList(asList(values), predicate);
     }
 
@@ -179,7 +179,7 @@ public interface Streams {
      * @return a list containing only the elements that satisfy the predicate
      */
     @Nonnull
-    static <T, S extends Iterable<T>> List<T> filterList(S values, Predicate<? super T> predicate) {
+    static <T, S extends Iterable<T>> List<T> filterList(@Nonnull S values, @Nonnull Predicate<? super T> predicate) {
         return filterStream(values, predicate).collect(toList());
     }
 
@@ -202,7 +202,7 @@ public interface Streams {
      * @return a set containing only the elements that satisfy the predicate
      */
     @Nonnull
-    static <T> Set<T> filterSet(T[] values, Predicate<? super T> predicate) {
+    static <T> Set<T> filterSet(@Nonnull T[] values, @Nonnull Predicate<? super T> predicate) {
         return filterSet(ofSet(values), predicate);
     }
 
@@ -231,7 +231,7 @@ public interface Streams {
      * maintaining insertion order using a {@link LinkedHashSet}
      */
     @Nonnull
-    static <T, S extends Iterable<T>> Set<T> filterSet(S values, Predicate<? super T> predicate) {
+    static <T, S extends Iterable<T>> Set<T> filterSet(@Nonnull S values, @Nonnull Predicate<? super T> predicate) {
         return filterStream(values, predicate).collect(LinkedHashSet::new, Set::add, Set::addAll);
     }
 
@@ -267,7 +267,7 @@ public interface Streams {
      * @return a new collection of the same type as the input, containing only the elements that satisfy the predicate
      */
     @Nonnull
-    static <T, S extends Iterable<T>> S filter(S values, Predicate<? super T> predicate) {
+    static <T, S extends Iterable<T>> S filter(@Nonnull S values, @Nonnull Predicate<? super T> predicate) {
         final boolean isSet = isSet(values);
         return (S) (isSet ? filterSet(values, predicate) : filterList(values, predicate));
     }
@@ -306,7 +306,7 @@ public interface Streams {
      * @return a new collection of the same type as the input, containing only the elements that satisfy all predicates
      */
     @Nonnull
-    static <T, S extends Iterable<T>> S filterAll(S values, Predicate<? super T>... predicates) {
+    static <T, S extends Iterable<T>> S filterAll(@Nonnull S values, Predicate<? super T>... predicates) {
         return filter(values, and(predicates));
     }
 
@@ -333,7 +333,7 @@ public interface Streams {
      * @return a new {@link List} containing only the elements that satisfy all predicates
      */
     @Nonnull
-    static <T> List<T> filterAllList(T[] values, Predicate<? super T>... predicates) {
+    static <T> List<T> filterAllList(@Nonnull T[] values, Predicate<? super T>... predicates) {
         return filterAll(asList(values), and(predicates));
     }
 
@@ -362,7 +362,7 @@ public interface Streams {
      * maintaining insertion order using a {@link LinkedHashSet}
      */
     @Nonnull
-    static <T> Set<T> filterAllSet(T[] values, Predicate<? super T>... predicates) {
+    static <T> Set<T> filterAllSet(@Nonnull T[] values, Predicate<? super T>... predicates) {
         return filterAll(ofSet(values), and(predicates));
     }
 
@@ -400,7 +400,7 @@ public interface Streams {
      * @return a new collection of the same type as the input, containing only the elements that satisfy at least one predicate
      */
     @Nonnull
-    static <T, S extends Iterable<T>> S filterAny(S values, Predicate<? super T>... predicates) {
+    static <T, S extends Iterable<T>> S filterAny(@Nonnull S values, Predicate<? super T>... predicates) {
         return filter(values, or(predicates));
     }
 
@@ -428,7 +428,7 @@ public interface Streams {
      * @return a new {@link List} containing only the elements that satisfy at least one predicate
      */
     @Nonnull
-    static <T> List<T> filterAnyList(T[] values, Predicate<? super T>... predicates) {
+    static <T> List<T> filterAnyList(@Nonnull T[] values, Predicate<? super T>... predicates) {
         return filterAny(asList(values), or(predicates));
     }
 
@@ -457,7 +457,7 @@ public interface Streams {
      * maintaining insertion order using a {@link LinkedHashSet}
      */
     @Nonnull
-    static <T> Set<T> filterAnySet(T[] values, Predicate<? super T>... predicates) {
+    static <T> Set<T> filterAnySet(@Nonnull T[] values, Predicate<? super T>... predicates) {
         return filterAny(ofSet(values), or(predicates));
     }
 
@@ -498,7 +498,7 @@ public interface Streams {
      * @return the first element that satisfies all predicates, or {@code null} if none match
      */
     @Nullable
-    static <T> T filterFirst(Iterable<T> values, Predicate<? super T>... predicates) {
+    static <T> T filterFirst(@Nonnull Iterable<T> values, Predicate<? super T>... predicates) {
         return StreamSupport.stream(values.spliterator(), false)
                 .filter(and(predicates))
                 .findFirst()

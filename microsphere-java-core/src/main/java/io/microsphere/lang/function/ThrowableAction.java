@@ -16,6 +16,8 @@
  */
 package io.microsphere.lang.function;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.function.Consumer;
 
 import static io.microsphere.util.Assert.assertNotNull;
@@ -62,7 +64,7 @@ public interface ThrowableAction {
      * @param exceptionHandler the handler to handle any {@link Throwable exception} that the {@link #execute()} method throws
      * @throws NullPointerException if <code>exceptionHandler</code> is <code>null</code>
      */
-    default void execute(Consumer<Throwable> exceptionHandler) {
+    default void execute(@Nonnull Consumer<Throwable> exceptionHandler) {
         assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
         try {
             execute();
@@ -76,7 +78,7 @@ public interface ThrowableAction {
      *
      * @param failure the instance of {@link Throwable}
      */
-    default void handleException(Throwable failure) {
+    default void handleException(@Nonnull Throwable failure) {
         throw new RuntimeException(failure);
     }
 
@@ -102,7 +104,7 @@ public interface ThrowableAction {
      * @param action the {@link ThrowableAction} to execute
      * @throws NullPointerException if the provided action is {@code null}
      */
-    static void execute(ThrowableAction action) {
+    static void execute(@Nonnull ThrowableAction action) {
         execute(action, action::handleException);
     }
 
@@ -129,7 +131,7 @@ public interface ThrowableAction {
      * @param exceptionHandler the handler to manage any exceptions thrown by the action
      * @throws NullPointerException if the provided action is {@code null}
      */
-    static void execute(ThrowableAction action, Consumer<Throwable> exceptionHandler) throws NullPointerException {
+    static void execute(@Nonnull ThrowableAction action, @Nonnull Consumer<Throwable> exceptionHandler) throws NullPointerException {
         assertNotNull(action, () -> "The 'action' must not be null");
         action.execute(exceptionHandler);
     }
