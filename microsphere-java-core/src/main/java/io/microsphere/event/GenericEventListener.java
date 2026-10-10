@@ -16,6 +16,7 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.lang.function.ThrowableFunction;
 
@@ -103,7 +104,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
         return eventMethods;
     }
 
-    public final void onEvent(Event event) {
+    public final void onEvent(@Nonnull Event event) {
         Class<?> eventClass = event.getClass();
         handleEventMethods.getOrDefault(eventClass, emptySet()).forEach(method -> {
             execute(method, m -> {
@@ -125,7 +126,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
      * @param method
      * @return
      */
-    protected boolean isHandleEventMethod(Method method) {
+    protected boolean isHandleEventMethod(@Nonnull Method method) {
 
         if (onEventMethod.equals(method)) { // not {@link #onEvent(Event)} method
             return false;

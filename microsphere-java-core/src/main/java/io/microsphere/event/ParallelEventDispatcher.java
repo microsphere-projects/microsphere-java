@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
@@ -36,7 +38,7 @@ public class ParallelEventDispatcher extends AbstractEventDispatcher {
         this(commonPool());
     }
 
-    public ParallelEventDispatcher(Executor executor) {
+    public ParallelEventDispatcher(@Nonnull Executor executor) {
         super(executor);
     }
 }

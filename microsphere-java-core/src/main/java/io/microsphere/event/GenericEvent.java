@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * A generic implementation of the {@link Event} class that allows for type-safe event handling.
  * <p>
@@ -41,10 +43,11 @@ package io.microsphere.event;
  */
 public class GenericEvent<S> extends Event {
 
-    public GenericEvent(S source) {
+    public GenericEvent(@Nonnull S source) {
         super(source);
     }
 
+    @Nonnull
     public S getSource() {
         return (S) super.getSource();
     }
