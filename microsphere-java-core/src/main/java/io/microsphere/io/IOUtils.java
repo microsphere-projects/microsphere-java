@@ -17,6 +17,8 @@
 package io.microsphere.io;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
 import io.microsphere.util.StringUtils;
@@ -116,7 +118,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      * @see #readLines(InputStream, String)
      */
-    public static String[] readLines(InputStream in) throws IOException {
+    @Nonnull
+    public static String[] readLines(@Nullable InputStream in) throws IOException {
         return readLines(in, FILE_ENCODING);
     }
 
@@ -147,7 +150,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      * @see #readLines(InputStream, Charset)
      */
-    public static String[] readLines(InputStream in, String encoding) throws IOException {
+    @Nonnull
+    public static String[] readLines(@Nullable InputStream in, @Nonnull String encoding) throws IOException {
         return readLines(in, forName(encoding));
     }
 
@@ -180,7 +184,8 @@ public abstract class IOUtils implements Utils {
      * @see #toString(InputStream, Charset)
      * @see StringUtils#split(String, String)
      */
-    public static String[] readLines(InputStream in, Charset charset) throws IOException {
+    @Nonnull
+    public static String[] readLines(@Nullable InputStream in, @Nullable Charset charset) throws IOException {
         String content = toString(in, charset);
         return split(content, LINE_SEPARATOR);
     }
@@ -205,7 +210,8 @@ public abstract class IOUtils implements Utils {
      * @return a newly created byte array containing the copied data (possibly empty)
      * @throws IOException if an I/O error occurs during copying
      */
-    public static byte[] toByteArray(InputStream in) throws IOException {
+    @Nonnull
+    public static byte[] toByteArray(@Nullable InputStream in) throws IOException {
         if (in == null) {
             return EMPTY_BYTE_ARRAY;
         }
@@ -237,7 +243,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream)
      */
-    public static String toString(InputStream in) throws IOException {
+    @Nullable
+    public static String toString(@Nullable InputStream in) throws IOException {
         return copyToString(in);
     }
 
@@ -265,7 +272,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream, String)
      */
-    public static String toString(InputStream in, String encoding) throws IOException {
+    @Nullable
+    public static String toString(@Nullable InputStream in, @Nullable String encoding) throws IOException {
         return copyToString(in, encoding);
     }
 
@@ -294,7 +302,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream, Charset)
      */
-    public static String toString(InputStream in, Charset charset) throws IOException {
+    @Nullable
+    public static String toString(@Nullable InputStream in, @Nullable Charset charset) throws IOException {
         return copyToString(in, charset);
     }
 
@@ -320,7 +329,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the reader
      * @see #copyToString(Reader)
      */
-    public static String toString(Reader reader) throws IOException {
+    @Nullable
+    public static String toString(@Nullable Reader reader) throws IOException {
         return copyToString(reader);
     }
 
@@ -343,7 +353,8 @@ public abstract class IOUtils implements Utils {
      * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
      * @throws IOException if an I/O error occurs during reading from the stream
      */
-    public static String copyToString(InputStream in, String encoding) throws IOException {
+    @Nullable
+    public static String copyToString(@Nullable InputStream in, @Nullable String encoding) throws IOException {
         String charset = defaultIfNull(encoding, FILE_ENCODING);
         return copyToString(in, forName(charset));
     }
@@ -368,7 +379,8 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream, Charset)
      */
-    public static String copyToString(InputStream in) throws IOException {
+    @Nullable
+    public static String copyToString(@Nullable InputStream in) throws IOException {
         return copyToString(in, DEFAULT_CHARSET);
     }
 
@@ -393,7 +405,8 @@ public abstract class IOUtils implements Utils {
      * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
      * @throws IOException if an I/O error occurs during reading from the stream
      */
-    public static String copyToString(InputStream in, Charset charset) throws IOException {
+    @Nullable
+    public static String copyToString(@Nullable InputStream in, @Nullable Charset charset) throws IOException {
         byte[] bytes = toByteArray(in);
         if (EMPTY_BYTE_ARRAY == bytes) {
             return null;
@@ -420,7 +433,8 @@ public abstract class IOUtils implements Utils {
      * @return the resulting String from the reader, or {@code null} if the reader is empty or null
      * @throws IOException if an I/O error occurs during reading from the reader
      */
-    public static String copyToString(Reader reader) throws IOException {
+    @Nullable
+    public static String copyToString(@Nullable Reader reader) throws IOException {
         if (reader == null) {
             return null;
         }
@@ -452,7 +466,7 @@ public abstract class IOUtils implements Utils {
      * @return the number of bytes copied from the input stream to the output stream
      * @throws IOException if an I/O error occurs while reading or writing
      */
-    public static int copy(InputStream in, OutputStream out) throws IOException {
+    public static int copy(@Nonnull InputStream in, @Nonnull OutputStream out) throws IOException {
         requireNonNull(in, "No InputStream specified");
         requireNonNull(out, "No OutputStream specified");
 
@@ -493,7 +507,7 @@ public abstract class IOUtils implements Utils {
      * @return the number of characters copied from the reader to the writer
      * @throws IOException if an I/O error occurs while reading or writing
      */
-    public static int copy(Reader reader, Writer writer) throws IOException {
+    public static int copy(@Nonnull Reader reader, @Nonnull Writer writer) throws IOException {
         requireNonNull(reader, "No Reader specified");
         requireNonNull(writer, "No Writer specified");
 
@@ -532,7 +546,7 @@ public abstract class IOUtils implements Utils {
      *
      * @param closeable the Closeable object to be closed, may be {@code null}
      */
-    public static void close(Closeable closeable) {
+    public static void close(@Nullable Closeable closeable) {
         try {
             if (closeable != null) {
                 closeable.close();

@@ -5,6 +5,7 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.jar.JarUtils;
 
@@ -77,7 +78,7 @@ public class SimpleJarEntryScanner {
      */
     @Nonnull
     @Immutable
-    public Set<JarEntry> scan(URL jarURL, final boolean recursive) throws NullPointerException, IllegalArgumentException, IOException {
+    public Set<JarEntry> scan(@Nonnull URL jarURL, final boolean recursive) throws NullPointerException, IllegalArgumentException, IOException {
         return scan(jarURL, recursive, null);
     }
 
@@ -93,7 +94,7 @@ public class SimpleJarEntryScanner {
      */
     @Nonnull
     @Immutable
-    public Set<JarEntry> scan(URL jarURL, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
+    public Set<JarEntry> scan(@Nonnull URL jarURL, final boolean recursive, @Nullable JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
         String relativePath = resolveRelativePath(jarURL);
         JarFile jarFile = toJarFile(jarURL);
         return scan(jarFile, relativePath, recursive, jarEntryFilter);
@@ -107,7 +108,8 @@ public class SimpleJarEntryScanner {
      * @throws IllegalArgumentException
      * @throws IOException
      */
-    public Set<JarEntry> scan(JarFile jarFile, final boolean recursive) throws NullPointerException, IllegalArgumentException, IOException {
+    @Nonnull
+    public Set<JarEntry> scan(@Nullable JarFile jarFile, final boolean recursive) throws NullPointerException, IllegalArgumentException, IOException {
         return scan(jarFile, recursive, null);
     }
 
@@ -122,13 +124,13 @@ public class SimpleJarEntryScanner {
      */
     @Nonnull
     @Immutable
-    public Set<JarEntry> scan(JarFile jarFile, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
+    public Set<JarEntry> scan(@Nullable JarFile jarFile, final boolean recursive, @Nullable JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
         return scan(jarFile, EMPTY, recursive, jarEntryFilter);
     }
 
     @Nonnull
     @Immutable
-    protected Set<JarEntry> scan(JarFile jarFile, String relativePath, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
+    protected Set<JarEntry> scan(@Nullable JarFile jarFile, @Nonnull String relativePath, final boolean recursive, @Nullable JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
         LinkedHashSet<JarEntry> jarEntriesSet = newLinkedHashSet();
         List<JarEntry> jarEntriesList = filter(jarFile, jarEntryFilter);
 

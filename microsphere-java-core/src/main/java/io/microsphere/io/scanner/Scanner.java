@@ -32,7 +32,7 @@ public interface Scanner<S, R> {
      * @throws IllegalStateException    scanned source's state is not valid
      */
     @Nonnull
-    Set<R> scan(S source) throws IllegalArgumentException, IllegalStateException;
+    Set<R> scan(@Nonnull S source) throws IllegalArgumentException, IllegalStateException;
 
     /**
      * Scan source to calculate result set with {@link Filter}
@@ -44,6 +44,6 @@ public interface Scanner<S, R> {
      * @throws IllegalStateException    scanned source's state is not valid
      */
     @Nonnull
-    Set<R> scan(S source, Filter<R> filter) throws IllegalArgumentException, IllegalStateException;
+    Set<R> scan(@Nonnull S source, @Nonnull Filter<R> filter) throws IllegalArgumentException, IllegalStateException;
 
 }

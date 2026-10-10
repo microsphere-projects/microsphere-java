@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.filter;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.FileUtils;
 
 import java.io.File;
@@ -60,13 +62,13 @@ public class FileExtensionFilter implements IOFileFilter {
 
     private final String extension;
 
-    protected FileExtensionFilter(String extension) {
+    protected FileExtensionFilter(@Nonnull String extension) {
         int lastIndex = extension.lastIndexOf(DOT);
         this.extension = lastIndex > -1 ? extension.substring(lastIndex + 1) : extension;
     }
 
     @Override
-    public boolean accept(File file) {
+    public boolean accept(@Nullable File file) {
         if (file == null || file.isDirectory()) {
             return false;
         }
@@ -80,7 +82,7 @@ public class FileExtensionFilter implements IOFileFilter {
         return matches(fileExtension, CASE_SENSITIVE);
     }
 
-    protected boolean matches(String fileExtension, boolean caseSensitive) {
+    protected boolean matches(@Nonnull String fileExtension, boolean caseSensitive) {
         return caseSensitive ? fileExtension.equals(extension) : fileExtension.equalsIgnoreCase(extension);
     }
 
@@ -90,7 +92,8 @@ public class FileExtensionFilter implements IOFileFilter {
      * @param extension the file extension
      * @return non-null
      */
-    public static FileExtensionFilter of(String extension) {
+    @Nonnull
+    public static FileExtensionFilter of(@Nonnull String extension) {
         return new FileExtensionFilter(extension);
     }
 

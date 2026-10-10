@@ -16,6 +16,7 @@
  */
 package io.microsphere.io.event;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -52,17 +53,17 @@ public class LoggingFileChangedListener implements FileChangedListener {
     private static final Logger logger = getLogger(LoggingFileChangedListener.class);
 
     @Override
-    public void onFileCreated(FileChangedEvent event) {
+    public void onFileCreated(@Nonnull FileChangedEvent event) {
         log(event);
     }
 
     @Override
-    public void onFileModified(FileChangedEvent event) {
+    public void onFileModified(@Nonnull FileChangedEvent event) {
         log(event);
     }
 
     @Override
-    public void onFileDeleted(FileChangedEvent event) {
+    public void onFileDeleted(@Nonnull FileChangedEvent event) {
         log(event);
     }
 
