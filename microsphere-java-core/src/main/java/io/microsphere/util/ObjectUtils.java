@@ -17,6 +17,7 @@
 
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
 import java.util.function.Function;
@@ -48,7 +49,7 @@ public abstract class ObjectUtils implements Utils {
      * @return the result of applying the function to the source object, or null if the source object is null
      */
     @Nullable
-    public static <S, T> T nullSafe(@Nullable S source, Function<S, T> function) {
+    public static <S, T> T nullSafe(@Nullable S source, @Nonnull Function<S, T> function) {
         return source == null ? null : function.apply(source);
     }
 
@@ -66,7 +67,8 @@ public abstract class ObjectUtils implements Utils {
      * @param <T>                  the type of the object
      * @return the object if non-null, otherwise the value provided by the supplier
      */
-    public static <T> T defaultIfNull(@Nullable T object, Supplier<T> defaultValueSupplier) {
+    @Nullable
+    public static <T> T defaultIfNull(@Nullable T object, @Nonnull Supplier<T> defaultValueSupplier) {
         return object == null ? defaultValueSupplier.get() : object;
     }
 

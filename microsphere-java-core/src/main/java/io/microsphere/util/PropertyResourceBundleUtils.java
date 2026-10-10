@@ -89,7 +89,7 @@ public abstract class PropertyResourceBundleUtils implements Utils {
      *                                  returns null)
      */
     @Nonnull
-    public static ResourceBundle getBundle(String baseName) {
+    public static ResourceBundle getBundle(@Nonnull String baseName) {
         return getBundle(baseName, DEFAULT_ENCODING);
     }
 
@@ -114,7 +114,7 @@ public abstract class PropertyResourceBundleUtils implements Utils {
      * @throws IllegalArgumentException if the encoding is not supported or the control object behaves improperly
      */
     @Nonnull
-    public static ResourceBundle getBundle(String baseName, String encoding) {
+    public static ResourceBundle getBundle(@Nonnull String baseName, @Nonnull String encoding) {
         return getBundle(baseName, getDefault(), encoding);
     }
 
@@ -140,7 +140,7 @@ public abstract class PropertyResourceBundleUtils implements Utils {
      * @throws IllegalArgumentException if the encoding is not supported or the control object behaves improperly
      */
     @Nonnull
-    public static ResourceBundle getBundle(String baseName, Locale locale, String encoding) {
+    public static ResourceBundle getBundle(@Nonnull String baseName, @Nonnull Locale locale, @Nonnull String encoding) {
         ClassLoader classLoader = getDefaultClassLoader();
         return getBundle(baseName, locale, classLoader, encoding);
     }
@@ -168,7 +168,7 @@ public abstract class PropertyResourceBundleUtils implements Utils {
      * @throws IllegalArgumentException if the encoding is not supported or the control object behaves improperly
      */
     @Nonnull
-    public static ResourceBundle getBundle(String baseName, Locale locale, ClassLoader classLoader, String encoding) {
+    public static ResourceBundle getBundle(@Nonnull String baseName, @Nonnull Locale locale, @Nonnull ClassLoader classLoader, @Nonnull String encoding) {
         ResourceBundle.Control control = newControl(encoding);
         return ResourceBundle.getBundle(baseName, locale, classLoader, control);
     }

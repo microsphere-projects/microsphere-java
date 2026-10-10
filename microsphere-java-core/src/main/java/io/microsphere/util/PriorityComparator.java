@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.lang.annotation.Annotation;
 import java.util.Comparator;
 import java.util.Objects;
@@ -77,7 +79,7 @@ public class PriorityComparator implements Comparator<Object> {
      * is less than, equal to, or greater than the second object's priority
      */
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(@Nonnull Object o1, @Nonnull Object o2) {
         return compare(getType(o1), getType(o2));
     }
 
