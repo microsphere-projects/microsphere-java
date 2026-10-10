@@ -17,6 +17,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Object} to {@link String}
  *
@@ -32,7 +34,8 @@ public class ObjectToStringConverter extends AbstractConverter<Object, String> {
     public static final ObjectToStringConverter INSTANCE = new ObjectToStringConverter();
 
     @Override
-    protected String doConvert(Object source) {
+    @Nonnull
+    protected String doConvert(@Nonnull Object source) {
         return source.toString();
     }
 }

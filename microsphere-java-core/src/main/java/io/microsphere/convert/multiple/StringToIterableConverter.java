@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.convert.StringConverter;
 
 import java.util.Collection;
@@ -33,12 +35,13 @@ import static io.microsphere.util.ClassUtils.isAssignableFrom;
  */
 public abstract class StringToIterableConverter<T extends Iterable> implements StringToMultiValueConverter {
 
-    public boolean accept(Class<String> type, Class<?> multiValueType) {
+    public boolean accept(@Nullable Class<String> type, @Nullable Class<?> multiValueType) {
         return isAssignableFrom(getSupportedType(), multiValueType);
     }
 
     @Override
-    public final Object convert(String[] segments, int size, Class<?> multiValueType, Class<?> elementType) {
+    @Nullable
+    public final Object convert(@Nonnull String[] segments, int size, @Nonnull Class<?> multiValueType, @Nullable Class<?> elementType) {
 
         Optional<StringConverter> stringConverter = getStringConverter(elementType);
 
@@ -60,13 +63,16 @@ public abstract class StringToIterableConverter<T extends Iterable> implements S
         }).orElse(null);
     }
 
-    protected abstract T createMultiValue(int size, Class<?> multiValueType);
+    @Nonnull
+    protected abstract T createMultiValue(int size, @Nullable Class<?> multiValueType);
 
-    protected Optional<StringConverter> getStringConverter(Class<?> elementType) {
+    @Nonnull
+    protected Optional<StringConverter> getStringConverter(@Nullable Class<?> elementType) {
         StringConverter converter = (StringConverter) getConverter(String.class, elementType);
         return Optional.ofNullable(converter);
     }
 
+    @Nonnull
     protected final Class<T> getSupportedType() {
         return resolveActualTypeArgumentClass(getClass(), StringToIterableConverter.class, 0);
     }

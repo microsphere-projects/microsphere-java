@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -27,7 +30,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class StringToBlockingDequeConverter extends StringToIterableConverter<BlockingDeque> {
 
     @Override
-    protected BlockingDeque createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected BlockingDeque createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new LinkedBlockingDeque(size);
     }
 }

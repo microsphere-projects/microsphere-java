@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Number} to {@link Float}
  *
@@ -33,7 +35,8 @@ public class NumberToFloatConverter extends AbstractConverter<Number, Float> {
     public static final NumberToFloatConverter INSTANCE = new NumberToFloatConverter();
 
     @Override
-    protected Float doConvert(Number source) {
+    @Nonnull
+    protected Float doConvert(@Nonnull Number source) {
         if (source instanceof Float) {
             return (Float) source;
         }

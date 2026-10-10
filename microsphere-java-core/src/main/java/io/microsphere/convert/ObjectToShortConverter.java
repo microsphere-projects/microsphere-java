@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -36,7 +38,8 @@ public class ObjectToShortConverter extends AbstractConverter<Object, Short> {
     public static final ObjectToShortConverter INSTANCE = new ObjectToShortConverter();
 
     @Override
-    protected Short doConvert(Object source) {
+    @Nullable
+    protected Short doConvert(@Nonnull Object source) {
         if (source instanceof Short) {
             return (Short) source;
         }

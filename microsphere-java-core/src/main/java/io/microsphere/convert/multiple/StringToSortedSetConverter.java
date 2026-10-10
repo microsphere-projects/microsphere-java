@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -27,7 +30,8 @@ import java.util.TreeSet;
 public class StringToSortedSetConverter extends StringToIterableConverter<SortedSet> {
 
     @Override
-    protected SortedSet createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected SortedSet createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new TreeSet();
     }
 }

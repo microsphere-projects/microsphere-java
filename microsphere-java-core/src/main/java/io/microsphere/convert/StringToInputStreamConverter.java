@@ -44,16 +44,17 @@ public class StringToInputStreamConverter extends AbstractConverter<String, Inpu
         this(DEFAULT_CHARSET);
     }
 
-    public StringToInputStreamConverter(String encoding) {
+    public StringToInputStreamConverter(@Nonnull String encoding) {
         this(forName(encoding));
     }
 
-    public StringToInputStreamConverter(Charset charset) {
+    public StringToInputStreamConverter(@Nonnull Charset charset) {
         this.charset = charset;
     }
 
     @Override
-    protected InputStream doConvert(String source) {
+    @Nonnull
+    protected InputStream doConvert(@Nonnull String source) {
         byte[] bytes = source.getBytes(charset);
         return new FastByteArrayInputStream(bytes);
     }

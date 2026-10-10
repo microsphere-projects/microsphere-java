@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * A conditional extension of the {@link EventListener} interface that allows filtering events before handling.
  *
@@ -52,5 +54,5 @@ public interface ConditionalEventListener<E extends Event> extends EventListener
      * @param event {@link Event event}
      * @return if handled, return <code>true</code>, or <code>false</code>
      */
-    boolean accept(E event);
+    boolean accept(@Nonnull E event);
 }

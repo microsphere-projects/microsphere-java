@@ -17,6 +17,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -35,7 +37,8 @@ public class ObjectToLongConverter extends AbstractConverter<Object, Long> {
     public static final ObjectToLongConverter INSTANCE = new ObjectToLongConverter();
 
     @Override
-    protected Long doConvert(Object source) {
+    @Nullable
+    protected Long doConvert(@Nonnull Object source) {
         if (source instanceof Long) {
             return (Long) source;
         }

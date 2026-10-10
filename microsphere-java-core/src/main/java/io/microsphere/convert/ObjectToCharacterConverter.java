@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -36,7 +38,8 @@ public class ObjectToCharacterConverter extends AbstractConverter<Object, Charac
     public static final ObjectToCharacterConverter INSTANCE = new ObjectToCharacterConverter();
 
     @Override
-    protected Character doConvert(Object source) {
+    @Nullable
+    protected Character doConvert(@Nonnull Object source) {
         if (source instanceof Character) {
             return (Character) source;
         }

@@ -17,6 +17,9 @@
 package io.microsphere.convert.multiple;
 
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.split;
@@ -30,7 +33,8 @@ import static io.microsphere.util.StringUtils.split;
 public interface StringToMultiValueConverter extends MultiValueConverter<String> {
 
     @Override
-    default Object convert(String source, Class<?> multiValueType, Class<?> elementType) {
+    @Nullable
+    default Object convert(@Nullable String source, @Nonnull Class<?> multiValueType, @Nullable Class<?> elementType) {
 
         if (source == null) {
             return null;
@@ -53,5 +57,6 @@ public interface StringToMultiValueConverter extends MultiValueConverter<String>
      * @param elementType the element type
      * @return multiple value object
      */
-    Object convert(String[] segments, int size, Class<?> targetType, Class<?> elementType);
+    @Nullable
+    Object convert(@Nonnull String[] segments, int size, @Nonnull Class<?> targetType, @Nullable Class<?> elementType);
 }

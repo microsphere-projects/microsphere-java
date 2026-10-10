@@ -16,6 +16,7 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.io.FastByteArrayInputStream;
 
@@ -98,13 +99,13 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
         super(priority);
     }
 
-    public StreamArtifactResourceResolver(ClassLoader classLoader, int priority) {
+    public StreamArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
         super(classLoader, priority);
-        assertNotNull(classLoader, () -> "The 'classLoader' must not be null");
     }
 
+    @Nullable
     @Override
-    public final Artifact resolve(URL resourceURL) {
+    public final Artifact resolve(@Nullable URL resourceURL) {
         if (resourceURL == null) {
             return null;
         }
@@ -134,12 +135,12 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
     }
 
     @Nullable
-    protected InputStream readArtifactMetadataDataFromResource(URL resourceURL, ClassLoader classLoader) throws IOException {
+    protected InputStream readArtifactMetadataDataFromResource(@Nullable URL resourceURL, @Nullable ClassLoader classLoader) throws IOException {
         return null;
     }
 
     @Nullable
-    protected InputStream readArtifactMetadataDataFromArchiveFile(File archiveFile) throws IOException {
+    protected InputStream readArtifactMetadataDataFromArchiveFile(@Nonnull File archiveFile) throws IOException {
         if (archiveFile.isDirectory()) {
             return readArtifactMetadataDataFromDirectory(archiveFile);
         } else {
@@ -148,7 +149,7 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
     }
 
     @Nullable
-    protected InputStream readArtifactMetadataDataFromFile(File archiveFile) throws IOException {
+    protected InputStream readArtifactMetadataDataFromFile(@Nonnull File archiveFile) throws IOException {
         try (JarFile jarFile = new JarFile(archiveFile)) {
             JarEntry jarEntry = findArtifactMetadataEntry(jarFile);
             if (jarEntry == null) {
@@ -165,7 +166,7 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
     }
 
     @Nullable
-    protected InputStream readArtifactMetadataDataFromDirectory(File directory) throws IOException {
+    protected InputStream readArtifactMetadataDataFromDirectory(@Nonnull File directory) throws IOException {
         File artifactMetadataFile = findArtifactMetadata(directory);
         if (artifactMetadataFile == null) {
             if (logger.isTraceEnabled()) {
@@ -176,26 +177,30 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
         return new FileInputStream(artifactMetadataFile);
     }
 
-    protected JarEntry findArtifactMetadataEntry(JarFile jarFile) throws IOException {
+    @Nullable
+    protected JarEntry findArtifactMetadataEntry(@Nullable JarFile jarFile) throws IOException {
         List<JarEntry> entries = filter(jarFile, this::isArtifactMetadataEntry);
         return first(entries);
     }
 
-    protected File findArtifactMetadata(File directory) throws IOException {
+    @Nullable
+    protected File findArtifactMetadata(@Nonnull File directory) throws IOException {
         Set<File> files = INSTANCE.scan(directory, true, file -> isArtifactMetadataFile(directory, file));
         return first(files);
     }
 
-    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
+    protected boolean isArtifactMetadataEntry(@Nonnull JarEntry jarEntry) {
         return isArtifactMetadata(jarEntry.getName());
     }
 
-    protected boolean isArtifactMetadataFile(File directory, File file) {
+    protected boolean isArtifactMetadataFile(@Nonnull File directory, @Nonnull File file) {
         String path = resolveRelativePath(directory, file);
         return isArtifactMetadata(path);
     }
 
-    protected abstract boolean isArtifactMetadata(String relativePath);
+    protected abstract boolean isArtifactMetadata(@Nonnull String relativePath);
 
-    protected abstract Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
+    @Nullable
+    protected abstract Artifact resolve(@Nullable URL resourceURL, @Nonnull InputStream artifactMetadataData,
+                                        @Nullable ClassLoader classLoader) throws IOException;
 }

@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TransferQueue;
 
@@ -27,7 +30,8 @@ import java.util.concurrent.TransferQueue;
 public class StringToTransferQueueConverter extends StringToIterableConverter<TransferQueue> {
 
     @Override
-    protected TransferQueue createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected TransferQueue createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new LinkedTransferQueue();
     }
 }

@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
@@ -78,7 +79,7 @@ public interface Converter<S, T> extends Prioritized {
      * @param targetType the target type
      * @return if accepted, return <code>true</code>, or <code>false</code>
      */
-    default boolean accept(Class<?> sourceType, Class<?> targetType) {
+    default boolean accept(@Nullable Class<?> sourceType, @Nullable Class<?> targetType) {
         return isAssignableFrom(getSourceType(), sourceType) && isAssignableFrom(getTargetType(), targetType);
     }
 
@@ -96,6 +97,7 @@ public interface Converter<S, T> extends Prioritized {
      *
      * @return non-null
      */
+    @Nonnull
     default Class<S> getSourceType() {
         return resolveActualTypeArgumentClass(getClass(), Converter.class, 0);
     }
@@ -105,6 +107,7 @@ public interface Converter<S, T> extends Prioritized {
      *
      * @return non-null
      */
+    @Nonnull
     default Class<T> getTargetType() {
         return resolveActualTypeArgumentClass(getClass(), Converter.class, 1);
     }
@@ -132,7 +135,8 @@ public interface Converter<S, T> extends Prioritized {
      * @param <T>        the target type
      * @return a converter instance that can handle the specified types, or {@code null} if no suitable converter is found
      */
-    static <S, T> Converter<S, T> getConverter(Class<S> sourceType, Class<T> targetType) {
+    @Nullable
+    static <S, T> Converter<S, T> getConverter(@Nullable Class<S> sourceType, @Nullable Class<T> targetType) {
         return findConverter(sourceType, targetType);
     }
 
@@ -156,7 +160,8 @@ public interface Converter<S, T> extends Prioritized {
      * @param <T>        the type of the target
      * @return the converted object of type {@code T}, or {@code null} if no suitable converter is found
      */
-    static <T> T convertIfPossible(@Nullable Object source, Class<T> targetType) {
+    @Nullable
+    static <T> T convertIfPossible(@Nullable Object source, @Nullable Class<T> targetType) {
         if (source == null) {
             return null;
         }

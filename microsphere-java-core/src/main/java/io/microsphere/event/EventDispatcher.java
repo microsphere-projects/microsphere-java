@@ -99,7 +99,7 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
      *
      * @param event a {@link Event event}
      */
-    void dispatch(Event event);
+    void dispatch(@Nonnull Event event);
 
     /**
      * The {@link Executor} to dispatch a {@link Event event}
@@ -108,6 +108,7 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
      * {@link Executor}. If the return value is <code>null</code>, the behavior is same as default.
      * @see #DIRECT_EXECUTOR
      */
+    @Nonnull
     default Executor getExecutor() {
         return DIRECT_EXECUTOR;
     }

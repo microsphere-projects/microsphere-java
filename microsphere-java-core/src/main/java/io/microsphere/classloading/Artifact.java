@@ -54,14 +54,17 @@ public class Artifact {
         this.location = location;
     }
 
+    @Nonnull
     public static Artifact create(@Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
         return new Artifact(artifactId, version, location);
     }
 
+    @Nonnull
     public static Artifact create(@Nonnull String artifactId, @Nullable String version) {
         return create(artifactId, version, null);
     }
 
+    @Nonnull
     public static Artifact create(@Nonnull String artifactId) {
         return create(artifactId, UNKNOWN);
     }
@@ -96,7 +99,7 @@ public class Artifact {
         return location;
     }
 
-    public boolean matches(Artifact artifact) {
+    public boolean matches(@Nullable Artifact artifact) {
         if (artifact == null) {
             return false;
         }
@@ -104,15 +107,15 @@ public class Artifact {
                 && matchesVersion(artifact);
     }
 
-    protected boolean matchesArtifactId(Artifact artifact) {
+    protected boolean matchesArtifactId(@Nonnull Artifact artifact) {
         return matches(artifact, Artifact::getArtifactId);
     }
 
-    protected boolean matchesVersion(Artifact artifact) {
+    protected boolean matchesVersion(@Nonnull Artifact artifact) {
         return matches(artifact, Artifact::getVersion);
     }
 
-    protected boolean matches(Artifact artifact, Function<Artifact, String> getterFunction) {
+    protected boolean matches(@Nullable Artifact artifact, @Nonnull Function<Artifact, String> getterFunction) {
         String configuredValue = getterFunction.apply(this);
         if (WILDCARD.equals(configuredValue)) {
             return true;
@@ -122,7 +125,7 @@ public class Artifact {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (!(o instanceof Artifact)) return false;
         Artifact that = (Artifact) o;
@@ -136,6 +139,7 @@ public class Artifact {
         return hash(artifactId, version, location);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         String sb = "Artifact{" + "artifactId='" + artifactId + QUOTE_CHAR +

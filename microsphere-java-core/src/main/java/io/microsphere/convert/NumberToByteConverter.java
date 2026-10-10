@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Number} to {@link Byte}
  *
@@ -33,7 +35,8 @@ public class NumberToByteConverter extends AbstractConverter<Number, Byte> {
     public static final NumberToByteConverter INSTANCE = new NumberToByteConverter();
 
     @Override
-    protected Byte doConvert(Number source) {
+    @Nonnull
+    protected Byte doConvert(@Nonnull Number source) {
         if (source instanceof Byte) {
             return (Byte) source;
         }
