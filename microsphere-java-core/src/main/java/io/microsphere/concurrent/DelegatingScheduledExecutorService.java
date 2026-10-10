@@ -16,6 +16,9 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -57,35 +60,40 @@ public class DelegatingScheduledExecutorService implements ScheduledExecutorServ
 
     private volatile ScheduledExecutorService delegate;
 
-    public DelegatingScheduledExecutorService(ScheduledExecutorService delegate) {
+    public DelegatingScheduledExecutorService(@Nonnull ScheduledExecutorService delegate) {
         this.delegate = delegate;
     }
 
-    public void setDelegate(ScheduledExecutorService delegate) {
+    public void setDelegate(@Nonnull ScheduledExecutorService delegate) {
         this.delegate = delegate;
     }
 
+    @Nonnull
     public ScheduledExecutorService getDelegate() {
         return delegate;
     }
 
     @Override
-    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
+    @Nonnull
+    public ScheduledFuture<?> schedule(@Nonnull Runnable command, long delay, @Nonnull TimeUnit unit) {
         return getDelegate().schedule(command, delay, unit);
     }
 
     @Override
-    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
+    @Nonnull
+    public <V> ScheduledFuture<V> schedule(@Nonnull Callable<V> callable, long delay, @Nonnull TimeUnit unit) {
         return getDelegate().schedule(callable, delay, unit);
     }
 
     @Override
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+    @Nonnull
+    public ScheduledFuture<?> scheduleAtFixedRate(@Nonnull Runnable command, long initialDelay, long period, @Nonnull TimeUnit unit) {
         return getDelegate().scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
     @Override
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+    @Nonnull
+    public ScheduledFuture<?> scheduleWithFixedDelay(@Nonnull Runnable command, long initialDelay, long delay, @Nonnull TimeUnit unit) {
         return getDelegate().scheduleWithFixedDelay(command, initialDelay, delay, unit);
     }
 
@@ -95,6 +103,7 @@ public class DelegatingScheduledExecutorService implements ScheduledExecutorServ
     }
 
     @Override
+    @Nonnull
     public List<Runnable> shutdownNow() {
         return getDelegate().shutdownNow();
     }
@@ -110,47 +119,54 @@ public class DelegatingScheduledExecutorService implements ScheduledExecutorServ
     }
 
     @Override
-    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+    public boolean awaitTermination(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
         return getDelegate().awaitTermination(timeout, unit);
     }
 
     @Override
-    public <T> Future<T> submit(Callable<T> task) {
+    @Nonnull
+    public <T> Future<T> submit(@Nonnull Callable<T> task) {
         return getDelegate().submit(task);
     }
 
     @Override
-    public <T> Future<T> submit(Runnable task, T result) {
+    @Nonnull
+    public <T> Future<T> submit(@Nonnull Runnable task, @Nullable T result) {
         return getDelegate().submit(task, result);
     }
 
     @Override
-    public Future<?> submit(Runnable task) {
+    @Nonnull
+    public Future<?> submit(@Nonnull Runnable task) {
         return getDelegate().submit(task);
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
+    @Nonnull
+    public <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks) throws InterruptedException {
         return getDelegate().invokeAll(tasks);
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
+    @Nonnull
+    public <T> List<Future<T>> invokeAll(@Nonnull Collection<? extends Callable<T>> tasks, long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
         return getDelegate().invokeAll(tasks, timeout, unit);
     }
 
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
+    @Nullable
+    public <T> T invokeAny(@Nonnull Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
         return getDelegate().invokeAny(tasks);
     }
 
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    @Nullable
+    public <T> T invokeAny(@Nonnull Collection<? extends Callable<T>> tasks, long timeout, @Nonnull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return getDelegate().invokeAny(tasks, timeout, unit);
     }
 
     @Override
-    public void execute(Runnable command) {
+    public void execute(@Nonnull Runnable command) {
         getDelegate().execute(command);
     }
 }
