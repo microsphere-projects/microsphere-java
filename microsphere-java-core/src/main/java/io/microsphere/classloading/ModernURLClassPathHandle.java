@@ -16,6 +16,8 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * Modern {@link URLClassPathHandle} for {@link jdk.internal.loader.URLClassPath} since JDK 9
  *
@@ -31,11 +33,13 @@ public class ModernURLClassPathHandle extends AbstractURLClassPathHandle {
         super();
     }
 
+    @Nonnull
     @Override
     protected String getURLClassPathClassName() {
         return "jdk.internal.loader.URLClassPath";
     }
 
+    @Nonnull
     @Override
     protected String getUrlsFieldName() {
         return "unopenedUrls";

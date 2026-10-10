@@ -17,6 +17,8 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -171,7 +173,7 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
         super(priority);
     }
 
-    public ManifestArtifactResourceResolver(ClassLoader classLoader, int priority) {
+    public ManifestArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
         super(classLoader, priority);
     }
 
@@ -189,12 +191,14 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     }
 
     @Override
-    protected boolean isArtifactMetadata(String relativePath) {
+    protected boolean isArtifactMetadata(@Nonnull String relativePath) {
         return MANIFEST_RESOURCE_PATH.equals(relativePath);
     }
 
+    @Nullable
     @Override
-    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
+    protected Artifact resolve(@Nullable URL resourceURL, @Nonnull InputStream artifactMetadataData,
+                               @Nullable ClassLoader classLoader) throws IOException {
         Manifest manifest = new Manifest(artifactMetadataData);
         return resolveArtifactMetaInfoInManifest(manifest, resourceURL);
     }

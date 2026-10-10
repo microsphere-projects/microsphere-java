@@ -134,7 +134,7 @@ public class ArtifactDetector {
     }
 
     @Nullable
-    public Artifact detect(@Nonnull URL classPathURL) {
+    public Artifact detect(@Nullable URL classPathURL) {
         Artifact artifact = null;
         for (ArtifactResourceResolver artifactResourceResolver : artifactResourceResolvers) {
             artifact = artifactResourceResolver.resolve(classPathURL);
@@ -148,6 +148,7 @@ public class ArtifactDetector {
         return artifact;
     }
 
+    @Nonnull
     protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
         Set<URL> urls = findAllClassPathURLs(classLoader);
         LinkedHashSet<URL> classPathURLs = newLinkedHashSet(urls);
