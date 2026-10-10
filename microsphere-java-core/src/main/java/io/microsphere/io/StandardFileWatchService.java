@@ -152,11 +152,11 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
         this(DIRECT_EXECUTOR);
     }
 
-    public StandardFileWatchService(Executor eventHandlerExecutor) {
+    public StandardFileWatchService(@Nonnull Executor eventHandlerExecutor) {
         this(eventHandlerExecutor, newSingleThreadExecutor(newThreadFactory(THREAD_NAME_PREFIX, true)));
     }
 
-    public StandardFileWatchService(Executor eventHandlerExecutor, ExecutorService eventLoopExecutor) {
+    public StandardFileWatchService(@Nonnull Executor eventHandlerExecutor, @Nonnull ExecutorService eventLoopExecutor) {
         this.eventHandlerExecutor = eventHandlerExecutor;
         this.eventLoopExecutor = eventLoopExecutor;
         this.started = new AtomicBoolean(false);
@@ -264,7 +264,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     }
 
     @Override
-    public void watch(File file, FileChangedListener listener, Kind... kinds) {
+    public void watch(@Nonnull File file, @Nonnull FileChangedListener listener, Kind... kinds) {
         Path filePath = file.toPath();
         FileChangedMetadata metadata = getMetadata(filePath, kinds);
         metadata.filePaths.add(filePath);
