@@ -17,6 +17,8 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -208,6 +210,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>    the class of the objects in the array
      * @return an array containing the specified elements
      */
+    @Nonnull
     public static <T> T[] of(T... values) {
         return ofArray(values);
     }
@@ -226,6 +229,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static boolean[] ofBooleans(boolean... values) {
         return values;
     }
@@ -244,6 +248,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static byte[] ofBytes(byte... values) {
         return values;
     }
@@ -262,6 +267,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static char[] ofChars(char... values) {
         return values;
     }
@@ -280,6 +286,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static short[] ofShorts(short... values) {
         return values;
     }
@@ -298,6 +305,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static int[] ofInts(int... values) {
         return values;
     }
@@ -316,6 +324,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static long[] ofLongs(long... values) {
         return values;
     }
@@ -334,6 +343,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static float[] ofFloats(float... values) {
         return values;
     }
@@ -352,6 +362,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the elements to be included in the resulting array
      * @return a newly created array containing the specified elements
      */
+    @Nonnull
     public static double[] ofDoubles(double... values) {
         return values;
     }
@@ -372,6 +383,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>    the class of the objects in the array
      * @return an array containing the specified elements
      */
+    @Nonnull
     public static <T> T[] ofArray(T... values) {
         return values;
     }
@@ -393,6 +405,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>   the class of the objects in the array
      * @return the original array if it is non-null, otherwise an empty array of the same type
      */
+    @Nonnull
     public static <T> T[] nullSafeArray(T... values) {
         return defaultIfNull(values, (T[]) EMPTY_OBJECT_ARRAY);
     }
@@ -411,7 +424,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(boolean[] values) {
+    public static int length(@Nullable boolean[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -429,7 +442,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(byte[] values) {
+    public static int length(@Nullable byte[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -447,7 +460,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(char[] values) {
+    public static int length(@Nullable char[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -465,7 +478,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(short[] values) {
+    public static int length(@Nullable short[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -483,7 +496,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(int[] values) {
+    public static int length(@Nullable int[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -501,7 +514,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(long[] values) {
+    public static int length(@Nullable long[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -519,7 +532,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(float[] values) {
+    public static int length(@Nullable float[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -537,7 +550,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to determine the length of
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static int length(double[] values) {
+    public static int length(@Nullable double[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -559,7 +572,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>    the class of the objects in the array
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static <T> int length(T[] values) {
+    public static <T> int length(@Nullable T[] values) {
         return values == null ? 0 : values.length;
     }
 
@@ -581,7 +594,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>    the class of the objects in the array
      * @return the length of the array, or {@code 0} if the array is {@code null}
      */
-    public static <T> int size(T[] values) {
+    public static <T> int size(@Nullable T[] values) {
         return length(values);
     }
 
@@ -605,7 +618,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(boolean[] values) {
+    public static boolean isEmpty(@Nullable boolean[] values) {
         return length(values) == 0;
     }
 
@@ -629,7 +642,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(byte[] values) {
+    public static boolean isEmpty(@Nullable byte[] values) {
         return length(values) == 0;
     }
 
@@ -653,7 +666,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(char[] values) {
+    public static boolean isEmpty(@Nullable char[] values) {
         return length(values) == 0;
     }
 
@@ -677,7 +690,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(short[] values) {
+    public static boolean isEmpty(@Nullable short[] values) {
         return length(values) == 0;
     }
 
@@ -701,7 +714,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(int[] values) {
+    public static boolean isEmpty(@Nullable int[] values) {
         return length(values) == 0;
     }
 
@@ -725,7 +738,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(long[] values) {
+    public static boolean isEmpty(@Nullable long[] values) {
         return length(values) == 0;
     }
 
@@ -749,7 +762,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(float[] values) {
+    public static boolean isEmpty(@Nullable float[] values) {
         return length(values) == 0;
     }
 
@@ -773,7 +786,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for emptiness
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static boolean isEmpty(double[] values) {
+    public static boolean isEmpty(@Nullable double[] values) {
         return length(values) == 0;
     }
 
@@ -799,7 +812,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>    the class of the objects in the array
      * @return {@code true} if the array is null or has no elements, otherwise {@code false}
      */
-    public static <T> boolean isEmpty(T[] values) {
+    public static <T> boolean isEmpty(@Nullable T[] values) {
         return length(values) == 0;
     }
 
@@ -823,7 +836,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(boolean[] values) {
+    public static boolean isNotEmpty(@Nullable boolean[] values) {
         return !isEmpty(values);
     }
 
@@ -847,7 +860,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(byte[] values) {
+    public static boolean isNotEmpty(@Nullable byte[] values) {
         return !isEmpty(values);
     }
 
@@ -871,7 +884,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(char[] values) {
+    public static boolean isNotEmpty(@Nullable char[] values) {
         return !isEmpty(values);
     }
 
@@ -895,7 +908,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(short[] values) {
+    public static boolean isNotEmpty(@Nullable short[] values) {
         return !isEmpty(values);
     }
 
@@ -919,7 +932,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(int[] values) {
+    public static boolean isNotEmpty(@Nullable int[] values) {
         return !isEmpty(values);
     }
 
@@ -943,7 +956,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(long[] values) {
+    public static boolean isNotEmpty(@Nullable long[] values) {
         return !isEmpty(values);
     }
 
@@ -967,7 +980,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(float[] values) {
+    public static boolean isNotEmpty(@Nullable float[] values) {
         return !isEmpty(values);
     }
 
@@ -991,7 +1004,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values the array to check for non-emptiness
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static boolean isNotEmpty(double[] values) {
+    public static boolean isNotEmpty(@Nullable double[] values) {
         return !isEmpty(values);
     }
 
@@ -1017,7 +1030,7 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>    the class of the objects in the array
      * @return {@code true} if the array has at least one element, otherwise {@code false}
      */
-    public static <T> boolean isNotEmpty(T[] values) {
+    public static <T> boolean isNotEmpty(@Nullable T[] values) {
         return !isEmpty(values);
     }
 
@@ -1044,7 +1057,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(boolean[] a, boolean[] b) {
+    public static boolean arrayEquals(@Nullable boolean[] a, @Nullable boolean[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1071,7 +1084,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(byte[] a, byte[] b) {
+    public static boolean arrayEquals(@Nullable byte[] a, @Nullable byte[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1098,7 +1111,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(char[] a, char[] b) {
+    public static boolean arrayEquals(@Nullable char[] a, @Nullable char[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1125,7 +1138,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(short[] a, short[] b) {
+    public static boolean arrayEquals(@Nullable short[] a, @Nullable short[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1152,7 +1165,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(int[] a, int[] b) {
+    public static boolean arrayEquals(@Nullable int[] a, @Nullable int[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1179,7 +1192,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(long[] a, long[] b) {
+    public static boolean arrayEquals(@Nullable long[] a, @Nullable long[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1206,7 +1219,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(float[] a, float[] b) {
+    public static boolean arrayEquals(@Nullable float[] a, @Nullable float[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1233,7 +1246,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static boolean arrayEquals(double[] a, double[] b) {
+    public static boolean arrayEquals(@Nullable double[] a, @Nullable double[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1264,7 +1277,7 @@ public abstract class ArrayUtils implements Utils {
      * @param b the second array to compare
      * @return {@code true} if both arrays are equal; otherwise, {@code false}
      */
-    public static <T> boolean arrayEquals(T[] a, T[] b) {
+    public static <T> boolean arrayEquals(@Nullable T[] a, @Nullable T[] b) {
         return Arrays.equals(a, b);
     }
 
@@ -1285,7 +1298,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <E>           the type of elements in the enumeration
      * @return an array containing all elements from the enumeration
      */
-    public static <E> E[] asArray(Enumeration<E> enumeration, Class<?> componentType) {
+    @Nonnull
+    public static <E> E[] asArray(@Nonnull Enumeration<E> enumeration, @Nonnull Class<?> componentType) {
         return asArray(list(enumeration), componentType);
     }
 
@@ -1307,7 +1321,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <E>           the type of elements in the iterable
      * @return an array containing all elements from the iterable
      */
-    public static <E> E[] asArray(Iterable<E> elements, Class<?> componentType) {
+    @Nonnull
+    public static <E> E[] asArray(@Nonnull Iterable<E> elements, @Nonnull Class<?> componentType) {
         return asArray(newArrayList(elements), componentType);
     }
 
@@ -1329,7 +1344,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <E>           the type of elements in the collection
      * @return an array containing all elements from the collection
      */
-    public static <E> E[] asArray(Collection<E> collection, Class<?> componentType) {
+    @Nonnull
+    public static <E> E[] asArray(@Nonnull Collection<E> collection, @Nonnull Class<?> componentType) {
         return collection.toArray(newArray(componentType, 0));
     }
 
@@ -1350,7 +1366,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <E>           the type of the array elements
      * @return a newly created array of the specified component type and length
      */
-    public static <E> E[] newArray(Class<?> componentType, int length) {
+    @Nonnull
+    public static <E> E[] newArray(@Nonnull Class<?> componentType, int length) {
         return (E[]) newInstance(componentType, length);
     }
 
@@ -1378,7 +1395,8 @@ public abstract class ArrayUtils implements Utils {
      * @param others the array of additional elements to combine
      * @return a new array containing the combined elements
      */
-    public static <E> E[] combine(E one, E... others) {
+    @Nonnull
+    public static <E> E[] combine(@Nonnull E one, E... others) {
         int othersLength = length(others);
         Class<?> oneType = one.getClass();
         boolean oneIsArray = isArray(oneType);
@@ -1420,7 +1438,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <E>    the type of elements in the arrays
      * @return a new array containing all elements from the provided arrays
      */
-    public static <E> E[] combine(E[] one, E[]... others) {
+    @Nullable
+    public static <E> E[] combine(@Nullable E[] one, E[]... others) {
         return combineArray(one, others);
     }
 
@@ -1449,7 +1468,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <E>    the type of elements in the arrays
      * @return a new array containing all elements from the provided arrays
      */
-    public static <E> E[] combineArray(E[] one, E[]... others) {
+    @Nullable
+    public static <E> E[] combineArray(@Nullable E[] one, E[]... others) {
         int othersSize = length(others);
         if (othersSize < 1) {
             return one;
@@ -1496,7 +1516,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the boolean array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(boolean[] values, Consumer<Boolean> consumer) {
+    public static void forEach(@Nullable boolean[] values, @Nonnull Consumer<Boolean> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1515,7 +1535,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the byte array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(byte[] values, Consumer<Byte> consumer) {
+    public static void forEach(@Nullable byte[] values, @Nonnull Consumer<Byte> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1534,7 +1554,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the char array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(char[] values, Consumer<Character> consumer) {
+    public static void forEach(@Nullable char[] values, @Nonnull Consumer<Character> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1553,7 +1573,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the short array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(short[] values, Consumer<Short> consumer) {
+    public static void forEach(@Nullable short[] values, @Nonnull Consumer<Short> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1572,7 +1592,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the int array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(int[] values, Consumer<Integer> consumer) {
+    public static void forEach(@Nullable int[] values, @Nonnull Consumer<Integer> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1591,7 +1611,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the long array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(long[] values, Consumer<Long> consumer) {
+    public static void forEach(@Nullable long[] values, @Nonnull Consumer<Long> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1610,7 +1630,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the float array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(float[] values, Consumer<Float> consumer) {
+    public static void forEach(@Nullable float[] values, @Nonnull Consumer<Float> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1629,7 +1649,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the double array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(double[] values, Consumer<Double> consumer) {
+    public static void forEach(@Nullable double[] values, @Nonnull Consumer<Double> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1649,7 +1669,7 @@ public abstract class ArrayUtils implements Utils {
      * @param consumer the operation to perform on each element
      * @param <T>      the type of elements in the array
      */
-    public static <T> void forEach(T[] values, Consumer<T> consumer) {
+    public static <T> void forEach(@Nullable T[] values, @Nonnull Consumer<T> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1668,7 +1688,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the boolean array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(boolean[] values, BiConsumer<Integer, Boolean> indexedElementConsumer) {
+    public static void forEach(@Nullable boolean[] values, @Nonnull BiConsumer<Integer, Boolean> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Boolean value = values[i];
@@ -1691,7 +1711,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the byte array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(byte[] values, BiConsumer<Integer, Byte> indexedElementConsumer) {
+    public static void forEach(@Nullable byte[] values, @Nonnull BiConsumer<Integer, Byte> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Byte value = values[i];
@@ -1714,7 +1734,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the char array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(char[] values, BiConsumer<Integer, Character> indexedElementConsumer) {
+    public static void forEach(@Nullable char[] values, @Nonnull BiConsumer<Integer, Character> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Character value = values[i];
@@ -1737,7 +1757,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the short array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(short[] values, BiConsumer<Integer, Short> indexedElementConsumer) {
+    public static void forEach(@Nullable short[] values, @Nonnull BiConsumer<Integer, Short> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Short value = values[i];
@@ -1760,7 +1780,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the int array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(int[] values, BiConsumer<Integer, Integer> indexedElementConsumer) {
+    public static void forEach(@Nullable int[] values, @Nonnull BiConsumer<Integer, Integer> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Integer value = values[i];
@@ -1783,7 +1803,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the long array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(long[] values, BiConsumer<Integer, Long> indexedElementConsumer) {
+    public static void forEach(@Nullable long[] values, @Nonnull BiConsumer<Integer, Long> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Long value = values[i];
@@ -1806,7 +1826,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the float array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(float[] values, BiConsumer<Integer, Float> indexedElementConsumer) {
+    public static void forEach(@Nullable float[] values, @Nonnull BiConsumer<Integer, Float> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Float value = values[i];
@@ -1829,7 +1849,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values                 the double array to iterate over
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      */
-    public static void forEach(double[] values, BiConsumer<Integer, Double> indexedElementConsumer) {
+    public static void forEach(@Nullable double[] values, @Nonnull BiConsumer<Integer, Double> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Double value = values[i];
@@ -1853,7 +1873,7 @@ public abstract class ArrayUtils implements Utils {
      * @param indexedElementConsumer the operation to perform on each element, taking the index and the element as arguments
      * @param <T>                    the type of elements in the array
      */
-    public static <T> void forEach(T[] values, BiConsumer<Integer, T> indexedElementConsumer) {
+    public static <T> void forEach(@Nullable T[] values, @Nonnull BiConsumer<Integer, T> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             T value = values[i];
@@ -1884,7 +1904,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(boolean[] values, boolean value) {
+    public static boolean contains(@Nullable boolean[] values, boolean value) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             if (values[i] == value) {
@@ -1908,7 +1928,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to find
      * @return {@code true} if the array contains the value, {@code false} otherwise
      */
-    public static boolean contains(byte[] values, byte value) {
+    public static boolean contains(@Nonnull byte[] values, byte value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -1934,7 +1954,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(char[] values, char value) {
+    public static boolean contains(@Nonnull char[] values, char value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -1960,7 +1980,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(short[] values, short value) {
+    public static boolean contains(@Nonnull short[] values, short value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -1986,7 +2006,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(int[] values, int value) {
+    public static boolean contains(@Nonnull int[] values, int value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -2012,7 +2032,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(long[] values, long value) {
+    public static boolean contains(@Nonnull long[] values, long value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -2038,7 +2058,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(float[] values, float value) {
+    public static boolean contains(@Nonnull float[] values, float value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -2064,7 +2084,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(double[] values, double value) {
+    public static boolean contains(@Nonnull double[] values, double value) {
         return binarySearch(values, value) > -1;
     }
 
@@ -2093,7 +2113,7 @@ public abstract class ArrayUtils implements Utils {
      * @param value  the value to search for
      * @return {@code true} if the array contains the specified value, otherwise {@code false}
      */
-    public static boolean contains(Object[] values, Object value) {
+    public static boolean contains(@Nullable Object[] values, @Nullable Object value) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             if (Objects.equals(values[i], value)) {
@@ -2127,7 +2147,8 @@ public abstract class ArrayUtils implements Utils {
      * @param <T>   the type of elements in the array
      * @return a string representation of the array, or "null" if the array is null
      */
-    public static <T> String arrayToString(T[] array) {
+    @Nonnull
+    public static <T> String arrayToString(@Nullable T[] array) {
         return Arrays.toString(array);
     }
 
@@ -2159,7 +2180,8 @@ public abstract class ArrayUtils implements Utils {
      * @throws NullPointerException if the provided array is null
      * @see jdk.internal.util.ArraysSupport#reverse(Object[])
      */
-    public static <T> T[] reverse(T[] a) {
+    @Nonnull
+    public static <T> T[] reverse(@Nonnull T[] a) {
         int limit = a.length / 2;
         for (int i = 0, j = a.length - 1; i < limit; i++, j--) {
             T t = a[i];
@@ -2190,7 +2212,8 @@ public abstract class ArrayUtils implements Utils {
      * @throws ArrayStoreException if coll contains elements that can't be stored in the array
      * @see jdk.internal.util.ArraysSupport#toArrayReversed(Collection, Object[])
      */
-    public static <T> T[] toArrayReversed(Collection<?> coll, T[] array) {
+    @Nonnull
+    public static <T> T[] toArrayReversed(@Nonnull Collection<?> coll, @Nonnull T[] array) {
         T[] newArray = reverse(coll.toArray(copyOfRange(array, 0, 0)));
         if (newArray.length > array.length) {
             return newArray;

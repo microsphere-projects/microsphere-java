@@ -16,6 +16,9 @@
  */
 package io.microsphere.net.console;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +43,7 @@ public class ConsoleURLConnection extends URLConnection {
      *
      * @param url the specified URL.
      */
-    public ConsoleURLConnection(URL url) {
+    public ConsoleURLConnection(@Nullable URL url) {
         super(url);
     }
 
@@ -49,11 +52,13 @@ public class ConsoleURLConnection extends URLConnection {
     }
 
     @Override
+    @Nonnull
     public InputStream getInputStream() throws IOException {
         return in;
     }
 
     @Override
+    @Nonnull
     public OutputStream getOutputStream() throws IOException {
         return out;
     }

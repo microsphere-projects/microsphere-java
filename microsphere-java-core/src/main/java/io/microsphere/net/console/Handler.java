@@ -16,6 +16,7 @@
  */
 package io.microsphere.net.console;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
 
 import java.io.IOException;
@@ -32,7 +33,8 @@ import java.net.URLConnection;
 public class Handler extends ExtendableProtocolURLStreamHandler {
 
     @Override
-    public URLConnection openConnection(URL url, Proxy proxy) throws IOException {
+    @Nonnull
+    public URLConnection openConnection(@Nonnull URL url, @Nonnull Proxy proxy) throws IOException {
         return new ConsoleURLConnection(url);
     }
 }

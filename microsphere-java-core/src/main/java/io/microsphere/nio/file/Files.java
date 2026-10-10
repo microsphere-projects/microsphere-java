@@ -18,6 +18,7 @@
 package io.microsphere.nio.file;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.IOUtils;
 import io.microsphere.util.Utils;
 
@@ -66,7 +67,7 @@ public abstract class Files implements Utils {
      * @see #readLines(File, Charset)
      */
     @Nonnull
-    public static String[] readLines(File file) throws IOException {
+    public static String[] readLines(@Nonnull File file) throws IOException {
         return readLines(file, DEFAULT_CHARSET);
     }
 
@@ -99,7 +100,7 @@ public abstract class Files implements Utils {
      * @see IOUtils#readLines(InputStream, Charset)
      */
     @Nonnull
-    public static String[] readLines(File file, Charset charset) throws IOException {
+    public static String[] readLines(@Nonnull File file, @Nullable Charset charset) throws IOException {
         return readLines(file.toPath(), charset);
     }
 
@@ -130,7 +131,7 @@ public abstract class Files implements Utils {
      * @see #readLines(Path, Charset)
      */
     @Nonnull
-    public static String[] readLines(Path filePath) throws IOException {
+    public static String[] readLines(@Nonnull Path filePath) throws IOException {
         return readLines(filePath, DEFAULT_CHARSET);
     }
 
@@ -163,7 +164,7 @@ public abstract class Files implements Utils {
      * @see IOUtils#readLines(InputStream, Charset)
      */
     @Nonnull
-    public static String[] readLines(Path filePath, Charset charset) throws IOException {
+    public static String[] readLines(@Nonnull Path filePath, @Nullable Charset charset) throws IOException {
         try (InputStream inputStream = newInputStream(filePath)) {
             return IOUtils.readLines(inputStream, charset);
         }

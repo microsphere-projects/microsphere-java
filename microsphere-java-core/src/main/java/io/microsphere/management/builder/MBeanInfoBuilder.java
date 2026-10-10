@@ -65,14 +65,16 @@ public class MBeanInfoBuilder extends MBeanDescribableBuilder<MBeanInfoBuilder> 
     @Nullable
     List<MBeanNotificationInfoBuilder> notificationBuilders = newLinkedList();
 
-    public MBeanInfoBuilder attribute(String attributeName, Class<?> attributeType, Consumer<MBeanAttributeInfoBuilder> builderConsumer) {
+    @Nonnull
+    public MBeanInfoBuilder attribute(@Nonnull String attributeName, @Nonnull Class<?> attributeType, @Nonnull Consumer<MBeanAttributeInfoBuilder> builderConsumer) {
         MBeanAttributeInfoBuilder builder = MBeanAttributeInfoBuilder.attribute(attributeType).name(attributeName);
         builderConsumer.accept(builder);
         this.attributeBuilders.add(builder);
         return this;
     }
 
-    public MBeanInfoBuilder attribute(PropertyDescriptor propertyDescriptor) {
+    @Nonnull
+    public MBeanInfoBuilder attribute(@Nonnull PropertyDescriptor propertyDescriptor) {
         String propertyName = propertyDescriptor.getName();
         Class<?> propertyType = propertyDescriptor.getPropertyType();
         return attribute(propertyName, propertyType, builder -> {
@@ -84,46 +86,54 @@ public class MBeanInfoBuilder extends MBeanDescribableBuilder<MBeanInfoBuilder> 
         });
     }
 
-    public MBeanInfoBuilder operation(String methodName, Class<?> returnType, Consumer<MBeanOperationInfoBuilder> builderConsumer) {
+    @Nonnull
+    public MBeanInfoBuilder operation(@Nonnull String methodName, @Nonnull Class<?> returnType, @Nonnull Consumer<MBeanOperationInfoBuilder> builderConsumer) {
         MBeanOperationInfoBuilder builder = MBeanOperationInfoBuilder.operation(returnType).name(methodName);
         builderConsumer.accept(builder);
         this.operationBuilders.add(builder);
         return this;
     }
 
-    public MBeanInfoBuilder operation(MethodDescriptor methodDescriptor) {
+    @Nonnull
+    public MBeanInfoBuilder operation(@Nonnull MethodDescriptor methodDescriptor) {
         Method method = methodDescriptor.getMethod();
         return operation(method);
     }
 
-    public MBeanInfoBuilder operation(Method method) {
+    @Nonnull
+    public MBeanInfoBuilder operation(@Nonnull Method method) {
         MBeanOperationInfoBuilder builder = MBeanOperationInfoBuilder.operation(method);
         this.operationBuilders.add(builder);
         return this;
     }
 
-    public MBeanInfoBuilder constructor(Constructor<?> constructor) {
+    @Nonnull
+    public MBeanInfoBuilder constructor(@Nonnull Constructor<?> constructor) {
         return constructor(builder -> builder.from(constructor));
     }
 
-    public MBeanInfoBuilder constructor(Consumer<MBeanConstructorInfoBuilder> builderConsumer) {
+    @Nonnull
+    public MBeanInfoBuilder constructor(@Nonnull Consumer<MBeanConstructorInfoBuilder> builderConsumer) {
         MBeanConstructorInfoBuilder builder = MBeanConstructorInfoBuilder.constructor();
         builderConsumer.accept(builder);
         this.constructorBuilders.add(builder);
         return this;
     }
 
+    @Nonnull
     public MBeanInfoBuilder notification(Class<?>... types) {
         return notification(builder -> builder.types(types));
     }
 
-    public MBeanInfoBuilder notification(Consumer<MBeanNotificationInfoBuilder> builderConsumer) {
+    @Nonnull
+    public MBeanInfoBuilder notification(@Nonnull Consumer<MBeanNotificationInfoBuilder> builderConsumer) {
         MBeanNotificationInfoBuilder builder = MBeanNotificationInfoBuilder.notification();
         builderConsumer.accept(builder);
         this.notificationBuilders.add(builder);
         return this;
     }
 
+    @Nonnull
     public MBeanInfo build() {
         return new MBeanInfo(this.className, this.description, buildAttributes(), buildConstructors(),
                 buildOperations(), buildNotifications(), this.descriptor);
@@ -153,13 +163,15 @@ public class MBeanInfoBuilder extends MBeanDescribableBuilder<MBeanInfoBuilder> 
                 .toArray(MBeanNotificationInfo[]::new);
     }
 
-    public static MBeanInfoBuilder mbeanInfo(String className) {
+    @Nonnull
+    public static MBeanInfoBuilder mbeanInfo(@Nonnull String className) {
         MBeanInfoBuilder builder = new MBeanInfoBuilder();
         builder.className = className;
         return builder;
     }
 
-    public static MBeanInfoBuilder mbeanInfo(BeanInfo beanInfo) {
+    @Nonnull
+    public static MBeanInfoBuilder mbeanInfo(@Nonnull BeanInfo beanInfo) {
         Class<?> beanClass = beanInfo.getBeanDescriptor().getBeanClass();
         MBeanInfoBuilder builder = new MBeanInfoBuilder();
 

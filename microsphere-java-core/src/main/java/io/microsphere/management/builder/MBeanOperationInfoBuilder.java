@@ -54,26 +54,31 @@ public class MBeanOperationInfoBuilder extends MBeanExecutableInfoBuilder<MBeanO
         impact(UNKNOWN);
     }
 
-    public MBeanOperationInfoBuilder impact(Impact impact) {
+    @Nonnull
+    public MBeanOperationInfoBuilder impact(@Nonnull Impact impact) {
         this.impact = impact.getValue();
         return this;
     }
 
+    @Nonnull
     public MBeanOperationInfo build() {
         return new MBeanOperationInfo(this.name, this.description, toSignature(), this.returnType, this.impact, this.descriptor);
     }
 
-    public static MBeanOperationInfoBuilder operation(Class<?> type) {
+    @Nonnull
+    public static MBeanOperationInfoBuilder operation(@Nonnull Class<?> type) {
         return operation(getTypeName(type));
     }
 
-    public static MBeanOperationInfoBuilder operation(String type) {
+    @Nonnull
+    public static MBeanOperationInfoBuilder operation(@Nonnull String type) {
         MBeanOperationInfoBuilder builder = new MBeanOperationInfoBuilder();
         builder.returnType = type;
         return builder;
     }
 
-    public static MBeanOperationInfoBuilder operation(Method method) {
+    @Nonnull
+    public static MBeanOperationInfoBuilder operation(@Nonnull Method method) {
         Class<?> returnType = method.getReturnType();
         return operation(returnType).from(method);
     }

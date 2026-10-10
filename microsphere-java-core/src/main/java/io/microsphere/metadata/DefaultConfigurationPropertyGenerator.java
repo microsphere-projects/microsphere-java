@@ -17,6 +17,7 @@
 
 package io.microsphere.metadata;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 
@@ -78,7 +79,8 @@ import static io.microsphere.util.Assert.assertNotNull;
 public class DefaultConfigurationPropertyGenerator implements ConfigurationPropertyGenerator {
 
     @Override
-    public String generate(ConfigurationProperty configurationProperty) {
+    @Nonnull
+    public String generate(@Nonnull ConfigurationProperty configurationProperty) {
         assertNotNull(configurationProperty, () -> "The 'ConfigurationProperty' argument must not be null");
 
         StringBuilder jsonBuilder = new StringBuilder();

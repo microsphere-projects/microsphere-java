@@ -17,6 +17,7 @@
 
 package io.microsphere.management.builder;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
 import javax.management.Descriptor;
@@ -48,15 +49,18 @@ public abstract class MBeanDescribableBuilder<B extends MBeanDescribableBuilder>
     MBeanDescribableBuilder() {
     }
 
-    public B description(String description) {
+    @Nonnull
+    public B description(@Nullable String description) {
         this.description = description;
         return (B) this;
     }
 
-    public B descriptor(Descriptor descriptor) {
+    @Nonnull
+    public B descriptor(@Nullable Descriptor descriptor) {
         this.descriptor = descriptor;
         return (B) this;
     }
 
+    @Nonnull
     public abstract <I extends DescriptorRead> I build();
 }

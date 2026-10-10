@@ -128,7 +128,8 @@ public abstract class CharSequenceUtils implements Utils {
      * @param str the {@link CharSequence} to trim (may be {@code null})
      * @return a new {@link CharSequence} with all whitespace characters removed, or the original if none exist
      */
-    public static CharSequence trimAllWhitespace(CharSequence str) {
+    @Nullable
+    public static CharSequence trimAllWhitespace(@Nullable CharSequence str) {
         int len = length(str);
         if (len < 1) {
             return str;

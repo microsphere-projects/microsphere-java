@@ -18,6 +18,7 @@
 
 package io.microsphere.management.builder;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.management.JmxUtils;
 
 import javax.management.Descriptor;
@@ -59,13 +60,15 @@ public abstract class MBeanExecutableInfoBuilder<B extends MBeanExecutableInfoBu
         super();
     }
 
+    @Nonnull
     public B signature(MBeanParameterInfo... signature) {
         this.parameters.clear();
         addAll(this.parameters, signature);
         return (B) this;
     }
 
-    public B param(Class<?> type, Consumer<MBeanParameterInfoBuilder> parameterBuilderConsumer) {
+    @Nonnull
+    public B param(@Nonnull Class<?> type, @Nonnull Consumer<MBeanParameterInfoBuilder> parameterBuilderConsumer) {
         MBeanParameterInfoBuilder builder = parameter(type);
         parameterBuilderConsumer.accept(builder);
         MBeanParameterInfo build = builder.build();
@@ -73,7 +76,8 @@ public abstract class MBeanExecutableInfoBuilder<B extends MBeanExecutableInfoBu
         return (B) this;
     }
 
-    public B from(Executable executable) {
+    @Nonnull
+    public B from(@Nonnull Executable executable) {
         String name = executable.getName();
         Descriptor descriptor = descriptorForElement(executable);
         MBeanParameterInfo[] signature = JmxUtils.signature(executable.getParameters());
@@ -83,6 +87,7 @@ public abstract class MBeanExecutableInfoBuilder<B extends MBeanExecutableInfoBu
                 .description(executable.toString());
     }
 
+    @Nonnull
     protected MBeanParameterInfo[] toSignature() {
         return this.parameters.toArray(NO_PARAMS);
     }

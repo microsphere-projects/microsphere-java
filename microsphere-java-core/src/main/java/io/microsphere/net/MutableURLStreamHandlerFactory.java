@@ -16,6 +16,9 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
@@ -77,7 +80,7 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      *
      * @param handlers the handlers
      */
-    public MutableURLStreamHandlerFactory(Map<String, H> handlers) {
+    public MutableURLStreamHandlerFactory(@Nullable Map<String, H> handlers) {
         this.handlers = handlers == null ? newHashMap() : newHashMap(handlers);
     }
 
@@ -88,7 +91,8 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      * @param handler  the handler
      * @return this instance
      */
-    public MutableURLStreamHandlerFactory addURLStreamHandler(String protocol, H handler) {
+    @Nonnull
+    public MutableURLStreamHandlerFactory addURLStreamHandler(@Nullable String protocol, @Nullable H handler) {
         this.handlers.put(protocol, handler);
         return this;
     }
@@ -99,7 +103,8 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      * @param protocol the protocol
      * @return the removed handler
      */
-    public H removeURLStreamHandler(String protocol) {
+    @Nullable
+    public H removeURLStreamHandler(@Nullable String protocol) {
         return this.handlers.remove(protocol);
     }
 
@@ -109,7 +114,8 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      * @param protocol the protocol
      * @return the handler
      */
-    public H getURLStreamHandler(String protocol) {
+    @Nullable
+    public H getURLStreamHandler(@Nullable String protocol) {
         return this.handlers.get(protocol);
     }
 
@@ -118,12 +124,14 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      *
      * @return the handlers
      */
+    @Nonnull
     public Collection<H> getHandlers() {
         return this.handlers.values();
     }
 
     @Override
-    public URLStreamHandler createURLStreamHandler(String protocol) {
+    @Nullable
+    public URLStreamHandler createURLStreamHandler(@Nonnull String protocol) {
         return getURLStreamHandler(protocol);
     }
 
@@ -132,6 +140,7 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      *
      * @return this instance
      */
+    @Nonnull
     public MutableURLStreamHandlerFactory<H> clearHandlers() {
         this.handlers.clear();
         return this;

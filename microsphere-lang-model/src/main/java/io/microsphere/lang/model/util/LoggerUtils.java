@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
@@ -31,23 +32,23 @@ public interface LoggerUtils extends Utils {
 
     Logger LOGGER = getLogger("microsphere-lang-model");
 
-    static void trace(String format, Object... args) {
+    static void trace(@Nullable String format, Object... args) {
         LOGGER.trace(format, args);
     }
 
-    static void debug(String format, Object... args) {
+    static void debug(@Nullable String format, Object... args) {
         LOGGER.debug(format, args);
     }
 
-    static void info(String format, Object... args) {
+    static void info(@Nullable String format, Object... args) {
         LOGGER.info(format, args);
     }
 
-    static void warn(String format, Object... args) {
+    static void warn(@Nullable String format, Object... args) {
         LOGGER.warn(format, args);
     }
 
-    static void error(String format, Object... args) {
+    static void error(@Nullable String format, Object... args) {
         LOGGER.error(format, args);
     }
 }

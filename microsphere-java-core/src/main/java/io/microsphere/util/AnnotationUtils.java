@@ -135,7 +135,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if the element is a {@link Class}, otherwise {@code false}
      * @see ElementType#TYPE
      */
-    public static boolean isType(AnnotatedElement annotatedElement) {
+    public static boolean isType(@Nullable AnnotatedElement annotatedElement) {
         return annotatedElement instanceof Class;
     }
 
@@ -185,7 +185,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationType the expected annotation type
      * @return {@code true} if the annotation is of the specified type; {@code false} otherwise
      */
-    public static boolean isSameType(Annotation annotation, Class<? extends Annotation> annotationType) {
+    public static boolean isSameType(@Nullable Annotation annotation, @Nullable Class<? extends Annotation> annotationType) {
         if (annotation == null || annotationType == null) {
             return false;
         }
@@ -245,7 +245,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return the first matching annotation of the specified type, or {@code null} if none is found
      */
     @Nullable
-    public static <A extends Annotation> A findAnnotation(AnnotatedElement annotatedElement, Class<A> annotationType) {
+    public static <A extends Annotation> A findAnnotation(@Nullable AnnotatedElement annotatedElement, @Nullable Class<A> annotationType) {
         return findAnnotation(annotatedElement, a -> isSameType(a, annotationType));
     }
 
@@ -286,7 +286,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return the first matching annotation based on the provided filters, or {@code null} if none match
      */
     @Nullable
-    public static <A extends Annotation> A findAnnotation(AnnotatedElement annotatedElement,
+    public static <A extends Annotation> A findAnnotation(@Nullable AnnotatedElement annotatedElement,
                                                           Predicate<? super Annotation>... annotationFilters) {
         return (A) filterFirst(findAllDeclaredAnnotations(annotatedElement), annotationFilters);
     }
@@ -373,8 +373,8 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if the annotation's type is annotated with the specified meta-annotation;
      * otherwise, {@code false}
      */
-    public static boolean isMetaAnnotation(Annotation annotation,
-                                           Class<? extends Annotation> metaAnnotationType) {
+    public static boolean isMetaAnnotation(@Nullable Annotation annotation,
+                                           @Nullable Class<? extends Annotation> metaAnnotationType) {
         if (annotation == null || metaAnnotationType == null) {
             return false;
         }
@@ -424,7 +424,7 @@ public abstract class AnnotationUtils implements Utils {
      *                            if none are provided, all annotations will be considered
      * @return {@code true} if the specified annotation is a meta-annotation; otherwise, {@code false}
      */
-    public static boolean isMetaAnnotation(Annotation annotation,
+    public static boolean isMetaAnnotation(@Nullable Annotation annotation,
                                            Class<? extends Annotation>... metaAnnotationTypes) {
         if (annotation == null || isEmpty(metaAnnotationTypes)) {
             return false;
@@ -481,8 +481,8 @@ public abstract class AnnotationUtils implements Utils {
      *                            if none are provided, all annotations will be considered
      * @return {@code true} if the specified annotation is a meta-annotation; otherwise, {@code false}
      */
-    public static boolean isMetaAnnotation(Annotation annotation,
-                                           Iterable<Class<? extends Annotation>> metaAnnotationTypes) {
+    public static boolean isMetaAnnotation(@Nullable Annotation annotation,
+                                           @Nullable Iterable<Class<? extends Annotation>> metaAnnotationTypes) {
         if (annotation == null) {
             return false;
         }
@@ -532,8 +532,8 @@ public abstract class AnnotationUtils implements Utils {
      * @param metaAnnotationType the specific meta-annotation type to look for
      * @return {@code true} if the specified annotation is a meta-annotation; otherwise, {@code false}
      */
-    public static boolean isMetaAnnotation(Class<? extends Annotation> annotationType,
-                                           Class<? extends Annotation> metaAnnotationType) {
+    public static boolean isMetaAnnotation(@Nullable Class<? extends Annotation> annotationType,
+                                           @Nullable Class<? extends Annotation> metaAnnotationType) {
         if (annotationType == null || metaAnnotationType == null || isNativeAnnotationType(annotationType)) {
             return false;
         }
@@ -586,7 +586,7 @@ public abstract class AnnotationUtils implements Utils {
      *                            if none are provided, all annotations will be considered
      * @return {@code true} if the specified annotation is a meta-annotation; otherwise, {@code false}
      */
-    public static boolean isMetaAnnotation(Class<? extends Annotation> annotationType,
+    public static boolean isMetaAnnotation(@Nullable Class<? extends Annotation> annotationType,
                                            Class<? extends Annotation>... metaAnnotationTypes) {
         return isMetaAnnotation(annotationType, ofList(metaAnnotationTypes));
     }
@@ -628,8 +628,8 @@ public abstract class AnnotationUtils implements Utils {
      *                            if none are provided, all annotations will be considered
      * @return {@code true} if the specified annotation is a meta-annotation; otherwise, {@code false}
      */
-    public static boolean isMetaAnnotation(Class<? extends Annotation> annotationType,
-                                           Iterable<Class<? extends Annotation>> metaAnnotationTypes) {
+    public static boolean isMetaAnnotation(@Nullable Class<? extends Annotation> annotationType,
+                                           @Nullable Iterable<Class<? extends Annotation>> metaAnnotationTypes) {
         if (annotationType == null || metaAnnotationTypes == null || NATIVE_ANNOTATION_TYPES.contains(annotationType)) {
             return false;
         }
@@ -686,7 +686,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> getAllDeclaredAnnotations(AnnotatedElement annotatedElement) {
+    public static List<Annotation> getAllDeclaredAnnotations(@Nullable AnnotatedElement annotatedElement) {
         return findAllDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -735,7 +735,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> getDeclaredAnnotations(AnnotatedElement annotatedElement) {
+    public static List<Annotation> getDeclaredAnnotations(@Nullable AnnotatedElement annotatedElement) {
         return findDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -791,7 +791,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> findAllDeclaredAnnotations(AnnotatedElement annotatedElement,
+    public static List<Annotation> findAllDeclaredAnnotations(@Nullable AnnotatedElement annotatedElement,
                                                               Predicate<? super Annotation>... annotationsToFilter) {
         if (isType(annotatedElement)) {
             return findAllDeclaredAnnotations((Class) annotatedElement, annotationsToFilter);
@@ -847,7 +847,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> findAllDeclaredAnnotations(Class<?> type, Predicate<? super Annotation>... annotationsToFilter) {
+    public static List<Annotation> findAllDeclaredAnnotations(@Nullable Class<?> type, Predicate<? super Annotation>... annotationsToFilter) {
 
         if (type == null) {
             return emptyList();
@@ -918,7 +918,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> findDeclaredAnnotations(AnnotatedElement annotatedElement,
+    public static List<Annotation> findDeclaredAnnotations(@Nullable AnnotatedElement annotatedElement,
                                                            Predicate<? super Annotation>... annotationsToFilter) {
         if (annotatedElement == null) {
             return emptyList();
@@ -984,7 +984,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> filterAnnotations(Annotation[] annotations,
+    public static List<Annotation> filterAnnotations(@Nullable Annotation[] annotations,
                                                      Predicate<? super Annotation>... annotationsToFilter) {
         return isEmpty(annotations) ? emptyList() : filterAnnotations(ofList(annotations), annotationsToFilter);
     }
@@ -1045,7 +1045,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Annotation> filterAnnotations(List<Annotation> annotations,
+    public static List<Annotation> filterAnnotations(@Nullable List<Annotation> annotations,
                                                      Predicate<? super Annotation>... annotationsToFilter) {
         if (isEmpty(annotations)) {
             return emptyList();
@@ -1088,7 +1088,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return the value of the attribute if found; otherwise, {@code null}
      */
     @Nullable
-    public static <T> T findAttributeValue(Annotation[] annotations, String attributeName) {
+    public static <T> T findAttributeValue(@Nonnull Annotation[] annotations, @Nullable String attributeName) {
         T attributeValue = null;
         for (Annotation annotation : annotations) {
             if (annotation != null) {
@@ -1130,7 +1130,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return the value of the attribute if found; otherwise, {@code null}
      */
     @Nullable
-    public static <T> T getAttributeValue(Annotation annotation, String attributeName) {
+    public static <T> T getAttributeValue(@Nonnull Annotation annotation, @Nullable String attributeName) {
         Class<?> annotationType = annotation.annotationType();
         Method attributeMethod = findMethod(annotationType, attributeName);
         return attributeMethod == null ? null : invokeMethod(annotation, attributeMethod);
@@ -1167,7 +1167,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, Object> getAttributesMap(Annotation annotation) {
+    public static Map<String, Object> getAttributesMap(@Nullable Annotation annotation) {
         return findAttributesMap(annotation, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1207,7 +1207,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, Object> findAttributesMap(Annotation annotation, String... attributeNamesToFilter) {
+    public static Map<String, Object> findAttributesMap(@Nullable Annotation annotation, String... attributeNamesToFilter) {
         return findAttributesMap(annotation, method -> contains(attributeNamesToFilter, method.getName()));
     }
 
@@ -1229,7 +1229,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
+    public static Map<String, Object> findAttributesMap(@Nullable Annotation annotation, Predicate<? super Method>... attributesToFilter) {
         if (annotation == null) {
             return emptyMap();
         }
@@ -1273,7 +1273,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationType the type of annotation to look for
      * @return {@code true} if at least one annotation matches the specified type; otherwise, {@code false}
      */
-    public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
+    public static boolean exists(@Nullable Annotation[] annotations, @Nullable Class<? extends Annotation> annotationType) {
         return exists(ofList(annotations), annotationType);
     }
 
@@ -1309,7 +1309,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationType the type of annotation to look for
      * @return {@code true} if at least one annotation matches the specified type; otherwise, {@code false}
      */
-    public static boolean exists(Collection<Annotation> annotations, Class<? extends Annotation> annotationType) {
+    public static boolean exists(@Nullable Collection<Annotation> annotations, @Nullable Class<? extends Annotation> annotationType) {
         if (isEmpty(annotations)) {
             return false;
         }
@@ -1348,7 +1348,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationType the type of annotation to look for
      * @return {@code true} if at least one annotation matches the specified type; otherwise, {@code false}
      */
-    public static boolean exists(Iterable<Annotation> annotations, Class<? extends Annotation> annotationType) {
+    public static boolean exists(@Nullable Iterable<Annotation> annotations, @Nullable Class<? extends Annotation> annotationType) {
         if (annotations == null || annotationType == null) {
             return false;
         }
@@ -1400,7 +1400,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationType    the type of annotation to look for
      * @return {@code true} if at least one element contains the specified annotation; otherwise, {@code false}
      */
-    public static boolean isAnnotationPresent(AnnotatedElement[] annotatedElements, Class<? extends Annotation> annotationType) {
+    public static boolean isAnnotationPresent(@Nullable AnnotatedElement[] annotatedElements, @Nullable Class<? extends Annotation> annotationType) {
         int length = length(annotatedElements);
         if (length < 1 || annotationType == null) {
             return false;
@@ -1448,7 +1448,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationType   the type of annotation to look for
      * @return {@code true} if the annotation is directly present on the element; otherwise, {@code false}
      */
-    public static boolean isAnnotationPresent(AnnotatedElement annotatedElement, Class<? extends Annotation> annotationType) {
+    public static boolean isAnnotationPresent(@Nullable AnnotatedElement annotatedElement, @Nullable Class<? extends Annotation> annotationType) {
         if (annotatedElement == null || annotationType == null) {
             return false;
         }
@@ -1490,7 +1490,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if the annotation is directly present on the annotation type;
      * otherwise, {@code false}
      */
-    public static boolean isAnnotationPresent(Annotation annotation, Class<? extends Annotation> annotationType) {
+    public static boolean isAnnotationPresent(@Nullable Annotation annotation, @Nullable Class<? extends Annotation> annotationType) {
         if (annotation == null || annotationType == null) {
             return false;
         }
@@ -1541,7 +1541,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if all specified annotation types are directly present on the element;
      * otherwise, {@code false}
      */
-    public static boolean isAnnotationPresent(AnnotatedElement annotatedElement, Iterable<Class<? extends Annotation>> annotationTypes) {
+    public static boolean isAnnotationPresent(@Nullable AnnotatedElement annotatedElement, @Nullable Iterable<Class<? extends Annotation>> annotationTypes) {
         if (annotatedElement == null || annotationTypes == null) {
             return false;
         }
@@ -1603,7 +1603,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if all specified annotation types are directly present on the annotation;
      * otherwise, {@code false}
      */
-    public static boolean isAnnotationPresent(Annotation annotation, Iterable<Class<? extends Annotation>> annotationTypes) {
+    public static boolean isAnnotationPresent(@Nullable Annotation annotation, @Nullable Iterable<Class<? extends Annotation>> annotationTypes) {
         if (annotation == null) {
             return false;
         }
@@ -1632,7 +1632,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if the method is declared by the {@link Annotation} interface;
      * otherwise, {@code false}
      */
-    public static boolean isAnnotationInterfaceMethod(Method attributeMethod) {
+    public static boolean isAnnotationInterfaceMethod(@Nullable Method attributeMethod) {
         return attributeMethod != null && Annotation.class == attributeMethod.getDeclaringClass();
     }
 
@@ -1692,7 +1692,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if the annotation type is a native annotation type; otherwise, {@code false}
      * @see #NATIVE_ANNOTATION_TYPES
      */
-    public static boolean isNativeAnnotationType(Class<? extends Annotation> annotationType) {
+    public static boolean isNativeAnnotationType(@Nullable Class<? extends Annotation> annotationType) {
         return NATIVE_ANNOTATION_TYPES.contains(annotationType);
     }
 
@@ -1749,7 +1749,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return the first matching meta-annotation of the specified type, or {@code null} if none is found
      */
     @Nullable
-    public static <A extends Annotation> A findMetaAnnotation(AnnotatedElement annotatedElement, Class<A> metaAnnotationType) {
+    public static <A extends Annotation> A findMetaAnnotation(@Nullable AnnotatedElement annotatedElement, @Nullable Class<A> metaAnnotationType) {
         return first(findMetaAnnotations(annotatedElement, metaAnnotationType));
     }
 
@@ -1811,7 +1811,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <A extends Annotation> List<A> findMetaAnnotations(AnnotatedElement annotatedElement, Class<A> metaAnnotationType) {
+    public static <A extends Annotation> List<A> findMetaAnnotations(@Nullable AnnotatedElement annotatedElement, @Nullable Class<A> metaAnnotationType) {
         LinkedList<A> annotations = newLinkedList();
         findMetaAnnotations(annotatedElement, metaAnnotationType, annotations);
         return unmodifiableList(annotations);

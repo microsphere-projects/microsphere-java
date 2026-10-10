@@ -19,6 +19,7 @@ package io.microsphere.lang.model.util;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
@@ -84,7 +85,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the kind is a class-like element, {@code false} otherwise
      * @see ElementKind#isClass()
      */
-    static boolean isClass(ElementKind kind) {
+    static boolean isClass(@Nullable ElementKind kind) {
         return kind != null && kind.isClass();
     }
 
@@ -115,7 +116,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the kind is an interface-like element, {@code false} otherwise
      * @see ElementKind#isInterface()
      */
-    static boolean isInterface(ElementKind kind) {
+    static boolean isInterface(@Nullable ElementKind kind) {
         return kind != null && kind.isInterface();
     }
 
@@ -146,7 +147,7 @@ public interface ElementUtils extends Utils {
      * @see #isClass(ElementKind)
      * @see #isInterface(ElementKind)
      */
-    static boolean isDeclaredType(ElementKind kind) {
+    static boolean isDeclaredType(@Nullable ElementKind kind) {
         return isClass(kind) || isInterface(kind);
     }
 
@@ -177,7 +178,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the kind is a field-like element, {@code false} otherwise
      * @see ElementKind#isField()
      */
-    static boolean isField(ElementKind kind) {
+    static boolean isField(@Nullable ElementKind kind) {
         return kind != null && kind.isField();
     }
 
@@ -213,7 +214,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the kind is an executable-like element, {@code false} otherwise
      * @see ElementKind#isExecutable()
      */
-    static boolean isExecutable(ElementKind kind) {
+    static boolean isExecutable(@Nullable ElementKind kind) {
         if (kind != null) {
             switch (kind) {
                 case METHOD:
@@ -253,7 +254,7 @@ public interface ElementUtils extends Utils {
      * @see #isField(ElementKind)
      * @see #isExecutable(ElementKind)
      */
-    static boolean isMember(ElementKind kind) {
+    static boolean isMember(@Nullable ElementKind kind) {
         return isField(kind) || isExecutable(kind);
     }
 
@@ -284,7 +285,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the kind is an initializer-like element, {@code false} otherwise
      * @see ElementKind#isInitializer()
      */
-    static boolean isInitializer(ElementKind kind) {
+    static boolean isInitializer(@Nullable ElementKind kind) {
         if (kind != null) {
             switch (kind) {
                 case STATIC_INIT:
@@ -344,7 +345,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the kind is a variable-like element, {@code false} otherwise
      * @see ElementKind#isVariable()
      */
-    static boolean isVariable(ElementKind kind) {
+    static boolean isVariable(@Nullable ElementKind kind) {
         if (kind != null) {
             switch (kind) {
                 case ENUM_CONSTANT:
@@ -386,7 +387,8 @@ public interface ElementUtils extends Utils {
      * @param elementType the ElementType to convert, may be {@code null}
      * @return the corresponding ElementKind, never {@code null}
      */
-    static ElementKind toElementKind(ElementType elementType) {
+    @Nonnull
+    static ElementKind toElementKind(@Nullable ElementType elementType) {
         if (elementType == null) {
             return OTHER;
         }
@@ -427,7 +429,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the ElementKind matches the converted ElementType, {@code false} otherwise
      * @see #toElementKind(ElementType)
      */
-    static boolean matchesElementType(ElementKind elementKind, ElementType elementType) {
+    static boolean matchesElementType(@Nullable ElementKind elementKind, @Nullable ElementType elementType) {
         return elementKind == toElementKind(elementType);
     }
 
@@ -458,7 +460,7 @@ public interface ElementUtils extends Utils {
      * @see #toElementKind(ElementType)
      * @see #matchesElementType(ElementKind, ElementType)
      */
-    static boolean matchesElementType(ElementKind elementKind, ElementType... elementTypes) {
+    static boolean matchesElementType(@Nullable ElementKind elementKind, ElementType... elementTypes) {
         int length = length(elementTypes);
         if (length < 1) {
             return false;
@@ -497,7 +499,7 @@ public interface ElementUtils extends Utils {
      * @return {@code true} if the element matches any of the converted ElementTypes, {@code false} otherwise
      * @see #matchesElementType(ElementKind, ElementType...)
      */
-    static boolean matchesElementType(Element element, ElementType... elementTypes) {
+    static boolean matchesElementType(@Nullable Element element, ElementType... elementTypes) {
         return element != null && matchesElementType(element.getKind(), elementTypes);
     }
 
@@ -523,7 +525,7 @@ public interface ElementUtils extends Utils {
      * @param kind   the ElementKind to match, may be {@code null}
      * @return {@code true} if the element is not null and its kind matches the specified kind; otherwise, {@code false}
      */
-    static boolean matchesElementKind(Element member, ElementKind kind) {
+    static boolean matchesElementKind(@Nullable Element member, @Nullable ElementKind kind) {
         return member == null || kind == null ? false : kind.equals(member.getKind());
     }
 
@@ -547,7 +549,7 @@ public interface ElementUtils extends Utils {
      * @param member the Element to check, may be null
      * @return {@code true} if the element is public and non-static; otherwise, {@code false}
      */
-    static boolean isPublicNonStatic(Element member) {
+    static boolean isPublicNonStatic(@Nullable Element member) {
         return hasModifiers(member, PUBLIC) && !hasModifiers(member, STATIC);
     }
 
@@ -575,7 +577,7 @@ public interface ElementUtils extends Utils {
      * @param modifiers the array of {@link Modifier}s to match, may be {@code null}
      * @return {@code true} if the element is not null and contains all specified modifiers; otherwise, {@code false}
      */
-    static boolean hasModifiers(Element member, Modifier... modifiers) {
+    static boolean hasModifiers(@Nullable Element member, Modifier... modifiers) {
         if (member == null || modifiers == null) {
             return false;
         }
@@ -621,7 +623,7 @@ public interface ElementUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static <E extends Element> List<E> filterElements(List<E> elements, Predicate<? super E>... elementPredicates) {
+    static <E extends Element> List<E> filterElements(@Nullable List<E> elements, Predicate<? super E>... elementPredicates) {
         if (isEmpty(elements) || elementPredicates == null) {
             return emptyList();
         }
@@ -653,7 +655,7 @@ public interface ElementUtils extends Utils {
      * @param parameterTypes    the expected parameter types, may be {@code null}
      * @return {@code true} if the parameter types match; {@code false} otherwise
      */
-    static boolean matchParameterTypes(ExecutableElement executableElement, Type... parameterTypes) {
+    static boolean matchParameterTypes(@Nullable ExecutableElement executableElement, Type... parameterTypes) {
         return executableElement == null || parameterTypes == null ? false :
                 matchParameterTypeNames(executableElement.getParameters(), getTypeNames(parameterTypes));
     }
@@ -679,7 +681,7 @@ public interface ElementUtils extends Utils {
      * @param parameterTypes the expected parameter types, may be {@code null}
      * @return {@code true} if all parameter types match their corresponding expected types; otherwise, {@code false}
      */
-    static boolean matchParameterTypes(List<? extends VariableElement> parameters, Type... parameterTypes) {
+    static boolean matchParameterTypes(@Nullable List<? extends VariableElement> parameters, Type... parameterTypes) {
         return parameters == null || parameterTypes == null ? false : matchParameterTypeNames(parameters, getTypeNames(parameterTypes));
     }
 
@@ -711,7 +713,7 @@ public interface ElementUtils extends Utils {
      * @param parameterTypeNames the expected fully qualified type names of the parameters, may be {@code null}
      * @return {@code true} if all parameter types match their corresponding type names; otherwise, {@code false}
      */
-    static boolean matchParameterTypeNames(List<? extends VariableElement> parameters, CharSequence... parameterTypeNames) {
+    static boolean matchParameterTypeNames(@Nullable List<? extends VariableElement> parameters, CharSequence... parameterTypeNames) {
         if (parameters == null || parameterTypeNames == null) {
             return false;
         }

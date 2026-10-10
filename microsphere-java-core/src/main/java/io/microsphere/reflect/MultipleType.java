@@ -17,6 +17,8 @@
 package io.microsphere.reflect;
 
 import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.lang.reflect.Type;
 
@@ -60,7 +62,7 @@ public class MultipleType {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -72,15 +74,18 @@ public class MultipleType {
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "MultipleType : " + arrayToString(types);
     }
 
-    public static MultipleType of(Type one, Type two) {
+    @Nonnull
+    public static MultipleType of(@Nonnull Type one, @Nonnull Type two) {
         return new MultipleType(one, two);
     }
 
-    public static MultipleType of(Type one, Type two, Type... others) {
+    @Nonnull
+    public static MultipleType of(@Nonnull Type one, @Nonnull Type two, Type... others) {
         Type[] oneAndTwo = ofArray(one, two);
         Type[] types = combineArray(oneAndTwo, others);
         return new MultipleType(types);

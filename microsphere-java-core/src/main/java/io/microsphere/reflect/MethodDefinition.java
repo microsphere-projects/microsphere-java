@@ -63,7 +63,7 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      * @param methodName          the method name
      * @param parameterClassNames the parameter types
      */
-    public MethodDefinition(String since, String declaredClassName, String methodName, String... parameterClassNames) {
+    public MethodDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String methodName, String... parameterClassNames) {
         this(since, null, declaredClassName, methodName, parameterClassNames);
     }
 
@@ -74,7 +74,8 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      * @param methodName          the method name
      * @param parameterClassNames the parameter class names
      */
-    public MethodDefinition(String since, Deprecation deprecation, String declaredClassName, String methodName, String... parameterClassNames) {
+    public MethodDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
+                            @Nonnull String methodName, String... parameterClassNames) {
         this(of(since), deprecation, declaredClassName, methodName, parameterClassNames);
     }
 
@@ -84,7 +85,8 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      * @param methodName          the method name
      * @param parameterClassNames the parameter types
      */
-    public MethodDefinition(Version since, String declaredClassName, String methodName, String... parameterClassNames) {
+    public MethodDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String methodName,
+                            String... parameterClassNames) {
         this(since, null, declaredClassName, methodName, parameterClassNames);
     }
 
@@ -95,7 +97,8 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      * @param methodName          the method name
      * @param parameterClassNames the parameter class names
      */
-    public MethodDefinition(Version since, Deprecation deprecation, String declaredClassName, String methodName, String... parameterClassNames) {
+    public MethodDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
+                            @Nonnull String methodName, String... parameterClassNames) {
         super(since, deprecation, declaredClassName, methodName, parameterClassNames);
     }
 
@@ -120,6 +123,7 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
     }
 
     @Override
+    @Nullable
     protected Method resolveMember() {
         return findMethod(super.getDeclaredClass(), getMethodName(), super.getParameterTypes());
     }
@@ -152,11 +156,13 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      * @throws RuntimeException         if the underlying method
      *                                  throws an exception.
      */
-    public <R> R invoke(Object instance, Object... args) throws IllegalStateException, IllegalArgumentException, RuntimeException {
+    @Nullable
+    public <R> R invoke(@Nullable Object instance, Object... args) throws IllegalStateException, IllegalArgumentException, RuntimeException {
         return invokeMethod(true, instance, getMethod(), args);
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "MethodDefinition{" +
                 "since=" + super.since +

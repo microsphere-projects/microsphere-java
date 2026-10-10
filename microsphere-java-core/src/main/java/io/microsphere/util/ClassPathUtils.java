@@ -174,7 +174,7 @@ public abstract class ClassPathUtils implements Utils {
      * @see #getRuntimeClassLocation(Class)
      */
     @Nullable
-    public static URL getRuntimeClassLocation(String className) {
+    public static URL getRuntimeClassLocation(@Nullable String className) {
         ClassLoader classLoader = getDefaultClassLoader();
         if (isLoadedClass(classLoader, className)) {
             return getRuntimeClassLocation(resolveClass(className, classLoader));
@@ -204,7 +204,7 @@ public abstract class ClassPathUtils implements Utils {
      * @return The URL representing the location of the class if it can be determined; otherwise, <code>null</code>.
      */
     @Nullable
-    public static URL getRuntimeClassLocation(Class<?> type) {
+    public static URL getRuntimeClassLocation(@Nonnull Class<?> type) {
         ClassLoader classLoader = type.getClassLoader();
         URL location = null;
         if (classLoader != null) { // Non-Bootstrap

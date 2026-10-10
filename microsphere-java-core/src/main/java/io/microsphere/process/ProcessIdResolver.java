@@ -16,6 +16,7 @@
  */
 package io.microsphere.process;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 /**
@@ -70,5 +71,6 @@ public interface ProcessIdResolver extends Prioritized {
      *
      * @return <code>>null</code> if can't be resolved
      */
+    @Nullable
     Long current();
 }

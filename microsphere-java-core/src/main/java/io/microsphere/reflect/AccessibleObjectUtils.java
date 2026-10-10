@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
@@ -94,7 +96,7 @@ public abstract class AccessibleObjectUtils implements Utils {
      * @see AccessibleObject#setAccessible(boolean)
      * @see AccessibleObject#isAccessible()
      */
-    public static boolean trySetAccessible(AccessibleObject accessibleObject) {
+    public static boolean trySetAccessible(@Nonnull AccessibleObject accessibleObject) {
         MethodHandle methodHandle = trySetAccessibleMethodHandle;
         if (methodHandle == null) { // JDK < 9 or not be initialized
             return setAccessible(accessibleObject);
@@ -139,7 +141,7 @@ public abstract class AccessibleObjectUtils implements Utils {
      * {@code false} otherwise.
      * @see AccessibleObject#isAccessible()
      */
-    public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
+    public static boolean canAccess(@Nullable Object object, @Nonnull AccessibleObject accessibleObject) {
         Member member = asMember(accessibleObject);
         if (isPublic(member)) {
             return true;

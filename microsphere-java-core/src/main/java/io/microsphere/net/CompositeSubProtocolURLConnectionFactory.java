@@ -16,6 +16,8 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.io.IOException;
@@ -81,18 +83,20 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
         this(newLinkedList());
     }
 
-    public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
+    public CompositeSubProtocolURLConnectionFactory(@Nonnull Iterable<SubProtocolURLConnectionFactory> factories) {
         LinkedList<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
         this.factories = newFactories;
         sortFactories();
     }
 
-    public CompositeSubProtocolURLConnectionFactory add(SubProtocolURLConnectionFactory factory) {
+    @Nonnull
+    public CompositeSubProtocolURLConnectionFactory add(@Nullable SubProtocolURLConnectionFactory factory) {
         addInternal(factory);
         sortFactories();
         return this;
     }
 
+    @Nonnull
     public CompositeSubProtocolURLConnectionFactory add(SubProtocolURLConnectionFactory... factories) {
         for (int i = 0; i < factories.length; i++) {
             addInternal(factories[i]);
@@ -101,14 +105,14 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
         return this;
     }
 
-    protected boolean addInternal(SubProtocolURLConnectionFactory factory) {
+    protected boolean addInternal(@Nullable SubProtocolURLConnectionFactory factory) {
         if (this.factories.contains(factory)) {
             return false;
         }
         return this.factories.add(factory);
     }
 
-    public boolean remove(SubProtocolURLConnectionFactory factory) {
+    public boolean remove(@Nullable SubProtocolURLConnectionFactory factory) {
         boolean result = this.factories.remove(factory);
         if (result) {
             sortFactories();
@@ -122,12 +126,13 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     }
 
     @Override
-    public boolean supports(URL url, List<String> subProtocols) {
+    public boolean supports(@Nonnull URL url, @Nonnull List<String> subProtocols) {
         return selectFactoryIndex(url, subProtocols) > -1;
     }
 
     @Override
-    public URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException {
+    @Nullable
+    public URLConnection create(@Nonnull URL url, @Nonnull List<String> subProtocols, @Nonnull Proxy proxy) throws IOException {
         SubProtocolURLConnectionFactory factory = selectFactory(url, subProtocols);
         return factory.create(url, subProtocols, proxy);
     }

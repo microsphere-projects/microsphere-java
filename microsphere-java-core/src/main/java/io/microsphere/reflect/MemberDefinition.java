@@ -126,6 +126,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      *
      * @return <code>null</code> if can't be resolved
      */
+    @Nullable
     protected abstract M resolveMember();
 
     /**
@@ -177,7 +178,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (!super.equals(o)) {
             return false;
         }

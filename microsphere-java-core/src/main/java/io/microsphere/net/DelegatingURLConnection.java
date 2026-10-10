@@ -16,6 +16,9 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,7 +47,7 @@ public class DelegatingURLConnection extends URLConnection {
 
     private final URLConnection delegate;
 
-    public DelegatingURLConnection(URLConnection delegate) {
+    public DelegatingURLConnection(@Nonnull URLConnection delegate) {
         super(delegate.getURL());
         this.delegate = delegate;
     }
@@ -75,6 +78,7 @@ public class DelegatingURLConnection extends URLConnection {
     }
 
     @Override
+    @Nonnull
     public URL getURL() {
         return delegate.getURL();
     }
@@ -90,11 +94,13 @@ public class DelegatingURLConnection extends URLConnection {
     }
 
     @Override
+    @Nullable
     public String getContentType() {
         return delegate.getContentType();
     }
 
     @Override
+    @Nullable
     public String getContentEncoding() {
         return delegate.getContentEncoding();
     }
@@ -115,66 +121,76 @@ public class DelegatingURLConnection extends URLConnection {
     }
 
     @Override
-    public String getHeaderField(String name) {
+    @Nullable
+    public String getHeaderField(@Nullable String name) {
         return delegate.getHeaderField(name);
     }
 
     @Override
+    @Nonnull
     public Map<String, List<String>> getHeaderFields() {
         return delegate.getHeaderFields();
     }
 
     @Override
-    public int getHeaderFieldInt(String name, int Default) {
+    public int getHeaderFieldInt(@Nullable String name, int Default) {
         return delegate.getHeaderFieldInt(name, Default);
     }
 
     @Override
-    public long getHeaderFieldLong(String name, long Default) {
+    public long getHeaderFieldLong(@Nullable String name, long Default) {
         return delegate.getHeaderFieldLong(name, Default);
     }
 
     @Override
-    public long getHeaderFieldDate(String name, long Default) {
+    public long getHeaderFieldDate(@Nullable String name, long Default) {
         return delegate.getHeaderFieldDate(name, Default);
     }
 
     @Override
+    @Nullable
     public String getHeaderFieldKey(int n) {
         return delegate.getHeaderFieldKey(n);
     }
 
     @Override
+    @Nullable
     public String getHeaderField(int n) {
         return delegate.getHeaderField(n);
     }
 
     @Override
+    @Nullable
     public Object getContent() throws IOException {
         return delegate.getContent();
     }
 
     @Override
-    public Object getContent(Class[] classes) throws IOException {
+    @Nullable
+    public Object getContent(@Nonnull Class[] classes) throws IOException {
         return delegate.getContent(classes);
     }
 
     @Override
+    @Nullable
     public Permission getPermission() throws IOException {
         return delegate.getPermission();
     }
 
     @Override
+    @Nonnull
     public InputStream getInputStream() throws IOException {
         return delegate.getInputStream();
     }
 
     @Override
+    @Nonnull
     public OutputStream getOutputStream() throws IOException {
         return delegate.getOutputStream();
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return delegate.toString();
     }
@@ -240,21 +256,23 @@ public class DelegatingURLConnection extends URLConnection {
     }
 
     @Override
-    public void setRequestProperty(String key, String value) {
+    public void setRequestProperty(@Nonnull String key, @Nullable String value) {
         delegate.setRequestProperty(key, value);
     }
 
     @Override
-    public void addRequestProperty(String key, String value) {
+    public void addRequestProperty(@Nonnull String key, @Nullable String value) {
         delegate.addRequestProperty(key, value);
     }
 
     @Override
-    public String getRequestProperty(String key) {
+    @Nullable
+    public String getRequestProperty(@Nullable String key) {
         return delegate.getRequestProperty(key);
     }
 
     @Override
+    @Nonnull
     public Map<String, List<String>> getRequestProperties() {
         return delegate.getRequestProperties();
     }

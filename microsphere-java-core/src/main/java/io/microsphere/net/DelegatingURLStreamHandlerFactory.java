@@ -16,6 +16,9 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
@@ -63,13 +66,14 @@ public class DelegatingURLStreamHandlerFactory implements URLStreamHandlerFactor
      * @param delegate the delegate factory to which calls will be forwarded, must not be {@code null}
      * @throws IllegalArgumentException if the provided delegate is {@code null}
      */
-    public DelegatingURLStreamHandlerFactory(URLStreamHandlerFactory delegate) {
+    public DelegatingURLStreamHandlerFactory(@Nonnull URLStreamHandlerFactory delegate) {
         assertNotNull(delegate, () -> "The 'delegate' argument must not be null!");
         this.delegate = delegate;
     }
 
     @Override
-    public URLStreamHandler createURLStreamHandler(String protocol) {
+    @Nullable
+    public URLStreamHandler createURLStreamHandler(@Nonnull String protocol) {
         return delegate.createURLStreamHandler(protocol);
     }
 
@@ -78,6 +82,7 @@ public class DelegatingURLStreamHandlerFactory implements URLStreamHandlerFactor
      *
      * @return non-null
      */
+    @Nonnull
     protected final URLStreamHandlerFactory getDelegate() {
         return delegate;
     }
