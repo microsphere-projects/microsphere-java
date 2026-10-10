@@ -16,6 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import javax.lang.model.SourceVersion;
 
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
@@ -153,7 +156,7 @@ public abstract class VersionUtils implements Utils {
      * otherwise, {@code false}
      * @throws IllegalArgumentException if any argument is null or the operator symbol is not supported
      */
-    public static boolean testCurrentJavaVersion(String operatorSymbol, Version comparedVersion) {
+    public static boolean testCurrentJavaVersion(@Nonnull String operatorSymbol, @Nullable Version comparedVersion) {
         return testCurrentJavaVersion(of(operatorSymbol), comparedVersion);
     }
 
@@ -165,7 +168,7 @@ public abstract class VersionUtils implements Utils {
      * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
      * {@link #CURRENT_JAVA_VERSION current Java version} and <code>comparedVersion</code>
      */
-    public static boolean testCurrentJavaVersion(Version.Operator versionOperator, Version comparedVersion) {
+    public static boolean testCurrentJavaVersion(@Nullable Version.Operator versionOperator, @Nullable Version comparedVersion) {
         return testVersion(CURRENT_JAVA_VERSION, versionOperator, comparedVersion);
     }
 
@@ -197,7 +200,7 @@ public abstract class VersionUtils implements Utils {
      * otherwise, {@code false}
      * @throws IllegalArgumentException if any argument is null or the operator symbol is not supported
      */
-    public static boolean testVersion(String baseVersion, String operatorSymbol, String comparedVersion) {
+    public static boolean testVersion(@Nullable String baseVersion, @Nullable String operatorSymbol, @Nullable String comparedVersion) {
         if (baseVersion == null || operatorSymbol == null || comparedVersion == null) {
             return false;
         }
@@ -245,7 +248,7 @@ public abstract class VersionUtils implements Utils {
      * otherwise, {@code false}
      * @throws IllegalArgumentException if any argument is null
      */
-    public static boolean testVersion(Version baseVersion, Version.Operator versionOperator, Version comparedVersion) {
+    public static boolean testVersion(@Nullable Version baseVersion, @Nullable Version.Operator versionOperator, @Nullable Version comparedVersion) {
         if (baseVersion == null || versionOperator == null || comparedVersion == null) {
             return false;
         }
