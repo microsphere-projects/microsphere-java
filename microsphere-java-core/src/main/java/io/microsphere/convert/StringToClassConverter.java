@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -36,7 +38,8 @@ public class StringToClassConverter extends AbstractConverter<String, Class> imp
     private static final ClassLoader classLoader = getDefaultClassLoader();
 
     @Override
-    protected Class doConvert(String className) {
+    @Nullable
+    protected Class doConvert(@Nonnull String className) {
         return resolveClass(className, classLoader);
     }
 }

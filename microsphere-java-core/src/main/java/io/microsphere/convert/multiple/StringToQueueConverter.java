@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Queue;
@@ -28,7 +31,8 @@ import java.util.Queue;
 public class StringToQueueConverter extends StringToIterableConverter<Queue> {
 
     @Override
-    protected Queue createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected Queue createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new ArrayDeque(size);
     }
 }

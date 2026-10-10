@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
@@ -28,7 +31,8 @@ import java.util.concurrent.BlockingQueue;
 public class StringToBlockingQueueConverter extends StringToIterableConverter<BlockingQueue> {
 
     @Override
-    protected BlockingQueue createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected BlockingQueue createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new ArrayBlockingQueue(size);
     }
 }

@@ -16,6 +16,9 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.net.URL;
 import java.util.List;
 
@@ -47,14 +50,15 @@ public class ServiceLoadingURLClassPathHandle implements URLClassPathHandle {
         return nonNull(this.delegate);
     }
 
+    @Nonnull
     @Override
-    public URL[] getURLs(ClassLoader classLoader) {
+    public URL[] getURLs(@Nullable ClassLoader classLoader) {
         URL[] urls = delegate.getURLs(classLoader);
         return isEmpty(urls) ? URLClassPathHandle.super.getURLs(classLoader) : urls;
     }
 
     @Override
-    public boolean removeURL(ClassLoader classLoader, URL url) {
+    public boolean removeURL(@Nullable ClassLoader classLoader, @Nullable URL url) {
         return delegate.removeURL(classLoader, url);
     }
 }

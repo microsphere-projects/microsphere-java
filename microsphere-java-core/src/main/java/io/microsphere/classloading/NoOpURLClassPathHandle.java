@@ -16,6 +16,9 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.net.URL;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
@@ -34,13 +37,14 @@ public class NoOpURLClassPathHandle implements URLClassPathHandle {
         return true;
     }
 
+    @Nonnull
     @Override
-    public URL[] getURLs(ClassLoader classLoader) {
+    public URL[] getURLs(@Nullable ClassLoader classLoader) {
         return EMPTY_URL_ARRAY;
     }
 
     @Override
-    public boolean removeURL(ClassLoader classLoader, URL url) {
+    public boolean removeURL(@Nullable ClassLoader classLoader, @Nullable URL url) {
         return false;
     }
 }

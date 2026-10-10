@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -36,7 +38,8 @@ public class ObjectToByteConverter extends AbstractConverter<Object, Byte> {
     public static final ObjectToByteConverter INSTANCE = new ObjectToByteConverter();
 
     @Override
-    protected Byte doConvert(Object source) {
+    @Nullable
+    protected Byte doConvert(@Nonnull Object source) {
         if (source instanceof Byte) {
             return (Byte) source;
         }

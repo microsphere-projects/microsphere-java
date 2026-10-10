@@ -17,6 +17,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -35,7 +37,8 @@ public class ObjectToBooleanConverter extends AbstractConverter<Object, Boolean>
     public static final ObjectToBooleanConverter INSTANCE = new ObjectToBooleanConverter();
 
     @Override
-    protected Boolean doConvert(Object source) {
+    @Nullable
+    protected Boolean doConvert(@Nonnull Object source) {
         if (source instanceof Boolean) {
             return (Boolean) source;
         }

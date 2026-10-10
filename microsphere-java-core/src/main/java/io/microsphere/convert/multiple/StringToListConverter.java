@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,8 @@ import java.util.List;
 public class StringToListConverter extends StringToIterableConverter<List> {
 
     @Override
-    protected List createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected List createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new ArrayList(size);
     }
 }

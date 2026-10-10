@@ -16,6 +16,9 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -66,7 +69,7 @@ public class CustomizedThreadFactory implements ThreadFactory {
 
     private final long stackSize;
 
-    protected CustomizedThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
+    protected CustomizedThreadFactory(@Nullable String namePrefix, boolean daemon, int priority, long stackSize) {
         this.group = currentThread().getThreadGroup();
         this.threadNumber = new AtomicInteger(1);
         this.namePrefix = namePrefix + "-thread-";
@@ -75,23 +78,28 @@ public class CustomizedThreadFactory implements ThreadFactory {
         this.stackSize = stackSize;
     }
 
-    public static ThreadFactory newThreadFactory(String namePrefix) {
+    @Nonnull
+    public static ThreadFactory newThreadFactory(@Nullable String namePrefix) {
         return newThreadFactory(namePrefix, DEFAULT_DAEMON);
     }
 
-    public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon) {
+    @Nonnull
+    public static ThreadFactory newThreadFactory(@Nullable String namePrefix, boolean daemon) {
         return newThreadFactory(namePrefix, daemon, DEFAULT_PRIORITY);
     }
 
-    public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon, int priority) {
+    @Nonnull
+    public static ThreadFactory newThreadFactory(@Nullable String namePrefix, boolean daemon, int priority) {
         return newThreadFactory(namePrefix, daemon, priority, DEFAULT_STACK_SIZE);
     }
 
-    public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
+    @Nonnull
+    public static ThreadFactory newThreadFactory(@Nullable String namePrefix, boolean daemon, int priority, long stackSize) {
         return new CustomizedThreadFactory(namePrefix, daemon, priority, stackSize);
     }
 
-    public Thread newThread(Runnable r) {
+    @Nonnull
+    public Thread newThread(@Nullable Runnable r) {
         Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), stackSize);
         t.setDaemon(daemon);
         t.setPriority(priority);

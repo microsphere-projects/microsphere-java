@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 
 import static java.lang.Long.valueOf;
 
@@ -32,7 +33,8 @@ public class StringToLongConverter extends AbstractConverter<String, Long> imple
     public static final StringToLongConverter INSTANCE = new StringToLongConverter();
 
     @Override
-    protected Long doConvert(String source) {
+    @Nonnull
+    protected Long doConvert(@Nonnull String source) {
         return valueOf(source);
     }
 }

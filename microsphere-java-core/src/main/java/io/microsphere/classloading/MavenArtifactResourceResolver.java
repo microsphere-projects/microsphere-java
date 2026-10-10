@@ -16,6 +16,9 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -94,12 +97,12 @@ public class MavenArtifactResourceResolver extends StreamArtifactResourceResolve
         super(priority);
     }
 
-    public MavenArtifactResourceResolver(ClassLoader classLoader, int priority) {
+    public MavenArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
         super(classLoader, priority);
     }
 
     @Override
-    protected boolean isArtifactMetadata(String relativePath) {
+    protected boolean isArtifactMetadata(@Nonnull String relativePath) {
         int begin = relativePath.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
         if (begin == 0) {
             begin += MAVEN_POM_PROPERTIES_RESOURCE_PREFIX.length();
@@ -109,8 +112,10 @@ public class MavenArtifactResourceResolver extends StreamArtifactResourceResolve
         return false;
     }
 
+    @Nullable
     @Override
-    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
+    protected Artifact resolve(@Nullable URL resourceURL, @Nonnull InputStream artifactMetadataData,
+                               @Nullable ClassLoader classLoader) throws IOException {
         Properties properties = new Properties();
         properties.load(artifactMetadataData);
         return resolveArtifactMetaInfoInMavenPomProperties(properties, resourceURL);

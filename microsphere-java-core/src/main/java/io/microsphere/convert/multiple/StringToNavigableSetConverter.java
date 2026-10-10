@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.NavigableSet;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,7 +31,8 @@ import java.util.TreeSet;
 public class StringToNavigableSetConverter extends StringToIterableConverter<NavigableSet> {
 
     @Override
-    protected NavigableSet createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected NavigableSet createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new TreeSet();
     }
 }

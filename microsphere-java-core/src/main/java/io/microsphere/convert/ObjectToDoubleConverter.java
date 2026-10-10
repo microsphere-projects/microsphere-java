@@ -17,6 +17,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -35,7 +37,8 @@ public class ObjectToDoubleConverter extends AbstractConverter<Object, Double> {
     public static final ObjectToDoubleConverter INSTANCE = new ObjectToDoubleConverter();
 
     @Override
-    protected Double doConvert(Object source) {
+    @Nullable
+    protected Double doConvert(@Nonnull Object source) {
         if (source instanceof Double) {
             return (Double) source;
         }

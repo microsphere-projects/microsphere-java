@@ -16,6 +16,8 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * Classic {@link URLClassPathHandle} for {@link sun.misc.URLClassPath} since JDK 1 to 8
  *
@@ -31,11 +33,13 @@ public class ClassicURLClassPathHandle extends AbstractURLClassPathHandle {
         super();
     }
 
+    @Nonnull
     @Override
     protected String getURLClassPathClassName() {
         return "sun.misc.URLClassPath";
     }
 
+    @Nonnull
     @Override
     protected String getUrlsFieldName() {
         return "urls";

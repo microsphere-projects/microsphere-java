@@ -47,16 +47,19 @@ public class MavenArtifact extends Artifact {
         this.groupId = groupId;
     }
 
+    @Nonnull
     public static MavenArtifact create(@Nonnull String groupId, @Nonnull String artifactId,
                                        @Nullable String version, @Nullable URL location) {
         return new MavenArtifact(groupId, artifactId, version, location);
     }
 
+    @Nonnull
     public static MavenArtifact create(@Nonnull String groupId, @Nonnull String artifactId,
                                        @Nullable String version) {
         return create(groupId, artifactId, version, null);
     }
 
+    @Nonnull
     public static MavenArtifact create(@Nonnull String groupId, @Nonnull String artifactId) {
         return create(groupId, artifactId, UNKNOWN);
     }
@@ -72,7 +75,7 @@ public class MavenArtifact extends Artifact {
     }
 
     @Override
-    public boolean matches(Artifact artifact) {
+    public boolean matches(@Nullable Artifact artifact) {
         return matchesGroupId(artifact)
                 && super.matches(artifact);
     }
@@ -89,7 +92,7 @@ public class MavenArtifact extends Artifact {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (!(o instanceof MavenArtifact)) return false;
         if (!super.equals(o)) return false;
@@ -102,6 +105,7 @@ public class MavenArtifact extends Artifact {
         return hash(super.hashCode(), groupId);
     }
 
+    @Nonnull
     @Override
     public String toString() {
         String sb = "MavenArtifact{" + "groupId='" + groupId + QUOTE_CHAR +

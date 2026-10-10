@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +30,8 @@ import java.util.Set;
 public class StringToSetConverter extends StringToIterableConverter<Set> {
 
     @Override
-    protected Set createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected Set createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new HashSet(size);
     }
 }

@@ -16,6 +16,7 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ShutdownHookUtils;
 import io.microsphere.util.Utils;
@@ -60,7 +61,7 @@ public abstract class ExecutorUtils implements Utils {
      * @param one    the first {@link Executor} to shut down on JVM exit; must not be {@code null}
      * @param others additional {@link Executor} instances to shut down; may be empty or {@code null}
      */
-    public static void shutdownOnExit(Executor one, Executor... others) {
+    public static void shutdownOnExit(@Nullable Executor one, Executor... others) {
         addShutdownHookCallback(() -> {
             shutdown(one);
             forEach(others, other -> shutdown(other));
@@ -93,7 +94,7 @@ public abstract class ExecutorUtils implements Utils {
      * @return <code>true</code> if the executor was an {@link ExecutorService} and has been successfully shut down;
      * <code>false</code> otherwise
      */
-    public static boolean shutdown(Executor executor) {
+    public static boolean shutdown(@Nullable Executor executor) {
         if (executor instanceof ExecutorService) {
             return shutdown((ExecutorService) executor);
         }
@@ -128,7 +129,7 @@ public abstract class ExecutorUtils implements Utils {
      * @return <code>true</code> if the executor was actively running and has been successfully shut down;
      * <code>false</code> if it was already shutdown or null
      */
-    public static boolean shutdown(ExecutorService executorService) {
+    public static boolean shutdown(@Nullable ExecutorService executorService) {
         if (executorService == null) {
             return false;
         }

@@ -18,6 +18,7 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 
 import static java.lang.Character.valueOf;
 
@@ -36,7 +37,8 @@ public class NumberToCharacterConverter extends AbstractConverter<Number, Charac
     public static final NumberToCharacterConverter INSTANCE = new NumberToCharacterConverter();
 
     @Override
-    protected Character doConvert(Number source) {
+    @Nonnull
+    protected Character doConvert(@Nonnull Number source) {
         return valueOf((char) source.intValue());
     }
 }

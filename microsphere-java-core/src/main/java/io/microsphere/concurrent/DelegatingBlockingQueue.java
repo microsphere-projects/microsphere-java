@@ -16,6 +16,8 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.DelegatingWrapper;
 
 import java.util.Collection;
@@ -56,48 +58,51 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingW
 
     private final BlockingQueue<E> delegate;
 
-    public DelegatingBlockingQueue(BlockingQueue<E> delegate) {
+    public DelegatingBlockingQueue(@Nonnull BlockingQueue<E> delegate) {
         BlockingQueue<E> unwrapper = tryUnwrap(delegate, BlockingQueue.class);
         this.delegate = defaultIfNull(unwrapper, delegate);
     }
 
     @Override
+    @Nonnull
     public Iterator<E> iterator() {
         return this.delegate.iterator();
     }
 
     @Override
+    @Nonnull
     public Object[] toArray() {
         return this.delegate.toArray();
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
+    @Nonnull
+    public <T> T[] toArray(@Nonnull T[] a) {
         return this.delegate.toArray(a);
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(@Nonnull Collection<?> c) {
         return this.delegate.containsAll(c);
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> c) {
+    public boolean addAll(@Nonnull Collection<? extends E> c) {
         return this.delegate.addAll(c);
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(@Nonnull Collection<?> c) {
         return this.delegate.removeAll(c);
     }
 
     @Override
-    public boolean removeIf(Predicate<? super E> filter) {
+    public boolean removeIf(@Nonnull Predicate<? super E> filter) {
         return this.delegate.removeIf(filter);
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(@Nonnull Collection<?> c) {
         return this.delegate.retainAll(c);
     }
 
@@ -107,7 +112,7 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingW
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -127,47 +132,52 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingW
     }
 
     @Override
+    @Nonnull
     public Spliterator<E> spliterator() {
         return this.delegate.spliterator();
     }
 
     @Override
+    @Nonnull
     public Stream<E> stream() {
         return this.delegate.stream();
     }
 
     @Override
+    @Nonnull
     public Stream<E> parallelStream() {
         return this.delegate.parallelStream();
     }
 
     @Override
-    public boolean add(E e) {
+    public boolean add(@Nonnull E e) {
         return this.delegate.add(e);
     }
 
     @Override
-    public boolean offer(E e) {
+    public boolean offer(@Nonnull E e) {
         return this.delegate.offer(e);
     }
 
     @Override
-    public void put(E e) throws InterruptedException {
+    public void put(@Nonnull E e) throws InterruptedException {
         this.delegate.put(e);
     }
 
     @Override
-    public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
+    public boolean offer(@Nonnull E e, long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
         return this.delegate.offer(e, timeout, unit);
     }
 
     @Override
+    @Nonnull
     public E take() throws InterruptedException {
         return this.delegate.take();
     }
 
     @Override
-    public E poll(long timeout, TimeUnit unit) throws InterruptedException {
+    @Nullable
+    public E poll(long timeout, @Nonnull TimeUnit unit) throws InterruptedException {
         return this.delegate.poll(timeout, unit);
     }
 
@@ -177,41 +187,45 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingW
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(@Nullable Object o) {
         return this.delegate.remove(o);
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(@Nullable Object o) {
         return this.delegate.contains(o);
     }
 
     @Override
-    public int drainTo(Collection<? super E> c) {
+    public int drainTo(@Nonnull Collection<? super E> c) {
         return this.delegate.drainTo(c);
     }
 
     @Override
-    public int drainTo(Collection<? super E> c, int maxElements) {
+    public int drainTo(@Nonnull Collection<? super E> c, int maxElements) {
         return this.delegate.drainTo(c, maxElements);
     }
 
     @Override
+    @Nonnull
     public E remove() {
         return this.delegate.remove();
     }
 
     @Override
+    @Nullable
     public E poll() {
         return this.delegate.poll();
     }
 
     @Override
+    @Nonnull
     public E element() {
         return this.delegate.element();
     }
 
     @Override
+    @Nullable
     public E peek() {
         return this.delegate.peek();
     }
@@ -227,16 +241,18 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingW
     }
 
     @Override
-    public void forEach(Consumer<? super E> action) {
+    public void forEach(@Nonnull Consumer<? super E> action) {
         this.delegate.forEach(action);
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return this.delegate.toString();
     }
 
     @Override
+    @Nonnull
     public Object getDelegate() {
         return this.delegate;
     }

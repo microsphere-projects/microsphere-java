@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 
 import static java.lang.Byte.valueOf;
 
@@ -32,7 +33,8 @@ public class StringToByteConverter extends AbstractConverter<String, Byte> imple
     public static final StringToByteConverter INSTANCE = new StringToByteConverter();
 
     @Override
-    protected Byte doConvert(String source) {
+    @Nonnull
+    protected Byte doConvert(@Nonnull String source) {
         return valueOf(source);
     }
 }

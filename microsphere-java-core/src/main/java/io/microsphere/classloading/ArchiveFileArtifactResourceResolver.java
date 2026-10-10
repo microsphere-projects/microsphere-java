@@ -16,6 +16,8 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nullable;
+
 import java.io.File;
 import java.net.URL;
 
@@ -73,12 +75,13 @@ public class ArchiveFileArtifactResourceResolver extends AbstractArtifactResourc
         super(priority);
     }
 
-    public ArchiveFileArtifactResourceResolver(ClassLoader classLoader, int priority) {
+    public ArchiveFileArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
         super(classLoader, priority);
     }
 
+    @Nullable
     @Override
-    public Artifact resolve(URL resourceURL) {
+    public Artifact resolve(@Nullable URL resourceURL) {
         if (resourceURL == null) {
             return null;
         }

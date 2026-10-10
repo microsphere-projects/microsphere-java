@@ -78,7 +78,7 @@ public abstract class StringUtils implements Utils {
      * @param value the String to check, may be null
      * @return {@code true} if the String is null, empty, or contains only whitespace characters
      */
-    public static boolean isBlank(String value) {
+    public static boolean isBlank(@Nullable String value) {
         int length = length(value);
         if (length < 1) {
             return true;
@@ -110,7 +110,7 @@ public abstract class StringUtils implements Utils {
      * @param value the String to check, may be null
      * @return {@code true} if the String is not null, not empty, and contains at least one non-whitespace character
      */
-    public static boolean isNotBlank(String value) {
+    public static boolean isNotBlank(@Nullable String value) {
         return !isBlank(value);
     }
 
@@ -218,7 +218,7 @@ public abstract class StringUtils implements Utils {
      * @param part  the CharSequence to search for, may be null
      * @return {@code true} if the value contains the part as a subsequence, case-sensitive
      */
-    public static boolean contains(String value, CharSequence part) {
+    public static boolean contains(@Nullable String value, @Nullable CharSequence part) {
         if (value != null && part != null) {
             return value == part ? true : value.contains(part);
         }
@@ -248,7 +248,7 @@ public abstract class StringUtils implements Utils {
      * @param part  the String prefix to search for, may be null
      * @return {@code true} if the value starts with the provided part, case-sensitive
      */
-    public static boolean startsWith(String value, String part) {
+    public static boolean startsWith(@Nullable String value, @Nullable String part) {
         if (value != null && part != null) {
             return value == part ? true : value.startsWith(part);
         }
@@ -279,7 +279,7 @@ public abstract class StringUtils implements Utils {
      * @param part  the String suffix to search for, may be null
      * @return {@code true} if the value ends with the provided part, case-sensitive
      */
-    public static boolean endsWith(String value, String part) {
+    public static boolean endsWith(@Nullable String value, @Nullable String part) {
         if (value != null && part != null) {
             return value == part ? true : value.endsWith(part);
         }
@@ -317,7 +317,8 @@ public abstract class StringUtils implements Utils {
      * <code>null</code> if null String input
      * @see #replace(String text, String searchString, String replacement, int max)
      */
-    public static String replace(String text, String searchString, String replacement) {
+    @Nullable
+    public static String replace(@Nullable String text, @Nullable String searchString, @Nullable String replacement) {
         return replace(text, searchString, replacement, -1);
     }
 
@@ -350,7 +351,8 @@ public abstract class StringUtils implements Utils {
      * @return the text with any replacements processed,
      * <code>null</code> if null String input
      */
-    public static String replace(String text, String searchString, String replacement, int max) {
+    @Nullable
+    public static String replace(@Nullable String text, @Nullable String searchString, @Nullable String replacement, int max) {
         if (isEmpty(text) || isEmpty(searchString) || replacement == null || max == 0) {
             return text;
         }
@@ -397,7 +399,8 @@ public abstract class StringUtils implements Utils {
      * @param tag the String before and after the substring, may be null
      * @return the substring, <code>null</code> if no match
      */
-    public static String substringBetween(String str, String tag) {
+    @Nullable
+    public static String substringBetween(@Nullable String str, @Nullable String tag) {
         return substringBetween(str, tag, tag);
     }
 
@@ -428,7 +431,8 @@ public abstract class StringUtils implements Utils {
      * @param close the String after the substring, may be null
      * @return the substring, <code>null</code> if no match
      */
-    public static String substringBetween(String str, String open, String close) {
+    @Nullable
+    public static String substringBetween(@Nullable String str, @Nullable String open, @Nullable String close) {
         if (str == null || open == null || close == null) {
             return null;
         }
@@ -469,7 +473,8 @@ public abstract class StringUtils implements Utils {
      * @return the substring before the first occurrence of the separator,
      * <code>null</code> if null String input
      */
-    public static String substringBefore(String str, String separator) {
+    @Nullable
+    public static String substringBefore(@Nullable String str, @Nullable String separator) {
         if (isEmpty(str) || separator == null) {
             return str;
         }
@@ -511,7 +516,8 @@ public abstract class StringUtils implements Utils {
      * @return the substring after the first occurrence of the separator,
      * <code>null</code> if null String input
      */
-    public static String substringAfter(String str, String separator) {
+    @Nullable
+    public static String substringAfter(@Nullable String str, @Nullable String separator) {
         if (isEmpty(str)) {
             return str;
         }
@@ -552,7 +558,8 @@ public abstract class StringUtils implements Utils {
      * @return the substring before the last occurrence of the separator,
      * <code>null</code> if null String input
      */
-    public static String substringBeforeLast(String str, String separator) {
+    @Nullable
+    public static String substringBeforeLast(@Nullable String str, @Nullable String separator) {
         if (isEmpty(str) || isEmpty(separator)) {
             return str;
         }
@@ -592,7 +599,8 @@ public abstract class StringUtils implements Utils {
      * @return the substring after the last occurrence of the separator,
      * <code>null</code> if null String input
      */
-    public static String substringAfterLast(String str, String separator) {
+    @Nullable
+    public static String substringAfterLast(@Nullable String str, @Nullable String separator) {
         if (isEmpty(str)) {
             return str;
         }
@@ -628,7 +636,7 @@ public abstract class StringUtils implements Utils {
      * @param str the String to check, may be null
      * @return <code>true</code> if only contains digits, and is non-null
      */
-    public static boolean isNumeric(String str) {
+    public static boolean isNumeric(@Nullable String str) {
         int sz = length(str);
         if (sz == 0) {
             return false;
@@ -688,7 +696,8 @@ public abstract class StringUtils implements Utils {
      * @return a new {@code String} with leading and trailing whitespace removed,
      * or the original if it is {@code null} or empty
      */
-    public static String trimWhitespace(String str) {
+    @Nullable
+    public static String trimWhitespace(@Nullable String str) {
         return trimWhitespace(str, true, true);
     }
 
@@ -715,7 +724,8 @@ public abstract class StringUtils implements Utils {
      * or the original if it is {@code null} or empty
      * @see Character#isWhitespace
      */
-    public static String trimLeadingWhitespace(String str) {
+    @Nullable
+    public static String trimLeadingWhitespace(@Nullable String str) {
         return trimWhitespace(str, true, false);
     }
 
@@ -742,7 +752,8 @@ public abstract class StringUtils implements Utils {
      * or the original if it is {@code null} or empty
      * @see Character#isWhitespace
      */
-    public static String trimTrailingWhitespace(String str) {
+    @Nullable
+    public static String trimTrailingWhitespace(@Nullable String str) {
         return trimWhitespace(str, false, true);
     }
 
@@ -766,7 +777,8 @@ public abstract class StringUtils implements Utils {
      * @param str the {@link String} to trim (may be {@code null})
      * @return a new {@link String} with all whitespace characters removed, or the original if none exist
      */
-    public static String trimAllWhitespace(String str) {
+    @Nullable
+    public static String trimAllWhitespace(@Nullable String str) {
         return isEmpty(str) ? str : CharSequenceUtils.trimAllWhitespace(str).toString();
     }
 
@@ -790,7 +802,8 @@ public abstract class StringUtils implements Utils {
      * @param str the String to capitalize (may be {@code null})
      * @return a new String with the first character capitalized, or the original if it is {@code null} or empty
      */
-    public static String capitalize(String str) {
+    @Nullable
+    public static String capitalize(@Nullable String str) {
         return changeFirstCharacter(str, true);
     }
 
@@ -814,7 +827,8 @@ public abstract class StringUtils implements Utils {
      * @param str the String to uncapitalize (may be {@code null})
      * @return a new String with the first character uncapitalized, or the original if it is {@code null} or empty
      */
-    public static String uncapitalize(String str) {
+    @Nullable
+    public static String uncapitalize(@Nullable String str) {
         return changeFirstCharacter(str, false);
     }
 
@@ -858,7 +872,8 @@ public abstract class StringUtils implements Utils {
      * @param delimiter the String to use as a delimiter between elements, may be {@code null} (treated as "null")
      * @return the joined String, or an empty string if the input array is {@code null} or empty
      */
-    public static String arrayToString(@Nullable Object[] values, String delimiter) {
+    @Nonnull
+    public static String arrayToString(@Nullable Object[] values, @Nonnull String delimiter) {
         int length = length(values);
         if (length < 1) {
             return EMPTY_STRING;

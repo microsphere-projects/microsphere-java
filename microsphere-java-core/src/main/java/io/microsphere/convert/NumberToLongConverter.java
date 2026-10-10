@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Number} to {@link Long}
  *
@@ -33,7 +35,8 @@ public class NumberToLongConverter extends AbstractConverter<Number, Long> {
     public static final NumberToLongConverter INSTANCE = new NumberToLongConverter();
 
     @Override
-    protected Long doConvert(Number source) {
+    @Nonnull
+    protected Long doConvert(@Nonnull Number source) {
         if (source instanceof Long) {
             return (Long) source;
         }

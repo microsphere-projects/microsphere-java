@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.EventObject;
 
 import static java.lang.System.currentTimeMillis;
@@ -41,7 +43,7 @@ public abstract class Event extends EventObject {
      * @param source The object on which the Event initially occurred.
      * @throws IllegalArgumentException if source is null.
      */
-    public Event(Object source) {
+    public Event(@Nonnull Object source) {
         super(source);
         this.timestamp = currentTimeMillis();
     }

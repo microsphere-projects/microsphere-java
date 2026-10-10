@@ -17,6 +17,7 @@
 package io.microsphere.event;
 
 import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
@@ -106,14 +107,14 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
      * @param executor {@link Executor}
      * @throws IllegalArgumentException <code>executor</code> is <code>null</code>
      */
-    protected AbstractEventDispatcher(Executor executor) {
+    protected AbstractEventDispatcher(@Nonnull Executor executor) {
         assertNotNull(executor, () -> "The 'executor' must not be null");
         this.executor = executor;
         this.loadEventListenerInstances();
     }
 
     @Override
-    public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
+    public void addEventListener(@Nonnull EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
         assertListener(listener);
         doInListener(listener, listeners -> {
             addIfAbsent(listeners, listener);
@@ -121,13 +122,14 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     @Override
-    public void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
+    public void removeEventListener(@Nonnull EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
         assertListener(listener);
         doInListener(listener, listeners -> listeners.remove(listener));
     }
 
     @Override
     @Immutable
+    @Nonnull
     public List<EventListener<?>> getAllEventListeners() {
         LinkedList<EventListener<?>> listeners = newLinkedList();
 
@@ -138,11 +140,13 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
         return unmodifiableList(listeners);
     }
 
+    @Nonnull
     protected Stream<EventListener> sortedListeners() {
         return sortedListeners(e -> true);
     }
 
-    protected Stream<EventListener> sortedListeners(Predicate<? super Map.Entry<Class<? extends Event>, List<EventListener>>> predicate) {
+    @Nonnull
+    protected Stream<EventListener> sortedListeners(@Nonnull Predicate<? super Map.Entry<Class<? extends Event>, List<EventListener>>> predicate) {
         return listenersCache
                 .entrySet()
                 .stream()
@@ -159,7 +163,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     @Override
-    public void dispatch(Event event) {
+    public void dispatch(@Nonnull Event event) {
 
         Executor executor = getExecutor();
 
@@ -183,11 +187,12 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
      * @return the non-null {@link Executor}
      */
     @Override
+    @Nonnull
     public final Executor getExecutor() {
         return executor;
     }
 
-    protected void doInListener(EventListener<?> listener, Consumer<Collection<EventListener>> consumer) {
+    protected void doInListener(@Nonnull EventListener<?> listener, @Nonnull Consumer<Collection<EventListener>> consumer) {
         doInListener(findEventType(listener), consumer);
     }
 

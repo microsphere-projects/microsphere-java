@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 
 import static java.lang.Integer.valueOf;
 
@@ -32,7 +33,8 @@ public class StringToIntegerConverter extends AbstractConverter<String, Integer>
     public static final StringToIntegerConverter INSTANCE = new StringToIntegerConverter();
 
     @Override
-    protected Integer doConvert(String source) {
+    @Nonnull
+    protected Integer doConvert(@Nonnull String source) {
         return valueOf(source);
     }
 }

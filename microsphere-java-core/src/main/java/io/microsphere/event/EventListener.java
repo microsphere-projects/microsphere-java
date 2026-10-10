@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.lang.reflect.ParameterizedType;
@@ -98,7 +100,8 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * @param listener the {@link EventListener} instance to examine
      * @return the {@link Class} object representing the type of event this listener handles, or {@code null} if not found
      */
-    static Class<? extends Event> findEventType(EventListener<?> listener) {
+    @Nullable
+    static Class<? extends Event> findEventType(@Nonnull EventListener<?> listener) {
         return findEventType(listener.getClass());
     }
 
@@ -128,7 +131,8 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * @param listenerClass the class of the {@link EventListener} instance to examine
      * @return the {@link Class} object representing the type of event this listener handles, or {@code null} if not found
      */
-    static Class<? extends Event> findEventType(Class<?> listenerClass) {
+    @Nullable
+    static Class<? extends Event> findEventType(@Nullable Class<?> listenerClass) {
         Class<? extends Event> eventType = null;
 
         if (isAssignableFrom(EventListener.class, listenerClass)) {
@@ -179,7 +183,8 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * @return the {@link Class} object representing the type of event this listener handles,
      * or {@code null} if no suitable event type is found
      */
-    static Class<? extends Event> findEventType(ParameterizedType parameterizedType) {
+    @Nullable
+    static Class<? extends Event> findEventType(@Nonnull ParameterizedType parameterizedType) {
         Class<? extends Event> eventType = null;
 
         Type rawType = parameterizedType.getRawType();
@@ -202,7 +207,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      *
      * @param event a {@link Event Event}
      */
-    void onEvent(E event);
+    void onEvent(@Nonnull E event);
 
     /**
      * The priority of {@link EventListener current listener}.

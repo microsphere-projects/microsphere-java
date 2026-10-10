@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,7 +32,8 @@ public class MapToPropertiesConverter extends AbstractConverter<Map, Properties>
     public static final MapToPropertiesConverter INSTANCE = new MapToPropertiesConverter();
 
     @Override
-    public Properties doConvert(Map source) {
+    @Nonnull
+    public Properties doConvert(@Nonnull Map source) {
         Properties properties = new Properties();
         properties.putAll(source);
         return properties;

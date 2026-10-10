@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Number} to {@link Integer}
  *
@@ -33,7 +35,8 @@ public class NumberToIntegerConverter extends AbstractConverter<Number, Integer>
     public static final NumberToIntegerConverter INSTANCE = new NumberToIntegerConverter();
 
     @Override
-    protected Integer doConvert(Number source) {
+    @Nonnull
+    protected Integer doConvert(@Nonnull Number source) {
         if (source instanceof Integer) {
             return (Integer) source;
         }

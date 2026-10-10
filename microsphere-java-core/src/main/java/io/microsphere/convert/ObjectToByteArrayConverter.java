@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.io.Serializable;
 
 import static io.microsphere.io.serializer.DefaultSerializer.DEFAULT_SERIALIZER;
@@ -35,7 +37,8 @@ public class ObjectToByteArrayConverter extends AbstractConverter<Object, byte[]
     public static final ObjectToByteArrayConverter INSTANCE = new ObjectToByteArrayConverter();
 
     @Override
-    protected byte[] doConvert(Object source) throws Throwable {
+    @Nonnull
+    protected byte[] doConvert(@Nonnull Object source) throws Throwable {
         return DEFAULT_SERIALIZER.serialize(source);
     }
 }
