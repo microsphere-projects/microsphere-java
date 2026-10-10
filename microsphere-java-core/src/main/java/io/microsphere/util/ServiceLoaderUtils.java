@@ -162,7 +162,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType) {
+    public static <T> Set<Class<T>> getServiceClasses(@Nonnull Class<T> serviceType) {
         return getServiceClasses(serviceType, null);
     }
 
@@ -195,7 +195,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, boolean failFast) {
+    public static <T> Set<Class<T>> getServiceClasses(@Nonnull Class<T> serviceType, boolean failFast) {
         return getServiceClasses(serviceType, null, failFast);
     }
 
@@ -224,7 +224,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, @Nullable ClassLoader classLoader) {
+    public static <T> Set<Class<T>> getServiceClasses(@Nonnull Class<T> serviceType, @Nullable ClassLoader classLoader) {
         return getServiceClasses(serviceType, classLoader, true);
     }
 
@@ -259,7 +259,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, @Nullable ClassLoader classLoader, boolean failFast) {
+    public static <T> Set<Class<T>> getServiceClasses(@Nonnull Class<T> serviceType, @Nullable ClassLoader classLoader, boolean failFast) {
         Set<String> serviceClassNames = doGetServiceClassNames(serviceType, classLoader);
         LinkedHashSet<Class<T>> serviceClasses = newFixedLinkedHashSet(serviceClassNames.size());
         for (String serviceClassName : serviceClassNames) {
@@ -299,7 +299,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<String> getServiceClassNames(Class<?> serviceType) {
+    public static Set<String> getServiceClassNames(@Nonnull Class<?> serviceType) {
         return getServiceClassNames(serviceType, null);
     }
 
@@ -325,7 +325,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<String> getServiceClassNames(Class<?> serviceType, @Nullable ClassLoader classLoader) {
+    public static Set<String> getServiceClassNames(@Nonnull Class<?> serviceType, @Nullable ClassLoader classLoader) {
         return unmodifiableSet(doGetServiceClassNames(serviceType, classLoader));
     }
 
@@ -352,7 +352,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<URL> getServiceResoources(Class<?> serviceType, @Nullable ClassLoader classLoader) throws IOException {
+    public static Set<URL> getServiceResoources(@Nonnull Class<?> serviceType, @Nullable ClassLoader classLoader) throws IOException {
         String resouceLocation = format(SERVICE_PROVIDER_CONFIG_FILES_LOCATION_PATTERN, serviceType.getName());
         return getResources(classLoader, DEFAULT, resouceLocation);
     }
@@ -379,7 +379,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <S> List<S> loadServicesList(Class<S> serviceType) throws IllegalArgumentException {
+    public static <S> List<S> loadServicesList(@Nonnull Class<S> serviceType) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType));
     }
 
@@ -407,7 +407,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
+    public static <S> List<S> loadServicesList(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadServicesList(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
@@ -435,7 +435,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <S> List<S> loadServicesList(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
+    public static <S> List<S> loadServicesList(@Nonnull Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType), cached);
     }
 
@@ -465,7 +465,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    public static <S> List<S> loadServicesList(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return unmodifiableList(loadServicesAsList(serviceType, classLoader, cached));
     }
 
@@ -490,7 +490,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S[] loadServices(Class<S> serviceType) throws IllegalArgumentException {
+    public static <S> S[] loadServices(@Nonnull Class<S> serviceType) throws IllegalArgumentException {
         return loadServices(serviceType, getClassLoader(serviceType));
     }
 
@@ -517,7 +517,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S[] loadServices(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
+    public static <S> S[] loadServices(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadServices(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
@@ -544,7 +544,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S[] loadServices(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
+    public static <S> S[] loadServices(@Nonnull Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadServices(serviceType, getClassLoader(serviceType), cached);
     }
 
@@ -573,7 +573,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S[] loadServices(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    public static <S> S[] loadServices(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return asArray(loadServicesAsList(serviceType, classLoader, cached), serviceType);
     }
 
@@ -599,7 +599,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadFirstService(Class<S> serviceType) throws IllegalArgumentException {
+    public static <S> S loadFirstService(@Nonnull Class<S> serviceType) throws IllegalArgumentException {
         return loadFirstService(serviceType, getClassLoader(serviceType));
     }
 
@@ -632,7 +632,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadFirstService(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
+    public static <S> S loadFirstService(@Nonnull Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadFirstService(serviceType, getClassLoader(serviceType), cached);
     }
 
@@ -660,7 +660,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadFirstService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
+    public static <S> S loadFirstService(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadFirstService(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
@@ -690,7 +690,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadFirstService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    public static <S> S loadFirstService(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return loadService(serviceType, classLoader, cached, true);
     }
 
@@ -716,7 +716,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadLastService(Class<S> serviceType) throws IllegalArgumentException {
+    public static <S> S loadLastService(@Nonnull Class<S> serviceType) throws IllegalArgumentException {
         return loadLastService(serviceType, getClassLoader(serviceType));
     }
 
@@ -744,7 +744,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadLastService(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
+    public static <S> S loadLastService(@Nonnull Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadLastService(serviceType, getClassLoader(serviceType), cached);
     }
 
@@ -772,7 +772,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadLastService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
+    public static <S> S loadLastService(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadLastService(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
@@ -802,7 +802,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
-    public static <S> S loadLastService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    public static <S> S loadLastService(@Nonnull Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return loadService(serviceType, classLoader, cached, false);
     }
 

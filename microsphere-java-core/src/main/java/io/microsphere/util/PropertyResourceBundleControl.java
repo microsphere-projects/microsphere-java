@@ -3,6 +3,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -94,7 +96,7 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @param encoding the encoding
      * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
      */
-    protected PropertyResourceBundleControl(final String encoding) throws UnsupportedCharsetException {
+    protected PropertyResourceBundleControl(@Nonnull final String encoding) throws UnsupportedCharsetException {
         // check encoding
         forName(encoding);
         this.encoding = encoding;
@@ -114,7 +116,8 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @return a list containing the properties format
      * @throws NullPointerException if {@code baseName} is {@code null}
      */
-    public final List<String> getFormats(String baseName) {
+    @Nonnull
+    public final List<String> getFormats(@Nonnull String baseName) {
         if (baseName == null) {
             throw new NullPointerException();
         }
@@ -143,7 +146,8 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @return a new {@link ResourceBundle} instance, or {@code null} if the resource is not found
      * @throws IOException if an I/O error occurs while reading the resource
      */
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, final ClassLoader classLoader, final boolean reload) throws IOException {
+    @Nonnull
+    public ResourceBundle newBundle(@Nonnull String baseName, @Nonnull Locale locale, @Nonnull String format, @Nonnull final ClassLoader classLoader, final boolean reload) throws IOException {
         String bundleName = super.toBundleName(baseName, locale);
         final String resourceName = super.toResourceName(bundleName, SUFFIX);
         InputStream stream = null;
@@ -189,6 +193,7 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      *
      * @return the encoding
      */
+    @Nonnull
     public String getEncoding() {
         return encoding;
     }
@@ -200,7 +205,8 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @return Control
      * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
      */
-    public static ResourceBundle.Control newControl(final String encoding) throws UnsupportedCharsetException {
+    @Nonnull
+    public static ResourceBundle.Control newControl(@Nonnull final String encoding) throws UnsupportedCharsetException {
         return encodingControlMap.computeIfAbsent(encoding, PropertyResourceBundleControl::new);
     }
 
