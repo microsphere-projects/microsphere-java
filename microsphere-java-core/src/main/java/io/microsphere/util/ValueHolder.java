@@ -16,6 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -72,7 +75,7 @@ public class ValueHolder<V> {
      *
      * @param value the initial value to hold, may be {@code null}
      */
-    public ValueHolder(V value) {
+    public ValueHolder(@Nullable V value) {
         this.value = value;
     }
 
@@ -87,6 +90,7 @@ public class ValueHolder<V> {
      *
      * @return the held value, or {@code null} if no value has been set
      */
+    @Nullable
     public V getValue() {
         return value;
     }
@@ -103,7 +107,7 @@ public class ValueHolder<V> {
      *
      * @param value the value to hold, may be {@code null}
      */
-    public void setValue(V value) {
+    public void setValue(@Nullable V value) {
         this.value = value;
     }
 
@@ -137,7 +141,7 @@ public class ValueHolder<V> {
      * @return {@code true} if the other object is a {@link ValueHolder} holding an equal value, {@code false} otherwise
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -196,7 +200,8 @@ public class ValueHolder<V> {
      * @param <V>   the type of the value
      * @return a new {@link ValueHolder} containing the given value
      */
-    public static <V> ValueHolder<V> of(V value) {
+    @Nonnull
+    public static <V> ValueHolder<V> of(@Nullable V value) {
         return new ValueHolder<>(value);
     }
 
