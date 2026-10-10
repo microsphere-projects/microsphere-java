@@ -17,6 +17,7 @@
 
 package io.microsphere.management.builder;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
 import javax.management.MBeanFeatureInfo;
@@ -42,11 +43,13 @@ public class MBeanFeatureInfoBuilder<B extends MBeanFeatureInfoBuilder> extends 
     MBeanFeatureInfoBuilder() {
     }
 
-    public B name(String name) {
+    @Nonnull
+    public B name(@Nullable String name) {
         this.name = name;
         return (B) this;
     }
 
+    @Nonnull
     public MBeanFeatureInfo build() {
         return new MBeanFeatureInfo(this.name, this.description, this.descriptor);
     }

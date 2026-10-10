@@ -1,6 +1,7 @@
 package io.microsphere.io.serializer;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.IOUtils;
 import io.microsphere.reflect.JavaType;
 
@@ -68,7 +69,8 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
     }
 
     @Override
-    public final byte[] serialize(T t) throws IOException {
+    @Nullable
+    public final byte[] serialize(@Nullable T t) throws IOException {
         // null compatible case
         if (t == null) {
             return null;
@@ -77,7 +79,8 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
     }
 
     @Override
-    public final T deserialize(byte[] bytes) throws IOException {
+    @Nullable
+    public final T deserialize(@Nullable byte[] bytes) throws IOException {
         // null compatible case
         if (bytes == null) {
             return null;
@@ -96,6 +99,7 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
      *
      * @return the target type class
      */
+    @Nonnull
     public final Class<T> getTargetType() {
         return targetType;
     }
@@ -125,6 +129,7 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
      * @return the serialized byte array; must not be {@code null}
      * @throws IOException if serialization fails
      */
+    @Nonnull
     protected abstract byte[] doSerialize(@Nonnull T t) throws IOException;
 
     /**
@@ -134,5 +139,6 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
      * @return the deserialized value
      * @throws IOException if deserialization fails
      */
+    @Nonnull
     protected abstract T doDeserialize(@Nonnull byte[] bytes) throws IOException;
 }

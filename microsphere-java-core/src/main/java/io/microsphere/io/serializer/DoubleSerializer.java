@@ -1,5 +1,7 @@
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.io.IOException;
 
 import static io.microsphere.io.serializer.LongSerializer.LONG_SERIALIZER;
@@ -23,14 +25,16 @@ public final class DoubleSerializer extends AbstractSerializer<Double> {
     }
 
     @Override
-    protected byte[] doSerialize(Double aDouble) throws IOException {
+    @Nonnull
+    protected byte[] doSerialize(@Nonnull Double aDouble) throws IOException {
         double doubleValue = aDouble.doubleValue();
         long longValue = doubleToLongBits(doubleValue);
         return LONG_SERIALIZER.serialize(longValue);
     }
 
     @Override
-    protected Double doDeserialize(byte[] bytes) throws IOException {
+    @Nonnull
+    protected Double doDeserialize(@Nonnull byte[] bytes) throws IOException {
         long longValue = LONG_SERIALIZER.deserialize(bytes);
         double doubleValue = longBitsToDouble(longValue);
         return doubleValue;

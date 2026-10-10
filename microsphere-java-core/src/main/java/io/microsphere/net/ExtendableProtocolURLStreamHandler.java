@@ -18,6 +18,7 @@ package io.microsphere.net;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -150,7 +151,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         this.protocol = resolveConventionProtocol(packageName);
     }
 
-    public ExtendableProtocolURLStreamHandler(String protocol) {
+    public ExtendableProtocolURLStreamHandler(@Nonnull String protocol) {
         this.protocol = protocol;
     }
 
@@ -167,6 +168,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      *
      * @return <code>null</code> if absent
      */
+    @Nullable
     public static String getHandlePackagesPropertyValue() {
         return getProperty(HANDLER_PACKAGES_PROPERTY_NAME);
     }
@@ -251,7 +253,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      *
      * @param factories the collection of {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
      */
-    protected void initSubProtocolURLConnectionFactories(List<SubProtocolURLConnectionFactory> factories) {
+    protected void initSubProtocolURLConnectionFactories(@Nonnull List<SubProtocolURLConnectionFactory> factories) {
     }
 
     /**
@@ -259,17 +261,19 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      *
      * @param factoriesCustomizer the customizer for collection of {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
      */
-    public void customizeSubProtocolURLConnectionFactories(Consumer<List<SubProtocolURLConnectionFactory>> factoriesCustomizer) {
+    public void customizeSubProtocolURLConnectionFactories(@Nonnull Consumer<List<SubProtocolURLConnectionFactory>> factoriesCustomizer) {
         factoriesCustomizer.accept(this.factories);
     }
 
     @Override
-    protected final URLConnection openConnection(URL u) throws IOException {
+    @Nullable
+    protected final URLConnection openConnection(@Nonnull URL u) throws IOException {
         return openConnection(u, NO_PROXY);
     }
 
     @Override
-    public URLConnection openConnection(URL u, Proxy p) throws IOException {
+    @Nullable
+    public URLConnection openConnection(@Nonnull URL u, @Nonnull Proxy p) throws IOException {
         List<String> subProtocols = resolveSubProtocols(u);
         URLConnection urlConnection = null;
         int size = factories.size();
@@ -294,22 +298,23 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @return <code>null</code> as default
      * @throws IOException
      */
-    protected URLConnection openFallbackConnection(URL url, Proxy proxy) throws IOException {
+    @Nullable
+    protected URLConnection openFallbackConnection(@Nullable URL url, @Nullable Proxy proxy) throws IOException {
         return null;
     }
 
     @Override
-    protected final boolean equals(URL u1, URL u2) {
+    protected final boolean equals(@Nonnull URL u1, @Nonnull URL u2) {
         return Objects.equals(toExternalForm(u1), toExternalForm(u2));
     }
 
     @Override
-    protected final int hashCode(URL u) {
+    protected final int hashCode(@Nonnull URL u) {
         return toExternalForm(u).hashCode();
     }
 
     @Override
-    protected final boolean hostsEqual(URL u1, URL u2) {
+    protected final boolean hostsEqual(@Nonnull URL u1, @Nonnull URL u2) {
         return Objects.equals(u1.getHost(), u2.getHost());
     }
 
@@ -321,12 +326,13 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @return a string representation of the URL argument.
      */
     @Override
-    protected final String toExternalForm(URL u) {
+    @Nonnull
+    protected final String toExternalForm(@Nonnull URL u) {
         return URLUtils.toExternalForm(u);
     }
 
     @Override
-    protected final void parseURL(URL u, String spec, int start, int limit) {
+    protected final void parseURL(@Nonnull URL u, @Nonnull String spec, int start, int limit) {
         int end = spec.indexOf("://", start);
         if (end > start) { // The sub-protocol was found
             String actualSpec = reformSpec(u, spec, start, end, limit);
@@ -367,7 +373,8 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      *              after the sharp sign indicates an anchor.
      * @return reformed the string of specified {@link URL} if the suffix o
      */
-    protected String reformSpec(URL url, String spec, int start, int end, int limit) {
+    @Nonnull
+    protected String reformSpec(@Nonnull URL url, @Nonnull String spec, int start, int end, int limit) {
         String protocol = url.getProtocol();
         String subProtocol = spec.substring(start, end);
         String[] subProtocols = split(subProtocol, COLON_CHAR);
@@ -397,23 +404,28 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @param url {@link URL}
      * @return non-null
      */
-    protected List<String> resolveSubProtocols(URL url) {
+    @Nonnull
+    protected List<String> resolveSubProtocols(@Nonnull URL url) {
         return URLUtils.resolveSubProtocols(url);
     }
 
-    protected String resolveAuthority(URL url) {
+    @Nullable
+    protected String resolveAuthority(@Nonnull URL url) {
         return URLUtils.resolveAuthority(url);
     }
 
-    protected String resolvePath(URL url) {
+    @Nonnull
+    protected String resolvePath(@Nonnull URL url) {
         return URLUtils.resolvePath(url);
     }
 
+    @Nonnull
     public final String getProtocol() {
         return protocol;
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return format("{} {defaultPort = {} , protocol = '{}'}", getClass().getName(), getDefaultPort(), getProtocol());
     }

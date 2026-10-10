@@ -17,6 +17,8 @@
 package io.microsphere.logging;
 
 
+import io.microsphere.annotation.Nullable;
+
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
@@ -50,11 +52,11 @@ final class NoOpLogger extends AbstractLogger {
     }
 
     @Override
-    public void trace(String message) {
+    public void trace(@Nullable String message) {
     }
 
     @Override
-    public void trace(String message, Throwable t) {
+    public void trace(@Nullable String message, @Nullable Throwable t) {
     }
 
     @Override
@@ -63,11 +65,11 @@ final class NoOpLogger extends AbstractLogger {
     }
 
     @Override
-    public void debug(String message) {
+    public void debug(@Nullable String message) {
     }
 
     @Override
-    public void debug(String message, Throwable t) {
+    public void debug(@Nullable String message, @Nullable Throwable t) {
     }
 
     @Override
@@ -76,11 +78,11 @@ final class NoOpLogger extends AbstractLogger {
     }
 
     @Override
-    public void info(String message) {
+    public void info(@Nullable String message) {
     }
 
     @Override
-    public void info(String message, Throwable t) {
+    public void info(@Nullable String message, @Nullable Throwable t) {
     }
 
     @Override
@@ -89,11 +91,11 @@ final class NoOpLogger extends AbstractLogger {
     }
 
     @Override
-    public void warn(String message) {
+    public void warn(@Nullable String message) {
     }
 
     @Override
-    public void warn(String message, Throwable t) {
+    public void warn(@Nullable String message, @Nullable Throwable t) {
     }
 
     @Override
@@ -102,10 +104,10 @@ final class NoOpLogger extends AbstractLogger {
     }
 
     @Override
-    public void error(String message) {
+    public void error(@Nullable String message) {
     }
 
     @Override
-    public void error(String message, Throwable t) {
+    public void error(@Nullable String message, @Nullable Throwable t) {
     }
 }

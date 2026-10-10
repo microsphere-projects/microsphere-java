@@ -16,6 +16,8 @@
  */
 package io.microsphere.jdk.tools.compiler;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.StringBuilderWriter;
 import io.microsphere.logging.Logger;
 
@@ -96,11 +98,11 @@ public class Compiler {
         this(defaultTargetDirectory());
     }
 
-    public Compiler(File targetDirectory) {
+    public Compiler(@Nullable File targetDirectory) {
         this(defaultSourceDirectory(), targetDirectory);
     }
 
-    public Compiler(File defaultSourceDirectory, File targetDirectory) {
+    public Compiler(@Nullable File defaultSourceDirectory, @Nullable File targetDirectory) {
         options(DEFAULT_OPTIONS);
         this.sourcePaths = newLinkedHashSet(defaultSourceDirectory);
         this.targetDirectory = targetDirectory;
@@ -108,16 +110,19 @@ public class Compiler {
         assertNotNull(this.javaCompiler, () -> "No Java compiler available. Ensure this process is running on a JDK (not just a JRE).");
     }
 
+    @Nonnull
     public Compiler options(String... options) {
         this.options = ofList(options);
         return this;
     }
 
+    @Nonnull
     public Compiler sourcePaths(File... sourcePaths) {
         addAll(this.sourcePaths, sourcePaths);
         return this;
     }
 
+    @Nonnull
     public Compiler sourcePaths(Class<?>... sourceClasses) {
         for (Class<?> sourceClass : sourceClasses) {
             sourcePath(sourceClass);
@@ -125,7 +130,8 @@ public class Compiler {
         return this;
     }
 
-    public Compiler sourcePath(Class<?> sourceClass) {
+    @Nonnull
+    public Compiler sourcePath(@Nonnull Class<?> sourceClass) {
         File sourcePath = detectSourcePath(sourceClass);
         if (sourcePath != null) {
             return sourcePaths(sourcePath);
@@ -133,22 +139,26 @@ public class Compiler {
         return this;
     }
 
+    @Nonnull
     public Compiler processors(Processor... processors) {
         this.processors = ofSet(processors);
         return this;
     }
 
-    public Compiler diagnosticListener(DiagnosticListener<? super JavaFileObject> diagnosticListener) {
+    @Nonnull
+    public Compiler diagnosticListener(@Nullable DiagnosticListener<? super JavaFileObject> diagnosticListener) {
         this.diagnosticListener = diagnosticListener;
         return this;
     }
 
-    public Compiler locale(Locale locale) {
+    @Nonnull
+    public Compiler locale(@Nullable Locale locale) {
         this.locale = locale;
         return this;
     }
 
-    public Compiler charset(Charset charset) {
+    @Nonnull
+    public Compiler charset(@Nullable Charset charset) {
         this.charset = charset;
         return this;
     }
@@ -166,10 +176,12 @@ public class Compiler {
         }
     }
 
+    @Nonnull
     public JavaCompiler getJavaCompiler() {
         return this.javaCompiler;
     }
 
+    @Nonnull
     public StandardJavaFileManager getJavaFileManager() throws IOException {
         StandardJavaFileManager javaFileManager = getJavaCompiler().getStandardFileManager(getDiagnosticListener(), getLocale(), getCharset());
         javaFileManager.setLocation(SOURCE_PATH, this.sourcePaths);
@@ -178,18 +190,22 @@ public class Compiler {
         return javaFileManager;
     }
 
+    @Nullable
     public DiagnosticListener<? super JavaFileObject> getDiagnosticListener() {
         return this.diagnosticListener;
     }
 
+    @Nullable
     public Locale getLocale() {
         return this.locale;
     }
 
+    @Nullable
     public Charset getCharset() {
         return this.charset;
     }
 
+    @Nonnull
     public List<String> getOptions() {
         List<String> options = this.options;
         if (isEmpty(options)) {
@@ -198,6 +214,7 @@ public class Compiler {
         return unmodifiableList(options);
     }
 
+    @Nonnull
     public Set<Processor> getProcessors() {
         Set<Processor> processors = this.processors;
         if (processors == null) {
@@ -239,7 +256,8 @@ public class Compiler {
         return dir;
     }
 
-    public static File detectSourcePath(Class<?> sourceClass) {
+    @Nullable
+    public static File detectSourcePath(@Nonnull Class<?> sourceClass) {
         File rootDirectory = detectRootDirectory(sourceClass);
         String javaSourceFileRelativePath = resolveJavaSourceFileRelativePath(sourceClass);
 
@@ -261,7 +279,8 @@ public class Compiler {
         return sourcePath;
     }
 
-    public static File detectRootDirectory(Class<?> sourceClass) {
+    @Nonnull
+    public static File detectRootDirectory(@Nonnull Class<?> sourceClass) {
         File classPath = detectClassPath(sourceClass);
         // classPath : "${rootDirectory}/target/classes"
         File rootDirectory = classPath.getParentFile().getParentFile();
@@ -270,7 +289,8 @@ public class Compiler {
         return rootDirectory;
     }
 
-    public static File detectClassPath(Class<?> sourceClass) {
+    @Nonnull
+    public static File detectClassPath(@Nonnull Class<?> sourceClass) {
         ProtectionDomain protectionDomain = sourceClass.getProtectionDomain();
         CodeSource codeSource = protectionDomain.getCodeSource();
         if (codeSource != null) {
@@ -281,7 +301,8 @@ public class Compiler {
         throw new UnsupportedOperationException(message);
     }
 
-    public static String resolveJavaSourceFileRelativePath(Class<?> sourceClass) {
+    @Nonnull
+    public static String resolveJavaSourceFileRelativePath(@Nonnull Class<?> sourceClass) {
         return sourceClass.getName().replace(DOT_CHAR, separatorChar).concat(JAVA_EXTENSION);
     }
 }

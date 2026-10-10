@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.FastByteArrayOutputStream;
 
 import java.io.IOException;
@@ -49,7 +51,8 @@ public class DefaultSerializer implements Serializer<Object> {
     public static final DefaultSerializer DEFAULT_SERIALIZER = new DefaultSerializer();
 
     @Override
-    public byte[] serialize(Object source) throws IOException {
+    @Nonnull
+    public byte[] serialize(@Nullable Object source) throws IOException {
         byte[] bytes = null;
         try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)

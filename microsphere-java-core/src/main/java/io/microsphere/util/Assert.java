@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
 import java.lang.reflect.Array;
@@ -57,7 +58,7 @@ public abstract class Assert {
      * @param message    the exception message to use if the assertion fails
      * @throws IllegalArgumentException if {@code expression} is {@code false}
      */
-    public static void assertTrue(boolean expression, String message) {
+    public static void assertTrue(boolean expression, @Nullable String message) {
         if (!expression) {
             throw new IllegalArgumentException(message);
         }
@@ -76,7 +77,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if {@code expression} is {@code false}
      */
-    public static void assertTrue(boolean expression, Supplier<String> messageSupplier) {
+    public static void assertTrue(boolean expression, @Nullable Supplier<String> messageSupplier) {
         if (!expression) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -93,7 +94,7 @@ public abstract class Assert {
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the object is not {@code null}
      */
-    public static void assertNull(@Nullable Object object, String message) {
+    public static void assertNull(@Nullable Object object, @Nullable String message) {
         if (object != null) {
             throw new IllegalArgumentException(message);
         }
@@ -111,7 +112,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if the object is not {@code null}
      */
-    public static void assertNull(@Nullable Object object, Supplier<String> messageSupplier) {
+    public static void assertNull(@Nullable Object object, @Nullable Supplier<String> messageSupplier) {
         if (object != null) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -128,7 +129,7 @@ public abstract class Assert {
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the object is {@code null}
      */
-    public static void assertNotNull(@Nullable Object object, String message) {
+    public static void assertNotNull(@Nullable Object object, @Nullable String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);
         }
@@ -146,7 +147,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if the object is {@code null}
      */
-    public static void assertNotNull(@Nullable Object object, Supplier<String> messageSupplier) {
+    public static void assertNotNull(@Nullable Object object, @Nullable Supplier<String> messageSupplier) {
         if (object == null) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -163,7 +164,7 @@ public abstract class Assert {
      * @param message the exception message to use if the
      *                assertion fails
      */
-    public static void assertNotEmpty(@Nullable String text, String message) {
+    public static void assertNotEmpty(@Nullable String text, @Nullable String message) {
         if (isEmpty(text)) {
             throw new IllegalArgumentException(message);
         }
@@ -180,7 +181,7 @@ public abstract class Assert {
      * @param messageSupplier a supplier for the exception message to use if the
      *                        assertion fails
      */
-    public static void assertNotEmpty(@Nullable String text, Supplier<String> messageSupplier) {
+    public static void assertNotEmpty(@Nullable String text, @Nullable Supplier<String> messageSupplier) {
         if (isEmpty(text)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -197,7 +198,7 @@ public abstract class Assert {
      * @param message the exception message to use if the
      *                assertion fails
      */
-    public static void assertNotBlank(@Nullable String text, String message) {
+    public static void assertNotBlank(@Nullable String text, @Nullable String message) {
         if (isBlank(text)) {
             throw new IllegalArgumentException(message);
         }
@@ -214,7 +215,7 @@ public abstract class Assert {
      * @param messageSupplier a supplier for the exception message to use if the
      *                        assertion fails
      */
-    public static void assertNotBlank(@Nullable String text, Supplier<String> messageSupplier) {
+    public static void assertNotBlank(@Nullable String text, @Nullable Supplier<String> messageSupplier) {
         if (isBlank(text)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -232,7 +233,7 @@ public abstract class Assert {
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the object array is {@code null} or contains no elements
      */
-    public static void assertNotEmpty(@Nullable Object[] array, String message) {
+    public static void assertNotEmpty(@Nullable Object[] array, @Nullable String message) {
         if (isEmpty(array)) {
             throw new IllegalArgumentException(message);
         }
@@ -251,7 +252,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if the object array is {@code null} or contains no elements
      */
-    public static void assertNotEmpty(@Nullable Object[] array, Supplier<String> messageSupplier) {
+    public static void assertNotEmpty(@Nullable Object[] array, @Nullable Supplier<String> messageSupplier) {
         if (isEmpty(array)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -270,7 +271,7 @@ public abstract class Assert {
      * @throws IllegalArgumentException if the collection is {@code null} or
      *                                  contains no elements
      */
-    public static void assertNotEmpty(@Nullable Collection<?> collection, String message) {
+    public static void assertNotEmpty(@Nullable Collection<?> collection, @Nullable String message) {
         if (isEmpty(collection)) {
             throw new IllegalArgumentException(message);
         }
@@ -290,7 +291,7 @@ public abstract class Assert {
      * @throws IllegalArgumentException if the collection is {@code null} or
      *                                  contains no elements
      */
-    public static void assertNotEmpty(@Nullable Collection<?> collection, Supplier<String> messageSupplier) {
+    public static void assertNotEmpty(@Nullable Collection<?> collection, @Nullable Supplier<String> messageSupplier) {
         if (isEmpty(collection)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -308,7 +309,7 @@ public abstract class Assert {
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the map is {@code null} or contains no entries
      */
-    public static void assertNotEmpty(@Nullable Map<?, ?> map, String message) {
+    public static void assertNotEmpty(@Nullable Map<?, ?> map, @Nullable String message) {
         if (isEmpty(map)) {
             throw new IllegalArgumentException(message);
         }
@@ -327,7 +328,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if the map is {@code null} or contains no entries
      */
-    public static void assertNotEmpty(@Nullable Map<?, ?> map, Supplier<String> messageSupplier) {
+    public static void assertNotEmpty(@Nullable Map<?, ?> map, @Nullable Supplier<String> messageSupplier) {
         if (isEmpty(map)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
@@ -345,7 +346,7 @@ public abstract class Assert {
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the object array contains a {@code null} element
      */
-    public static void assertNoNullElements(@Nullable Object[] array, String message) {
+    public static void assertNoNullElements(@Nullable Object[] array, @Nullable String message) {
         if (array != null) {
             for (Object element : array) {
                 if (element == null) {
@@ -368,7 +369,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if the object array contains a {@code null} element
      */
-    public static void assertNoNullElements(@Nullable Object[] array, Supplier<String> messageSupplier) {
+    public static void assertNoNullElements(@Nullable Object[] array, @Nullable Supplier<String> messageSupplier) {
         if (array != null) {
             for (Object element : array) {
                 if (element == null) {
@@ -390,7 +391,7 @@ public abstract class Assert {
      * @param message  the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the elements contains a {@code null} element
      */
-    public static void assertNoNullElements(@Nullable Iterable<?> elements, String message) {
+    public static void assertNoNullElements(@Nullable Iterable<?> elements, @Nullable String message) {
         if (elements != null) {
             for (Object element : elements) {
                 if (element == null) {
@@ -413,7 +414,7 @@ public abstract class Assert {
      *                        assertion fails
      * @throws IllegalArgumentException if the elements contains a {@code null} element
      */
-    public static void assertNoNullElements(@Nullable Iterable<?> elements, Supplier<String> messageSupplier) {
+    public static void assertNoNullElements(@Nullable Iterable<?> elements, @Nullable Supplier<String> messageSupplier) {
         if (elements != null) {
             for (Object element : elements) {
                 if (element == null) {
@@ -436,7 +437,7 @@ public abstract class Assert {
      * @throws IllegalArgumentException       if the object is not an array
      * @throws ArrayIndexOutOfBoundsException if the index is negative or exceeds the array length
      */
-    public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
+    public static void assertArrayIndex(@Nonnull Object array, int index) throws IllegalArgumentException {
         if (index < 0) {
             String message = format("The index argument must be positive , actual is {}", index);
             throw new ArrayIndexOutOfBoundsException(message);
@@ -461,7 +462,7 @@ public abstract class Assert {
      * @param array the object to check
      * @throws IllegalArgumentException if the object is not an array
      */
-    public static void assertArrayType(Object array) throws IllegalArgumentException {
+    public static void assertArrayType(@Nonnull Object array) throws IllegalArgumentException {
         Class<?> type = array.getClass();
         if (!isArray(type)) {
             String message = format("The argument is not an array object, its type is {}", type.getName());
@@ -489,7 +490,7 @@ public abstract class Assert {
      * @throws NullPointerException     if the field cannot be found in the object's class
      * @throws IllegalArgumentException if the field's type does not match the expected type
      */
-    public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws NullPointerException, IllegalArgumentException {
+    public static void assertFieldMatchType(@Nonnull Object object, @Nonnull String fieldName, @Nullable Class<?> expectedType) throws NullPointerException, IllegalArgumentException {
         Class<?> type = object.getClass();
         Field field = findField(type, fieldName);
         Class<?> fieldType = field.getType();

@@ -16,6 +16,8 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -129,7 +131,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     /**
      * {@inheritDoc}
      */
-    public void write(byte[] b, int off, int len) {
+    public void write(@Nonnull byte[] b, int off, int len) {
         if ((off < 0) || (off > b.length) || (len < 0) ||
                 ((off + len) - b.length > 0)) {
             throw new IndexOutOfBoundsException();
@@ -142,7 +144,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     /**
      * {@inheritDoc}
      */
-    public void writeTo(OutputStream out) throws IOException {
+    public void writeTo(@Nonnull OutputStream out) throws IOException {
         out.write(buf, 0, count);
     }
 
@@ -156,6 +158,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     /**
      * {@inheritDoc}
      */
+    @Nonnull
     public byte[] toByteArray() {
         return copyOf(buf, count);
     }
@@ -170,6 +173,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     /**
      * {@inheritDoc}
      */
+    @Nonnull
     public String toString() {
         return new String(buf, 0, count);
     }
@@ -177,7 +181,8 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
     /**
      * {@inheritDoc}
      */
-    public String toString(String charsetName)
+    @Nonnull
+    public String toString(@Nonnull String charsetName)
             throws UnsupportedEncodingException {
         return new String(buf, 0, count, charsetName);
     }

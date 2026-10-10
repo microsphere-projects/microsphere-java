@@ -5,6 +5,7 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.lang.ClassDataRepository;
 
@@ -83,7 +84,7 @@ public class SimpleClassScanner {
      */
     @Nonnull
     @Immutable
-    public Set<Class<?>> scan(ClassLoader classLoader, String packageName) throws IllegalArgumentException, IllegalStateException {
+    public Set<Class<?>> scan(@Nullable ClassLoader classLoader, @Nonnull String packageName) throws IllegalArgumentException, IllegalStateException {
         return scan(classLoader, packageName, false);
     }
 
@@ -100,7 +101,7 @@ public class SimpleClassScanner {
      */
     @Nonnull
     @Immutable
-    public Set<Class<?>> scan(ClassLoader classLoader, String packageName, boolean recursive) throws IllegalArgumentException, IllegalStateException {
+    public Set<Class<?>> scan(@Nullable ClassLoader classLoader, @Nonnull String packageName, boolean recursive) throws IllegalArgumentException, IllegalStateException {
         return scan(classLoader, packageName, recursive, false);
     }
 
@@ -118,7 +119,7 @@ public class SimpleClassScanner {
      */
     @Nonnull
     @Immutable
-    public Set<Class<?>> scan(ClassLoader classLoader, String packageName, final boolean recursive, boolean requiredLoad) throws IllegalArgumentException, IllegalStateException {
+    public Set<Class<?>> scan(@Nullable ClassLoader classLoader, @Nonnull String packageName, final boolean recursive, boolean requiredLoad) throws IllegalArgumentException, IllegalStateException {
         LinkedHashSet<Class<?>> classesSet = new LinkedHashSet();
 
         final String packageResourceName = PACKAGE.resolve(packageName);
@@ -158,14 +159,14 @@ public class SimpleClassScanner {
     }
 
     @Nonnull
-    public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,
+    public Set<Class<?>> scan(@Nullable ClassLoader classLoader, @Nonnull URL resourceInArchive, boolean requiredLoad,
                               Predicate<? super Class<?>>... classFilters) {
         File archiveFile = resolveArchiveFile(resourceInArchive);
         return scan(classLoader, archiveFile, requiredLoad, classFilters);
     }
 
     @Nonnull
-    public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
+    public Set<Class<?>> scan(@Nullable ClassLoader classLoader, @Nullable File archiveFile, boolean requiredLoad,
                               Predicate<? super Class<?>>... classFilters) {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
         LinkedHashSet<Class<?>> classesSet = newLinkedHashSet();

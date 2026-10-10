@@ -146,17 +146,17 @@ public abstract class ConstantPoolUtils implements Utils {
      */
     static final Method getUTF8AtMethod = findMethod(CONSTANT_POOL_CLASS, "getUTF8At", int.class);
 
-    public static int getSize(Class<?> targetClass) {
+    public static int getSize(@Nonnull Class<?> targetClass) {
         return invoke(targetClass, getSizeMethod);
     }
 
     @Nullable
-    public static Class<?> getClassAt(Class<?> targetClass, int index) {
+    public static Class<?> getClassAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getClassAtMethod, index);
     }
 
     @Nullable
-    public static Class<?> getClassAtIfLoaded(Class<?> targetClass, int index) {
+    public static Class<?> getClassAtIfLoaded(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getClassAtIfLoadedMethod, index);
     }
 
@@ -168,71 +168,72 @@ public abstract class ConstantPoolUtils implements Utils {
      * @return the class reference index
      */
     @Nullable
-    public static Integer getClassRefIndexAt(Class<?> targetClass, int index) {
+    public static Integer getClassRefIndexAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getClassRefIndexAtMethod, index);
     }
 
     @Nullable
-    public static Member getMethodAt(Class<?> targetClass, int index) {
+    public static Member getMethodAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getMethodAtMethod, index);
     }
 
     @Nullable
-    public static Member getMethodAtIfLoaded(Class<?> targetClass, int index) {
+    public static Member getMethodAtIfLoaded(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getMethodAtIfLoadedMethod, index);
     }
 
     @Nullable
-    public static Field getFieldAt(Class<?> targetClass, int index) {
+    public static Field getFieldAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getFieldAtMethod, index);
     }
 
     @Nullable
-    public static Field getFieldAtIfLoaded(Class<?> targetClass, int index) {
+    public static Field getFieldAtIfLoaded(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getFieldAtIfLoadedMethod, index);
     }
 
-    @Nonnull
-    public static String[] getMemberRefInfoAt(Class<?> targetClass, int index) {
+    @Nullable
+    public static String[] getMemberRefInfoAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getMemberRefInfoAtMethod, index);
     }
 
     @Nullable
-    public static Integer getNameAndTypeRefIndexAt(Class<?> targetClass, int index) {
+    public static Integer getNameAndTypeRefIndexAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getNameAndTypeRefIndexAtMethod, index);
     }
 
-    @Nonnull
-    public static String[] getNameAndTypeRefInfoAt(Class<?> targetClass, int index) {
+    @Nullable
+    public static String[] getNameAndTypeRefInfoAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getNameAndTypeRefInfoAtMethod, index);
     }
 
     @Nullable
-    public static Integer getIntAt(Class<?> targetClass, int index) {
+    public static Integer getIntAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getIntAtMethod, index);
     }
 
     @Nullable
-    public static Long getLongAt(Class<?> targetClass, int index) {
+    public static Long getLongAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getLongAtMethod, index);
     }
 
     @Nullable
-    public static Float getFloatAt(Class<?> targetClass, int index) {
+    public static Float getFloatAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getFloatAtMethod, index);
     }
 
-    public static Double getDoubleAt(Class<?> targetClass, int index) {
+    @Nullable
+    public static Double getDoubleAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getDoubleAtMethod, index);
     }
 
     @Nullable
-    public static String getStringAt(Class<?> targetClass, int index) {
+    public static String getStringAt(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getStringAtMethod, index);
     }
 
     @Nullable
-    public static String getUTF8At(Class<?> targetClass, int index) {
+    public static String getUTF8At(@Nonnull Class<?> targetClass, int index) {
         return invoke(targetClass, getUTF8AtMethod, index);
     }
 

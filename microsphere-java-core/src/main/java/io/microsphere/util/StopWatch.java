@@ -16,6 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -102,7 +105,7 @@ public class StopWatch {
      *
      * @param id the identifier for this stop watch, used to distinguish output from multiple stop watches
      */
-    public StopWatch(String id) {
+    public StopWatch(@Nullable String id) {
         this.id = id;
     }
 
@@ -121,7 +124,7 @@ public class StopWatch {
      * @throws IllegalArgumentException if {@code taskName} is blank
      * @throws IllegalStateException    if a non-reentrant task with the same name is already running
      */
-    public void start(String taskName) throws IllegalArgumentException, IllegalStateException {
+    public void start(@Nonnull String taskName) throws IllegalArgumentException, IllegalStateException {
         start(taskName, false);
     }
 
@@ -146,7 +149,7 @@ public class StopWatch {
      * @throws IllegalArgumentException if {@code taskName} is blank
      * @throws IllegalStateException    if a non-reentrant task with the same name is already running
      */
-    public void start(String taskName, boolean reentrant) throws IllegalArgumentException, IllegalStateException {
+    public void start(@Nonnull String taskName, boolean reentrant) throws IllegalArgumentException, IllegalStateException {
         if (isBlank(taskName)) {
             throw new IllegalArgumentException("The 'taskName' argument must not be blank");
         }
@@ -207,6 +210,7 @@ public class StopWatch {
      *
      * @return the current running {@link Task}, or {@code null} if no task is running
      */
+    @Nullable
     public Task getCurrentTask() {
         return getCurrentTask(false);
     }
@@ -226,6 +230,7 @@ public class StopWatch {
      * @param removed {@code true} to remove the task from the running list, {@code false} to only peek
      * @return the current running {@link Task}, or {@code null} if no task is running
      */
+    @Nullable
     protected Task getCurrentTask(boolean removed) {
         List<Task> runningTasks = this.runningTasks;
         int size = runningTasks.size();
@@ -247,6 +252,7 @@ public class StopWatch {
      *
      * @return the stop watch identifier
      */
+    @Nullable
     public String getId() {
         return this.id;
     }
@@ -265,6 +271,7 @@ public class StopWatch {
      *
      * @return an unmodifiable list of currently running {@link Task} instances
      */
+    @Nonnull
     public List<Task> getRunningTasks() {
         return unmodifiableList(this.runningTasks);
     }
@@ -283,6 +290,7 @@ public class StopWatch {
      *
      * @return an unmodifiable list of completed {@link Task} instances
      */
+    @Nonnull
     public List<Task> getCompletedTasks() {
         return unmodifiableList(this.completedTasks);
     }
@@ -320,7 +328,7 @@ public class StopWatch {
      * @param timeUnit the desired time unit for the result
      * @return the total elapsed time in the specified time unit
      */
-    public long getTotalTime(TimeUnit timeUnit) {
+    public long getTotalTime(@Nonnull TimeUnit timeUnit) {
         return NANOSECONDS.convert(this.totalTimeNanos, timeUnit);
     }
 
@@ -398,7 +406,8 @@ public class StopWatch {
          * @param taskName the name of the task
          * @return a new running {@link Task} instance
          */
-        public static Task start(String taskName) {
+        @Nonnull
+        public static Task start(@Nullable String taskName) {
             return start(taskName, false);
         }
 
@@ -417,7 +426,8 @@ public class StopWatch {
          * @param reentrant {@code true} if the task may be started again while running
          * @return a new running {@link Task} instance
          */
-        public static Task start(String taskName, boolean reentrant) {
+        @Nonnull
+        public static Task start(@Nullable String taskName, boolean reentrant) {
             return new Task(taskName, reentrant);
         }
 
@@ -448,6 +458,7 @@ public class StopWatch {
          *
          * @return the task name
          */
+        @Nullable
         public String getTaskName() {
             return this.taskName;
         }
@@ -516,7 +527,7 @@ public class StopWatch {
          * @return {@code true} if the given object is a {@link Task} with the same name
          */
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }

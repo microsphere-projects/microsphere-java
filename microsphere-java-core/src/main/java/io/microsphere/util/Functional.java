@@ -16,6 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -81,7 +84,7 @@ public class Functional<V> {
      * @param name  the descriptive name for this functional instance
      * @param value the value to be operated on
      */
-    protected Functional(String name, V value) {
+    protected Functional(@Nullable String name, @Nullable V value) {
         this.name = name;
         this.value = value;
     }
@@ -101,7 +104,8 @@ public class Functional<V> {
      * @param predicate the condition to test the value against
      * @return this {@link Functional} instance for fluent chaining
      */
-    public Functional<V> on(Predicate<? super V> predicate) {
+    @Nonnull
+    public Functional<V> on(@Nonnull Predicate<? super V> predicate) {
         if (isSkip()) {
             return this;
         }
@@ -128,7 +132,8 @@ public class Functional<V> {
      * @param function the transformation function to apply to the value
      * @return a new {@link Functional} wrapping the transformed result, or this instance if skipped
      */
-    public <R> Functional<R> as(Function<V, R> function) {
+    @Nonnull
+    public <R> Functional<R> as(@Nonnull Function<V, R> function) {
         if (isSkip()) {
             return (Functional<R>) this;
         }
@@ -149,7 +154,7 @@ public class Functional<V> {
      *
      * @param valueConsumer the consumer to apply to the value
      */
-    public void apply(Consumer<V> valueConsumer) {
+    public void apply(@Nonnull Consumer<V> valueConsumer) {
         if (isSkip()) {
             return;
         }
@@ -173,6 +178,7 @@ public class Functional<V> {
      * @return a string describing this instance
      */
     @Override
+    @Nonnull
     public String toString() {
         return "Functional{" +
                 "name='" + name + QUOTE_CHAR +
@@ -196,7 +202,8 @@ public class Functional<V> {
      * @param valueSupplier the supplier providing the value
      * @return a new unnamed {@link Functional} instance wrapping the supplied value
      */
-    public static <V> Functional<V> value(Supplier<V> valueSupplier) {
+    @Nonnull
+    public static <V> Functional<V> value(@Nonnull Supplier<V> valueSupplier) {
         return value(valueSupplier.get());
     }
 
@@ -215,7 +222,8 @@ public class Functional<V> {
      * @param value the value to wrap
      * @return a new unnamed {@link Functional} instance wrapping the value
      */
-    public static <V> Functional<V> value(V value) {
+    @Nonnull
+    public static <V> Functional<V> value(@Nullable V value) {
         return of(UNNAMED, value);
     }
 
@@ -236,7 +244,8 @@ public class Functional<V> {
      * @param valueSupplier the supplier providing the value
      * @return a new named {@link Functional} instance wrapping the supplied value
      */
-    public static <V> Functional<V> of(String name, Supplier<V> valueSupplier) {
+    @Nonnull
+    public static <V> Functional<V> of(@Nullable String name, @Nonnull Supplier<V> valueSupplier) {
         return of(name, valueSupplier.get());
     }
 
@@ -257,7 +266,8 @@ public class Functional<V> {
      * @param value the value to wrap
      * @return a new named {@link Functional} instance wrapping the value
      */
-    public static <V> Functional<V> of(String name, V value) {
+    @Nonnull
+    public static <V> Functional<V> of(@Nullable String name, @Nullable V value) {
         return new Functional<>(name, value);
     }
 }

@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.filter;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.Filter;
 
 import java.io.File;
@@ -53,10 +55,10 @@ import java.io.FilenameFilter;
 public interface IOFileFilter extends FileFilter, FilenameFilter {
 
     @Override
-    boolean accept(File file);
+    boolean accept(@Nullable File file);
 
     @Override
-    default boolean accept(File dir, String name) {
+    default boolean accept(@Nullable File dir, @Nonnull String name) {
         return accept(new File(dir, name));
     }
 }

@@ -69,7 +69,7 @@ public class SimpleFileScanner {
      */
     @Nonnull
     @Immutable
-    public Set<File> scan(File rootDirectory, boolean recursive) {
+    public Set<File> scan(@Nonnull File rootDirectory, boolean recursive) {
         return scan(rootDirectory, recursive, TrueFileFilter.INSTANCE);
     }
 
@@ -84,7 +84,7 @@ public class SimpleFileScanner {
      */
     @Nonnull
     @Immutable
-    public Set<File> scan(File rootDirectory, boolean recursive, IOFileFilter ioFileFilter) {
+    public Set<File> scan(@Nonnull File rootDirectory, boolean recursive, @Nonnull IOFileFilter ioFileFilter) {
 
         final LinkedHashSet<File> filesSet = newLinkedHashSet();
 

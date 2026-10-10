@@ -17,6 +17,9 @@
 
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
@@ -73,79 +76,91 @@ public class JSONAnnotationValueVisitor extends SimpleAnnotationValueVisitor6<St
 
     private final StringBuilder jsonBuilder;
 
-    public JSONAnnotationValueVisitor(StringBuilder jsonBuilder) {
+    public JSONAnnotationValueVisitor(@Nonnull StringBuilder jsonBuilder) {
         super(jsonBuilder);
         this.jsonBuilder = jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitBoolean(boolean value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitBoolean(boolean value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitByte(byte value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitByte(byte value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitChar(char value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitChar(char value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitDouble(double value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitDouble(double value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitFloat(float value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitFloat(float value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitInt(int value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitInt(int value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitLong(long value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitLong(long value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitShort(short value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitShort(short value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitString(String value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitString(@Nullable String value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value);
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitType(TypeMirror value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitType(@Nullable TypeMirror value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), getTypeName(value));
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitEnumConstant(VariableElement value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitEnumConstant(@Nonnull VariableElement value, @Nullable ExecutableElement attributeMethod) {
         append(jsonBuilder, getAttributeName(attributeMethod), value.getSimpleName().toString());
         return jsonBuilder;
     }
 
     @Override
-    public StringBuilder visitAnnotation(AnnotationMirror value, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitAnnotation(@Nullable AnnotationMirror value, @Nullable ExecutableElement attributeMethod) {
         Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(value);
         Iterator<Entry<ExecutableElement, AnnotationValue>> iterator = elementValues.entrySet().iterator();
         StringBuilder annotationJsonBuilder = new StringBuilder();
@@ -165,7 +180,8 @@ public class JSONAnnotationValueVisitor extends SimpleAnnotationValueVisitor6<St
     }
 
     @Override
-    public StringBuilder visitArray(List<? extends AnnotationValue> values, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitArray(@Nonnull List<? extends AnnotationValue> values, @Nullable ExecutableElement attributeMethod) {
         StringBuilder arrayJsonBuilder = new StringBuilder();
 
         arrayJsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
@@ -184,11 +200,13 @@ public class JSONAnnotationValueVisitor extends SimpleAnnotationValueVisitor6<St
     }
 
     @Override
-    public StringBuilder visitUnknown(AnnotationValue annotationValue, ExecutableElement attributeMethod) {
+    @Nonnull
+    public StringBuilder visitUnknown(@Nullable AnnotationValue annotationValue, @Nullable ExecutableElement attributeMethod) {
         return jsonBuilder;
     }
 
-    protected StringBuilder doAppend(ExecutableElement attributeMethod, StringBuilder value) {
+    @Nonnull
+    protected StringBuilder doAppend(@Nullable ExecutableElement attributeMethod, @Nullable StringBuilder value) {
         appendName(this.jsonBuilder, getAttributeName(attributeMethod))
                 .append(value);
         return this.jsonBuilder;

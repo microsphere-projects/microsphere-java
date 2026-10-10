@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nullable;
+
 import java.util.Comparator;
 
 /**
@@ -63,7 +65,7 @@ public class CharSequenceComparator implements Comparator<CharSequence> {
      * equal to, or greater than {@code c2}
      */
     @Override
-    public int compare(CharSequence c1, CharSequence c2) {
+    public int compare(@Nullable CharSequence c1, @Nullable CharSequence c2) {
         String string1 = toString(c1);
         String string2 = toString(c2);
         return compare(string1, string2);

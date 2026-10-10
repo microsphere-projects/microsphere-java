@@ -133,6 +133,7 @@ public class MBeanAttribute {
     /**
      * @return Get the attribute value of MBean, may be <code>null</code>
      */
+    @Nullable
     public Object getValue() {
         return value;
     }

@@ -63,7 +63,7 @@ public interface ConfigurationPropertyReader extends Prioritized {
      */
     @Nonnull
     @Immutable
-    default List<ConfigurationProperty> read(InputStream inputStream) throws Throwable {
+    default List<ConfigurationProperty> read(@Nonnull InputStream inputStream) throws Throwable {
         return read(new InputStreamReader(inputStream, DEFAULT_CHARSET));
     }
 
@@ -91,7 +91,7 @@ public interface ConfigurationPropertyReader extends Prioritized {
      */
     @Nonnull
     @Immutable
-    default List<ConfigurationProperty> read(Reader reader) throws Throwable {
+    default List<ConfigurationProperty> read(@Nonnull Reader reader) throws Throwable {
         return read(copyToString(reader));
     }
 
@@ -116,6 +116,6 @@ public interface ConfigurationPropertyReader extends Prioritized {
      */
     @Nonnull
     @Immutable
-    List<ConfigurationProperty> read(String content) throws Throwable;
+    List<ConfigurationProperty> read(@Nonnull String content) throws Throwable;
 
 }

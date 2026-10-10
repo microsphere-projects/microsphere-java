@@ -16,6 +16,8 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.lang.reflect.Field;
@@ -68,7 +70,8 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
     private static final Field defaultFactoryField = findField(URL.class, defaultFactoryFieldName); // JDK 9+
 
     @Override
-    public URLStreamHandler createURLStreamHandler(String protocol) {
+    @Nullable
+    public URLStreamHandler createURLStreamHandler(@Nonnull String protocol) {
         return createURLStreamHandler(defaultFactoryField, protocol);
     }
 

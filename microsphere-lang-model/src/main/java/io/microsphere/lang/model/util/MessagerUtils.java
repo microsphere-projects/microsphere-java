@@ -17,6 +17,8 @@
 
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import javax.annotation.processing.Messager;
@@ -60,7 +62,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern       the message pattern to format (supports {@link String#format} syntax)
      * @param args          the arguments for the message pattern
      */
-    static void printNote(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+    static void printNote(@Nonnull ProcessingEnvironment processingEnv, @Nullable String pattern, Object... args) {
         printNote(processingEnv.getMessager(), pattern, args);
     }
 
@@ -100,7 +102,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern  the message pattern to format (supports {@link String#format} syntax)
      * @param args     the arguments for the message pattern
      */
-    static void printNote(Messager messager, String pattern, Object... args) {
+    static void printNote(@Nonnull Messager messager, @Nullable String pattern, Object... args) {
         printMessage(messager, NOTE, pattern, args);
     }
 
@@ -124,7 +126,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern       the message pattern to format (supports {@link String#format} syntax)
      * @param args          the arguments for the message pattern
      */
-    static void printWarning(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+    static void printWarning(@Nonnull ProcessingEnvironment processingEnv, @Nullable String pattern, Object... args) {
         printWarning(processingEnv.getMessager(), pattern, args);
     }
 
@@ -147,7 +149,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern  the message pattern to format (supports {@link String#format} syntax)
      * @param args     the arguments for the message pattern
      */
-    static void printWarning(Messager messager, String pattern, Object... args) {
+    static void printWarning(@Nonnull Messager messager, @Nullable String pattern, Object... args) {
         printMessage(messager, WARNING, pattern, args);
     }
 
@@ -171,7 +173,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern       the message pattern to format (supports {@link String#format} syntax)
      * @param args          the arguments for the message pattern
      */
-    static void printMandatoryWarning(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+    static void printMandatoryWarning(@Nonnull ProcessingEnvironment processingEnv, @Nullable String pattern, Object... args) {
         printMandatoryWarning(processingEnv.getMessager(), pattern, args);
     }
 
@@ -194,7 +196,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern  the message pattern to format (supports {@link String#format} syntax)
      * @param args     the arguments for the message pattern
      */
-    static void printMandatoryWarning(Messager messager, String pattern, Object... args) {
+    static void printMandatoryWarning(@Nonnull Messager messager, @Nullable String pattern, Object... args) {
         printMessage(messager, MANDATORY_WARNING, pattern, args);
     }
 
@@ -218,7 +220,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern       the message pattern to format (supports {@link String#format} syntax)
      * @param args          the arguments for the message pattern
      */
-    static void printError(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+    static void printError(@Nonnull ProcessingEnvironment processingEnv, @Nullable String pattern, Object... args) {
         printError(processingEnv.getMessager(), pattern, args);
     }
 
@@ -241,7 +243,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern  the message pattern to format (supports {@link String#format} syntax)
      * @param args     the arguments for the message pattern
      */
-    static void printError(Messager messager, String pattern, Object... args) {
+    static void printError(@Nonnull Messager messager, @Nullable String pattern, Object... args) {
         printMessage(messager, ERROR, pattern, args);
     }
 
@@ -265,7 +267,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern       the message pattern to format (supports {@link String#format} syntax)
      * @param args          the arguments for the message pattern
      */
-    static void printMessage(ProcessingEnvironment processingEnv, Kind kind, String pattern, Object... args) {
+    static void printMessage(@Nonnull ProcessingEnvironment processingEnv, @Nonnull Kind kind, @Nullable String pattern, Object... args) {
         printMessage(processingEnv.getMessager(), kind, pattern, args);
     }
 
@@ -289,7 +291,7 @@ public interface MessagerUtils extends Utils {
      * @param pattern  the message pattern to format (supports {@link String#format} syntax)
      * @param args     the arguments for the message pattern
      */
-    static void printMessage(Messager messager, Kind kind, String pattern, Object... args) {
+    static void printMessage(@Nonnull Messager messager, @Nonnull Kind kind, @Nullable String pattern, Object... args) {
         String message = format(pattern, args);
         messager.printMessage(kind, message);
         switch (kind) {

@@ -49,12 +49,14 @@ public class ProcessManager {
     private ProcessManager() {
     }
 
-    protected ProcessManager addUnfinishedProcess(Process process, String arguments) {
+    @Nonnull
+    protected ProcessManager addUnfinishedProcess(@Nonnull Process process, @Nonnull String arguments) {
         unfinishedProcessesCache.putIfAbsent(process, arguments);
         return this;
     }
 
-    protected ProcessManager removeUnfinishedProcess(Process process, String arguments) {
+    @Nonnull
+    protected ProcessManager removeUnfinishedProcess(@Nonnull Process process, @Nonnull String arguments) {
         unfinishedProcessesCache.remove(process, arguments);
         return this;
     }

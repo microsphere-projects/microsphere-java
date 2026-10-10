@@ -18,6 +18,8 @@
 package io.microsphere.lang.model.element;
 
 import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -34,17 +36,19 @@ public class StringAnnotationValue implements AnnotationValue {
 
     private final String value;
 
-    public StringAnnotationValue(String value) {
+    public StringAnnotationValue(@Nullable String value) {
         this.value = value;
     }
 
     @Override
+    @Nullable
     public Object getValue() {
         return this.value;
     }
 
     @Override
-    public <R, P> R accept(AnnotationValueVisitor<R, P> v, P p) {
+    @Nullable
+    public <R, P> R accept(@Nonnull AnnotationValueVisitor<R, P> v, @Nullable P p) {
         return v.visitString(this.value, p);
     }
 }

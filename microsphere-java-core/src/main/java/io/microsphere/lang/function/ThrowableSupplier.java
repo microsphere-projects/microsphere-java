@@ -1,5 +1,8 @@
 package io.microsphere.lang.function;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -54,6 +57,7 @@ public interface ThrowableSupplier<T> {
      * @return the supplied result
      * @see #get()
      */
+    @Nullable
     default T execute() {
         return execute(this::handleException);
     }
@@ -65,7 +69,8 @@ public interface ThrowableSupplier<T> {
      * @return the supplied result
      * @see #execute()
      */
-    default T execute(Function<Throwable, T> exceptionHandler) {
+    @Nullable
+    default T execute(@Nonnull Function<Throwable, T> exceptionHandler) {
         assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
         T result;
         try {
@@ -82,7 +87,8 @@ public interface ThrowableSupplier<T> {
      * @param failure the instance of {@link Throwable}
      * @return the result after the exception handling
      */
-    default T handleException(Throwable failure) {
+    @Nonnull
+    default T handleException(@Nonnull Throwable failure) {
         throw new RuntimeException(failure);
     }
 
@@ -108,7 +114,8 @@ public interface ThrowableSupplier<T> {
      * @return The result of the supplier after successful execution.
      * @throws NullPointerException if the given supplier is {@code null}.
      */
-    static <T> T execute(ThrowableSupplier<T> supplier) throws NullPointerException {
+    @Nullable
+    static <T> T execute(@Nonnull ThrowableSupplier<T> supplier) throws NullPointerException {
         return execute(supplier, supplier::handleException);
     }
 
@@ -143,7 +150,8 @@ public interface ThrowableSupplier<T> {
      * @return The result of the supplier after execution or after handling an exception.
      * @throws NullPointerException if either the supplier or the exception handler is null.
      */
-    static <T> T execute(ThrowableSupplier<T> supplier, Function<Throwable, T> exceptionHandler) throws NullPointerException {
+    @Nullable
+    static <T> T execute(@Nonnull ThrowableSupplier<T> supplier, @Nonnull Function<Throwable, T> exceptionHandler) throws NullPointerException {
         assertNotNull(supplier, "The supplier must not be null");
         return supplier.execute(exceptionHandler);
     }

@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.util.Objects;
@@ -104,7 +106,7 @@ public class Configurer<T> {
      *
      * @param name the descriptive name of this configuration entry
      */
-    protected Configurer(String name) {
+    protected Configurer(@Nonnull String name) {
         this.name = name;
     }
 
@@ -120,7 +122,7 @@ public class Configurer<T> {
      *
      * @param valueSupplier a supplier providing the initial configuration value
      */
-    protected Configurer(Supplier<T> valueSupplier) {
+    protected Configurer(@Nonnull Supplier<T> valueSupplier) {
         this(valueSupplier.get());
     }
 
@@ -135,7 +137,7 @@ public class Configurer<T> {
      *
      * @param value the initial configuration value
      */
-    protected Configurer(T value) {
+    protected Configurer(@Nullable T value) {
         this(UNNAMED, value);
     }
 
@@ -152,7 +154,7 @@ public class Configurer<T> {
      * @param name          the descriptive name of this configuration entry
      * @param valueSupplier a supplier providing the initial configuration value
      */
-    protected Configurer(String name, Supplier<T> valueSupplier) {
+    protected Configurer(@Nonnull String name, @Nonnull Supplier<T> valueSupplier) {
         this(name, valueSupplier.get());
     }
 
@@ -170,7 +172,7 @@ public class Configurer<T> {
      * @param name  the descriptive name of this configuration entry
      * @param value the initial configuration value
      */
-    protected Configurer(String name, T value) {
+    protected Configurer(@Nonnull String name, @Nullable T value) {
         this.name = name;
         this.value = value;
         this.logBuilder = new StringBuilder();
@@ -192,7 +194,8 @@ public class Configurer<T> {
      * @param <T>   the type of the new value
      * @return a new {@link Configurer} instance with the given value
      */
-    public <T> Configurer<T> value(T value) {
+    @Nonnull
+    public <T> Configurer<T> value(@Nullable T value) {
         return new Configurer<>(name, value);
     }
 
@@ -211,7 +214,8 @@ public class Configurer<T> {
      * @param <T>           the type of the new value
      * @return a new {@link Configurer} instance with the supplied value
      */
-    public <T> Configurer<T> value(Supplier<T> valueSupplier) {
+    @Nonnull
+    public <T> Configurer<T> value(@Nonnull Supplier<T> valueSupplier) {
         return new Configurer<>(name, valueSupplier);
     }
 
@@ -230,7 +234,8 @@ public class Configurer<T> {
      * @param comparedValueSupplier a supplier providing the value to compare against
      * @return this {@link Configurer} instance for method chaining
      */
-    public Configurer<T> compare(Supplier<T> comparedValueSupplier) {
+    @Nonnull
+    public Configurer<T> compare(@Nonnull Supplier<T> comparedValueSupplier) {
         return compare(comparedValueSupplier.get());
     }
 
@@ -250,7 +255,8 @@ public class Configurer<T> {
      * @param comparedValue the value to compare against the current value
      * @return this {@link Configurer} instance for method chaining
      */
-    public Configurer<T> compare(T comparedValue) {
+    @Nonnull
+    public Configurer<T> compare(@Nullable T comparedValue) {
         if (value != null) {
             if (Objects.equals(value, comparedValue)) {
                 logBuilder.append(format(", the config value is not changed[current：'{}'，compared：'{}']", value, comparedValue));
@@ -275,7 +281,8 @@ public class Configurer<T> {
      * @param predicate the predicate to test the current value against
      * @return this {@link Configurer} instance for method chaining
      */
-    public Configurer<T> on(Predicate<? super T> predicate) {
+    @Nonnull
+    public Configurer<T> on(@Nonnull Predicate<? super T> predicate) {
         if (value != null) {
             if (!predicate.test(value)) {
                 logBuilder.append(format(", the config value[current：'{}'] does not match", value));
@@ -302,7 +309,8 @@ public class Configurer<T> {
      * @param <R>      the target type after conversion
      * @return a {@link Configurer} holding the converted value
      */
-    public <R> Configurer<R> as(Function<T, R> function) {
+    @Nonnull
+    public <R> Configurer<R> as(@Nonnull Function<T, R> function) {
         final R result;
         if (value != null) {
             result = function.apply(value);
@@ -336,7 +344,7 @@ public class Configurer<T> {
      *
      * @param valueConsumer the consumer to accept the current value
      */
-    public void apply(Consumer<T> valueConsumer) {
+    public void apply(@Nonnull Consumer<T> valueConsumer) {
         if (value != null) {
             valueConsumer.accept(value);
             logBuilder.append(", the config value is applied");
@@ -362,7 +370,8 @@ public class Configurer<T> {
      * @param <T>  the type of the value to be configured
      * @return a new {@link Configurer} instance with the given name
      */
-    public static <T> Configurer<T> configure(String name) {
+    @Nonnull
+    public static <T> Configurer<T> configure(@Nonnull String name) {
         return new Configurer<>(name);
     }
 
@@ -382,7 +391,8 @@ public class Configurer<T> {
      * @param <T>   the type of the value to be configured
      * @return a new {@link Configurer} instance with the given name and value
      */
-    public static <T> Configurer<T> configure(String name, T value) {
+    @Nonnull
+    public static <T> Configurer<T> configure(@Nonnull String name, @Nullable T value) {
         return new Configurer<>(name, value);
     }
 
@@ -402,7 +412,8 @@ public class Configurer<T> {
      * @param <T>           the type of the value to be configured
      * @return a new {@link Configurer} instance with the given name and supplied value
      */
-    public static <T> Configurer<T> configure(String name, Supplier<T> valueSupplier) {
+    @Nonnull
+    public static <T> Configurer<T> configure(@Nonnull String name, @Nonnull Supplier<T> valueSupplier) {
         return new Configurer<>(name, valueSupplier);
     }
 
@@ -420,7 +431,8 @@ public class Configurer<T> {
      * @param <T>   the type of the value to be configured
      * @return a new unnamed {@link Configurer} instance with the given value
      */
-    public static <T> Configurer<T> configure(T value) {
+    @Nonnull
+    public static <T> Configurer<T> configure(@Nullable T value) {
         return new Configurer<>(value);
     }
 
@@ -439,7 +451,8 @@ public class Configurer<T> {
      * @param <T>           the type of the value to be configured
      * @return a new unnamed {@link Configurer} instance with the supplied value
      */
-    public static <T> Configurer<T> configure(Supplier<T> valueSupplier) {
+    @Nonnull
+    public static <T> Configurer<T> configure(@Nonnull Supplier<T> valueSupplier) {
         return new Configurer<>(valueSupplier);
     }
 }

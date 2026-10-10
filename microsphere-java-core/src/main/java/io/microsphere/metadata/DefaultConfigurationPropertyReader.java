@@ -17,6 +17,7 @@
 
 package io.microsphere.metadata;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 
@@ -39,7 +40,8 @@ import static java.util.Collections.unmodifiableList;
 public class DefaultConfigurationPropertyReader implements ConfigurationPropertyReader {
 
     @Override
-    public List<ConfigurationProperty> read(String content) throws Throwable {
+    @Nonnull
+    public List<ConfigurationProperty> read(@Nonnull String content) throws Throwable {
         List<Map<String, Object>> configurationPropertiesMaps = readValues(content, List.class, Map.class);
         int size = configurationPropertiesMaps.size();
         ArrayList<ConfigurationProperty> configurationProperties = newArrayList(size);

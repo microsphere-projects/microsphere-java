@@ -3,6 +3,8 @@
  */
 package io.microsphere.filter;
 
+import io.microsphere.annotation.Nullable;
+
 /**
  * A {@link ClassFilter} implementation that always returns {@code true}.
  * <p>
@@ -36,7 +38,7 @@ public class TrueClassFilter implements ClassFilter {
     }
 
     @Override
-    public boolean accept(Class<?> filteredObject) {
+    public boolean accept(@Nullable Class<?> filteredObject) {
         return true;
     }
 }

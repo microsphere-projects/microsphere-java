@@ -17,6 +17,9 @@
 
 package io.microsphere.io;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -90,7 +93,7 @@ public class StringBuilderWriter extends Writer {
      *
      * @param builder The String builder. May be null.
      */
-    public StringBuilderWriter(final StringBuilder builder) {
+    public StringBuilderWriter(@Nullable final StringBuilder builder) {
         this.builder = builder != null ? builder : new StringBuilder();
     }
 
@@ -110,7 +113,7 @@ public class StringBuilderWriter extends Writer {
      * @param value The character array to write. May be null.
      */
     @Override
-    public void write(char[] value) {
+    public void write(@Nullable char[] value) {
         if (isNotEmpty(value)) {
             builder.append(value, 0, value.length);
         }
@@ -124,7 +127,7 @@ public class StringBuilderWriter extends Writer {
      * @param length The number of characters to write
      */
     @Override
-    public void write(final char[] value, final int offset, final int length) {
+    public void write(@Nullable final char[] value, final int offset, final int length) {
         if (isNotEmpty(value)) {
             builder.append(value, offset, length);
         }
@@ -136,14 +139,14 @@ public class StringBuilderWriter extends Writer {
      * @param value The value to write
      */
     @Override
-    public void write(final String value) {
+    public void write(@Nullable final String value) {
         if (isNotEmpty(value)) {
             builder.append(value);
         }
     }
 
     @Override
-    public void write(String value, int off, int len) {
+    public void write(@Nullable String value, int off, int len) {
         if (isNotEmpty(value)) {
             builder.append(value, off, len);
         }
@@ -156,6 +159,7 @@ public class StringBuilderWriter extends Writer {
      * @return This writer instance
      */
     @Override
+    @Nonnull
     public Writer append(final char value) {
         builder.append(value);
         return this;
@@ -168,7 +172,8 @@ public class StringBuilderWriter extends Writer {
      * @return This writer instance
      */
     @Override
-    public Writer append(final CharSequence value) {
+    @Nonnull
+    public Writer append(@Nullable final CharSequence value) {
         if (isNotEmpty(value)) {
             builder.append(value);
         }
@@ -184,7 +189,8 @@ public class StringBuilderWriter extends Writer {
      * @return This writer instance
      */
     @Override
-    public Writer append(final CharSequence value, final int start, final int end) {
+    @Nonnull
+    public Writer append(@Nullable final CharSequence value, final int start, final int end) {
         if (isNotEmpty(value)) {
             builder.append(value, start, end);
         }
@@ -212,6 +218,7 @@ public class StringBuilderWriter extends Writer {
      *
      * @return The underlying builder
      */
+    @Nonnull
     public StringBuilder getBuilder() {
         return builder;
     }
@@ -222,6 +229,7 @@ public class StringBuilderWriter extends Writer {
      * @return The contents of the String builder.
      */
     @Override
+    @Nonnull
     public String toString() {
         return builder.toString();
     }

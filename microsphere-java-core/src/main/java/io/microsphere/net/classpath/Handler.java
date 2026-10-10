@@ -16,6 +16,7 @@
  */
 package io.microsphere.net.classpath;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
 import io.microsphere.util.ClassLoaderUtils;
 
@@ -40,7 +41,8 @@ import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 public class Handler extends ExtendableProtocolURLStreamHandler {
 
     @Override
-    public URLConnection openConnection(URL u, Proxy proxy) throws IOException {
+    @Nonnull
+    public URLConnection openConnection(@Nonnull URL u, @Nonnull Proxy proxy) throws IOException {
         String authority = u.getAuthority();
         String path = u.getPath();
 

@@ -56,7 +56,7 @@ public abstract class ExceptionUtils implements Utils {
      * <code>printStackTrace(PrintWriter)</code> method
      */
     @Nonnull
-    public static String getStackTrace(Throwable throwable) {
+    public static String getStackTrace(@Nonnull Throwable throwable) {
         StringBuilderWriter sw = new StringBuilderWriter();
         throwable.printStackTrace(new PrintWriter(sw, true));
         return sw.toString();
@@ -95,7 +95,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return an instance of the target type wrapping or referencing the source exception
      */
     @Nonnull
-    public static <T extends Throwable, TT extends Throwable> TT wrap(T source, Class<TT> thrownType) {
+    public static <T extends Throwable, TT extends Throwable> TT wrap(@Nonnull T source, @Nonnull Class<TT> thrownType) {
         if (isAssignableFrom(thrownType, source.getClass())) {
             return (TT) source;
         }
@@ -121,7 +121,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return a new instance of the specified Throwable
      */
     @Nonnull
-    public static <T extends Throwable> T create(Class<T> throwableClass) {
+    public static <T extends Throwable> T create(@Nonnull Class<T> throwableClass) {
         return newInstance(throwableClass);
     }
 
@@ -144,7 +144,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return a new instance of the specified Throwable with the provided message
      */
     @Nonnull
-    public static <T extends Throwable> T create(Class<T> throwableClass, String message) {
+    public static <T extends Throwable> T create(@Nonnull Class<T> throwableClass, @Nonnull String message) {
         return newInstance(true, throwableClass, message);
     }
 
@@ -167,7 +167,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return a new instance of the specified Throwable with the provided cause
      */
     @Nonnull
-    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause) {
+    public static <T extends Throwable> T create(@Nonnull Class<T> throwableClass, @Nonnull Throwable cause) {
         return newInstance(throwableClass, cause);
     }
 
@@ -191,7 +191,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return a new instance of the specified Throwable with the provided message and cause
      */
     @Nonnull
-    public static <T extends Throwable> T create(Class<T> throwableClass, String message, Throwable cause) {
+    public static <T extends Throwable> T create(@Nonnull Class<T> throwableClass, @Nonnull String message, @Nonnull Throwable cause) {
         return newInstance(throwableClass, message, cause);
     }
 
@@ -224,7 +224,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return a new instance of the specified Throwable with the formatted message and cause
      */
     @Nonnull
-    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
+    public static <T extends Throwable> T create(@Nonnull Class<T> throwableClass, @Nonnull Throwable cause, @Nonnull String messagePattern, Object... args) {
         String message = format(messagePattern, args);
         return create(throwableClass, message, cause);
     }
@@ -261,7 +261,7 @@ public abstract class ExceptionUtils implements Utils {
      * @return a new instance of the specified Throwable initialized with the given arguments
      */
     @Nonnull
-    public static <T extends Throwable> T create(Class<T> throwableClass, Object... args) {
+    public static <T extends Throwable> T create(@Nonnull Class<T> throwableClass, Object... args) {
         return newInstance(throwableClass, args);
     }
 
@@ -297,7 +297,7 @@ public abstract class ExceptionUtils implements Utils {
      * @throws TT wraps and throws the source or newly created target exception
      */
     @Nonnull
-    public static <T extends Throwable, TT extends Throwable> TT throwTarget(T source, Class<TT> thrownType) throws TT {
+    public static <T extends Throwable, TT extends Throwable> TT throwTarget(@Nonnull T source, @Nonnull Class<TT> thrownType) throws TT {
         throw wrap(source, thrownType);
     }
 

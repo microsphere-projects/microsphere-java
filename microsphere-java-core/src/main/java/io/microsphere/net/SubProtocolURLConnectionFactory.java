@@ -16,6 +16,9 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
@@ -77,7 +80,7 @@ public interface SubProtocolURLConnectionFactory {
      * @param subProtocols the list of sub-protocols
      * @return <code>true</code> if supports,otherwise <code>false</code>
      */
-    boolean supports(URL url, List<String> subProtocols);
+    boolean supports(@Nonnull URL url, @Nonnull List<String> subProtocols);
 
     /**
      * Create the sub-protocols' {@link URLConnection}
@@ -88,5 +91,6 @@ public interface SubProtocolURLConnectionFactory {
      * @return {@link URLConnection}
      * @throws IOException If the process is failed
      */
-    URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException;
+    @Nullable
+    URLConnection create(@Nonnull URL url, @Nonnull List<String> subProtocols, @Nonnull Proxy proxy) throws IOException;
 }

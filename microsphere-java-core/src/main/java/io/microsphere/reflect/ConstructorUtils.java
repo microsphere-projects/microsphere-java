@@ -73,7 +73,7 @@ public abstract class ConstructorUtils implements Utils {
      * @param constructor the constructor to check
      * @return {@code true} if the constructor is non-private and has no parameters; {@code false} otherwise
      */
-    public static boolean isNonPrivateConstructorWithoutParameters(Constructor<?> constructor) {
+    public static boolean isNonPrivateConstructorWithoutParameters(@Nullable Constructor<?> constructor) {
         return constructor != null && !isPrivate(constructor) && constructor.getParameterCount() < 1;
     }
 
@@ -93,7 +93,7 @@ public abstract class ConstructorUtils implements Utils {
      * @param type the class to check for a non-private parameterless constructor
      * @return {@code true} if such a constructor exists; otherwise, {@code false}
      */
-    public static boolean hasNonPrivateConstructorWithoutParameters(Class<?> type) {
+    public static boolean hasNonPrivateConstructorWithoutParameters(@Nonnull Class<?> type) {
         Constructor<?>[] constructors = type.getDeclaredConstructors();
         boolean has = false;
         for (Constructor<?> constructor : constructors) {
@@ -138,7 +138,7 @@ public abstract class ConstructorUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Constructor<?>> findConstructors(Class<?> type,
+    public static List<Constructor<?>> findConstructors(@Nonnull Class<?> type,
                                                         Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = ofList(type.getConstructors());
         return unmodifiableList(filterAll(constructors, constructorFilters));
@@ -177,7 +177,7 @@ public abstract class ConstructorUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Constructor<?>> findDeclaredConstructors(Class<?> type,
+    public static List<Constructor<?>> findDeclaredConstructors(@Nonnull Class<?> type,
                                                                 Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = ofList(type.getDeclaredConstructors());
         return unmodifiableList(filterAll(constructors, constructorFilters));
@@ -202,7 +202,7 @@ public abstract class ConstructorUtils implements Utils {
      * @return the matching public constructor, or throws an exception if not found
      */
     @Nullable
-    public static <T> Constructor<T> getConstructor(Class<T> type, Class<?>... parameterTypes) {
+    public static <T> Constructor<T> getConstructor(@Nonnull Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getConstructor(parameterTypes));
     }
 
@@ -226,7 +226,7 @@ public abstract class ConstructorUtils implements Utils {
      * @return the matching declared constructor, or throws an exception if not found
      */
     @Nullable
-    public static <T> Constructor<T> getDeclaredConstructor(Class<T> type, Class<?>... parameterTypes) {
+    public static <T> Constructor<T> getDeclaredConstructor(@Nonnull Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getDeclaredConstructor(parameterTypes));
     }
 
@@ -261,7 +261,7 @@ public abstract class ConstructorUtils implements Utils {
      * @return the matching constructor, or {@code null} if none is found
      */
     @Nullable
-    public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
+    public static <T> Constructor<T> findConstructor(@Nonnull Class<T> type, Class<?>... parameterTypes) {
         return ThrowableSupplier.execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
             if (logger.isTraceEnabled()) {
                 logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, arrayToString(parameterTypes));
@@ -290,7 +290,7 @@ public abstract class ConstructorUtils implements Utils {
      * @return a new instance of {@code type}
      */
     @Nonnull
-    public static <T> T newInstance(Class<T> type, Object... args) {
+    public static <T> T newInstance(@Nonnull Class<T> type, Object... args) {
         return newInstance(false, type, args);
     }
 
@@ -321,7 +321,7 @@ public abstract class ConstructorUtils implements Utils {
      * @return a new instance of {@code type}
      */
     @Nonnull
-    public static <T> T newInstance(boolean forceAccess, Class<T> type, Object... args) {
+    public static <T> T newInstance(boolean forceAccess, @Nonnull Class<T> type, Object... args) {
         List<Constructor<?>> constructors = findDeclaredConstructors(type, constructor -> matchParameterTypes(constructor, args));
         if (constructors.isEmpty()) {
             String message = format("No constructor['{}'] matches the arguments : {}", type, arrayToString(args));
@@ -351,7 +351,7 @@ public abstract class ConstructorUtils implements Utils {
      * @return a new instance of the object constructed by the given constructor
      */
     @Nonnull
-    public static <T> T newInstance(Constructor<T> constructor, Object... args) {
+    public static <T> T newInstance(@Nonnull Constructor<T> constructor, Object... args) {
         return newInstance(false, constructor, args);
     }
 
@@ -390,7 +390,7 @@ public abstract class ConstructorUtils implements Utils {
      * @throws RuntimeException         if the underlying constructor throws an exception
      */
     @Nonnull
-    public static <T> T newInstance(boolean forceAccess, Constructor<T> constructor, Object... args) {
+    public static <T> T newInstance(boolean forceAccess, @Nonnull Constructor<T> constructor, Object... args) {
         if (forceAccess) {
             trySetAccessible(constructor);
         }

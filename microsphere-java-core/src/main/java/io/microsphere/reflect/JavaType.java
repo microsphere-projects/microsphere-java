@@ -131,7 +131,7 @@ public class JavaType implements Serializable {
      *
      * @param type the Type object to be encapsulated by this JavaType instance
      */
-    protected JavaType(Type type) {
+    protected JavaType(@Nullable Type type) {
         this(type, valueOf(type));
     }
 
@@ -144,7 +144,7 @@ public class JavaType implements Serializable {
      * @param type The Type object to be encapsulated by this JavaType instance
      * @param kind The Kind of the type, indicating what sort of Java type this represents (e.g., CLASS, PARAMETERIZED_TYPE)
      */
-    protected JavaType(Type type, Kind kind) {
+    protected JavaType(@Nullable Type type, @Nonnull Kind kind) {
         this(type, kind, null);
     }
 
@@ -159,7 +159,7 @@ public class JavaType implements Serializable {
      * @param type   the Type object to be encapsulated by this JavaType instance
      * @param source the source JavaType from which this type was derived, may be null
      */
-    protected JavaType(Type type, JavaType source) {
+    protected JavaType(@Nullable Type type, @Nullable JavaType source) {
         this(type, valueOf(type), source);
     }
 
@@ -175,7 +175,7 @@ public class JavaType implements Serializable {
      *               (e.g., CLASS, PARAMETERIZED_TYPE)
      * @param source the source JavaType from which this type was derived, may be null
      */
-    protected JavaType(Type type, Kind kind, JavaType source) {
+    protected JavaType(@Nullable Type type, @Nonnull Kind kind, @Nullable JavaType source) {
         this.type = type;
         this.kind = kind;
         this.source = source;
@@ -199,7 +199,7 @@ public class JavaType implements Serializable {
      *
      * @return the underlying Type object; never null
      */
-    @Nonnull
+    @Nullable
     public Type getType() {
         return type;
     }
@@ -317,6 +317,7 @@ public class JavaType implements Serializable {
         return superType;
     }
 
+    @Nullable
     protected JavaType resolveSuperType() {
         Type superType = getSuperType(this.kind, this.type);
         return superType == null ? null : from(superType, this);
@@ -348,6 +349,7 @@ public class JavaType implements Serializable {
         return interfaces;
     }
 
+    @Nonnull
     protected JavaType[] resolveInterfaces() {
         Type[] interfaces = kind.getInterfaces(type);
         return from(interfaces, this);
@@ -452,7 +454,7 @@ public class JavaType implements Serializable {
      * otherwise, {@code null}
      */
     @Nullable
-    public JavaType as(Class<?> targetClass) {
+    public JavaType as(@Nonnull Class<?> targetClass) {
         if (isObjectClass(targetClass)) {
             return from(Object.class, CLASS, this);
         }
@@ -769,7 +771,7 @@ public class JavaType implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (!(o instanceof JavaType)) return false;
         JavaType javaType = (JavaType) o;
         return Objects.equals(type, javaType.type)
@@ -815,8 +817,8 @@ public class JavaType implements Serializable {
      * @param fieldName     The name of the field to retrieve the type from
      * @return A JavaType instance representing the field's type, or NULL_JAVA_TYPE if the field is not found
      */
-    @Nullable
-    public static JavaType fromField(Class<?> declaredClass, String fieldName) {
+    @Nonnull
+    public static JavaType fromField(@Nullable Class<?> declaredClass, @Nonnull String fieldName) {
         Field field = findField(declaredClass, fieldName);
         return fromField(field);
     }
@@ -845,7 +847,7 @@ public class JavaType implements Serializable {
      * @return a JavaType representing the field's type; never null
      */
     @Nonnull
-    public static JavaType fromField(Field field) {
+    public static JavaType fromField(@Nullable Field field) {
         return field == null ? NULL_JAVA_TYPE : from(field.getGenericType());
     }
 
@@ -876,7 +878,7 @@ public class JavaType implements Serializable {
      * @return A JavaType instance representing the method's return type, or NULL_JAVA_TYPE if the method is not found
      */
     @Nonnull
-    public static JavaType fromMethodReturnType(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+    public static JavaType fromMethodReturnType(@Nullable Class<?> declaredClass, @Nullable String methodName, Class<?>... parameterTypes) {
         Method method = findMethod(declaredClass, methodName, parameterTypes);
         return fromMethodReturnType(method);
     }
@@ -907,7 +909,7 @@ public class JavaType implements Serializable {
      * @return a JavaType representing the method's return type; never null
      */
     @Nonnull
-    public static JavaType fromMethodReturnType(Method method) {
+    public static JavaType fromMethodReturnType(@Nullable Method method) {
         return method == null ? NULL_JAVA_TYPE : from(method.getGenericReturnType());
     }
 
@@ -938,7 +940,7 @@ public class JavaType implements Serializable {
      * @return An array of JavaType representing the method's parameter types, or an empty array if the method is not found
      */
     @Nonnull
-    public static JavaType[] fromMethodParameters(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+    public static JavaType[] fromMethodParameters(@Nullable Class<?> declaredClass, @Nullable String methodName, Class<?>... parameterTypes) {
         Method method = findMethod(declaredClass, methodName, parameterTypes);
         return method == null ? EMPTY_JAVA_TYPE_ARRAY : fromMethodParameters(method);
     }
@@ -971,7 +973,7 @@ public class JavaType implements Serializable {
      * @return an array of JavaType objects representing the method's parameter types; never null
      */
     @Nonnull
-    public static JavaType[] fromMethodParameters(Method method) {
+    public static JavaType[] fromMethodParameters(@Nonnull Method method) {
         Type[] genericParameterType = method.getGenericParameterTypes();
         return from(genericParameterType);
     }
@@ -1002,7 +1004,7 @@ public class JavaType implements Serializable {
      * @return a JavaType representing the method's parameter type at the specified index; never null
      */
     @Nonnull
-    public static JavaType fromMethodParameter(Method method, int parameterIndex) {
+    public static JavaType fromMethodParameter(@Nonnull Method method, int parameterIndex) {
         Type genericParameterType = method.getGenericParameterTypes()[parameterIndex];
         return from(genericParameterType);
     }
@@ -1027,7 +1029,7 @@ public class JavaType implements Serializable {
      * @return a JavaType representing the given class; never null
      */
     @Nonnull
-    public static JavaType from(Class<?> targetClass) {
+    public static JavaType from(@Nonnull Class<?> targetClass) {
         return from(targetClass, CLASS);
     }
 
@@ -1056,32 +1058,32 @@ public class JavaType implements Serializable {
      * @return a JavaType representing the given type; never null
      */
     @Nonnull
-    public static JavaType from(Type type) {
+    public static JavaType from(@Nullable Type type) {
         return new JavaType(type);
     }
 
     @Nonnull
-    protected static JavaType from(Type type, Kind kind) {
+    protected static JavaType from(@Nullable Type type, @Nonnull Kind kind) {
         return new JavaType(type, kind);
     }
 
     @Nonnull
-    protected static JavaType from(Type type, JavaType source) {
+    protected static JavaType from(@Nullable Type type, @Nullable JavaType source) {
         return new JavaType(type, source);
     }
 
     @Nonnull
-    protected static JavaType from(Type type, Kind kind, JavaType source) {
+    protected static JavaType from(@Nullable Type type, @Nonnull Kind kind, @Nullable JavaType source) {
         return new JavaType(type, kind, source);
     }
 
     @Nonnull
-    protected static JavaType[] from(Type[] types) {
+    protected static JavaType[] from(@Nullable Type[] types) {
         return from(types, null);
     }
 
     @Nonnull
-    protected static JavaType[] from(Type[] types, JavaType source) {
+    protected static JavaType[] from(@Nullable Type[] types, @Nullable JavaType source) {
         int length = length(types);
         if (length == 0) {
             return EMPTY_JAVA_TYPE_ARRAY;
@@ -1166,24 +1168,28 @@ public class JavaType implements Serializable {
          */
         CLASS(Class.class) {
             @Override
-            public Type getSuperType(Type type) {
+            @Nullable
+            public Type getSuperType(@Nullable Type type) {
                 Class klass = as(type);
                 return klass.getGenericSuperclass();
             }
 
             @Override
-            public Type getRawType(Type type) {
+            @Nullable
+            public Type getRawType(@Nullable Type type) {
                 return type;
             }
 
             @Override
-            public Type[] getInterfaces(Type type) {
+            @Nonnull
+            public Type[] getInterfaces(@Nullable Type type) {
                 Class klass = as(type);
                 return klass.getGenericInterfaces();
             }
 
             @Override
-            public Type[] getGenericTypes(JavaType javaType) {
+            @Nonnull
+            public Type[] getGenericTypes(@Nonnull JavaType javaType) {
                 Class klass = as(javaType.type);
                 TypeVariable<Class>[] typeParameters = klass.getTypeParameters();
                 int length = typeParameters.length;
@@ -1200,28 +1206,32 @@ public class JavaType implements Serializable {
          */
         PARAMETERIZED_TYPE(ParameterizedType.class) {
             @Override
-            public Type getSuperType(Type type) {
+            @Nullable
+            public Type getSuperType(@Nullable Type type) {
                 Type rawType = getRawType(type);
                 Kind rawTypeKind = valueOf(rawType);
                 return rawTypeKind.getSuperType(rawType);
             }
 
             @Override
-            public Type getRawType(Type type) {
+            @Nullable
+            public Type getRawType(@Nullable Type type) {
                 ParameterizedType pType = as(type);
                 Type rawType = pType.getRawType();
                 return rawType;
             }
 
             @Override
-            public Type[] getInterfaces(Type type) {
+            @Nonnull
+            public Type[] getInterfaces(@Nullable Type type) {
                 Type rawType = getRawType(type);
                 Kind rawTypeKind = valueOf(rawType);
                 return rawTypeKind.getInterfaces(rawType);
             }
 
             @Override
-            public Type[] getGenericTypes(JavaType javaType) {
+            @Nonnull
+            public Type[] getGenericTypes(@Nonnull JavaType javaType) {
                 Type type = resolveType(javaType);
                 Type baseType = javaType.type;
                 final Type[] genericTypes;
@@ -1291,7 +1301,8 @@ public class JavaType implements Serializable {
          * @param type the specified {@link Type type}
          * @return <code>null</code> as default
          */
-        public Type getRawType(Type type) {
+        @Nullable
+        public Type getRawType(@Nullable Type type) {
             return null;
         }
 
@@ -1301,19 +1312,23 @@ public class JavaType implements Serializable {
          * @param type the specified {@link Type type}
          * @return <code>null</code> as default
          */
-        public Type getSuperType(Type type) {
+        @Nullable
+        public Type getSuperType(@Nullable Type type) {
             return null;
         }
 
-        public Type[] getInterfaces(Type type) {
+        @Nonnull
+        public Type[] getInterfaces(@Nullable Type type) {
             return EMPTY_TYPE_ARRAY;
         }
 
-        public Type[] getGenericTypes(JavaType javaType) {
+        @Nonnull
+        public Type[] getGenericTypes(@Nonnull JavaType javaType) {
             return EMPTY_TYPE_ARRAY;
         }
 
-        public static Kind valueOf(Type type) {
+        @Nonnull
+        public static Kind valueOf(@Nullable Type type) {
             Kind kind = UNKNOWN;
             for (Kind e : values()) {
                 if (e.typeClass.isInstance(type)) {

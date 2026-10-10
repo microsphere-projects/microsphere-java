@@ -17,6 +17,9 @@
 
 package io.microsphere.lang.model.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -99,63 +102,75 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
     }
 
     @Override
-    public Object visitBoolean(boolean b, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitBoolean(boolean b, @Nullable ExecutableElement attributeMethod) {
         return b;
     }
 
     @Override
-    public Object visitByte(byte b, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitByte(byte b, @Nullable ExecutableElement attributeMethod) {
         return b;
     }
 
     @Override
-    public Object visitChar(char c, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitChar(char c, @Nullable ExecutableElement attributeMethod) {
         return c;
     }
 
     @Override
-    public Object visitDouble(double d, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitDouble(double d, @Nullable ExecutableElement attributeMethod) {
         return d;
     }
 
     @Override
-    public Object visitFloat(float f, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitFloat(float f, @Nullable ExecutableElement attributeMethod) {
         return f;
     }
 
     @Override
-    public Object visitInt(int i, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitInt(int i, @Nullable ExecutableElement attributeMethod) {
         return i;
     }
 
     @Override
-    public Object visitLong(long i, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitLong(long i, @Nullable ExecutableElement attributeMethod) {
         return i;
     }
 
     @Override
-    public Object visitShort(short s, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitShort(short s, @Nullable ExecutableElement attributeMethod) {
         return s;
     }
 
     @Override
-    public Object visitString(String s, ExecutableElement attributeMethod) {
+    @Nullable
+    public Object visitString(@Nullable String s, @Nullable ExecutableElement attributeMethod) {
         return s;
     }
 
     @Override
-    public Object visitType(TypeMirror t, ExecutableElement attributeMethod) {
+    @Nullable
+    public Object visitType(@Nonnull TypeMirror t, @Nullable ExecutableElement attributeMethod) {
         return classValuesAsString ? t.toString() : loadClass(t);
     }
 
     @Override
-    public Object visitEnumConstant(VariableElement c, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitEnumConstant(@Nonnull VariableElement c, @Nullable ExecutableElement attributeMethod) {
         Class enumClass = loadClass(c.asType());
         return valueOf(enumClass, c.toString());
     }
 
     @Override
-    public Object visitAnnotation(AnnotationMirror a, ExecutableElement attributeMethod) {
+    @Nullable
+    public Object visitAnnotation(@Nonnull AnnotationMirror a, @Nullable ExecutableElement attributeMethod) {
         Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(a);
         LinkedHashMap<String, Object> attributesMap = newFixedLinkedHashMap(elementValues.size());
         for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
@@ -174,7 +189,8 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
     }
 
     @Override
-    public Object visitArray(List<? extends AnnotationValue> values, ExecutableElement attributeMethod) {
+    @Nonnull
+    public Object visitArray(@Nonnull List<? extends AnnotationValue> values, @Nonnull ExecutableElement attributeMethod) {
         int size = values.size();
         Class<?> componentType = getComponentType(attributeMethod);
         Object array = newArray(componentType, size);
@@ -195,7 +211,8 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
     }
 
     @Override
-    public Object visitUnknown(AnnotationValue av, ExecutableElement attributeMethod) {
+    @Nullable
+    public Object visitUnknown(@Nullable AnnotationValue av, @Nullable ExecutableElement attributeMethod) {
         return av;
     }
 }

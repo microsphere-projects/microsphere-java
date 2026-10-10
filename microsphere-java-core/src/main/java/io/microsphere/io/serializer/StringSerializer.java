@@ -16,6 +16,9 @@
  */
 package io.microsphere.io.serializer;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -49,12 +52,13 @@ public class StringSerializer implements Serializer<String> {
         this(UTF_8);
     }
 
-    public StringSerializer(Charset charset) {
+    public StringSerializer(@Nonnull Charset charset) {
         this.charset = charset;
     }
 
     @Override
-    public byte[] serialize(String source) throws IOException {
+    @Nonnull
+    public byte[] serialize(@Nullable String source) throws IOException {
         return source.getBytes(this.charset);
     }
 }

@@ -16,6 +16,9 @@
  */
 package io.microsphere.lang.function;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -66,7 +69,7 @@ public interface ThrowableConsumer<T> {
      * @param t the function argument
      * @throws Throwable if met with any error
      */
-    void accept(T t) throws Throwable;
+    void accept(@Nullable T t) throws Throwable;
 
     /**
      * Executes {@link #accept(T)} with {@link #handleException(Object, Throwable) the default exception handling}
@@ -74,7 +77,7 @@ public interface ThrowableConsumer<T> {
      * @param t the function argument
      * @see #accept(T)
      */
-    default void execute(T t) {
+    default void execute(@Nullable T t) {
         execute(t, this::handleException);
     }
 
@@ -86,7 +89,7 @@ public interface ThrowableConsumer<T> {
      *                         the exception that the {@link #accept(T)} method throws
      * @throws NullPointerException if <code>exceptionHandler</code> is <code>null</code>
      */
-    default void execute(T t, BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
+    default void execute(@Nullable T t, @Nonnull BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
         assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
         try {
             accept(t);
@@ -101,7 +104,7 @@ public interface ThrowableConsumer<T> {
      * @param t       the value to be consumed
      * @param failure the instance of {@link Throwable}
      */
-    default void handleException(T t, Throwable failure) {
+    default void handleException(@Nullable T t, @Nonnull Throwable failure) {
         throw new RuntimeException(failure);
     }
 
@@ -148,7 +151,7 @@ public interface ThrowableConsumer<T> {
      * @param <T>      the type of the input argument
      * @throws NullPointerException if the given consumer is null
      */
-    static <T> void execute(T t, ThrowableConsumer<T> consumer) throws NullPointerException {
+    static <T> void execute(@Nullable T t, @Nonnull ThrowableConsumer<T> consumer) throws NullPointerException {
         consumer.execute(t, consumer::handleException);
     }
 
@@ -187,7 +190,7 @@ public interface ThrowableConsumer<T> {
      * @param <T>              the type of the input argument
      * @throws NullPointerException if the given {@code consumer} or {@code exceptionHandler} is null
      */
-    static <T> void execute(T t, ThrowableConsumer<T> consumer, BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
+    static <T> void execute(@Nullable T t, @Nonnull ThrowableConsumer<T> consumer, @Nonnull BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
         assertNotNull(consumer, "The 'consumer' must not be null");
         consumer.execute(t, exceptionHandler);
     }

@@ -3,6 +3,8 @@
  */
 package io.microsphere.filter;
 
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.Predicate;
 
 /**
@@ -39,10 +41,10 @@ public interface Filter<T> extends Predicate<T> {
      * @param filteredObject filtered object
      * @return
      */
-    boolean accept(T filteredObject);
+    boolean accept(@Nullable T filteredObject);
 
     @Override
-    default boolean test(T t) {
+    default boolean test(@Nullable T t) {
         return accept(t);
     }
 }

@@ -3,6 +3,8 @@
  */
 package io.microsphere.filter;
 
+import io.microsphere.annotation.Nullable;
+
 import java.util.jar.JarEntry;
 
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
@@ -41,7 +43,7 @@ public class ClassFileJarEntryFilter implements JarEntryFilter {
     }
 
     @Override
-    public boolean accept(JarEntry jarEntry) {
+    public boolean accept(@Nullable JarEntry jarEntry) {
         return !jarEntry.isDirectory() && jarEntry.getName().endsWith(CLASS_EXTENSION);
     }
 }

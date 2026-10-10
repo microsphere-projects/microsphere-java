@@ -16,6 +16,8 @@
  */
 package io.microsphere.io.filter;
 
+import io.microsphere.annotation.Nullable;
+
 import java.io.File;
 
 /**
@@ -50,7 +52,7 @@ public class DirectoryFileFilter implements IOFileFilter {
     }
 
     @Override
-    public boolean accept(File file) {
+    public boolean accept(@Nullable File file) {
         return file != null && file.isDirectory();
     }
 }

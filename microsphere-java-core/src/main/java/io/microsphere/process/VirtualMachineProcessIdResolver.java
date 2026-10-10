@@ -16,6 +16,7 @@
  */
 package io.microsphere.process;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.logging.Logger;
 
 import java.lang.management.RuntimeMXBean;
@@ -86,6 +87,7 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
     }
 
     @Override
+    @Nonnull
     public Long current() {
         RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
         Object jvm = getFieldValue(true, runtimeMXBean, JVM_FIELD);

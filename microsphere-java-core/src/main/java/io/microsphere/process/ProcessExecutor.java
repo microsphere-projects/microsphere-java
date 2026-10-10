@@ -1,6 +1,8 @@
 package io.microsphere.process;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.io.FastByteArrayInputStream;
 import io.microsphere.io.FastByteArrayOutputStream;
 import io.microsphere.logging.Logger;
@@ -101,7 +103,7 @@ public class ProcessExecutor {
      * @param command command
      * @param options command options
      */
-    public ProcessExecutor(String command, String... options) {
+    public ProcessExecutor(@Nullable String command, String... options) {
         StringBuilder optionsBuilder = new StringBuilder();
         if (isNotEmpty(options)) {
             for (String argument : options) {
@@ -121,7 +123,7 @@ public class ProcessExecutor {
      * @throws IOException      if process execution is failed.
      * @throws TimeoutException if the execution is timeout over specified {@link #DEFAULT_TIMEOUT}
      */
-    public void execute(OutputStream outputStream) throws IOException, TimeoutException {
+    public void execute(@Nonnull OutputStream outputStream) throws IOException, TimeoutException {
         this.execute(outputStream, DEFAULT_TIMEOUT);
     }
 
@@ -133,7 +135,7 @@ public class ProcessExecutor {
      * @throws IOException      if process execution is failed.
      * @throws TimeoutException if the execution is timeout over specified <code>timeoutInMilliseconds</code>
      */
-    public void execute(OutputStream outputStream, long timeoutInMilliseconds) throws IOException, TimeoutException {
+    public void execute(@Nonnull OutputStream outputStream, long timeoutInMilliseconds) throws IOException, TimeoutException {
         execute(outputStream, timeoutInMilliseconds, MILLISECONDS);
     }
 
@@ -146,7 +148,7 @@ public class ProcessExecutor {
      * @throws IOException      if process execution is failed.
      * @throws TimeoutException if the execution is timeout over specified <code>timeout</code> and <code>timeUnit</code>
      */
-    public void execute(OutputStream outputStream, long timeout, TimeUnit timeUnit) throws IOException, TimeoutException {
+    public void execute(@Nonnull OutputStream outputStream, long timeout, @Nonnull TimeUnit timeUnit) throws IOException, TimeoutException {
 
         Future<byte[]> future = executor.submit(() -> {
             // Use ProcessBuilder with merged stderr so we only need to drain one stream,

@@ -248,7 +248,7 @@ public abstract class ReflectionUtils implements Utils {
      * @return The fully qualified name of the caller class.
      * @throws IllegalStateException if an error occurs while determining the caller class.
      */
-    @Nonnull
+    @Nullable
     public static String getCallerClassName() {
         if (supportedSunReflectReflection) {
             return getCallerClassInSunReflectReflection(sunReflectReflectionInvocationFrameOffset).getName();
@@ -315,7 +315,7 @@ public abstract class ReflectionUtils implements Utils {
      * @return The {@link Class} of the method caller.
      * @throws IllegalStateException if an error occurs while trying to determine the caller class via reflection.
      */
-    @Nonnull
+    @Nullable
     public static Class<?> getCallerClass() throws IllegalStateException {
         Class<?> callerClass = getCallerClassInSunReflectReflection(sunReflectReflectionInvocationFrameOffset);
         if (callerClass != null) {
@@ -379,7 +379,7 @@ public abstract class ReflectionUtils implements Utils {
      * @throws IllegalArgumentException if the input is not a valid array object.
      */
     @Nonnull
-    public static <T> List<T> toList(Object array) throws IllegalArgumentException {
+    public static <T> List<T> toList(@Nonnull Object array) throws IllegalArgumentException {
         int length = getLength(array);
         ArrayList<T> list = newArrayList(length);
         for (int i = 0; i < length; i++) {
@@ -443,7 +443,7 @@ public abstract class ReflectionUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Map<String, Object> readFieldsAsMap(Object object) {
+    public static Map<String, Object> readFieldsAsMap(@Nullable Object object) {
         if (object == null) {
             return emptyMap();
         }
@@ -504,7 +504,7 @@ public abstract class ReflectionUtils implements Utils {
      * @return <code>true</code> if the specified {@link Throwable} is an instance of
      * {@link java.lang.reflect.InaccessibleObjectException}, <code>false</code> otherwise.
      */
-    public static boolean isInaccessibleObjectException(Throwable failure) {
+    public static boolean isInaccessibleObjectException(@Nullable Throwable failure) {
         return isInaccessibleObjectException(getType(failure));
     }
 
@@ -530,7 +530,7 @@ public abstract class ReflectionUtils implements Utils {
      * @return <code>true</code> if the specified {@link Class} represents
      * {@link java.lang.reflect.InaccessibleObjectException}, <code>false</code> otherwise.
      */
-    public static boolean isInaccessibleObjectException(Class<?> throwableClass) {
+    public static boolean isInaccessibleObjectException(@Nullable Class<?> throwableClass) {
         return isInaccessibleObjectException(getTypeName(throwableClass));
     }
 

@@ -16,6 +16,7 @@
  */
 package io.microsphere.process;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -61,6 +62,7 @@ public class ModernProcessIdResolver implements ProcessIdResolver {
     }
 
     @Override
+    @Nullable
     public Long current() {
         Object processHandle = invokeStaticMethod(PROCESS_HANDLE_CLASS, "current");
         Long pid = invokeMethod(processHandle, PROCESS_HANDLE_CLASS, "pid");

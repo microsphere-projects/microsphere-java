@@ -386,7 +386,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, Iterable<String> classNames) {
+    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, @Nullable Iterable<String> classNames) {
         int size = size(classNames);
         if (size < 1) {
             return emptySet();
@@ -425,7 +425,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param type        the Class object representing the class to check
      * @return true if the class is already loaded; false otherwise
      */
-    public static boolean isLoadedClass(@Nullable ClassLoader classLoader, Class<?> type) {
+    public static boolean isLoadedClass(@Nullable ClassLoader classLoader, @Nonnull Class<?> type) {
         return isLoadedClass(classLoader, type.getName());
     }
 
@@ -455,7 +455,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param className   the fully qualified name of the class to check
      * @return true if the class is already loaded; false otherwise
      */
-    public static boolean isLoadedClass(@Nullable ClassLoader classLoader, String className) {
+    public static boolean isLoadedClass(@Nullable ClassLoader classLoader, @Nullable String className) {
         return nonNull(findLoadedClass(classLoader, className));
     }
 
@@ -494,7 +494,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return the {@link Class} object if the class is already loaded; null otherwise
      */
     @Nullable
-    public static Class<?> findLoadedClass(@Nullable ClassLoader classLoader, String className) {
+    public static Class<?> findLoadedClass(@Nullable ClassLoader classLoader, @Nullable String className) {
         ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         Class<?> loadedClass = invokeFindLoadedClassMethod(actualClassLoader, className);
         if (loadedClass == null) {
@@ -617,7 +617,8 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param className   the fully qualified name of the class to load, may be blank
      * @return the loaded {@link Class}, or {@code null} if the name is blank or the class cannot be found
      */
-    protected static Class<?> doLoadClass(ClassLoader classLoader, String className) {
+    @Nullable
+    protected static Class<?> doLoadClass(@Nonnull ClassLoader classLoader, @Nullable String className) {
         if (isBlank(className)) {
             return null;
         }
@@ -666,7 +667,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<URL> getResources(@Nullable ClassLoader classLoader, @Nonnull ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
+    public static Set<URL> getResources(@Nullable ClassLoader classLoader, @Nonnull ResourceType resourceType, @Nonnull String resourceName) throws NullPointerException, IOException {
         ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         String normalizedResourceName = resourceType.resolve(resourceName);
         Enumeration<URL> resources = actualClassLoader.getResources(normalizedResourceName);
@@ -704,7 +705,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<URL> getResources(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
+    public static Set<URL> getResources(@Nullable ClassLoader classLoader, @Nonnull String resourceName) throws NullPointerException, IOException {
         Set<URL> resourceURLs = emptySet();
         for (ResourceType resourceType : ResourceType.values()) {
             resourceURLs = getResources(classLoader, resourceType, resourceName);
@@ -739,7 +740,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException if the resourceName is {@code null}
      */
     @Nullable
-    public static URL getResource(String resourceName) throws NullPointerException {
+    public static URL getResource(@Nonnull String resourceName) throws NullPointerException {
         return getResource(null, resourceName);
     }
 
@@ -780,7 +781,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException if the resourceName is {@code null}
      */
     @Nullable
-    public static URL getResource(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException {
+    public static URL getResource(@Nullable ClassLoader classLoader, @Nonnull String resourceName) throws NullPointerException {
         URL resourceURL = null;
         for (ResourceType resourceType : values()) {
             resourceURL = getResource(classLoader, resourceType, resourceName);
@@ -840,7 +841,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException if the resourceName is {@code null}
      */
     @Nullable
-    public static URL getResource(@Nullable ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
+    public static URL getResource(@Nullable ClassLoader classLoader, @Nonnull ResourceType resourceType, @Nonnull String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
         URL resource = nullSafe(normalizedResourceName, name -> nullSafeClassLoader(classLoader).getResource(name));
         if (logger.isTraceEnabled()) {
@@ -873,7 +874,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws IOException          if an I/O error occurs while reading the resource
      */
     @Nullable
-    public static String getResourceAsString(String resourceName) throws NullPointerException, IOException {
+    public static String getResourceAsString(@Nonnull String resourceName) throws NullPointerException, IOException {
         return getResourceAsString(null, resourceName);
     }
 
@@ -912,7 +913,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws IOException          if an I/O error occurs while reading the resource
      */
     @Nullable
-    public static String getResourceAsString(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
+    public static String getResourceAsString(@Nullable ClassLoader classLoader, @Nonnull String resourceName) throws NullPointerException, IOException {
         URL resource = getResource(classLoader, resourceName);
         if (resource == null) {
             return null;
@@ -961,7 +962,8 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return the URL to the class file resource, or {@code null} if not found
      * @throws NullPointerException if the className is null
      */
-    public static URL getClassResource(@Nullable ClassLoader classLoader, String className) {
+    @Nullable
+    public static URL getClassResource(@Nullable ClassLoader classLoader, @Nonnull String className) {
         final String resourceName = className + CLASS_EXTENSION;
         return getResource(classLoader, ResourceType.CLASS, resourceName);
     }
@@ -990,7 +992,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException if the provided class is {@code null}
      */
     @Nullable
-    public static URL getClassResource(Class<?> type) {
+    public static URL getClassResource(@Nonnull Class<?> type) {
         return getClassResource(getClassLoader(type), type);
     }
 
@@ -1032,7 +1034,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException If <code>type</code> argument is <code>null</code>
      */
     @Nullable
-    public static URL getClassResource(@Nullable ClassLoader classLoader, Class<?> type) {
+    public static URL getClassResource(@Nullable ClassLoader classLoader, @Nonnull Class<?> type) {
         String resourceName = type.getName();
         return getClassResource(classLoader, resourceName);
     }
@@ -1297,7 +1299,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<Class<?>> findLoadedClassesInClassPaths(@Nullable ClassLoader classLoader, Set<String> classPaths) throws UnsupportedOperationException {
+    public static Set<Class<?>> findLoadedClassesInClassPaths(@Nullable ClassLoader classLoader, @Nonnull Set<String> classPaths) throws UnsupportedOperationException {
         LinkedHashSet<Class<?>> loadedClasses = newLinkedHashSet();
         for (String classPath : classPaths) {
             loadedClasses.addAll(findLoadedClassesInClassPath(classLoader, classPath));
@@ -1343,7 +1345,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<Class<?>> findLoadedClassesInClassPath(@Nullable ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
+    public static Set<Class<?>> findLoadedClassesInClassPath(@Nullable ClassLoader classLoader, @Nonnull String classPath) throws UnsupportedOperationException {
         Set<String> classNames = INSTANCE.getClassNamesInClassPath(classPath, true);
         return findLoadedClasses(classLoader, classNames);
     }
@@ -1595,7 +1597,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param url         the URL to remove from the class path
      * @return true if the URL was successfully removed; false otherwise
      */
-    public static boolean removeClassPathURL(@Nullable ClassLoader classLoader, URL url) {
+    public static boolean removeClassPathURL(@Nullable ClassLoader classLoader, @Nullable URL url) {
         if (!(classLoader instanceof SecureClassLoader)) {
             return false;
         }
@@ -1696,6 +1698,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return a non-null instance of {@link URLClassLoader}
      * @throws IllegalArgumentException if the 'urls' is null or contains null elements
      */
+    @Nonnull
     public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls, @Nullable ClassLoader classLoader) {
         assertNotNull(urls, () -> "The 'urls' must not be null");
         URL[] urlsArray = asArray(urls, URL.class);
@@ -1963,7 +1966,8 @@ public abstract class ClassLoaderUtils implements Utils {
              * @return the same resource name, unchanged
              */
             @Override
-            public String normalize(String name) {
+            @Nullable
+            public String normalize(@Nullable String name) {
                 return name;
             }
         },
@@ -2004,7 +2008,8 @@ public abstract class ClassLoaderUtils implements Utils {
              * @return the normalized path-style class resource name, or {@code null} if {@code name} is {@code null}
              */
             @Override
-            public String normalize(String name) {
+            @Nullable
+            public String normalize(@Nullable String name) {
                 if (name == null) {
                     return null;
                 }
@@ -2083,7 +2088,8 @@ public abstract class ClassLoaderUtils implements Utils {
          * @param name the original resource name
          * @return the resolved and normalized resource name, or null if not supported
          */
-        public String resolve(String name) {
+        @Nullable
+        public String resolve(@Nullable String name) {
             if (isBlank(name) || !supports(name)) {
                 return null;
             }

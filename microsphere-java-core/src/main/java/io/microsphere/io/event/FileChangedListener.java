@@ -16,6 +16,7 @@
  */
 package io.microsphere.io.event;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.event.Event;
 import io.microsphere.event.EventListener;
 import io.microsphere.io.event.FileChangedEvent.Kind;
@@ -94,7 +95,7 @@ import io.microsphere.io.event.FileChangedEvent.Kind;
  */
 public interface FileChangedListener extends EventListener<FileChangedEvent> {
 
-    default void onEvent(FileChangedEvent event) {
+    default void onEvent(@Nonnull FileChangedEvent event) {
         Kind kind = event.getKind();
         switch (kind) {
             case CREATED:
@@ -114,7 +115,7 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
      *
      * @param event the {@link Kind#CREATED created} {@link FileChangedEvent event}
      */
-    default void onFileCreated(FileChangedEvent event) {
+    default void onFileCreated(@Nonnull FileChangedEvent event) {
     }
 
     /**
@@ -122,7 +123,7 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
      *
      * @param event the {@link Kind#MODIFIED modified} {@link FileChangedEvent event}
      */
-    default void onFileModified(FileChangedEvent event) {
+    default void onFileModified(@Nonnull FileChangedEvent event) {
     }
 
     /**
@@ -130,6 +131,6 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
      *
      * @param event the {@link Kind#DELETED deleted} {@link FileChangedEvent event}
      */
-    default void onFileDeleted(FileChangedEvent event) {
+    default void onFileDeleted(@Nonnull FileChangedEvent event) {
     }
 }

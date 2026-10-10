@@ -17,6 +17,7 @@
 
 package io.microsphere.lang.invoke;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
@@ -58,6 +59,7 @@ public abstract class LambdaUtils implements Utils {
      * @param object the lambda object
      * @return the parameter types of the lambda method
      */
+    @Nonnull
     public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Object object) {
         return resolveLambdaMethodParameterTypes(getType(object));
     }
@@ -68,6 +70,7 @@ public abstract class LambdaUtils implements Utils {
      * @param type the lambda class type
      * @return the parameter types of the lambda method
      */
+    @Nonnull
     public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Class<?> type) {
         List<Class<?>> allInterfaces = findAllInterfaces(type, ClassUtils::isFunctionalInterface);
         if (allInterfaces.size() == 1) {
@@ -84,6 +87,7 @@ public abstract class LambdaUtils implements Utils {
      * @param functionalInterface the functional interface type
      * @return the parameter types of the lambda method
      */
+    @Nonnull
     public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Object object, @Nullable Class<?> functionalInterface) {
         return resolveLambdaMethodParameterTypes(getType(object), functionalInterface);
     }
@@ -95,6 +99,7 @@ public abstract class LambdaUtils implements Utils {
      * @param functionalInterface the functional interface type
      * @return the parameter types of the lambda method
      */
+    @Nonnull
     public static List<Class<?>> resolveLambdaMethodParameterTypes(@Nullable Class<?> type, @Nullable Class<?> functionalInterface) {
         if (!isLambdaClass(type)) {
             return emptyList();

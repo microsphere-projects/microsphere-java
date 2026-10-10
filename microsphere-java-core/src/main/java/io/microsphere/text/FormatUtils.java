@@ -1,5 +1,7 @@
 package io.microsphere.text;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import static io.microsphere.util.ArrayUtils.length;
@@ -35,7 +37,8 @@ public abstract class FormatUtils implements Utils {
      * @param args    the arguments to replace the placeholders in the pattern
      * @return the formatted string, with placeholders replaced by corresponding argument values
      */
-    public static String format(String pattern, Object... args) {
+    @Nullable
+    public static String format(@Nullable String pattern, Object... args) {
         return formatWithPlaceholder(pattern, DEFAULT_PLACEHOLDER, args);
     }
 
@@ -59,7 +62,8 @@ public abstract class FormatUtils implements Utils {
      * @param args        the arguments to replace the placeholders in the pattern
      * @return the formatted string, with placeholders replaced by corresponding argument values
      */
-    public static String formatWithPlaceholder(String pattern, String placeholder, Object... args) {
+    @Nullable
+    public static String formatWithPlaceholder(@Nullable String pattern, @Nonnull String placeholder, Object... args) {
         if (isBlank(pattern)) {
             return pattern;
         }

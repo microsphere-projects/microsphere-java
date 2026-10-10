@@ -117,7 +117,7 @@ public interface TypeUtils extends Utils {
      * @param element the element to check, may be null
      * @return true if the element is a simple type, false otherwise
      */
-    static boolean isSimpleType(Element element) {
+    static boolean isSimpleType(@Nullable Element element) {
         return element != null && isSimpleType(element.asType());
     }
 
@@ -146,7 +146,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a simple type; false otherwise
      */
-    static boolean isSimpleType(TypeMirror type) {
+    static boolean isSimpleType(@Nullable TypeMirror type) {
         return type != null && SIMPLE_TYPE_NAMES.contains(type.toString());
     }
 
@@ -174,7 +174,7 @@ public interface TypeUtils extends Utils {
      * @param type    the Type to compare, may be null
      * @return true if both represent the same type; false otherwise
      */
-    static boolean isSameType(Element element, Type type) {
+    static boolean isSameType(@Nullable Element element, @Nullable Type type) {
         return isSameType(element == null ? null : element.asType(), type);
     }
 
@@ -200,7 +200,7 @@ public interface TypeUtils extends Utils {
      * @param typeName the fully qualified class name to compare, may be null
      * @return true if both represent the same type; false otherwise
      */
-    static boolean isSameType(Element type, CharSequence typeName) {
+    static boolean isSameType(@Nullable Element type, @Nullable CharSequence typeName) {
         return isSameType(type == null ? null : type.asType(), typeName);
     }
 
@@ -232,7 +232,7 @@ public interface TypeUtils extends Utils {
      * @param type       the Type to compare, may be null
      * @return true if both represent the same type; false otherwise
      */
-    static boolean isSameType(TypeMirror typeMirror, Type type) {
+    static boolean isSameType(@Nullable TypeMirror typeMirror, @Nullable Type type) {
         return isSameType(typeMirror, type == null ? null : type.getTypeName());
     }
 
@@ -258,7 +258,7 @@ public interface TypeUtils extends Utils {
      * @param typeName the fully qualified class name to compare, may be null
      * @return true if both represent the same type; false otherwise
      */
-    static boolean isSameType(TypeMirror type, CharSequence typeName) {
+    static boolean isSameType(@Nullable TypeMirror type, @Nullable CharSequence typeName) {
         if (type == null && typeName == null) {
             return true;
         }
@@ -286,7 +286,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an array type; false otherwise
      */
-    static boolean isArrayType(TypeMirror type) {
+    static boolean isArrayType(@Nullable TypeMirror type) {
         return type != null && ARRAY == type.getKind();
     }
 
@@ -311,7 +311,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents an array type; false otherwise
      */
-    static boolean isArrayType(Element element) {
+    static boolean isArrayType(@Nullable Element element) {
         return element != null && isArrayType(element.asType());
     }
 
@@ -337,7 +337,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an enum type; false otherwise
      */
-    static boolean isEnumType(TypeMirror type) {
+    static boolean isEnumType(@Nullable TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
         return declaredType != null && ENUM == declaredType.asElement().getKind();
     }
@@ -364,7 +364,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents an enum type; false otherwise
      */
-    static boolean isEnumType(Element element) {
+    static boolean isEnumType(@Nullable Element element) {
         return element != null && isEnumType(element.asType());
     }
 
@@ -384,7 +384,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a class type; false otherwise
      */
-    static boolean isClassType(TypeMirror type) {
+    static boolean isClassType(@Nullable TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
         return declaredType != null && isClassType(declaredType.asElement());
     }
@@ -405,7 +405,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents a class type; false otherwise
      */
-    static boolean isClassType(Element element) {
+    static boolean isClassType(@Nullable Element element) {
         return element != null && CLASS == element.getKind();
     }
 
@@ -425,7 +425,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a primitive type; false otherwise
      */
-    static boolean isPrimitiveType(TypeMirror type) {
+    static boolean isPrimitiveType(@Nullable TypeMirror type) {
         return type != null && type.getKind().isPrimitive();
     }
 
@@ -445,7 +445,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents a primitive type; false otherwise
      */
-    static boolean isPrimitiveType(Element element) {
+    static boolean isPrimitiveType(@Nullable Element element) {
         return element != null && isPrimitiveType(element.asType());
     }
 
@@ -465,7 +465,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an interface type; false otherwise
      */
-    static boolean isInterfaceType(TypeMirror type) {
+    static boolean isInterfaceType(@Nullable TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
         return declaredType != null && isInterfaceType(declaredType.asElement());
     }
@@ -486,7 +486,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents an interface type; false otherwise
      */
-    static boolean isInterfaceType(Element element) {
+    static boolean isInterfaceType(@Nullable Element element) {
         return element != null && INTERFACE == element.getKind();
     }
 
@@ -506,7 +506,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an annotation type; false otherwise
      */
-    static boolean isAnnotationType(TypeMirror type) {
+    static boolean isAnnotationType(@Nullable TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
         return declaredType != null && isAnnotationType(declaredType.asElement());
     }
@@ -527,7 +527,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents an annotation type; false otherwise
      */
-    static boolean isAnnotationType(Element element) {
+    static boolean isAnnotationType(@Nullable Element element) {
         return element != null && ANNOTATION_TYPE == element.getKind();
     }
 
@@ -552,7 +552,7 @@ public interface TypeUtils extends Utils {
      * @param element The Element to check, may be null.
      * @return true if the element is a TypeElement; false otherwise.
      */
-    static boolean isTypeElement(Element element) {
+    static boolean isTypeElement(@Nullable Element element) {
         return element instanceof TypeElement;
     }
 
@@ -576,7 +576,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the TypeMirror represents a TypeElement; false otherwise
      */
-    static boolean isTypeElement(TypeMirror type) {
+    static boolean isTypeElement(@Nullable TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
         if (declaredType == null) {
             return false;
@@ -601,7 +601,7 @@ public interface TypeUtils extends Utils {
      * @param element the Element to check, may be null
      * @return true if the element represents a DeclaredType; false otherwise
      */
-    static boolean isDeclaredType(Element element) {
+    static boolean isDeclaredType(@Nullable Element element) {
         return element != null && isDeclaredType(element.asType());
     }
 
@@ -625,7 +625,7 @@ public interface TypeUtils extends Utils {
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a declared type; false otherwise
      */
-    static boolean isDeclaredType(TypeMirror type) {
+    static boolean isDeclaredType(@Nullable TypeMirror type) {
         return type instanceof DeclaredType;
     }
 
@@ -649,7 +649,8 @@ public interface TypeUtils extends Utils {
      * @param element The Element to convert, may be null.
      * @return The converted TypeElement if the element is a TypeElement; otherwise, null.
      */
-    static TypeElement ofTypeElement(Element element) {
+    @Nullable
+    static TypeElement ofTypeElement(@Nullable Element element) {
         return isTypeElement(element) ? (TypeElement) element : null;
     }
 
@@ -677,7 +678,7 @@ public interface TypeUtils extends Utils {
      * otherwise, null if the type is null or not a DeclaredType.
      */
     @Nullable
-    static TypeElement ofTypeElement(TypeMirror type) {
+    static TypeElement ofTypeElement(@Nullable TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
         return ofTypeElement(declaredType);
     }
@@ -703,7 +704,7 @@ public interface TypeUtils extends Utils {
      * otherwise, null
      */
     @Nullable
-    static TypeElement ofTypeElement(DeclaredType declaredType) {
+    static TypeElement ofTypeElement(@Nullable DeclaredType declaredType) {
         if (declaredType != null) {
             return ofTypeElement(declaredType.asElement());
         }
@@ -734,7 +735,7 @@ public interface TypeUtils extends Utils {
      * otherwise, null if the element is null or conversion fails.
      */
     @Nullable
-    static DeclaredType ofDeclaredType(Element element) {
+    static DeclaredType ofDeclaredType(@Nullable Element element) {
         return element == null ? null : ofDeclaredType(element.asType());
     }
 
@@ -760,7 +761,7 @@ public interface TypeUtils extends Utils {
      * otherwise, null if the type is null or not a DeclaredType.
      */
     @Nullable
-    static DeclaredType ofDeclaredType(TypeMirror type) {
+    static DeclaredType ofDeclaredType(@Nullable TypeMirror type) {
         return isDeclaredType(type) ? (DeclaredType) type : null;
     }
 
@@ -808,13 +809,13 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> ofTypeMirrors(Collection<? extends Element> elements) {
+    static List<TypeMirror> ofTypeMirrors(@Nullable Collection<? extends Element> elements) {
         return ofTypeMirrors(elements, EMPTY_PREDICATE_ARRAY);
     }
 
     @Nonnull
     @Immutable
-    static List<TypeMirror> ofTypeMirrors(Collection<? extends Element> elements, Predicate<? super TypeMirror>... typeFilters) {
+    static List<TypeMirror> ofTypeMirrors(@Nullable Collection<? extends Element> elements, Predicate<? super TypeMirror>... typeFilters) {
         return isEmpty(elements) ? emptyList() :
                 unmodifiableList(elements.stream().map(Element::asType).filter(and(typeFilters)).collect(toList()));
     }
@@ -863,7 +864,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> ofTypeElements(Collection<? extends TypeMirror> types) {
+    static List<TypeElement> ofTypeElements(@Nullable Collection<? extends TypeMirror> types) {
         return ofTypeElements(types, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -888,7 +889,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> ofTypeElements(Collection<? extends TypeMirror> types, Predicate<? super TypeElement>... typeFilters) {
+    static List<TypeElement> ofTypeElements(@Nullable Collection<? extends TypeMirror> types, Predicate<? super TypeElement>... typeFilters) {
         return isEmpty(types) ? emptyList() : unmodifiableList(
                 types.stream()
                         .map(TypeUtils::ofTypeElement)
@@ -941,7 +942,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> ofDeclaredTypes(Collection<? extends Element> elements) {
+    static List<DeclaredType> ofDeclaredTypes(@Nullable Collection<? extends Element> elements) {
         return ofDeclaredTypes(elements, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -966,7 +967,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> ofDeclaredTypes(Collection<? extends Element> elements,
+    static List<DeclaredType> ofDeclaredTypes(@Nullable Collection<? extends Element> elements,
                                               Predicate<? super DeclaredType>... typeFilters) {
 
         if (isEmpty(elements)) {
@@ -1010,7 +1011,7 @@ public interface TypeUtils extends Utils {
      * @return the TypeElement of the superclass if available; otherwise, null
      */
     @Nullable
-    static TypeElement getTypeElementOfSuperclass(TypeElement type) {
+    static TypeElement getTypeElementOfSuperclass(@Nullable TypeElement type) {
         return type == null ? null : ofTypeElement(type.getSuperclass());
     }
 
@@ -1037,7 +1038,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getAllTypeElementsOfSuperTypes(TypeElement type) {
+    static List<TypeElement> getAllTypeElementsOfSuperTypes(@Nullable TypeElement type) {
         return findAllTypeElementsOfSuperTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1060,7 +1061,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getAllTypeElementsOfSuperclasses(TypeElement type) {
+    static List<TypeElement> getAllTypeElementsOfSuperclasses(@Nullable TypeElement type) {
         return findAllTypeElementsOfSuperclasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1084,7 +1085,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getTypeElementsOfInterfaces(TypeElement type) {
+    static List<TypeElement> getTypeElementsOfInterfaces(@Nullable TypeElement type) {
         return findTypeElementsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1107,7 +1108,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getAllTypeElementsOfInterfaces(TypeElement type) {
+    static List<TypeElement> getAllTypeElementsOfInterfaces(@Nullable TypeElement type) {
         return findAllTypeElementsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1138,7 +1139,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getTypeElements(TypeElement type) {
+    static List<TypeElement> getTypeElements(@Nullable TypeElement type) {
         return getTypeElements(type, true, false, true, true);
     }
 
@@ -1166,7 +1167,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getAllTypeElements(TypeElement type) {
+    static List<TypeElement> getAllTypeElements(@Nullable TypeElement type) {
         return getTypeElements(type, true, true, true, true);
     }
 
@@ -1211,7 +1212,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getTypeElements(TypeElement type,
+    static List<TypeElement> getTypeElements(@Nullable TypeElement type,
                                              boolean includeSelf,
                                              boolean includeHierarchicalTypes,
                                              boolean includeSuperClasses,
@@ -1240,7 +1241,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> findTypeElementsOfInterfaces(TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
+    static List<TypeElement> findTypeElementsOfInterfaces(@Nullable TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
         return findTypeElements(type, false, false, false, true, interfaceFilters);
     }
 
@@ -1264,7 +1265,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> findAllTypeElementsOfSuperclasses(TypeElement type, Predicate<? super TypeElement>... typeFilters) {
+    static List<TypeElement> findAllTypeElementsOfSuperclasses(@Nullable TypeElement type, Predicate<? super TypeElement>... typeFilters) {
         return findTypeElements(type, false, true, true, false, typeFilters);
     }
 
@@ -1287,7 +1288,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> findAllTypeElementsOfInterfaces(TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
+    static List<TypeElement> findAllTypeElementsOfInterfaces(@Nullable TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
         return findTypeElements(type, false, true, false, true, interfaceFilters);
     }
 
@@ -1316,7 +1317,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> findAllTypeElementsOfSuperTypes(TypeElement type, Predicate<? super TypeElement>... typeFilters) {
+    static List<TypeElement> findAllTypeElementsOfSuperTypes(@Nullable TypeElement type, Predicate<? super TypeElement>... typeFilters) {
         return findTypeElements(type, false, true, true, true, typeFilters);
     }
 
@@ -1357,7 +1358,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> findTypeElements(TypeElement type,
+    static List<TypeElement> findTypeElements(@Nullable TypeElement type,
                                               boolean includeSelf,
                                               boolean includeHierarchicalTypes,
                                               boolean includeSuperclass,
@@ -1393,7 +1394,7 @@ public interface TypeUtils extends Utils {
      * @return the DeclaredType representing the superclass of the given Element, or null if none exists
      */
     @Nullable
-    static DeclaredType getDeclaredTypeOfSuperclass(Element typeElement) {
+    static DeclaredType getDeclaredTypeOfSuperclass(@Nullable Element typeElement) {
         return typeElement == null ? null : getDeclaredTypeOfSuperclass(typeElement.asType());
     }
 
@@ -1416,7 +1417,7 @@ public interface TypeUtils extends Utils {
      * @return the DeclaredType representing the superclass of the given TypeMirror, or null if none exists
      */
     @Nullable
-    static DeclaredType getDeclaredTypeOfSuperclass(TypeMirror type) {
+    static DeclaredType getDeclaredTypeOfSuperclass(@Nullable TypeMirror type) {
         TypeElement superType = getTypeElementOfSuperclass(ofTypeElement(type));
         return superType == null ? null : ofDeclaredType(superType.asType());
     }
@@ -1441,7 +1442,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getDeclaredTypesOfInterfaces(Element element) {
+    static List<DeclaredType> getDeclaredTypesOfInterfaces(@Nullable Element element) {
         return element == null ? emptyList() : findDeclaredTypesOfInterfaces(element.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1465,7 +1466,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getDeclaredTypesOfInterfaces(TypeMirror type) {
+    static List<DeclaredType> getDeclaredTypesOfInterfaces(@Nullable TypeMirror type) {
         return findDeclaredTypesOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1489,7 +1490,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypesOfSuperclasses(Element type) {
+    static List<DeclaredType> getAllDeclaredTypesOfSuperclasses(@Nullable Element type) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperclasses(type.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1512,7 +1513,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypesOfSuperclasses(TypeMirror type) {
+    static List<DeclaredType> getAllDeclaredTypesOfSuperclasses(@Nullable TypeMirror type) {
         return findAllDeclaredTypesOfSuperclasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1537,7 +1538,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypesOfInterfaces(Element type) {
+    static List<DeclaredType> getAllDeclaredTypesOfInterfaces(@Nullable Element type) {
         return type == null ? emptyList() : findAllDeclaredTypesOfInterfaces(type.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1562,7 +1563,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypesOfInterfaces(TypeMirror type) {
+    static List<DeclaredType> getAllDeclaredTypesOfInterfaces(@Nullable TypeMirror type) {
         return findAllDeclaredTypesOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1586,7 +1587,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypesOfSuperTypes(Element type) {
+    static List<DeclaredType> getAllDeclaredTypesOfSuperTypes(@Nullable Element type) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperTypes(type.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1610,7 +1611,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypesOfSuperTypes(TypeMirror type) {
+    static List<DeclaredType> getAllDeclaredTypesOfSuperTypes(@Nullable TypeMirror type) {
         return findAllDeclaredTypesOfSuperTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1636,7 +1637,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypes(Element type) {
+    static List<DeclaredType> getAllDeclaredTypes(@Nullable Element type) {
         return type == null ? emptyList() : findAllDeclaredTypes(type.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1653,7 +1654,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getAllDeclaredTypes(TypeMirror type) {
+    static List<DeclaredType> getAllDeclaredTypes(@Nullable TypeMirror type) {
         return findAllDeclaredTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -1672,7 +1673,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getDeclaredTypes(Element type,
+    static List<DeclaredType> getDeclaredTypes(@Nonnull Element type,
                                                boolean includeSelf,
                                                boolean includeHierarchicalTypes,
                                                boolean includeSuperClasses,
@@ -1695,7 +1696,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> getDeclaredTypes(TypeMirror type,
+    static List<DeclaredType> getDeclaredTypes(@Nullable TypeMirror type,
                                                boolean includeSelf,
                                                boolean includeHierarchicalTypes,
                                                boolean includeSuperClasses,
@@ -1714,7 +1715,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypes(TypeMirror type, Type... excludedTypes) {
+    static List<DeclaredType> findDeclaredTypes(@Nullable TypeMirror type, Type... excludedTypes) {
         return type == null ? emptyList() : findDeclaredTypes(ofTypeElement(type), excludedTypes);
     }
 
@@ -1729,7 +1730,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypes(Element type, Type... excludedTypes) {
+    static List<DeclaredType> findDeclaredTypes(@Nullable Element type, Type... excludedTypes) {
         return type == null ? emptyList() : findDeclaredTypes(type, getTypeNames(excludedTypes));
     }
 
@@ -1745,7 +1746,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
+    static List<DeclaredType> findDeclaredTypes(@Nullable TypeMirror type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findDeclaredTypes(ofTypeElement(type), excludedTypeNames);
     }
 
@@ -1761,7 +1762,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
+    static List<DeclaredType> findDeclaredTypes(@Nullable Element type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findDeclaredTypes(type, false, false, true, true, t -> !contains(excludedTypeNames, t.toString()));
     }
 
@@ -1777,7 +1778,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypesOfInterfaces(Element type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findDeclaredTypesOfInterfaces(@Nullable Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findDeclaredTypesOfInterfaces(type.asType(), typeFilters);
     }
 
@@ -1793,7 +1794,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypesOfInterfaces(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findDeclaredTypesOfInterfaces(@Nullable TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
     }
 
@@ -1809,7 +1810,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(Element type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(@Nullable Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperclasses(type.asType(), typeFilters);
     }
 
@@ -1826,7 +1827,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(@Nullable TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfSuperclasses(ofTypeElement(type)), typeFilters);
     }
 
@@ -1843,7 +1844,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypesOfInterfaces(Element type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypesOfInterfaces(@Nullable Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypesOfInterfaces(type.asType(), typeFilters);
     }
 
@@ -1860,7 +1861,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypesOfInterfaces(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypesOfInterfaces(@Nullable TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
     }
 
@@ -1877,7 +1878,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(Element type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(@Nullable Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperTypes(type.asType(), typeFilters);
     }
 
@@ -1894,7 +1895,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(@Nullable TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfSuperTypes(ofTypeElement(type)), typeFilters);
     }
 
@@ -1913,7 +1914,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Type... excludedTypes) {
+    static List<DeclaredType> findAllDeclaredTypes(@Nullable TypeMirror type, Type... excludedTypes) {
         return type == null ? emptyList() : findAllDeclaredTypes(ofTypeElement(type), excludedTypes);
     }
 
@@ -1932,7 +1933,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypes(Element type, Type... excludedTypes) {
+    static List<DeclaredType> findAllDeclaredTypes(@Nullable Element type, Type... excludedTypes) {
         return type == null ? emptyList() : findAllDeclaredTypes(type, getTypeNames(excludedTypes));
     }
 
@@ -1952,7 +1953,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
+    static List<DeclaredType> findAllDeclaredTypes(@Nullable TypeMirror type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findAllDeclaredTypes(ofTypeElement(type), excludedTypeNames);
     }
 
@@ -1972,7 +1973,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
+    static List<DeclaredType> findAllDeclaredTypes(@Nullable Element type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findAllDeclaredTypes(type, t -> !contains(excludedTypeNames, t.toString()));
     }
 
@@ -1991,7 +1992,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypes(Element type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypes(@Nullable Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypes(type.asType(), typeFilters);
     }
 
@@ -2010,7 +2011,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+    static List<DeclaredType> findAllDeclaredTypes(@Nullable TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElements(ofTypeElement(type)), typeFilters);
     }
 
@@ -2035,7 +2036,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypes(Element type,
+    static List<DeclaredType> findDeclaredTypes(@Nullable Element type,
                                                 boolean includeSelf,
                                                 boolean includeHierarchicalTypes,
                                                 boolean includeSuperClasses,
@@ -2065,7 +2066,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<DeclaredType> findDeclaredTypes(TypeMirror type,
+    static List<DeclaredType> findDeclaredTypes(@Nullable TypeMirror type,
                                                 boolean includeSelf,
                                                 boolean includeHierarchicalTypes,
                                                 boolean includeSuperClasses,
@@ -2085,7 +2086,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeMirror type) {
+    static List<TypeMirror> getTypeMirrorsOfInterfaces(@Nullable TypeMirror type) {
         return type == null ? emptyList() : findTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -2100,7 +2101,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeElement type) {
+    static List<TypeMirror> getTypeMirrorsOfInterfaces(@Nullable TypeElement type) {
         return type == null ? emptyList() : findTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -2117,7 +2118,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+    static List<TypeMirror> findTypeMirrorsOfInterfaces(@Nullable TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
         return type == null ? emptyList() : findTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
     }
 
@@ -2134,7 +2135,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
+    static List<TypeMirror> findTypeMirrorsOfInterfaces(@Nullable TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
         if (type == null) {
             return emptyList();
         }
@@ -2157,7 +2158,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> getAllTypeMirrorsOfInterfaces(TypeMirror type) {
+    static List<TypeMirror> getAllTypeMirrorsOfInterfaces(@Nullable TypeMirror type) {
         return findAllTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -2173,7 +2174,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> getAllTypeMirrorsOfInterfaces(TypeElement type) {
+    static List<TypeMirror> getAllTypeMirrorsOfInterfaces(@Nullable TypeElement type) {
         return findAllTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -2190,7 +2191,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> findAllTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+    static List<TypeMirror> findAllTypeMirrorsOfInterfaces(@Nullable TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
         return type == null ? emptyList() : findAllTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
     }
 
@@ -2207,7 +2208,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> findAllTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
+    static List<TypeMirror> findAllTypeMirrorsOfInterfaces(@Nullable TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
         if (type == null) {
             return emptyList();
         }
@@ -2227,7 +2228,7 @@ public interface TypeUtils extends Utils {
      * @return The TypeMirror of the specified interface if found; otherwise, null.
      */
     @Nullable
-    static TypeMirror findInterfaceTypeMirror(Element type, Type interfaceType) {
+    static TypeMirror findInterfaceTypeMirror(@Nullable Element type, @Nonnull Type interfaceType) {
         return findInterfaceTypeMirror(type, interfaceType.getTypeName());
     }
 
@@ -2240,7 +2241,7 @@ public interface TypeUtils extends Utils {
      * @return The TypeMirror of the specified interface if found; otherwise, null.
      */
     @Nullable
-    static TypeMirror findInterfaceTypeMirror(TypeMirror type, Type interfaceType) {
+    static TypeMirror findInterfaceTypeMirror(@Nullable TypeMirror type, @Nonnull Type interfaceType) {
         return findInterfaceTypeMirror(type, interfaceType.getTypeName());
     }
 
@@ -2253,7 +2254,7 @@ public interface TypeUtils extends Utils {
      * @return The TypeMirror of the specified interface if found; otherwise, null.
      */
     @Nullable
-    static TypeMirror findInterfaceTypeMirror(Element type, CharSequence interfaceClassName) {
+    static TypeMirror findInterfaceTypeMirror(@Nullable Element type, @Nullable CharSequence interfaceClassName) {
         return type == null ? null : findInterfaceTypeMirror(type.asType(), interfaceClassName);
     }
 
@@ -2269,7 +2270,7 @@ public interface TypeUtils extends Utils {
      * @return The TypeMirror of the specified interface if found; otherwise, null.
      */
     @Nullable
-    static TypeMirror findInterfaceTypeMirror(TypeMirror type, CharSequence interfaceClassName) {
+    static TypeMirror findInterfaceTypeMirror(@Nullable TypeMirror type, @Nullable CharSequence interfaceClassName) {
         return filterFirst(getAllTypeMirrorsOfInterfaces(type), t -> isSameType(t, interfaceClassName));
     }
 
@@ -2284,7 +2285,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeMirror> getTypeMirrors(ProcessingEnvironment processingEnv, Type... types) {
+    static List<TypeMirror> getTypeMirrors(@Nullable ProcessingEnvironment processingEnv, Type... types) {
         if (isEmpty(types)) {
             return emptyList();
         }
@@ -2307,7 +2308,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved TypeMirror if available; otherwise, null.
      */
     @Nullable
-    static TypeMirror getTypeMirror(ProcessingEnvironment processingEnv, Type type) {
+    static TypeMirror getTypeMirror(@Nullable ProcessingEnvironment processingEnv, @Nullable Type type) {
         TypeElement typeElement = getTypeElement(processingEnv, type);
         return typeElement == null ? null : typeElement.asType();
     }
@@ -2323,7 +2324,7 @@ public interface TypeUtils extends Utils {
      */
     @Nonnull
     @Immutable
-    static List<TypeElement> getTypeElements(ProcessingEnvironment processingEnv, Type... types) {
+    static List<TypeElement> getTypeElements(@Nullable ProcessingEnvironment processingEnv, Type... types) {
         if (isEmpty(types)) {
             return emptyList();
         }
@@ -2347,7 +2348,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved TypeElement if available; otherwise, null.
      */
     @Nullable
-    static TypeElement getTypeElement(ProcessingEnvironment processingEnv, Type type) {
+    static TypeElement getTypeElement(@Nullable ProcessingEnvironment processingEnv, @Nullable Type type) {
         return type == null ? null : getTypeElement(processingEnv, type.getTypeName());
     }
 
@@ -2363,7 +2364,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved TypeElement if available; otherwise, null.
      */
     @Nullable
-    static TypeElement getTypeElement(ProcessingEnvironment processingEnv, TypeMirror type) {
+    static TypeElement getTypeElement(@Nullable ProcessingEnvironment processingEnv, @Nullable TypeMirror type) {
         return type == null ? null : getTypeElement(processingEnv, type.toString());
     }
 
@@ -2378,7 +2379,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved TypeElement if available; otherwise, null.
      */
     @Nullable
-    static TypeElement getTypeElement(ProcessingEnvironment processingEnv, CharSequence typeName) {
+    static TypeElement getTypeElement(@Nullable ProcessingEnvironment processingEnv, @Nullable CharSequence typeName) {
         if (processingEnv == null || typeName == null) {
             return null;
         }
@@ -2398,7 +2399,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved DeclaredType if available; otherwise, null.
      */
     @Nullable
-    static DeclaredType getDeclaredType(ProcessingEnvironment processingEnv, Type type) {
+    static DeclaredType getDeclaredType(@Nullable ProcessingEnvironment processingEnv, @Nullable Type type) {
         return type == null ? null : getDeclaredType(processingEnv, type.getTypeName());
     }
 
@@ -2414,7 +2415,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved DeclaredType if available; otherwise, null.
      */
     @Nullable
-    static DeclaredType getDeclaredType(ProcessingEnvironment processingEnv, TypeMirror type) {
+    static DeclaredType getDeclaredType(@Nullable ProcessingEnvironment processingEnv, @Nullable TypeMirror type) {
         return type == null ? null : getDeclaredType(processingEnv, type.toString());
     }
 
@@ -2430,7 +2431,7 @@ public interface TypeUtils extends Utils {
      * @return The resolved DeclaredType if available; otherwise, null.
      */
     @Nullable
-    static DeclaredType getDeclaredType(ProcessingEnvironment processingEnv, CharSequence typeName) {
+    static DeclaredType getDeclaredType(@Nullable ProcessingEnvironment processingEnv, @Nullable CharSequence typeName) {
         return ofDeclaredType(getTypeElement(processingEnv, typeName));
     }
 
@@ -2443,7 +2444,7 @@ public interface TypeUtils extends Utils {
      * @return The string representation of the TypeMirror, or null if the input is null.
      */
     @Nullable
-    static String toString(TypeMirror type) {
+    static String toString(@Nullable TypeMirror type) {
         return getTypeName(type);
     }
 
@@ -2454,7 +2455,7 @@ public interface TypeUtils extends Utils {
      * @return The fully qualified name of the type including type parameters, or null if the input is null.
      */
     @Nullable
-    static String getTypeName(TypeMirror type) {
+    static String getTypeName(@Nullable TypeMirror type) {
         if (type == null) {
             return null;
         }
@@ -2498,7 +2499,7 @@ public interface TypeUtils extends Utils {
      * @throws IllegalArgumentException if any parameter is invalid or if assertions fail.
      */
     @Nonnull
-    static TypeFinder<TypeElement> typeElementFinder(TypeElement typeElement, boolean includeSelf,
+    static TypeFinder<TypeElement> typeElementFinder(@Nonnull TypeElement typeElement, boolean includeSelf,
                                                      boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         return new TypeFinder(typeElement, TYPE_ELEMENT_GET_SUPERCLASS, TYPE_ELEMENT_GET_INTERFACES, includeSelf,
                 includeHierarchicalTypes, includeSuperclass, includeInterfaces);

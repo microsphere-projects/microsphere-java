@@ -1,5 +1,7 @@
 package io.microsphere.misc;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Assert;
 import io.microsphere.util.Utils;
 
@@ -684,7 +686,8 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return The cache key of offset
      */
-    protected static String createOffsetCacheKey(Class<?> type, String fieldName) {
+    @Nonnull
+    protected static String createOffsetCacheKey(@Nonnull Class<?> type, @Nonnull String fieldName) {
         return type.getName() + "#" + fieldName;
     }
 
@@ -695,7 +698,8 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return Offset
      */
-    protected static Long getOffsetFromCache(Class<?> type, String fieldName) {
+    @Nullable
+    protected static Long getOffsetFromCache(@Nonnull Class<?> type, @Nonnull String fieldName) {
         String key = createOffsetCacheKey(type, fieldName);
         return offsetCache.get(key);
     }
@@ -707,7 +711,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param offset    offset
      */
-    protected static void putOffsetFromCache(Class<?> type, String fieldName, long offset) {
+    protected static void putOffsetFromCache(@Nonnull Class<?> type, @Nonnull String fieldName, long offset) {
         String key = createOffsetCacheKey(type, fieldName);
         offsetCache.putIfAbsent(key, offset);
     }
@@ -720,7 +724,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the <code>long<code> value
      */
-    public static long getLongVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static long getLongVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = longArrayIndexOffset(index);
@@ -735,7 +739,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the <code>int<code> value
      */
-    public static int getIntVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static int getIntVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = intArrayIndexOffset(index);
@@ -750,7 +754,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the <code>short<code> value
      */
-    public static short getShortVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static short getShortVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = shortArrayIndexOffset(index);
@@ -765,7 +769,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the <code>byte<code> value
      */
-    public static byte getByteVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static byte getByteVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = byteArrayIndexOffset(index);
@@ -780,7 +784,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the <code>boolean<code> value
      */
-    public static boolean getBooleanVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static boolean getBooleanVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = booleanArrayIndexOffset(index);
@@ -795,7 +799,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the <code>double<code> value
      */
-    public static double getDoubleVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static double getDoubleVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = doubleArrayIndexOffset(index);
@@ -810,7 +814,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param index     the index
      * @return the target index
      */
-    public static float getFloatVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static float getFloatVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = floatArrayIndexOffset(index);
@@ -827,7 +831,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       See {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static char getCharVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static char getCharVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = charArrayIndexOffset(index);
@@ -844,7 +848,8 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static Object getObjectVolatileFromArray(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    @Nullable
+    public static Object getObjectVolatileFromArray(@Nonnull Object object, @Nonnull String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
@@ -858,7 +863,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     double value
      */
-    public static void putDouble(Object object, String fieldName, double value) {
+    public static void putDouble(@Nonnull Object object, @Nonnull String fieldName, double value) {
         assertFieldMatchType(object, fieldName, double.class);
         long offset = objectFieldOffset(object, fieldName);
         putDouble(object, offset, value);
@@ -871,7 +876,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     float value
      */
-    public static void putFloat(Object object, String fieldName, float value) {
+    public static void putFloat(@Nonnull Object object, @Nonnull String fieldName, float value) {
         assertFieldMatchType(object, fieldName, float.class);
         long offset = objectFieldOffset(object, fieldName);
         putFloat(object, offset, value);
@@ -884,7 +889,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     short value
      */
-    public static void putShort(Object object, String fieldName, short value) {
+    public static void putShort(@Nonnull Object object, @Nonnull String fieldName, short value) {
         assertFieldMatchType(object, fieldName, short.class);
         long offset = objectFieldOffset(object, fieldName);
         putShort(object, offset, value);
@@ -897,7 +902,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     byte value
      */
-    public static void putByte(Object object, String fieldName, byte value) {
+    public static void putByte(@Nonnull Object object, @Nonnull String fieldName, byte value) {
         assertFieldMatchType(object, fieldName, byte.class);
         long offset = objectFieldOffset(object, fieldName);
         putByte(object, offset, value);
@@ -910,7 +915,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     boolean value
      */
-    public static void putBoolean(Object object, String fieldName, boolean value) {
+    public static void putBoolean(@Nonnull Object object, @Nonnull String fieldName, boolean value) {
         assertFieldMatchType(object, fieldName, boolean.class);
         long offset = objectFieldOffset(object, fieldName);
         putBoolean(object, offset, value);
@@ -923,7 +928,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     char value
      */
-    public static void putChar(Object object, String fieldName, char value) {
+    public static void putChar(@Nonnull Object object, @Nonnull String fieldName, char value) {
         assertFieldMatchType(object, fieldName, char.class);
         long offset = objectFieldOffset(object, fieldName);
         putChar(object, offset, value);
@@ -936,7 +941,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     Object value
      */
-    public static void putObject(Object object, String fieldName, Object value) {
+    public static void putObject(@Nonnull Object object, @Nonnull String fieldName, @Nullable Object value) {
         assertFieldMatchType(object, fieldName, Object.class);
         long offset = objectFieldOffset(object, fieldName);
         putObject(object, offset, value);
@@ -949,7 +954,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     long value
      */
-    public static void putLong(Object object, String fieldName, long value) {
+    public static void putLong(@Nonnull Object object, @Nonnull String fieldName, long value) {
         assertFieldMatchType(object, fieldName, long.class);
         long offset = objectFieldOffset(object, fieldName);
         putLong(object, offset, value);
@@ -962,7 +967,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     int value
      */
-    public static void putInt(Object object, String fieldName, int value) {
+    public static void putInt(@Nonnull Object object, @Nonnull String fieldName, int value) {
         assertFieldMatchType(object, fieldName, int.class);
         long offset = objectFieldOffset(object, fieldName);
         putInt(object, offset, value);
@@ -975,7 +980,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     int value
      */
-    public static void putOrderedInt(Object object, String fieldName, int value) {
+    public static void putOrderedInt(@Nonnull Object object, @Nonnull String fieldName, int value) {
         assertFieldMatchType(object, fieldName, int.class);
         long offset = objectFieldOffset(object, fieldName);
         putOrderedInt(object, offset, value);
@@ -988,7 +993,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     long value
      */
-    public static void putOrderedLong(Object object, String fieldName, long value) {
+    public static void putOrderedLong(@Nonnull Object object, @Nonnull String fieldName, long value) {
         assertFieldMatchType(object, fieldName, long.class);
         long offset = objectFieldOffset(object, fieldName);
         putOrderedLong(object, offset, value);
@@ -1001,7 +1006,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     Object value
      */
-    public static void putOrderedObject(Object object, String fieldName, Object value) {
+    public static void putOrderedObject(@Nonnull Object object, @Nonnull String fieldName, @Nullable Object value) {
         assertFieldMatchType(object, fieldName, Object.class);
         long offset = objectFieldOffset(object, fieldName);
         putOrderedObject(object, offset, value);
@@ -1014,7 +1019,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     double value
      */
-    public static void putDoubleVolatile(Object object, String fieldName, double value) {
+    public static void putDoubleVolatile(@Nonnull Object object, @Nonnull String fieldName, double value) {
         assertFieldMatchType(object, fieldName, double.class);
         long offset = objectFieldOffset(object, fieldName);
         putDoubleVolatile(object, offset, value);
@@ -1027,7 +1032,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     float value
      */
-    public static void putFloatVolatile(Object object, String fieldName, float value) {
+    public static void putFloatVolatile(@Nonnull Object object, @Nonnull String fieldName, float value) {
         assertFieldMatchType(object, fieldName, float.class);
         long offset = objectFieldOffset(object, fieldName);
         putFloatVolatile(object, offset, value);
@@ -1040,7 +1045,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     short value
      */
-    public static void putShortVolatile(Object object, String fieldName, short value) {
+    public static void putShortVolatile(@Nonnull Object object, @Nonnull String fieldName, short value) {
         assertFieldMatchType(object, fieldName, short.class);
         long offset = objectFieldOffset(object, fieldName);
         putShortVolatile(object, offset, value);
@@ -1053,7 +1058,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     byte value
      */
-    public static void putByteVolatile(Object object, String fieldName, byte value) {
+    public static void putByteVolatile(@Nonnull Object object, @Nonnull String fieldName, byte value) {
         assertFieldMatchType(object, fieldName, byte.class);
         long offset = objectFieldOffset(object, fieldName);
         putByteVolatile(object, offset, value);
@@ -1066,7 +1071,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     boolean value
      */
-    public static void putBooleanVolatile(Object object, String fieldName, boolean value) {
+    public static void putBooleanVolatile(@Nonnull Object object, @Nonnull String fieldName, boolean value) {
         assertFieldMatchType(object, fieldName, boolean.class);
         long offset = objectFieldOffset(object, fieldName);
         putBooleanVolatile(object, offset, value);
@@ -1079,7 +1084,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     char value
      */
-    public static void putCharVolatile(Object object, String fieldName, char value) {
+    public static void putCharVolatile(@Nonnull Object object, @Nonnull String fieldName, char value) {
         assertFieldMatchType(object, fieldName, char.class);
         long offset = objectFieldOffset(object, fieldName);
         putCharVolatile(object, offset, value);
@@ -1092,7 +1097,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     Object value
      */
-    public static void putObjectVolatile(Object object, String fieldName, Object value) {
+    public static void putObjectVolatile(@Nonnull Object object, @Nonnull String fieldName, @Nullable Object value) {
         assertFieldMatchType(object, fieldName, Object.class);
         long offset = objectFieldOffset(object, fieldName);
         putObjectVolatile(object, offset, value);
@@ -1105,7 +1110,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     long value
      */
-    public static void putLongVolatile(Object object, String fieldName, long value) {
+    public static void putLongVolatile(@Nonnull Object object, @Nonnull String fieldName, long value) {
         assertFieldMatchType(object, fieldName, long.class);
         long offset = objectFieldOffset(object, fieldName);
         putLongVolatile(object, offset, value);
@@ -1118,7 +1123,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @param value     int value
      */
-    public static void putIntVolatile(Object object, String fieldName, int value) {
+    public static void putIntVolatile(@Nonnull Object object, @Nonnull String fieldName, int value) {
         assertFieldMatchType(object, fieldName, int.class);
         long offset = objectFieldOffset(object, fieldName);
         putIntVolatile(object, offset, value);
@@ -1134,7 +1139,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putLongVolatileIntoArray(Object object, String fieldName, int index, long value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putLongVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, long value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = longArrayIndexOffset(index);
@@ -1151,7 +1156,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putOrderedLongIntoArray(Object object, String fieldName, int index, long value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putOrderedLongIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, long value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = longArrayIndexOffset(index);
@@ -1168,7 +1173,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putIntVolatileIntoArray(Object object, String fieldName, int index, int value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putIntVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, int value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = intArrayIndexOffset(index);
@@ -1185,7 +1190,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putOrderedIntIntoArray(Object object, String fieldName, int index, int value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putOrderedIntIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, int value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = intArrayIndexOffset(index);
@@ -1202,7 +1207,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putShortVolatileIntoArray(Object object, String fieldName, int index, short value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putShortVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, short value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = shortArrayIndexOffset(index);
@@ -1219,7 +1224,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putByteVolatileIntoArray(Object object, String fieldName, int index, byte value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putByteVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, byte value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = byteArrayIndexOffset(index);
@@ -1236,7 +1241,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putBooleanVolatileIntoArray(Object object, String fieldName, int index, boolean value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putBooleanVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, boolean value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = booleanArrayIndexOffset(index);
@@ -1253,7 +1258,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putDoubleVolatileIntoArray(Object object, String fieldName, int index, double value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putDoubleVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, double value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = doubleArrayIndexOffset(index);
@@ -1270,7 +1275,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putFloatVolatileIntoArray(Object object, String fieldName, int index, float value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putFloatVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, float value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = floatArrayIndexOffset(index);
@@ -1287,7 +1292,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putCharVolatileIntoArray(Object object, String fieldName, int index, char value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putCharVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, char value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = charArrayIndexOffset(index);
@@ -1304,7 +1309,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putObjectVolatileIntoArray(Object object, String fieldName, int index, Object value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putObjectVolatileIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, @Nullable Object value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
@@ -1321,7 +1326,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException       see {@link Assert#assertArrayType(Object)}
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
-    public static void putOrderedObjectIntoArray(Object object, String fieldName, int index, Object value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
+    public static void putOrderedObjectIntoArray(@Nonnull Object object, @Nonnull String fieldName, int index, @Nullable Object value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, NullPointerException {
         Object array = getFieldValue(true, object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
@@ -1335,7 +1340,8 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return Object value
      */
-    public static Object getObject(Object object, String fieldName) {
+    @Nullable
+    public static Object getObject(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getObject(object, offset);
     }
@@ -1347,7 +1353,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return long value
      */
-    public static long getLong(Object object, String fieldName) {
+    public static long getLong(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getLong(object, offset);
     }
@@ -1359,7 +1365,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return double value
      */
-    public static double getDouble(Object object, String fieldName) {
+    public static double getDouble(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getDouble(object, offset);
     }
@@ -1371,7 +1377,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return float value
      */
-    public static float getFloat(Object object, String fieldName) {
+    public static float getFloat(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getFloat(object, offset);
     }
@@ -1383,7 +1389,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return short value
      */
-    public static short getShort(Object object, String fieldName) {
+    public static short getShort(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getShort(object, offset);
     }
@@ -1395,7 +1401,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return byte value
      */
-    public static byte getByte(Object object, String fieldName) {
+    public static byte getByte(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getByte(object, offset);
     }
@@ -1407,7 +1413,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return boolean value
      */
-    public static boolean getBoolean(Object object, String fieldName) {
+    public static boolean getBoolean(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getBoolean(object, offset);
     }
@@ -1419,7 +1425,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return char value
      */
-    public static char getChar(Object object, String fieldName) {
+    public static char getChar(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getChar(object, offset);
     }
@@ -1431,7 +1437,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return int value
      */
-    public static int getInt(Object object, String fieldName) {
+    public static int getInt(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getInt(object, offset);
     }
@@ -1443,7 +1449,8 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return Object value
      */
-    public static Object getObjectVolatile(Object object, String fieldName) {
+    @Nullable
+    public static Object getObjectVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getObjectVolatile(object, offset);
     }
@@ -1455,7 +1462,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return long value
      */
-    public static long getLongVolatile(Object object, String fieldName) {
+    public static long getLongVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getLongVolatile(object, offset);
     }
@@ -1467,7 +1474,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return double value
      */
-    public static double getDoubleVolatile(Object object, String fieldName) {
+    public static double getDoubleVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getDoubleVolatile(object, offset);
     }
@@ -1479,7 +1486,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return float value
      */
-    public static float getFloatVolatile(Object object, String fieldName) {
+    public static float getFloatVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getFloatVolatile(object, offset);
     }
@@ -1491,7 +1498,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return short value
      */
-    public static short getShortVolatile(Object object, String fieldName) {
+    public static short getShortVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getShortVolatile(object, offset);
     }
@@ -1503,7 +1510,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return byte value
      */
-    public static byte getByteVolatile(Object object, String fieldName) {
+    public static byte getByteVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getByteVolatile(object, offset);
     }
@@ -1515,7 +1522,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return boolean value
      */
-    public static boolean getBooleanVolatile(Object object, String fieldName) {
+    public static boolean getBooleanVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getBooleanVolatile(object, offset);
     }
@@ -1527,7 +1534,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return char value
      */
-    public static char getCharVolatile(Object object, String fieldName) {
+    public static char getCharVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getCharVolatile(object, offset);
     }
@@ -1539,7 +1546,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return int value
      */
-    public static int getIntVolatile(Object object, String fieldName) {
+    public static int getIntVolatile(@Nonnull Object object, @Nonnull String fieldName) {
         long offset = objectFieldOffset(object, fieldName);
         return getIntVolatile(object, offset);
     }
@@ -1553,7 +1560,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param newValue  the new value
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public static boolean compareAndSwapObject(Object object, String fieldName, Object expected, Object newValue) {
+    public static boolean compareAndSwapObject(@Nonnull Object object, @Nonnull String fieldName, @Nullable Object expected, @Nullable Object newValue) {
         long offset = objectFieldOffset(object, fieldName);
         return compareAndSwapObject(object, offset, expected, newValue);
     }
@@ -1567,7 +1574,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param newValue  the new value
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public static boolean compareAndSwapInt(Object object, String fieldName, int expected, int newValue) {
+    public static boolean compareAndSwapInt(@Nonnull Object object, @Nonnull String fieldName, int expected, int newValue) {
         long offset = objectFieldOffset(object, fieldName);
         return compareAndSwapInt(object, offset, expected, newValue);
     }
@@ -1581,32 +1588,33 @@ public abstract class UnsafeUtils implements Utils {
      * @param newValue  the new value
      * @return {@code true} if successful, {@code false} otherwise
      */
-    public static boolean compareAndSwapLong(Object object, String fieldName, long expected, long newValue) {
+    public static boolean compareAndSwapLong(@Nonnull Object object, @Nonnull String fieldName, long expected, long newValue) {
         long offset = objectFieldOffset(object, fieldName);
         return compareAndSwapLong(object, offset, expected, newValue);
     }
 
-    public static int getAndAddInt(Object object, String fieldName, int delta) {
+    public static int getAndAddInt(@Nonnull Object object, @Nonnull String fieldName, int delta) {
         long offset = objectFieldOffset(object, fieldName);
         return getAndAddInt(object, offset, delta);
     }
 
-    public static long getAndAddLong(Object object, String fieldName, long delta) {
+    public static long getAndAddLong(@Nonnull Object object, @Nonnull String fieldName, long delta) {
         long offset = objectFieldOffset(object, fieldName);
         return getAndAddLong(object, offset, delta);
     }
 
-    public static int getAndSetInt(Object object, String fieldName, int newValue) {
+    public static int getAndSetInt(@Nonnull Object object, @Nonnull String fieldName, int newValue) {
         long offset = objectFieldOffset(object, fieldName);
         return getAndSetInt(object, offset, newValue);
     }
 
-    public static long getAndSetLong(Object object, String fieldName, long newValue) {
+    public static long getAndSetLong(@Nonnull Object object, @Nonnull String fieldName, long newValue) {
         long offset = objectFieldOffset(object, fieldName);
         return getAndSetLong(object, offset, newValue);
     }
 
-    public static Object getAndSetObject(Object object, String fieldName, Object newValue) {
+    @Nullable
+    public static Object getAndSetObject(@Nonnull Object object, @Nonnull String fieldName, @Nullable Object newValue) {
         long offset = objectFieldOffset(object, fieldName);
         return getAndSetObject(object, offset, newValue);
     }
@@ -1672,7 +1680,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.java.lang.foreign.MemorySegment#get(java.lang.foreign.java.lang.foreign.ValueLayout.OfInt, long)} instead.
      */
-    public static int getInt(Object o, long offset) {
+    public static int getInt(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getIntMethod, o, offset);
     }
 
@@ -1698,7 +1706,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.java.lang.foreign.MemorySegment#set(java.lang.foreign.java.lang.foreign.ValueLayout.OfInt, long, int)} instead.
      */
-    public static void putInt(Object o, long offset, int x) {
+    public static void putInt(@Nullable Object o, long offset, int x) {
         invokeMethod(unsafe, putIntMethod, o, offset, x);
     }
 
@@ -1707,7 +1715,8 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} instead.
      */
-    public static Object getObject(Object o, long offset) {
+    @Nullable
+    public static Object getObject(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getObjectMethod, o, offset);
     }
 
@@ -1722,7 +1731,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} instead.
      */
-    public static void putObject(Object o, long offset, Object x) {
+    public static void putObject(@Nullable Object o, long offset, @Nullable Object x) {
         invokeMethod(unsafe, putObjectMethod, o, offset, x);
     }
 
@@ -1731,7 +1740,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.java.lang.foreign.MemorySegment#get(java.lang.foreign.java.lang.foreign.ValueLayout.OfBoolean, long)} instead.
      */
-    public static boolean getBoolean(Object o, long offset) {
+    public static boolean getBoolean(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getBooleanMethod, o, offset);
     }
 
@@ -1740,7 +1749,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.java.lang.foreign.MemorySegment#set(java.lang.foreign.java.lang.foreign.ValueLayout.OfBoolean, long, boolean)} instead.
      */
-    public static void putBoolean(Object o, long offset, boolean x) {
+    public static void putBoolean(@Nullable Object o, long offset, boolean x) {
         invokeMethod(unsafe, putBooleanMethod, o, offset, x);
     }
 
@@ -1749,7 +1758,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfByte, long)} instead.
      */
-    public static byte getByte(Object o, long offset) {
+    public static byte getByte(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getByteMethod, o, offset);
     }
 
@@ -1758,7 +1767,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfByte, long, byte)} instead.
      */
-    public static void putByte(Object o, long offset, byte x) {
+    public static void putByte(@Nullable Object o, long offset, byte x) {
         invokeMethod(unsafe, putByteMethod, o, offset, x);
     }
 
@@ -1767,7 +1776,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfShort, long)} instead.
      */
-    public static short getShort(Object o, long offset) {
+    public static short getShort(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getShortMethod, o, offset);
     }
 
@@ -1776,7 +1785,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfShort, long, short)} instead.
      */
-    public static void putShort(Object o, long offset, short x) {
+    public static void putShort(@Nullable Object o, long offset, short x) {
         invokeMethod(unsafe, putShortMethod, o, offset, x);
     }
 
@@ -1785,7 +1794,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfChar, long)} instead.
      */
-    public static char getChar(Object o, long offset) {
+    public static char getChar(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getCharMethod, o, offset);
     }
 
@@ -1794,7 +1803,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfChar, long, char)} instead.
      */
-    public static void putChar(Object o, long offset, char x) {
+    public static void putChar(@Nullable Object o, long offset, char x) {
         invokeMethod(unsafe, putCharMethod, o, offset, x);
     }
 
@@ -1803,7 +1812,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfLong, long)} instead.
      */
-    public static long getLong(Object o, long offset) {
+    public static long getLong(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getLongMethod, o, offset);
     }
 
@@ -1812,7 +1821,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfLong, long, long)} instead.
      */
-    public static void putLong(Object o, long offset, long x) {
+    public static void putLong(@Nullable Object o, long offset, long x) {
         invokeMethod(unsafe, putLongMethod, o, offset, x);
     }
 
@@ -1821,7 +1830,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfFloat, long)} instead.
      */
-    public static float getFloat(Object o, long offset) {
+    public static float getFloat(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getFloatMethod, o, offset);
     }
 
@@ -1830,7 +1839,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfFloat, long, float)} instead.
      */
-    public static void putFloat(Object o, long offset, float x) {
+    public static void putFloat(@Nullable Object o, long offset, float x) {
         invokeMethod(unsafe, putFloatMethod, o, offset, x);
     }
 
@@ -1839,7 +1848,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#get(Object...)} or
      * {@link java.lang.foreign.MemorySegment#get(java.lang.foreign.ValueLayout.OfDouble, long)} instead.
      */
-    public static double getDouble(Object o, long offset) {
+    public static double getDouble(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getDoubleMethod, o, offset);
     }
 
@@ -1848,7 +1857,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#set(Object...)} or
      * {@link java.lang.foreign.MemorySegment#set(java.lang.foreign.ValueLayout.OfDouble, long, double)} instead.
      */
-    public static void putDouble(Object o, long offset, double x) {
+    public static void putDouble(@Nullable Object o, long offset, double x) {
         invokeMethod(unsafe, putDoubleMethod, o, offset, x);
     }
 
@@ -2097,7 +2106,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated {@link java.lang.foreign.java.lang.foreign.MemorySegment#fill(byte)} fills the contents of a memory
      * segment with a given value.
      */
-    public static void setMemory(Object o, long offset, long bytes, byte value) {
+    public static void setMemory(@Nullable Object o, long offset, long bytes, byte value) {
         invokeMethod(unsafe, setMemoryMethod, o, offset, bytes, value);
     }
 
@@ -2145,7 +2154,7 @@ public abstract class UnsafeUtils implements Utils {
      * @since JDK 1.7
      * @deprecated Use {@link java.lang.foreign.java.lang.foreign.MemorySegment} and its bulk copy methods instead.
      */
-    public static void copyMemory(Object srcBase, long srcOffset, Object destBase, long destOffset, long bytes) {
+    public static void copyMemory(@Nullable Object srcBase, long srcOffset, @Nullable Object destBase, long destOffset, long bytes) {
         invokeMethod(unsafe, copyMemoryMethod, srcBase, srcOffset, destBase, destOffset, bytes);
     }
 
@@ -2193,7 +2202,7 @@ public abstract class UnsafeUtils implements Utils {
      * @throws IllegalArgumentException If the class is null, or the field name is blank or empty or is matched at multiple places in the inheritance hierarchy
      * @throws NullPointerException     If any argument is <code>null</code>
      */
-    public static long objectFieldOffset(Object object, String fieldName) throws IllegalArgumentException, NullPointerException {
+    public static long objectFieldOffset(@Nonnull Object object, @Nonnull String fieldName) throws IllegalArgumentException, NullPointerException {
         Class<?> type = object.getClass();
         Long offsetFromCache = getOffsetFromCache(type, fieldName);
         if (offsetFromCache != null) {
@@ -2212,7 +2221,7 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return offset
      */
-    public static long staticFieldOffset(Class<?> type, String fieldName) {
+    public static long staticFieldOffset(@Nonnull Class<?> type, @Nonnull String fieldName) {
         Field field = findField(type, fieldName);
         return invokeMethod(unsafe, staticFieldOffsetMethod, field);
     }
@@ -2224,7 +2233,8 @@ public abstract class UnsafeUtils implements Utils {
      * @param fieldName the name of {@link Field}
      * @return base
      */
-    public static Object staticFieldBase(Class<?> type, String fieldName) {
+    @Nullable
+    public static Object staticFieldBase(@Nonnull Class<?> type, @Nonnull String fieldName) {
         Field field = findField(type, fieldName);
         return staticFieldBase(field);
     }
@@ -2246,7 +2256,8 @@ public abstract class UnsafeUtils implements Utils {
      * offset and object reference to a heap memory accessor will be removed
      * in a future release. Use {@link java.lang.invoke.VarHandle} instead.
      */
-    public static Object staticFieldBase(Field field) {
+    @Nullable
+    public static Object staticFieldBase(@Nonnull Field field) {
         return invokeMethod(unsafe, staticFieldBaseMethod, field);
     }
 
@@ -2261,7 +2272,7 @@ public abstract class UnsafeUtils implements Utils {
      * @see #putInt(Object, long, int)
      * @deprecated Not needed when using {@link java.lang.invoke.VarHandle} or {@link java.lang.foreign}.
      */
-    public static int arrayBaseOffset(Class<?> arrayClass) {
+    public static int arrayBaseOffset(@Nonnull Class<?> arrayClass) {
         return invokeMethod(unsafe, arrayBaseOffsetMethod, arrayClass);
     }
 
@@ -2277,7 +2288,7 @@ public abstract class UnsafeUtils implements Utils {
      * @see #putInt(Object, long, int)
      * @deprecated Not needed when using {@link java.lang.invoke.VarHandle} or {@link java.lang.foreign}.
      */
-    public static int arrayIndexScale(Class<?> arrayClass) {
+    public static int arrayIndexScale(@Nonnull Class<?> arrayClass) {
         return invokeMethod(unsafe, arrayIndexScaleMethod, arrayClass);
     }
 
@@ -2307,14 +2318,15 @@ public abstract class UnsafeUtils implements Utils {
      * Allocates an instance but does not run any constructor.
      * Initializes the class if it has not yet been.
      */
-    public static Object allocateInstance(Class<?> cls) {
+    @Nonnull
+    public static Object allocateInstance(@Nonnull Class<?> cls) {
         return invokeMethod(unsafe, allocateInstanceMethod, cls);
     }
 
     /**
      * Throws the exception without telling the verifier.
      */
-    public static void throwException(Throwable ee) {
+    public static void throwException(@Nonnull Throwable ee) {
         invokeMethod(unsafe, throwExceptionMethod, ee);
     }
 
@@ -2328,7 +2340,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return {@code true} if successful
      * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
      */
-    public static boolean compareAndSwapObject(Object o, long offset, Object expected, Object x) {
+    public static boolean compareAndSwapObject(@Nullable Object o, long offset, @Nullable Object expected, @Nullable Object x) {
         return invokeMethod(unsafe, compareAndSwapObjectMethod, o, offset, expected, x);
     }
 
@@ -2342,7 +2354,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return {@code true} if successful
      * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
      */
-    public static boolean compareAndSwapInt(Object o, long offset, int expected, int x) {
+    public static boolean compareAndSwapInt(@Nullable Object o, long offset, int expected, int x) {
         return invokeMethod(unsafe, compareAndSwapIntMethod, o, offset, expected, x);
     }
 
@@ -2356,7 +2368,7 @@ public abstract class UnsafeUtils implements Utils {
      * @return {@code true} if successful
      * @deprecated Use {@link java.lang.invoke.VarHandle#compareAndExchange(Object...)} instead.
      */
-    public static boolean compareAndSwapLong(Object o, long offset, long expected, long x) {
+    public static boolean compareAndSwapLong(@Nullable Object o, long offset, long expected, long x) {
         return invokeMethod(unsafe, compareAndSwapLongMethod, o, offset, expected, x);
     }
 
@@ -2366,7 +2378,8 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static Object getObjectVolatile(Object o, long offset) {
+    @Nullable
+    public static Object getObjectVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getObjectVolatileMethod, o, offset);
     }
 
@@ -2376,7 +2389,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putObjectVolatile(Object o, long offset, Object x) {
+    public static void putObjectVolatile(@Nullable Object o, long offset, @Nullable Object x) {
         invokeMethod(unsafe, putObjectVolatileMethod, o, offset, x);
     }
 
@@ -2385,7 +2398,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static int getIntVolatile(Object o, long offset) {
+    public static int getIntVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getIntVolatileMethod, o, offset);
     }
 
@@ -2394,7 +2407,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putIntVolatile(Object o, long offset, int x) {
+    public static void putIntVolatile(@Nullable Object o, long offset, int x) {
         invokeMethod(unsafe, putIntVolatileMethod, o, offset, x);
     }
 
@@ -2403,7 +2416,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static boolean getBooleanVolatile(Object o, long offset) {
+    public static boolean getBooleanVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getBooleanVolatileMethod, o, offset);
     }
 
@@ -2412,7 +2425,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putBooleanVolatile(Object o, long offset, boolean x) {
+    public static void putBooleanVolatile(@Nullable Object o, long offset, boolean x) {
         invokeMethod(unsafe, putBooleanVolatileMethod, o, offset, x);
     }
 
@@ -2422,7 +2435,7 @@ public abstract class UnsafeUtils implements Utils {
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)}
      * instead.
      */
-    public static byte getByteVolatile(Object o, long offset) {
+    public static byte getByteVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getByteVolatileMethod, o, offset);
     }
 
@@ -2431,7 +2444,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putByteVolatile(Object o, long offset, byte x) {
+    public static void putByteVolatile(@Nullable Object o, long offset, byte x) {
         invokeMethod(unsafe, putByteVolatileMethod, o, offset, x);
     }
 
@@ -2440,7 +2453,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static short getShortVolatile(Object o, long offset) {
+    public static short getShortVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getShortVolatileMethod, o, offset);
     }
 
@@ -2449,7 +2462,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putShortVolatile(Object o, long offset, short x) {
+    public static void putShortVolatile(@Nullable Object o, long offset, short x) {
         invokeMethod(unsafe, putShortVolatileMethod, o, offset, x);
     }
 
@@ -2458,7 +2471,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static char getCharVolatile(Object o, long offset) {
+    public static char getCharVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getCharVolatileMethod, o, offset);
     }
 
@@ -2467,7 +2480,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putCharVolatile(Object o, long offset, char x) {
+    public static void putCharVolatile(@Nullable Object o, long offset, char x) {
         invokeMethod(unsafe, putCharVolatileMethod, o, offset, x);
     }
 
@@ -2476,7 +2489,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static long getLongVolatile(Object o, long offset) {
+    public static long getLongVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getLongVolatileMethod, o, offset);
     }
 
@@ -2485,7 +2498,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putLongVolatile(Object o, long offset, long x) {
+    public static void putLongVolatile(@Nullable Object o, long offset, long x) {
         invokeMethod(unsafe, putLongVolatileMethod, o, offset, x);
     }
 
@@ -2494,7 +2507,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static float getFloatVolatile(Object o, long offset) {
+    public static float getFloatVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getFloatVolatileMethod, o, offset);
     }
 
@@ -2503,7 +2516,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putFloatVolatile(Object o, long offset, float x) {
+    public static void putFloatVolatile(@Nullable Object o, long offset, float x) {
         invokeMethod(unsafe, putFloatVolatileMethod, o, offset, x);
     }
 
@@ -2512,7 +2525,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#getVolatile(Object...)} instead.
      */
-    public static double getDoubleVolatile(Object o, long offset) {
+    public static double getDoubleVolatile(@Nullable Object o, long offset) {
         return invokeMethod(unsafe, getDoubleVolatileMethod, o, offset);
     }
 
@@ -2521,7 +2534,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setVolatile(Object...)} instead.
      */
-    public static void putDoubleVolatile(Object o, long offset, double x) {
+    public static void putDoubleVolatile(@Nullable Object o, long offset, double x) {
         invokeMethod(unsafe, putDoubleVolatileMethod, o, offset, x);
     }
 
@@ -2536,7 +2549,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setRelease(Object...)} instead.
      */
-    public static void putOrderedObject(Object o, long offset, Object x) {
+    public static void putOrderedObject(@Nullable Object o, long offset, @Nullable Object x) {
         invokeMethod(unsafe, putOrderedObjectMethod, o, offset, x);
     }
 
@@ -2545,7 +2558,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setRelease(Object...)} instead.
      */
-    public static void putOrderedInt(Object o, long offset, int x) {
+    public static void putOrderedInt(@Nullable Object o, long offset, int x) {
         invokeMethod(unsafe, putOrderedIntMethod, o, offset, x);
     }
 
@@ -2554,7 +2567,7 @@ public abstract class UnsafeUtils implements Utils {
      *
      * @deprecated Use {@link java.lang.invoke.VarHandle#setRelease(Object...)} instead.
      */
-    public static void putOrderedLong(Object o, long offset, long x) {
+    public static void putOrderedLong(@Nullable Object o, long offset, long x) {
         invokeMethod(unsafe, putOrderedLongMethod, o, offset, x);
     }
 
@@ -2573,7 +2586,7 @@ public abstract class UnsafeUtils implements Utils {
      * @since JDK 1.8
      * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
      */
-    public static int getAndAddInt(Object o, long offset, int delta) {
+    public static int getAndAddInt(@Nullable Object o, long offset, int delta) {
         return invokeMethod(unsafe, getAndAddIntMethod, o, offset, delta);
     }
 
@@ -2589,7 +2602,7 @@ public abstract class UnsafeUtils implements Utils {
      * @since JDK 1.8
      * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
      */
-    public static long getAndAddLong(Object o, long offset, long delta) {
+    public static long getAndAddLong(@Nullable Object o, long offset, long delta) {
         return invokeMethod(unsafe, getAndAddLongMethod, o, offset, delta);
     }
 
@@ -2605,7 +2618,7 @@ public abstract class UnsafeUtils implements Utils {
      * @since JDK 1.8
      * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
      */
-    public static int getAndSetInt(Object o, long offset, int newValue) {
+    public static int getAndSetInt(@Nullable Object o, long offset, int newValue) {
         return invokeMethod(unsafe, getAndSetIntMethod, o, offset, newValue);
     }
 
@@ -2621,7 +2634,7 @@ public abstract class UnsafeUtils implements Utils {
      * @since JDK 1.8
      * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
      */
-    public static long getAndSetLong(Object o, long offset, long newValue) {
+    public static long getAndSetLong(@Nullable Object o, long offset, long newValue) {
         return invokeMethod(unsafe, getAndSetLongMethod, o, offset, newValue);
     }
 
@@ -2637,7 +2650,8 @@ public abstract class UnsafeUtils implements Utils {
      * @since JDK 1.8
      * @deprecated Use {@link java.lang.invoke.VarHandle#getAndAdd(Object...)} instead.
      */
-    public static Object getAndSetObject(Object o, long offset, Object newValue) {
+    @Nullable
+    public static Object getAndSetObject(@Nullable Object o, long offset, @Nullable Object newValue) {
         return invokeMethod(unsafe, getAndSetObjectMethod, o, offset, newValue);
     }
 

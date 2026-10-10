@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Version.Operator;
 
@@ -107,7 +108,7 @@ public class Compatible<T, R> {
      * @param version             the version to be used for comparison
      * @param conditionalFunction the function to execute if a condition is satisfied, or {@code null} if no default action is needed
      */
-    public Compatible(Version version, Function<Version, R> conditionalFunction) {
+    public Compatible(@Nonnull Version version, @Nullable Function<Version, R> conditionalFunction) {
         this.version = version;
         this.conditionalFunction = conditionalFunction;
     }
@@ -137,7 +138,8 @@ public class Compatible<T, R> {
      * @return a new {@link Compatible} instance initialized with the detected version of the target class
      * @see Version#getVersion(Class)
      */
-    public static <T> Compatible<T, ?> of(Class<T> targetClass) {
+    @Nonnull
+    public static <T> Compatible<T, ?> of(@Nonnull Class<T> targetClass) {
         return new Compatible<>(getVersion(targetClass), null);
     }
 
@@ -163,8 +165,9 @@ public class Compatible<T, R> {
      * @param <R>                 the return type of the conditional function
      * @return a new {@link Compatible} instance with the added condition, or the same instance if the condition is not met
      */
-    public <R> Compatible<T, R> on(String operator, String comparedVersion,
-                                   Function<Version, R> conditionalFunction) {
+    @Nonnull
+    public <R> Compatible<T, R> on(@Nullable String operator, @Nonnull String comparedVersion,
+                                   @Nullable Function<Version, R> conditionalFunction) {
         return on(Operator.of(operator), ofVersion(comparedVersion), conditionalFunction);
     }
 
@@ -190,8 +193,9 @@ public class Compatible<T, R> {
      * @param <R>                 the return type of the conditional function
      * @return a new {@link Compatible} instance with the added condition, or the same instance if the condition is not met
      */
-    public <R> Compatible<T, R> on(Operator operator, Version comparedVersion,
-                                   Function<Version, R> conditionalFunction) {
+    @Nonnull
+    public <R> Compatible<T, R> on(@Nonnull Operator operator, @Nullable Version comparedVersion,
+                                   @Nullable Function<Version, R> conditionalFunction) {
         if (TRUE.equals(operator.test(this.version, comparedVersion))) {
             return new Compatible<>(version, conditionalFunction);
         }
@@ -217,6 +221,7 @@ public class Compatible<T, R> {
      *
      * @return an {@link Optional} containing the result of the conditional function, or empty if no condition matched
      */
+    @Nonnull
     public Optional<R> call() {
         R result = null;
         if (conditionalFunction != null) {
@@ -244,7 +249,7 @@ public class Compatible<T, R> {
      *
      * @param resultConsumer the consumer to accept the result of the conditional function
      */
-    public void accept(Consumer<R> resultConsumer) {
+    public void accept(@Nonnull Consumer<R> resultConsumer) {
         call().ifPresent(resultConsumer);
     }
 

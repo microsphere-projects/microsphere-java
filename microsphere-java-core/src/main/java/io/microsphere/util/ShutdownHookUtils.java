@@ -206,7 +206,7 @@ public abstract class ShutdownHookUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter) {
+    public static Set<Thread> filterShutdownHookThreads(@Nonnull Predicate<? super Thread> hookThreadFilter) {
         return filterShutdownHookThreads(hookThreadFilter, false);
     }
 
@@ -242,7 +242,7 @@ public abstract class ShutdownHookUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter, boolean removed) {
+    public static Set<Thread> filterShutdownHookThreads(@Nonnull Predicate<? super Thread> hookThreadFilter, boolean removed) {
         Map<Thread, Thread> shutdownHookThreadsMap = shutdownHookThreadsMap();
 
         Set<Thread> shutdownHookThreads = shutdownHookThreadsMap.keySet().stream()
