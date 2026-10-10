@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -36,7 +39,8 @@ public class ByteArrayToObjectConverter extends AbstractConverter<byte[], Object
     public static final ByteArrayToObjectConverter INSTANCE = new ByteArrayToObjectConverter();
 
     @Override
-    public Serializable doConvert(byte[] source) {
+    @Nullable
+    public Serializable doConvert(@Nonnull byte[] source) {
         try {
             return (Serializable) DEFAULT_DESERIALIZER.deserialize(source);
         } catch (IOException e) {

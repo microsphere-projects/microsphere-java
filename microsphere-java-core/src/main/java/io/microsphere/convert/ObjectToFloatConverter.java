@@ -17,6 +17,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
 
@@ -35,7 +37,8 @@ public class ObjectToFloatConverter extends AbstractConverter<Object, Float> {
     public static final ObjectToFloatConverter INSTANCE = new ObjectToFloatConverter();
 
     @Override
-    protected Float doConvert(Object source) {
+    @Nullable
+    protected Float doConvert(@Nonnull Object source) {
         if (source instanceof Float) {
             return (Float) source;
         }

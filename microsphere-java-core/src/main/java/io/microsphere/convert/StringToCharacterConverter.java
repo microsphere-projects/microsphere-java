@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.util.CharSequenceUtils.length;
 
@@ -32,7 +34,8 @@ public class StringToCharacterConverter extends AbstractConverter<String, Charac
     public static final StringToCharacterConverter INSTANCE = new StringToCharacterConverter();
 
     @Override
-    protected Character doConvert(String source) {
+    @Nullable
+    protected Character doConvert(@Nonnull String source) {
         int length = length(source);
         if (length == 0) {
             return null;

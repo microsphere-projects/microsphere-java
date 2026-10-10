@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.convert.Converter;
 
 import static java.lang.reflect.Array.newInstance;
@@ -28,12 +30,13 @@ import static java.lang.reflect.Array.set;
  */
 public class StringToArrayConverter implements StringToMultiValueConverter {
 
-    public boolean accept(Class<String> type, Class<?> multiValueType) {
+    public boolean accept(@Nullable Class<String> type, @Nullable Class<?> multiValueType) {
         return multiValueType != null && multiValueType.isArray();
     }
 
     @Override
-    public Object convert(String[] segments, int size, Class<?> targetType, Class<?> elementType) {
+    @Nonnull
+    public Object convert(@Nonnull String[] segments, int size, @Nonnull Class<?> targetType, @Nullable Class<?> elementType) {
 
         Class<?> componentType = targetType.getComponentType();
 

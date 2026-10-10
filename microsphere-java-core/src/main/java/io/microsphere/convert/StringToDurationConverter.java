@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.time.Duration;
 
 import static java.time.Duration.parse;
@@ -34,7 +36,8 @@ public class StringToDurationConverter extends AbstractConverter<String, Duratio
     public static final StringToDurationConverter INSTANCE = new StringToDurationConverter();
 
     @Override
-    protected Duration doConvert(String source) {
+    @Nonnull
+    protected Duration doConvert(@Nonnull String source) {
         return parse(source);
     }
 }

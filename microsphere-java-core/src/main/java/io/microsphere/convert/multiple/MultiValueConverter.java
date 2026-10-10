@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.util.Collection;
@@ -42,7 +44,7 @@ public interface MultiValueConverter<S> extends Prioritized {
      * @param multiValueType the multi-value type
      * @return if accepted, return <code>true</code>, or <code>false</code>
      */
-    boolean accept(Class<S> sourceType, Class<?> multiValueType);
+    boolean accept(@Nullable Class<S> sourceType, @Nullable Class<?> multiValueType);
 
     /**
      * Convert the source to be the multiple value
@@ -52,13 +54,15 @@ public interface MultiValueConverter<S> extends Prioritized {
      * @param elementType    the element type
      * @return
      */
-    Object convert(S source, Class<?> multiValueType, Class<?> elementType);
+    @Nullable
+    Object convert(@Nullable S source, @Nonnull Class<?> multiValueType, @Nullable Class<?> elementType);
 
     /**
      * Get the source type
      *
      * @return non-null
      */
+    @Nonnull
     default Class<S> getSourceType() {
         return resolveActualTypeArgumentClass(getClass(), MultiValueConverter.class, 0);
     }
@@ -70,7 +74,8 @@ public interface MultiValueConverter<S> extends Prioritized {
      * @param targetType the target type
      * @return <code>null</code> if not found
      */
-    static MultiValueConverter<?> find(Class<?> sourceType, Class<?> targetType) {
+    @Nullable
+    static MultiValueConverter<?> find(@Nullable Class<?> sourceType, @Nullable Class<?> targetType) {
         ClassLoader classLoader = getClassLoader(MultiValueConverter.class);
         return loadServicesList(MultiValueConverter.class, classLoader)
                 .stream()
@@ -80,7 +85,8 @@ public interface MultiValueConverter<S> extends Prioritized {
                 .orElse(null);
     }
 
-    static <T> T convertIfPossible(Object source, Class<?> multiValueType, Class<?> elementType) {
+    @Nullable
+    static <T> T convertIfPossible(@Nonnull Object source, @Nullable Class<?> multiValueType, @Nullable Class<?> elementType) {
         Class<?> sourceType = source.getClass();
         MultiValueConverter converter = find(sourceType, multiValueType);
         if (converter != null) {

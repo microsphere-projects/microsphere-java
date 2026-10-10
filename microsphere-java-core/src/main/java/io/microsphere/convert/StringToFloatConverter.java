@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 
 import static java.lang.Float.valueOf;
 
@@ -32,7 +33,8 @@ public class StringToFloatConverter extends AbstractConverter<String, Float> imp
     public static final StringToFloatConverter INSTANCE = new StringToFloatConverter();
 
     @Override
-    protected Float doConvert(String source) {
+    @Nonnull
+    protected Float doConvert(@Nonnull String source) {
         return valueOf(source);
     }
 }

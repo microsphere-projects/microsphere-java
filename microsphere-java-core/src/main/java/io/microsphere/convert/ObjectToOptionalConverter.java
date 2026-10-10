@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -33,7 +36,8 @@ public class ObjectToOptionalConverter implements Converter<Object, Optional> {
     public static final ObjectToOptionalConverter INSTANCE = new ObjectToOptionalConverter();
 
     @Override
-    public Optional convert(Object source) {
+    @Nonnull
+    public Optional convert(@Nullable Object source) {
         return ofNullable(source);
     }
 

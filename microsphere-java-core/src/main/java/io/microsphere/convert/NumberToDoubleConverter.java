@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Number} to {@link Double}
  *
@@ -33,7 +35,8 @@ public class NumberToDoubleConverter extends AbstractConverter<Number, Double> {
     public static final NumberToDoubleConverter INSTANCE = new NumberToDoubleConverter();
 
     @Override
-    protected Double doConvert(Number source) {
+    @Nonnull
+    protected Double doConvert(@Nonnull Number source) {
         if (source instanceof Double) {
             return (Double) source;
         }

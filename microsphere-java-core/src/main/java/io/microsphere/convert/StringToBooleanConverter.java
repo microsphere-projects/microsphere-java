@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Boolean.valueOf;
@@ -33,7 +35,8 @@ public class StringToBooleanConverter extends AbstractConverter<String, Boolean>
     public static final StringToBooleanConverter INSTANCE = new StringToBooleanConverter();
 
     @Override
-    protected Boolean doConvert(String source) {
+    @Nullable
+    protected Boolean doConvert(@Nonnull String source) {
         return isNotEmpty(source) ? valueOf(source) : null;
     }
 }

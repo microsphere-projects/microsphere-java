@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 
 import static java.lang.Short.valueOf;
 
@@ -32,7 +33,8 @@ public class StringToShortConverter extends AbstractConverter<String, Short> imp
     public static final StringToShortConverter INSTANCE = new StringToShortConverter();
 
     @Override
-    protected Short doConvert(String source) {
+    @Nonnull
+    protected Short doConvert(@Nonnull String source) {
         return valueOf(source);
     }
 }

@@ -16,6 +16,9 @@
  */
 package io.microsphere.convert.multiple;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -27,7 +30,8 @@ import java.util.Deque;
 public class StringToDequeConverter extends StringToIterableConverter<Deque> {
 
     @Override
-    protected Deque createMultiValue(int size, Class<?> multiValueType) {
+    @Nonnull
+    protected Deque createMultiValue(int size, @Nullable Class<?> multiValueType) {
         return new ArrayDeque(size);
     }
 }

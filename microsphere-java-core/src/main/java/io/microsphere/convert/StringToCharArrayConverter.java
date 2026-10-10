@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The class to convert {@link String} to <code>char[]</code>
  *
@@ -29,7 +31,8 @@ public class StringToCharArrayConverter extends AbstractConverter<String, char[]
     public static final StringToCharArrayConverter INSTANCE = new StringToCharArrayConverter();
 
     @Override
-    protected char[] doConvert(String source) {
+    @Nonnull
+    protected char[] doConvert(@Nonnull String source) {
         return source.toCharArray();
     }
 }

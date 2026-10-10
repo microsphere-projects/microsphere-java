@@ -18,6 +18,8 @@
 
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * The {@link Converter} for {@link Number} to {@link Short}
  *
@@ -33,7 +35,8 @@ public class NumberToShortConverter extends AbstractConverter<Number, Short> {
     public static final NumberToShortConverter INSTANCE = new NumberToShortConverter();
 
     @Override
-    protected Short doConvert(Number source) {
+    @Nonnull
+    protected Short doConvert(@Nonnull Number source) {
         if (source instanceof Short) {
             return (Short) source;
         }
