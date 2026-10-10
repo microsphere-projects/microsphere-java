@@ -16,6 +16,9 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -64,37 +67,38 @@ public abstract class AbstractLogger implements Logger {
 
     private final String name;
 
-    protected AbstractLogger(String name) {
+    protected AbstractLogger(@Nonnull String name) {
         this.name = name;
     }
 
     @Override
+    @Nonnull
     public final String getName() {
         return this.name;
     }
 
     @Override
-    public void trace(String format, Object... arguments) {
+    public void trace(@Nullable String format, Object... arguments) {
         log(this::trace, this::trace, format, arguments);
     }
 
     @Override
-    public void debug(String format, Object... arguments) {
+    public void debug(@Nullable String format, Object... arguments) {
         log(this::debug, this::debug, format, arguments);
     }
 
     @Override
-    public void info(String format, Object... arguments) {
+    public void info(@Nullable String format, Object... arguments) {
         log(this::info, this::info, format, arguments);
     }
 
     @Override
-    public void warn(String format, Object... arguments) {
+    public void warn(@Nullable String format, Object... arguments) {
         log(this::warn, this::warn, format, arguments);
     }
 
     @Override
-    public void error(String format, Object... arguments) {
+    public void error(@Nullable String format, Object... arguments) {
         log(this::error, this::error, format, arguments);
     }
 
@@ -104,7 +108,7 @@ public abstract class AbstractLogger implements Logger {
      * @param format                  the format message or regular message
      * @param arguments               zero or more arguments for the format pattern
      */
-    protected void log(Consumer<String> messageHandler, BiConsumer<String, Throwable> messageThrowableHandler, String format, Object... arguments) {
+    protected void log(@Nonnull Consumer<String> messageHandler, @Nonnull BiConsumer<String, Throwable> messageThrowableHandler, @Nullable String format, Object... arguments) {
         final String message;
         int length = length(arguments);
         if (length < 1) {
@@ -126,7 +130,8 @@ public abstract class AbstractLogger implements Logger {
      * @param arguments zero or more arguments for the format pattern
      * @return non-null
      */
-    protected String resolveMessage(String format, Object... arguments) {
+    @Nullable
+    protected String resolveMessage(@Nullable String format, Object... arguments) {
         return format(format, arguments);
     }
 }

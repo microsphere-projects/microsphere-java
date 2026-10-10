@@ -16,6 +16,8 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+
 /**
  * A {@link LoggerFactory} implementation that provides instances of {@link NoOpLogger},
  * which perform no operations for logging calls. This factory is always available
@@ -39,6 +41,7 @@ package io.microsphere.logging;
 public class NoOpLoggerFactory extends LoggerFactory {
 
     @Override
+    @Nonnull
     protected String getDelegateLoggerClassName() {
         throw new UnsupportedOperationException("This method should not be invoked here!");
     }
@@ -49,7 +52,8 @@ public class NoOpLoggerFactory extends LoggerFactory {
     }
 
     @Override
-    public Logger createLogger(String name) {
+    @Nonnull
+    public Logger createLogger(@Nonnull String name) {
         return new NoOpLogger(name);
     }
 
