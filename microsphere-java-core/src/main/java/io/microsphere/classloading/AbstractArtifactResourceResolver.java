@@ -96,11 +96,11 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
 
     protected final int priority;
 
-    public AbstractArtifactResourceResolver(int priority) {
+    protected AbstractArtifactResourceResolver(int priority) {
         this(null, priority);
     }
 
-    public AbstractArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
+    protected AbstractArtifactResourceResolver(@Nullable ClassLoader classLoader, int priority) {
         this.classLoader = nullSafeClassLoader(classLoader);
         this.priority = priority;
     }
