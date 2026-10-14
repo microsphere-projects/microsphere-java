@@ -50,7 +50,6 @@ public class CharacterSerializer extends AbstractSerializer<Character> {
     @Override
     @Nonnull
     protected Character doDeserialize(@Nonnull byte[] bytes) {
-        char c = (char) ((bytes[0] << 8) | (bytes[1] & 0xFF));
-        return c;
+        return (char) ((bytes[0] << 8) | (bytes[1] & 0xFF));
     }
 }
