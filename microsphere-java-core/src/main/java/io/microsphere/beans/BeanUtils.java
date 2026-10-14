@@ -282,7 +282,7 @@ public abstract class BeanUtils implements Utils {
      * @throws RuntimeException if an exception occurs during introspection
      */
     @Nonnull
-    public static BeanMetadata getBeanMetadata(@Nonnull Class<?> beanClass) throws RuntimeException {
+    public static BeanMetadata getBeanMetadata(@Nonnull Class<?> beanClass) {
         return beanMetadataCache.computeIfAbsent(beanClass, BeanMetadata::of);
     }
 
