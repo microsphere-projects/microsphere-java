@@ -103,12 +103,11 @@ public class BeanProperty {
 
     @Override
     public String toString() {
-        String sb = "BeanProperty{" + "name='" + name + QUOTE_CHAR +
+        return "BeanProperty{" + "name='" + name + QUOTE_CHAR +
                 ", value=" + value +
                 ", declaringClass=" + beanClass +
                 ", descriptor=" + descriptor +
                 '}';
-        return sb;
     }
 
     /**

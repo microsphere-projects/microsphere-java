@@ -86,19 +86,19 @@ class BeanMetadataTest {
 
     @Test
     void testEquals() {
-        assertEquals(this.beanMetadata, of(TestBean.class));
-        assertNotEquals(this.beanMetadata, TestBean.class);
-        assertNotEquals(this.beanMetadata, null);
+        assertEquals(of(TestBean.class), this.beanMetadata);
+        assertNotEquals(TestBean.class, this.beanMetadata);
+        assertNotNull(this.beanMetadata);
     }
 
     @Test
     void testHashCode() {
-        assertEquals(this.beanMetadata.hashCode(), of(TestBean.class).hashCode());
-        assertEquals(this.beanMetadata.hashCode(), TestBean.class.hashCode());
+        assertEquals(of(TestBean.class).hashCode(), this.beanMetadata.hashCode());
+        assertEquals(TestBean.class.hashCode(), this.beanMetadata.hashCode());
     }
 
     @Test
     void testToString() {
-        assertEquals(this.beanMetadata.toString(), of(TestBean.class).toString());
+        assertEquals(of(TestBean.class).toString(), this.beanMetadata.toString());
     }
 }
