@@ -28,8 +28,7 @@ public final class BooleanSerializer extends AbstractSerializer<Boolean> {
     @Nonnull
     protected byte[] doSerialize(@Nonnull Boolean booleanValue) {
         byte byteValue = booleanValue ? TRUE_VALUE : FALSE_VALUE;
-        byte[] bytes = new byte[]{byteValue};
-        return bytes;
+        return new byte[]{byteValue};
     }
 
     @Override
