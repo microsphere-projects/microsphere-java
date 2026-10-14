@@ -164,11 +164,8 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     @Override
     public void dispatch(@Nonnull Event event) {
-
-        Executor executor = getExecutor();
-
         // execute in sequential or parallel execution model
-        executor.execute(() -> {
+        getExecutor().execute(() -> {
             sortedListeners(entry -> entry.getKey().isAssignableFrom(event.getClass()))
                     .forEach(listener -> {
                         if (listener instanceof ConditionalEventListener) {
