@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,21 +35,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class StringSerializerAndDeserializerTest {
 
-    private StringSerializer serializer = new StringSerializer();
+    private StringSerializer serializer = StringSerializer.INSTANCE;
 
-    private StringDeserializer deserializer = new StringDeserializer();
+    private StringDeserializer deserializer = StringDeserializer.INSTANCE;
 
     @Test
     void test() throws IOException {
         String value = "Test";
-        byte[] bytes = serializer.serialize(value);
-        assertArrayEquals(value.getBytes(StandardCharsets.UTF_8), bytes);
+        byte[] bytes = StringSerializer.INSTANCE.serialize(value);
+        assertArrayEquals(value.getBytes(UTF_8), bytes);
         assertEquals(value, deserializer.deserialize(bytes));
     }
 
     @Test
     void testWithCustomCharset() throws IOException {
-        Charset charset = StandardCharsets.ISO_8859_1;
+        Charset charset = ISO_8859_1;
         StringSerializer customSerializer = new StringSerializer(charset);
         StringDeserializer customDeserializer = new StringDeserializer(charset);
         String value = "Test";
@@ -70,5 +72,11 @@ class StringSerializerAndDeserializerTest {
         StringDeserializer utf16Deserializer = new StringDeserializer(charset);
         String value = "Hello UTF-16";
         assertEquals(value, utf16Deserializer.deserialize(utf16Serializer.serialize(value)));
+    }
+
+    @Test
+    void testNull() throws IOException {
+        assertEquals(null, serializer.serialize(null));
+        assertEquals(null, deserializer.deserialize(null));
     }
 }

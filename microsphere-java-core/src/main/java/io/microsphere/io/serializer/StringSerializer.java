@@ -22,6 +22,7 @@ import io.microsphere.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import static io.microsphere.util.ObjectUtils.requireNonNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -46,6 +47,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class StringSerializer implements Serializer<String> {
 
+    /**
+     * A singleton instance of {@link StringSerializer} that uses UTF-8 encoding.
+     */
+    public static final StringSerializer INSTANCE = new StringSerializer();
+
     private final Charset charset;
 
     public StringSerializer() {
@@ -53,12 +59,12 @@ public class StringSerializer implements Serializer<String> {
     }
 
     public StringSerializer(@Nonnull Charset charset) {
-        this.charset = charset;
+        this.charset = requireNonNull(charset, () -> "Charset must not be null");
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public byte[] serialize(@Nullable String source) throws IOException {
-        return source.getBytes(this.charset);
+        return source == null ? null : source.getBytes(this.charset);
     }
 }
