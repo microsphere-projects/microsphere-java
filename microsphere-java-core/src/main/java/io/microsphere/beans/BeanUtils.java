@@ -503,15 +503,15 @@ public abstract class BeanUtils implements Utils {
         } else if (valueType.isArray()) {
             return toArray(value, valueType, resolvedDepth, maxResolvedDepth);
         } else if (isList(valueType)) {
-            return toList(value, valueType, resolvedDepth, maxResolvedDepth);
+            return toList(value, resolvedDepth, maxResolvedDepth);
         } else if (isSet(valueType)) {
-            return toSet(value, valueType, resolvedDepth, maxResolvedDepth);
+            return toSet(value, resolvedDepth, maxResolvedDepth);
         } else if (isQueue(valueType)) {
-            return toQueue(value, valueType, resolvedDepth, maxResolvedDepth);
+            return toQueue(value, resolvedDepth, maxResolvedDepth);
         } else if (isEnumeration(valueType)) {
-            return toEnumeration(value, valueType, resolvedDepth, maxResolvedDepth);
+            return toEnumeration(value, resolvedDepth, maxResolvedDepth);
         } else if (isMap(valueType)) {
-            return toMap(value, valueType, resolvedDepth, maxResolvedDepth);
+            return toMap(value, resolvedDepth, maxResolvedDepth);
         } else { // as the POJO
             return resolvePropertiesAsMap(value, resolvedDepth, maxResolvedDepth);
         }
@@ -527,35 +527,35 @@ public abstract class BeanUtils implements Utils {
         return newArray;
     }
 
-    static List<?> toList(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+    static List<?> toList(Object value, MutableInteger resolvedDepth, int maxResolvedDepth) {
         List<?> list = (List<?>) value;
         ArrayList<Object> newList = newArrayList(size(list));
         addValues(newList, list, resolvedDepth, maxResolvedDepth);
         return newList;
     }
 
-    static Set<?> toSet(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+    static Set<?> toSet(Object value, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Set<?> set = (Set<?>) value;
         LinkedHashSet<Object> newSet = newFixedLinkedHashSet(size(set));
         addValues(newSet, set, resolvedDepth, maxResolvedDepth);
         return newSet;
     }
 
-    static Queue<?> toQueue(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+    static Queue<?> toQueue(Object value, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Queue<?> queue = (Queue<?>) value;
         ArrayDeque<Object> newQueue = newArrayDeque(size(queue));
         addValues(newQueue, queue, resolvedDepth, maxResolvedDepth);
         return newQueue;
     }
 
-    static Enumeration<?> toEnumeration(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+    static Enumeration<?> toEnumeration(Object value, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Enumeration<?> enumeration = (Enumeration<?>) value;
         LinkedList<Object> newList = newLinkedList();
         addValues(newList, toIterable(enumeration), resolvedDepth, maxResolvedDepth);
         return enumeration(newList);
     }
 
-    static Object toMap(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+    static Object toMap(Object value, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Map<?, ?> map = (Map<?, ?>) value;
         LinkedHashMap<Object, Object> newMap = newFixedLinkedHashMap(size(map));
         for (Map.Entry<?, ?> entry : map.entrySet()) {
