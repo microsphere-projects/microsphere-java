@@ -142,10 +142,9 @@ public class Artifact {
     @Nonnull
     @Override
     public String toString() {
-        String sb = "Artifact{" + "artifactId='" + artifactId + QUOTE_CHAR +
+        return "Artifact{" + "artifactId='" + artifactId + QUOTE_CHAR +
                 ", version='" + version + QUOTE_CHAR +
                 ", location='" + location + QUOTE_CHAR +
                 '}';
-        return sb;
     }
 }

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.beans.BeanProperty.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -89,36 +88,35 @@ class BeanPropertyTest {
         assertEquals(this.beanProperty, of(this, "value"));
 
         // test "null"
-        assertFalse(this.beanProperty.equals(null));
+        assertNotNull(this.beanProperty);
 
         // test different type
-        assertFalse(this.beanProperty.equals("test"));
+        assertNotEquals("test", this.beanProperty);
 
         // test different property name
-        assertNotEquals(this.beanProperty, of(this, "beanProperty"));
+        assertNotEquals(of(this, "beanProperty"), this.beanProperty);
 
         // test different property value
         BeanPropertyTest bean = new BeanPropertyTest();
         bean.value = TEST_VALUE + TEST_VALUE;
-        assertNotEquals(this.beanProperty, of(bean, "value"));
+        assertNotEquals(of(bean, "value"), this.beanProperty);
 
         bean = new BeanPropertyTest() {
         };
-        assertNotEquals(this.beanProperty, of(bean, "value"));
-
+        assertNotEquals(of(bean, "value"), this.beanProperty);
     }
 
     @Test
     void testHashCode() {
-        assertEquals(this.beanProperty.hashCode(), of(this, "value").hashCode());
+        assertEquals(of(this, "value").hashCode(), this.beanProperty.hashCode());
 
         BeanPropertyTest bean = new BeanPropertyTest();
         bean.value = null;
-        assertNotEquals(beanProperty.hashCode(), of(bean, "value").hashCode());
+        assertNotEquals(of(bean, "value").hashCode(), this.beanProperty.hashCode());
     }
 
     @Test
     void testToString() {
-        assertEquals(beanProperty.toString(), of(this, "value").toString());
+        assertEquals(of(this, "value").toString(), this.beanProperty.toString());
     }
 }
