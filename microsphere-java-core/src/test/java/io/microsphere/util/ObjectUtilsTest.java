@@ -21,8 +21,10 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static io.microsphere.util.ObjectUtils.nullSafe;
+import static io.microsphere.util.ObjectUtils.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ObjectUtils} Test
@@ -45,5 +47,12 @@ class ObjectUtilsTest {
         assertEquals("default", defaultIfNull(null, () -> "default"));
         assertEquals("value", defaultIfNull("value", () -> "default"));
         assertNull(defaultIfNull(null, () -> null));
+    }
+
+    @Test
+    void testNonNull() {
+        String value = "test";
+        assertEquals(value, requireNonNull(value, () -> "default"));
+        assertThrows(NullPointerException.class, () -> requireNonNull(null, () -> "{} cannot be null", "Something"));
     }
 }
