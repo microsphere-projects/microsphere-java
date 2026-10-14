@@ -100,8 +100,8 @@ class AbstractConverterTest extends BaseConverterTest<String, String> {
     @Test
     void testEquals() {
         assertEquals(this.converter, this.converter);
-        assertNotEquals(this.converter, StringToBooleanConverter.INSTANCE);
-        assertNotEquals(this.converter, ObjectToStringConverter.INSTANCE);
+        assertNotEquals(StringToBooleanConverter.INSTANCE, this.converter);
+        assertNotEquals(ObjectToStringConverter.INSTANCE, this.converter);
     }
 
     @Test

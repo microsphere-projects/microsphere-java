@@ -235,6 +235,6 @@ class AbstractDequeTest {
         // push delegates to addFirst (LIFO)
         assertEquals("Y", multiDeque.pop());
         assertEquals("X", multiDeque.pop());
-        assertThrows(NoSuchElementException.class, () -> multiDeque.pop());
+        assertThrows(NoSuchElementException.class, multiDeque::pop);
     }
 }
