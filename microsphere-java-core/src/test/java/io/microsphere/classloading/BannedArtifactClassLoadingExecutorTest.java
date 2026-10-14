@@ -24,6 +24,7 @@ import java.util.Enumeration;
 
 import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfig;
 import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfigs;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,7 +39,7 @@ class BannedArtifactClassLoadingExecutorTest {
     @Test
     void testDetect() {
         BannedArtifactClassLoadingExecutor detector = new BannedArtifactClassLoadingExecutor();
-        detector.execute();
+        assertDoesNotThrow(detector::execute);
     }
 
     @Test

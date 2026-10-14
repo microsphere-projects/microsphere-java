@@ -679,8 +679,6 @@ class ArrayUtilsTest implements Loggable {
         assertFalse(isNotEmpty(TEST_NULL_OBJECT_ARRAY));
     }
 
-    // Test arrayEquals(...) methods;
-
     @Test
     void testArrayEqualsOnBooleanArray() {
         assertTrue(arrayEquals(ofBooleans(true), ofBooleans(true)));
@@ -917,7 +915,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         List<Boolean> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -928,7 +926,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         List<Byte> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -939,7 +937,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnCharArray() {
         char[] values = ofChars('A');
         List<Character> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -950,7 +948,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         List<Short> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -961,7 +959,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnIntArray() {
         int[] values = ofInts(1);
         List<Integer> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -972,7 +970,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         List<Long> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -983,7 +981,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         List<Float> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -994,7 +992,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         List<Double> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });
@@ -1005,7 +1003,7 @@ class ArrayUtilsTest implements Loggable {
     void testForEachWithConsumerOnObjectArray() {
         Object[] values = of("A");
         List<Object> visitedValues = new ArrayList<>();
-        forEach(values, (value) -> {
+        forEach(values, value -> {
             visitedValues.add(value);
             log("forEach(value : {})", value);
         });

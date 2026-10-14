@@ -1824,12 +1824,6 @@ public interface AnnotationUtils extends Utils {
     /**
      * Retrieves the {@link ElementType} array from the specified annotation.
      *
-     * @param annotation the specified annotation, may be {@code null}
-     * @return a non-null array of {@link ElementType}; never {@code null}, returns an empty array if the annotation is {@code null}
-     */
-    /**
-     * Retrieves the {@link ElementType} array from the specified annotation.
-     *
      * <p>This method checks the annotation's type for the presence of a {@link Target} annotation,
      * which defines the element types the annotation can be applied to. If the provided annotation
      * is {@code null}, this method returns an empty array.</p>

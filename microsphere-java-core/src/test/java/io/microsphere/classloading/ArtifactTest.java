@@ -29,6 +29,7 @@ import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -81,15 +82,15 @@ class ArtifactTest {
 
     @Test
     void testEquals() {
-        assertTrue(artifact.equals(artifact));
-        assertTrue(artifact.equals(create(ARTIFACT_ID, VERSION, LOCATION)));
+        assertEquals(this.artifact, this.artifact);
+        assertEquals(this.artifact, create(ARTIFACT_ID, VERSION, LOCATION));
 
-        assertFalse(artifact.equals(null));
-        assertFalse(artifact.equals(create(ARTIFACT_ID)));
-        assertFalse(artifact.equals(create(ARTIFACT_ID, VERSION)));
-        assertFalse(artifact.equals(create(ARTIFACT_ID, HYPHEN)));
-        assertFalse(artifact.equals(create(HYPHEN)));
-        assertFalse(artifact.equals(create(HYPHEN, HYPHEN)));
+        assertNotEquals(null, this.artifact);
+        assertNotEquals(create(ARTIFACT_ID), this.artifact);
+        assertNotEquals(create(ARTIFACT_ID, VERSION), this.artifact);
+        assertNotEquals(create(ARTIFACT_ID, HYPHEN), this.artifact);
+        assertNotEquals(create(HYPHEN), this.artifact);
+        assertNotEquals(create(HYPHEN, HYPHEN), this.artifact);
     }
 
     @Test
