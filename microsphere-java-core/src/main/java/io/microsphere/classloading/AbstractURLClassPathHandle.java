@@ -20,7 +20,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -109,7 +108,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
 
     private int priority;
 
-    public AbstractURLClassPathHandle() {
+    protected AbstractURLClassPathHandle() {
         setPriority(DEFAULT_PRIORITY);
     }
 

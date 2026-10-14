@@ -32,6 +32,9 @@ import java.util.Enumeration;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ClassUtils.isArray;
@@ -1592,7 +1595,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the int array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(@Nullable int[] values, @Nonnull Consumer<Integer> consumer) {
+    public static void forEach(@Nullable int[] values, @Nonnull IntConsumer consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1611,7 +1614,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the long array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(@Nullable long[] values, @Nonnull Consumer<Long> consumer) {
+    public static void forEach(@Nullable long[] values, @Nonnull LongConsumer consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -1649,7 +1652,7 @@ public abstract class ArrayUtils implements Utils {
      * @param values   the double array to iterate over
      * @param consumer the operation to perform on each element
      */
-    public static void forEach(@Nullable double[] values, @Nonnull Consumer<Double> consumer) {
+    public static void forEach(@Nullable double[] values, @Nonnull DoubleConsumer consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
