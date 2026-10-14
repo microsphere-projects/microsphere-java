@@ -62,7 +62,7 @@ public abstract class AbstractSerializer<T> implements Serializer<T>, Deserializ
      * Resolves the serializable type parameter {@code T} via reflection and pre-calculates
      * the expected serialized byte-array length.
      */
-    public AbstractSerializer() {
+    protected AbstractSerializer() {
         JavaType type = from(getClass()).as(AbstractSerializer.class).getGenericType(0);
         this.targetType = type.toClass();
         this.bytesLength = calcBytesLength();

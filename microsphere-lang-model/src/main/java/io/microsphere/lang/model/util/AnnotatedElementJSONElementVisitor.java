@@ -121,6 +121,7 @@ public abstract class AnnotatedElementJSONElementVisitor extends JSONElementVisi
         return this.annotationClassName;
     }
 
+    @Override
     protected boolean supports(@Nonnull Element e) {
         return matchesElementType(e, this.elementTypes);
     }

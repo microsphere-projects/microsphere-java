@@ -131,7 +131,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
         assertNotEquals(definitions.get(0), definitions.get(2));
         assertNotEquals(definitions.get(0), definitions.get(2));
         assertNotEquals(definitions.get(0), definitions.get(4));
-        assertFalse(definitions.get(0).equals(this));
+        assertNotEquals(definitions.get(0), this);
     }
 
     @Test

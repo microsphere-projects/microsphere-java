@@ -86,7 +86,7 @@ public abstract class AnnotationUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public final static List<Class<? extends Annotation>> NATIVE_ANNOTATION_TYPES = ofList(
+    public static final List<Class<? extends Annotation>> NATIVE_ANNOTATION_TYPES = ofList(
             Target.class,
             Retention.class,
             Documented.class,
@@ -291,44 +291,6 @@ public abstract class AnnotationUtils implements Utils {
         return (A) filterFirst(findAllDeclaredAnnotations(annotatedElement), annotationFilters);
     }
 
-    /**
-     * Checks whether the specified annotation is a meta-annotation, which means it's used to annotate other annotations.
-     *
-     * <p>A meta-annotation is an annotation that applies to another annotation type rather than directly to Java elements like classes or methods.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * @Target(TYPE)
-     * @Retention(RUNTIME)
-     * @Inherited
-     * @Documented
-     * public @interface ServiceMode {
-     * }
-     *
-     * @Inherited
-     * @Target(TYPE)
-     * @Retention(RUNTIME)
-     * @ServiceMode
-     * @interface Monitored {
-     * }
-     *
-     * @Inherited
-     * @Target(TYPE)
-     * @Retention(RUNTIME)
-     * @Monitored
-     * @interface DataAccess {
-     * }
-     *
-     * @DataAccess
-     * class A {
-     * }
-     *
-     * DataAccess dataAccess = findAnnotation(A.class, DataAccess.class);
-     * assertTrue(isMetaAnnotation(dataAccess, Monitored.class));        // true
-     * assertTrue(isMetaAnnotation(dataAccess, ServiceMode.class));      // true
-     *
-     * }</pre>
-     */
     /**
      * Checks whether the specified annotation is a meta-annotation targeting a specific type.
      *
