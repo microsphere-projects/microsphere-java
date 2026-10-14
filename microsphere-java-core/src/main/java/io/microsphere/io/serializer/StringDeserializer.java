@@ -22,6 +22,7 @@ import io.microsphere.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import static io.microsphere.util.ObjectUtils.requireNonNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -58,6 +59,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class StringDeserializer implements Deserializer<String> {
 
+    /**
+     * A singleton instance of {@link StringDeserializer} that uses UTF-8 encoding.
+     */
+    public static final StringDeserializer INSTANCE = new StringDeserializer();
+
     private final Charset charset;
 
     public StringDeserializer() {
@@ -65,12 +71,12 @@ public class StringDeserializer implements Deserializer<String> {
     }
 
     public StringDeserializer(@Nonnull Charset charset) {
-        this.charset = charset;
+        this.charset = requireNonNull(charset, () -> "Charset must not be null");
     }
 
     @Override
-    @Nonnull
+    @Nullable
     public String deserialize(@Nullable byte[] bytes) throws IOException {
-        return new String(bytes, this.charset);
+        return bytes == null ? null : new String(bytes, this.charset);
     }
 }

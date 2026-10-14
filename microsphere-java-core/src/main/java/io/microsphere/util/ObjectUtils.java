@@ -23,6 +23,8 @@ import io.microsphere.annotation.Nullable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static io.microsphere.text.FormatUtils.format;
+
 /**
  * The utility class for {@link Object}.
  *
@@ -91,6 +93,51 @@ public abstract class ObjectUtils implements Utils {
     @Nullable
     public static <T> T defaultIfNull(@Nullable T object, @Nullable T defaultValue) {
         return object == null ? defaultValue : object;
+    }
+
+    /**
+     * Returns the given object if it is non-null, otherwise throws a {@link NullPointerException} with a formatted message
+     * provided by the {@link Supplier}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String result = ObjectUtils.requireNonNull("value", () -> "Object cannot be null"); // returns "value"
+     * String result2 = ObjectUtils.requireNonNull(null, () -> "{} cannot be null", "Something"); // throws NullPointerException with message "Something cannot be null"
+     * }</pre>
+     *
+     * @param object                 the object to check
+     * @param patternMessageSupplier the supplier of the error message pattern for the exception if the object is null
+     * @param args                   the arguments to format into the error message pattern
+     * @param <T>                    the type of the object
+     * @return the object if non-null
+     * @throws NullPointerException if the object is null
+     */
+    public static <T> T requireNonNull(@Nullable T object, @Nonnull Supplier<String> patternMessageSupplier, @Nonnull Object... args)
+            throws NullPointerException {
+        return requireNonNull(object, () -> format(patternMessageSupplier.get(), args));
+    }
+
+    /**
+     * Returns the given object if it is non-null, otherwise throws a {@link NullPointerException} with a message
+     * provided by the {@link Supplier}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String result = ObjectUtils.requireNonNull("value", () -> "Object cannot be null"); // returns "value"
+     * String result2 = ObjectUtils.requireNonNull(null, () -> "Object cannot be null"); // throws NullPointerException with message "Object cannot be null"
+     * }</pre>
+     *
+     * @param object               the object to check
+     * @param errorMessageSupplier the supplier of the error message for the exception if the object is null
+     * @param <T>                  the type of the object
+     * @return the object if non-null
+     * @throws NullPointerException if the object is null
+     */
+    public static <T> T requireNonNull(@Nullable T object, @Nonnull Supplier<String> errorMessageSupplier) throws NullPointerException {
+        if (object == null) {
+            throw new NullPointerException(errorMessageSupplier.get());
+        }
+        return object;
     }
 
     private ObjectUtils() {
