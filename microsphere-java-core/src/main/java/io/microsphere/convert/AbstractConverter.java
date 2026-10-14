@@ -92,7 +92,7 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
     @Nullable
     private Integer priority;
 
-    public AbstractConverter() {
+    protected AbstractConverter() {
         this.priority = resolvePriority();
     }
 
