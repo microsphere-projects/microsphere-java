@@ -73,14 +73,14 @@ public abstract class AbstractJavaTypeTest<T> {
     }
 
     private static void testObjectJavaType() {
-        assertEquals(from(Object.class, CLASS), OBJECT_JAVA_TYPE);
+        assertEquals(OBJECT_JAVA_TYPE, from(Object.class, CLASS));
         assertEquals(Object.class, OBJECT_JAVA_TYPE.getType());
         assertEquals(CLASS, OBJECT_JAVA_TYPE.getKind());
         assertNull(OBJECT_JAVA_TYPE.getSource());
     }
 
     private static void testNullJavaType() {
-        assertEquals(from(null, UNKNOWN), NULL_JAVA_TYPE);
+        assertEquals(NULL_JAVA_TYPE, from(null, UNKNOWN));
         assertNull(NULL_JAVA_TYPE.getType());
         assertEquals(UNKNOWN, NULL_JAVA_TYPE.getKind());
         assertNull(NULL_JAVA_TYPE.getSource());
@@ -231,7 +231,7 @@ public abstract class AbstractJavaTypeTest<T> {
         assertNotEquals(type, javaType);
         assertNotEquals(javaType, type);
         assertNotEquals(null, javaType);
-        assertNotEquals(javaType, null);
+        assertNotNull(this.javaType);
     }
 
     protected void testHashCode() {

@@ -32,6 +32,7 @@ import static java.util.Objects.hash;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -62,7 +63,7 @@ abstract class AbstractEnumerationTest {
 
     @Test
     void testEquals() {
-        assertNotEquals(this.enumeration, null);
+        assertNotNull(this.enumeration);
         assertNotEquals(emptyEnumeration(), this.enumeration);
         assertNotEquals(enumeration(ofList(1)), this.enumeration);
         assertNotEquals(enumeration(ofList(1, 2)), this.enumeration);

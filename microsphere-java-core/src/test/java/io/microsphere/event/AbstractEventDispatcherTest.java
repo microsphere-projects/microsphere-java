@@ -3,6 +3,7 @@ package io.microsphere.event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -47,10 +48,9 @@ class AbstractEventDispatcherTest {
     }
 
     @Test
-    void testLoadEventListenerInstancesOnFailed() {
+    void testLoadEventListenerInstancesOnFailed() throws IOException {
         ClassLoader classLoader = currentThread().getContextClassLoader();
-        try {
-            URLClassLoader newClassLoader = new URLClassLoader(new URL[0], null);
+        try(URLClassLoader newClassLoader = new URLClassLoader(new URL[0], null)) {
             currentThread().setContextClassLoader(newClassLoader);
             assertDoesNotThrow(this.eventDispatcher::loadEventListenerInstances);
         } finally {
