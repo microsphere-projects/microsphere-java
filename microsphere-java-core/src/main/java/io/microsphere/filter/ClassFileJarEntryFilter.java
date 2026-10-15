@@ -38,12 +38,11 @@ public class ClassFileJarEntryFilter implements JarEntryFilter {
      */
     public static final ClassFileJarEntryFilter INSTANCE = new ClassFileJarEntryFilter();
 
-    protected ClassFileJarEntryFilter() {
-
+    public ClassFileJarEntryFilter() {
     }
 
     @Override
     public boolean accept(@Nullable JarEntry jarEntry) {
-        return !jarEntry.isDirectory() && jarEntry.getName().endsWith(CLASS_EXTENSION);
+        return jarEntry == null ? false : !jarEntry.isDirectory() && jarEntry.getName().endsWith(CLASS_EXTENSION);
     }
 }
