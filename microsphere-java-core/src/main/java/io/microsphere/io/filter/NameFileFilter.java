@@ -16,9 +16,12 @@
  */
 package io.microsphere.io.filter;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
 import java.io.File;
+
+import static io.microsphere.util.Assert.assertNotEmpty;
 
 /**
  * Filters filenames for a certain name.
@@ -33,17 +36,21 @@ public class NameFileFilter implements IOFileFilter {
 
     private final boolean caseSensitive;
 
-    public NameFileFilter(@Nullable String name) {
+    public NameFileFilter(@Nonnull String name) {
         this(name, true);
     }
 
-    public NameFileFilter(@Nullable String name, boolean caseSensitive) {
+    public NameFileFilter(@Nonnull String name, boolean caseSensitive) {
+        assertNotEmpty(name, () -> "The 'name' argument must not be empty!");
         this.name = name;
         this.caseSensitive = caseSensitive;
     }
 
     @Override
     public boolean accept(@Nullable File file) {
+        if (file == null) {
+            return false;
+        }
         String fileName = file.getName();
         String name = this.name;
         return caseSensitive ? fileName.equals(name) : fileName.equalsIgnoreCase(name);
