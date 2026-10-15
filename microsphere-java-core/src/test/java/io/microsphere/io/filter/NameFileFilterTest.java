@@ -66,4 +66,10 @@ class NameFileFilterTest {
         filter = new NameFileFilter(FILE_NAME.toLowerCase(), false);
         assertTrue(filter.accept(this.file));
     }
+
+    @Test
+    void testAcceptOnNullFile() {
+        NameFileFilter filter = new NameFileFilter(FILE_NAME);
+        assertFalse(filter.accept(null));
+    }
 }
