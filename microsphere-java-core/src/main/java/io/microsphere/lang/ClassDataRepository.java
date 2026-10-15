@@ -229,11 +229,7 @@ public class ClassDataRepository {
         for (Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
             String className = entry.getKey();
             String packageName = resolvePackageName(className);
-            Set<String> classNamesInPackage = packageNameToClassNamesMap.get(packageName);
-            if (classNamesInPackage == null) {
-                classNamesInPackage = new LinkedHashSet();
-                packageNameToClassNamesMap.put(packageName, classNamesInPackage);
-            }
+            Set<String> classNamesInPackage = packageNameToClassNamesMap.computeIfAbsent(packageName, k -> new LinkedHashSet<>());
             classNamesInPackage.add(className);
         }
 
