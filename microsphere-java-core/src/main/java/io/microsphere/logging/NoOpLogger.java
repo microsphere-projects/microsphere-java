@@ -53,10 +53,12 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public void trace(@Nullable String message) {
+        // No operation performed for trace level logging
     }
 
     @Override
     public void trace(@Nullable String message, @Nullable Throwable t) {
+        // No operation performed for trace level logging with throwable
     }
 
     @Override
@@ -66,10 +68,12 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public void debug(@Nullable String message) {
+        // No operation performed for debug level logging
     }
 
     @Override
     public void debug(@Nullable String message, @Nullable Throwable t) {
+        // No operation performed for debug level logging with throwable
     }
 
     @Override
@@ -79,10 +83,12 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public void info(@Nullable String message) {
+        // No operation performed for info level logging
     }
 
     @Override
     public void info(@Nullable String message, @Nullable Throwable t) {
+        // No operation performed for info level logging with throwable
     }
 
     @Override
@@ -92,10 +98,12 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public void warn(@Nullable String message) {
+        // No operation performed for warn level logging
     }
 
     @Override
     public void warn(@Nullable String message, @Nullable Throwable t) {
+        // No operation performed for warn level logging with throwable
     }
 
     @Override
@@ -105,9 +113,11 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public void error(@Nullable String message) {
+        // No operation performed for error level logging
     }
 
     @Override
     public void error(@Nullable String message, @Nullable Throwable t) {
+        // No operation performed for error level logging with throwable
     }
 }
