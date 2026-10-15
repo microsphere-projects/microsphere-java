@@ -1903,8 +1903,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return a cache key string composed of the class name and ClassLoader hash code
      */
     static String buildCacheKey(ClassLoader classLoader, String className) {
-        String cacheKey = className + classLoader.hashCode();
-        return cacheKey;
+        return className + classLoader.hashCode();
     }
 
     /**
