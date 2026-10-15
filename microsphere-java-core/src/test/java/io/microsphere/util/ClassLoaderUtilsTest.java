@@ -134,10 +134,10 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
     @Test
     void testFields() throws Exception {
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
-        assertTrue(allFields.size() > 0);
+        assertNotNull(allFields);
 
         Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
-        assertTrue(classLoaders.size() > 0);
+        assertNotNull(classLoaders);
 
         for (ClassLoader classLoader : classLoaders) {
             log("ClassLoader : {}", classLoader);

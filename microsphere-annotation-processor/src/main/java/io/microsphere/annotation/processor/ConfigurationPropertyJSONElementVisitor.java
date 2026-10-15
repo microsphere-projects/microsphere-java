@@ -116,18 +116,21 @@ class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElemen
         return generator;
     }
 
-    private String resolveName(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+    private String resolveName(@Nonnull VariableElement field, @Nonnull ExecutableElement attributeMethod,
+                               @Nonnull AnnotationValue annotationValue) {
         Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? field.getConstantValue() : annotationValue.getValue();
         return (String) value;
     }
 
-    private String resolveType(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+    private String resolveType(@Nonnull VariableElement field, @Nonnull ExecutableElement attributeMethod,
+                               @Nonnull AnnotationValue annotationValue) {
         Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? field.asType() : annotationValue.getValue();
         TypeMirror type = (TypeMirror) value;
         return getTypeName(type);
     }
 
-    private String resolveDescription(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+    private String resolveDescription(@Nonnull VariableElement field, @Nonnull ExecutableElement attributeMethod,
+                                      @Nonnull AnnotationValue annotationValue) {
         String description = resolveStringValue(attributeMethod, annotationValue);
         if (isBlank(description)) {
             description = elements.getDocComment(field);
@@ -135,7 +138,7 @@ class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElemen
         return description;
     }
 
-    private String resolveStringValue(ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+    private String resolveStringValue(@Nonnull ExecutableElement attributeMethod, @Nonnull AnnotationValue annotationValue) {
         Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? null : annotationValue.getValue();
         return (String) value;
     }

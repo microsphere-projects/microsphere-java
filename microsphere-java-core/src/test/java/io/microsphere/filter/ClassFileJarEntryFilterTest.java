@@ -56,4 +56,9 @@ class ClassFileJarEntryFilterTest {
         JarEntry propertiesEntry = new JarEntry("META-INF/services/io.microsphere.convert.Converter");
         assertFalse(INSTANCE.accept(propertiesEntry));
     }
+
+    @Test
+    void testNull() {
+        assertFalse(INSTANCE.accept(null));
+    }
 }
