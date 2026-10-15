@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
@@ -80,10 +79,12 @@ import static io.microsphere.util.VersionUtils.JAVA_VERSION_12;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.lang.Thread.currentThread;
+import static java.lang.reflect.Modifier.isStatic;
 import static java.net.URLClassLoader.newInstance;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -132,14 +133,16 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
 
     @Test
     void testFields() throws Exception {
-
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
+        assertTrue(allFields.size() > 0);
 
         Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
+        assertTrue(classLoaders.size() > 0);
+
         for (ClassLoader classLoader : classLoaders) {
             log("ClassLoader : {}", classLoader);
             for (Field field : allFields) {
-                if (!Modifier.isStatic(field.getModifiers())) {
+                if (!isStatic(field.getModifiers())) {
                     field.setAccessible(true);
                     log("Field name : {} , value : {}", field.getName(), field.get(classLoader));
                 }
@@ -520,7 +523,6 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
 
     @Test
     void testFindLoadedClassesInClassPath() {
-        Double d = null;
         Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPath(classLoader);
 
         Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
@@ -692,10 +694,12 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
 
     @Test
     void testLogOnFindLoadedClassInvocationFailed() {
-        logOnFindLoadedClassInvocationFailed(this.classLoader, "NotFound", new Exception("For testing"));
-        logOnFindLoadedClassInvocationFailed(null, "NotFound", new Exception("For testing"));
-        logOnFindLoadedClassInvocationFailed(null, null, new Exception("For testing"));
-        logOnFindLoadedClassInvocationFailed(null, null, null);
+        assertDoesNotThrow(() -> {
+            logOnFindLoadedClassInvocationFailed(this.classLoader, "NotFound", new Exception("For testing"));
+            logOnFindLoadedClassInvocationFailed(null, "NotFound", new Exception("For testing"));
+            logOnFindLoadedClassInvocationFailed(null, null, new Exception("For testing"));
+            logOnFindLoadedClassInvocationFailed(null, null, null);
+        });
     }
 
     @Test
