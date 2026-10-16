@@ -45,6 +45,7 @@ import static io.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.registerURLStreamHandler;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.CharSequenceUtils.length;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.System.getProperty;
@@ -381,7 +382,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         String matrix = buildMatrixString(SUB_PROTOCOL_MATRIX_NAME, subProtocols);
         String suffix = spec.substring(end, limit);
 
-        int capacity = protocol.length() + matrix.length() + suffix.length();
+        int capacity = length(protocol) + length(matrix) + length(suffix);
 
         StringBuilder newSpecBuilder = new StringBuilder(capacity);
 
