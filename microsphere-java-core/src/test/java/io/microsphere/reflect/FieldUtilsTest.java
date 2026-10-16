@@ -266,6 +266,7 @@ class FieldUtilsTest extends LoggingTest {
 
     @Test
     void testAssertFieldMatchTypeOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> assertFieldMatchType(test, "not-found-field", Integer.class));
         assertThrows(IllegalArgumentException.class, () -> assertFieldMatchType(test, "privateField", Integer.class));
     }
 
