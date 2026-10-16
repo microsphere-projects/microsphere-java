@@ -36,6 +36,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Optional.empty;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_PATH;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -150,9 +151,8 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
 
     @Test
     void testProcessInResourceOutputStream() {
-        this.classOutputProcessor.processInResourceOutputStream(randomResourceName, outputStream -> {
-            outputStream.write(randomResourceName.getBytes(DEFAULT_CHARSET));
-        });
+        assertDoesNotThrow(() -> this.classOutputProcessor.processInResourceOutputStream(randomResourceName,
+                outputStream -> outputStream.write(randomResourceName.getBytes(DEFAULT_CHARSET))));
     }
 
     @Test
