@@ -1,3 +1,9 @@
+> [!NOTE]
+> **Appendix — topic-organized handbook.** The primary, module-based user guide for the `release` branch now lives at
+> [`../current/user-guide/README.md`](../current/user-guide/README.md) (中文: [`../current/user-guide/zh/README.md`](../current/user-guide/zh/README.md)),
+> with a page per Maven module. This handbook is kept as a cross-cutting, topic-first read.
+> Documentation index: [`../README.md`](../README.md) · 中文: [`../zh/README.md`](../zh/README.md)
+
 # Microsphere Java User Guide
 
 A complete, task-oriented guide to the [`microsphere-java`](https://github.com/microsphere-projects/microsphere-java)
