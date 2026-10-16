@@ -610,4 +610,148 @@ fee46a15 chore: merge release into main [skip ci]
 9604ad40 chore: bump version to next patch after publishing 0.3.18
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.18...0.3.19
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.18...0.3.19## v0.3.20
+
+_Release notes generation failed. Raw commits since 0.3.19:_
+
+```
+97a55f65 chore: merge main into release [skip ci]
+f7861717 Update Microsphere BOM to 0.3.16
+f19ce9c3 chore: merge main into release [skip ci]
+52d4d4aa Fix compilation MXBean lazy initialization
+026acdd9 chore: merge main into release [skip ci]
+170582a6 Use Objects.isNull for MXBean guard
+90168797 Resolve type in array assertion
+3220952e Handle missing fields in type assertions
+30e252aa chore: merge main into release [skip ci]
+574364c7 Handle null URL components safely
+da6586f1 Assert resource processing does not throw
+878bb1f6 chore: merge main into release [skip ci]
+6f83fb21 Document no-op logger methods
+8b7e4623 chore: merge main into release [skip ci]
+07e2d28e Harden NameFileFilter input handling
+eeec0eee chore: merge main into release [skip ci]
+38dfd3d0 Make class entry filter null-safe
+973a4f13 Relax class loader test assertions
+e3a84c77 Add nullability annotations to resolvers
+8dd10b81 chore: merge main into release [skip ci]
+9f123115 Add Apache license header to ClassUtils
+f95fd45f Strengthen ClassLoaderUtils tests
+9976026b Simplify cache key construction
+6e039faa Use computeIfAbsent for package class sets
+001124d6 chore: merge main into release [skip ci]
+8fce81e2 Remove redundant throws from BeanUtils
+0da2976b Inline return in Character deserializer
+93147704 Inline BooleanSerializer byte array return
+9b7da951 chore: merge main into release [skip ci]
+28e46fca Remove unused valueType from BeanUtils converters
+f2d7e4d4 chore: merge main into release [skip ci]
+0ddf8dd9 Remove deprecated BaseUtils class
+3c98ed0e chore: merge main into release [skip ci]
+81806fd9 Refine utility APIs and test assertions
+ceec61bf chore: merge main into release [skip ci]
+2a63dc75 Refine assertions and resource handling in tests
+04ce9195 chore: merge main into release [skip ci]
+e78c5585 Restrict resolver constructor visibility
+7f4c941b chore: merge main into release [skip ci]
+12362d9e Make string codecs null-safe
+2c166301 Add ObjectUtils.requireNonNull helpers
+64e9737c Add versioned docs entry points
+5fad786c chore: merge main into release [skip ci]
+67338037 Merge pull request #301 from microsphere-projects/dependabot/maven/io.github.microsphere-projects-microsphere-all-bom-0.3.15
+234725eb Bump io.github.microsphere-projects:microsphere-all-bom
+652986c1 chore: merge main into release [skip ci]
+3fbaf992 Merge pull request #300 from microsphere-projects/dependabot/maven/io.github.microsphere-projects-microsphere-all-bom-0.3.14
+3adb34c9 chore: merge main into release [skip ci]
+34e27823 Refine nullability contracts across core APIs
+a2824fff Add nullability annotations to logging APIs
+e1e83e85 Add nullability annotations to lang APIs
+e0b17365 Add nullability annotations to function APIs
+01918859 Annotate LambdaUtils return values
+0bc33ddc Annotate nullability in lang utilities
+81505bba Add nullability annotations in IO classes
+30507ecd Annotate serializer APIs with nullability
+441c0b6e Add nullability annotations to IO APIs
+2cae6dba Refine nullability in invoke utilities
+e047067b Annotate filter APIs with nullability
+9a0ccc98 chore: merge main into release [skip ci]
+45c4b6b7 Add nullability annotations to event APIs
+3c7729da Annotate converter nullability contracts
+588b93d3 Add nullability annotations to concurrency APIs
+4b409125 Add nullability annotations in classloading
+001f2a6c Update VersionUtils.java
+40919b19 Update Version.java
+0f2c953d Update ValueHolder.java
+dd98f731 Update StringUtils.java
+925ae19f chore: merge main into release [skip ci]
+afdd348c Update ServiceLoaderUtils.java
+abe91a32 Update PropertyResourceBundleUtils.java
+7098a537 Update ObjectUtils.java
+7162bd14 Update PriorityComparator.java
+1fa3f655 Update PropertyResourceBundleControl.java
+8317f7c9 chore: merge main into release [skip ci]
+bd8b38f4 Update pom.xml
+c26608f5 chore: merge main into release [skip ci]
+c7fb3eab Bump io.github.microsphere-projects:microsphere-all-bom
+cf440a70 Update Iterators.java
+1d1bf9fc Update DefaultEntry.java
+9d1f4a78 Add nullability annotations to URL classpath handle
+bc5cb8ea Harden class loader handling in resolver base
+062315b0 chore: merge main into release [skip ci]
+6f1ae392 Merge pull request #299 from microsphere-projects/dependabot/maven/io.github.microsphere-projects-microsphere-all-bom-0.3.13
+87b49af1 chore: merge main into release [skip ci]
+d62b4c8a Add nullability annotations in bean APIs
+97b51623 Add nullability annotations to processors
+6726260b Bump io.github.microsphere-projects:microsphere-all-bom
+5a0c7e5d chore: merge main into release [skip ci]
+74743377 Add nullability annotations to core utils
+6f6095c1 Downgrade Microsphere BOM version
+8a2db5cf chore: merge main into release [skip ci]
+c3b41416 Remove null fallbacks in ArrayUtils
+88763a60 Handle null source in convertIfPossible
+e7b9aded chore: merge main into release [skip ci]
+6a2a9735 Allow null input in ArrayEnumeration ctor
+7be0a9c8 Harden ArrayUtils null handling
+9e9f33f3 Fix null-safe artifact matching
+e6c91d8a Guard null getter in BeanUtils resolveProperty
+2b0989d3 Allow nullable configuration descriptions
+9990b7e0 chore: merge main into release [skip ci]
+83296965 Merge pull request #296 from microsphere-projects/dependabot/github_actions/actions/setup-python-7
+1398f742 chore: merge main into release [skip ci]
+17aabb6a Refresh docs and add zh reference pages
+f9d43c20 chore: merge main into release [skip ci]
+aa29c1ae Add bilingual developer guide documentation
+1d40238c chore: merge main into release [skip ci]
+d6215b67 Add comprehensive testing user guide
+e695cc3f chore: merge main into release [skip ci]
+a9d9d6f3 Add annotation processing user guide
+36880db2 chore: merge main into release [skip ci]
+fd7d6198 Document configuration property metadata
+9b89cc8d chore: merge main into release [skip ci]
+b063798c Add Microsphere Java user guide docs
+d5824c2b chore: merge main into release [skip ci]
+97b72ea4 Strengthen core utility test assertions
+ffa038ae Harden URLUtils close() unit tests
+8cf47ad2 Bump actions/setup-python from 5 to 7
+9cbc7da2 chore: merge main into release [skip ci]
+2d7729a7 Add GitHub Actions updates to Dependabot
+e9ba0a65 chore: merge main into release [skip ci]
+50e081a7 Update GitHub Actions workflow versions
+985e948f chore: merge main into release [skip ci]
+366c4f55 Update Maven publish Java setup
+76c5464a chore: merge main into release [skip ci]
+182957fa Bump setup-java to v6.0.1
+10d948d3 chore: merge main into release [skip ci]
+fac23f1d Merge pull request #295 from microsphere-projects/dependabot/maven/io.github.microsphere-projects-microsphere-all-bom-0.3.12
+1e0fde38 chore: merge main into release [skip ci]
+88f542ae Bump microsphere BOM to 0.3.12
+d16c2e73 Bump io.github.microsphere-projects:microsphere-all-bom
+2dc24b33 chore: merge main into release [skip ci]
+39311e8e Bump Microsphere build parent to 0.3.16
+0a233ee5 chore: merge main into release [skip ci]
+7a1a73ce Bump microsphere-build to 0.3.15
+57594472 chore: merge release into main [skip ci]
+24bcd908 chore: bump version to next patch after publishing 0.3.19
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.19...0.3.20
