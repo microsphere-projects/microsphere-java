@@ -31,6 +31,7 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
@@ -463,7 +464,7 @@ public abstract class Assert {
      * @throws IllegalArgumentException if the object is not an array
      */
     public static void assertArrayType(@Nonnull Object array) throws IllegalArgumentException {
-        Class<?> type = array.getClass();
+        Class<?> type = getType(array);
         if (!isArray(type)) {
             String message = format("The argument is not an array object, its type is {}", type.getName());
             throw new IllegalArgumentException(message);

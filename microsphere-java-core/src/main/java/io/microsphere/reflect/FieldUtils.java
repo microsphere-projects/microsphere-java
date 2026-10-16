@@ -37,7 +37,9 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Collections.unmodifiableSet;
@@ -1077,8 +1079,9 @@ public abstract class FieldUtils implements Utils {
      * @throws IllegalArgumentException if the field's actual type does not match or is not assignable to the expected type
      */
     public static void assertFieldMatchType(@Nonnull Object instance, @Nonnull String fieldName, @Nonnull Class<?> expectedType) throws IllegalArgumentException {
-        Class<?> type = instance instanceof Class ? (Class<?>) instance : instance.getClass();
+        final Class<?> type = getType(instance);
         Field field = findField(type, fieldName);
+        assertNotNull(field, () -> format("The field['{}'] in {} is not found", fieldName, type));
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
             String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
