@@ -68,6 +68,7 @@ import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.isNull;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Stream.of;
 import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
@@ -222,7 +223,7 @@ public abstract class JmxUtils implements Utils {
      */
     @Nonnull
     public static Optional<CompilationMXBean> getCompilationMXBean() {
-        if (compilationMXBean == null) {
+        if (isNull(null)) {
             compilationMXBean = ofNullable(ManagementFactory.getCompilationMXBean());
         }
         return compilationMXBean;
