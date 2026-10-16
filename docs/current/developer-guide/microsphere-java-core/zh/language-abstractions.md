@@ -255,7 +255,7 @@ LambdaUtils.java:118-125  if (Method) { resolveParameterTypes(...); if (matched)
 | **标记 / 契约接口** | `Wrapper`（`lang/Wrapper.java:71`）、`Prioritized`（`lang/Prioritized.java:56`）、`io.microsphere.util.Utils`（被 `LambdaUtils:53`、`MethodHandleUtils:87`、`MethodHandlesLookupUtils:62` 实现）、`Predicates:32`、`Streams:44` | 无实例状态；纯粹用于打标与授予某种能力。`Utils` 标记“静态工具，不供用户实现”。 |
 | **Comparator 策略** | `Prioritized.COMPARATOR`（`lang/Prioritized.java:61`） | 单个共享的策略对象被注入 `PriorityBlockingQueue`（`ShutdownHookUtils.java:114`）与 `List.sort`（`ServiceLoaderUtils.java:890`）。 |
 | **通过 `default` 实现的模板方法** | `DelegatingWrapper`（`lang/DelegatingWrapper.java:78-103`） | 子类只需实现一个抽象原语（`getDelegate()`）；`unwrap`/`isWrapperFor` 是继承来的骨架。`ThrowableFunction.execute` → `handleException`（`ThrowableFunction.java:71-101`）是同一形状。 |
-| **Wrapper + 责任链** | `Wrapper`/`DelegatingWrapper`/`WrapperProcessor`，被 `DelegatingQueue:41`、`DelegatingIterator:41`、`DelegatingBlockingQueue:55` 消费 | 一个请求（“给我一个 `T`”）沿委托链传递；每一跳要么应答要么拒绝。`WrapperProcessor<W extends Wrapper>` 是可插拔的拦截过滤器。建立在 `Prioritized` 之上的 SPI 链（`Converter`、`ProcessIdResolver`、`ConfigurationProperty*`、`URLClassPathHandle`）是同一模式，只是用优先级作为路由键。 |
+| **Wrapper + 责任链** | `Wrapper`/`DelegatingWrapper`/`WrapperProcessor`，被 `DelegatingQueue:40`、`DelegatingIterator:41`、`DelegatingBlockingQueue:55` 消费 | 一个请求（“给我一个 `T`”）沿委托链传递；每一跳要么应答要么拒绝。`WrapperProcessor<W extends Wrapper>` 是可插拔的拦截过滤器。建立在 `Prioritized` 之上的 SPI 链（`Converter`、`ProcessIdResolver`、`ConfigurationProperty*`、`URLClassPathHandle`）是同一模式，只是用优先级作为路由键。 |
 | **Builder（构建器）** | `Deprecation.Builder`（`lang/Deprecation.java:186-243`）+ `Deprecation.builder()`（`:250`） | 链式、容忍 null、以 `build()` 收尾；`of(…)` 各重载（`:254-278`）是委托给构建器的 telescoping 工厂。 |
 | **不可变值对象** | `Deprecation`（`lang/Deprecation.java:72`）、`ClassDataRepository`（`:79` `@Immutable`） | `final` 类、`private final` 字段、完整的 `equals`/`hashCode`、`Serializable`。 |
 | **适配器 / 函数式接口适配器** | 六个 `Throwable*` 接口（`lang/function/`） | 每个接口把一个 JDK `java.util.function` 形状适配成 `throws Throwable` 签名，再适配回来，靠的是 `execute`/`ExceptionHandler`。`MethodHandleUtils.find`（`:347`）之所以使用 `ThrowableBiFunction<Lookup, MethodType, MethodHandle>`，正是为了适配会抛 `NoSuchMethodException`/`IllegalAccessException` 的 `Lookup.findVirtual`。 |
@@ -441,7 +441,7 @@ classDiagram
 | `Wrapper` / `DelegatingWrapper` | 取决于调用方 | `isWrapperFor` 后接 `unwrap` 是一个**检查后执行**的对（`lang/Wrapper.java:113-121`）：若 `getDelegate()` 可能在两次调用之间改变，`unwrap` 就会抛 `IllegalArgumentException`。请让 delegate 为 `final`。 |
 | `Deprecation` | **不可变，可自由共享** | `final` 类、`final` 字段、`@Immutable`（`lang/Deprecation.java:72-90`）。`Builder` 按设计**不是**线程安全的（单线程构造），`level(@Nullable)` 是其中唯一的无锁归一化。 |
 | `MutableInteger` | **非线程安全** | `private int value`（`lang/MutableInteger.java:48`）既无 `volatile` 也无锁；`getAndIncrement`（`:125`）等是读-改-写。尽管方法名与 `AtomicInteger` 同形，并发使用构成数据竞争。 |
-| `ClassDataRepository` | 预热后实质只读 | 只以 `INSTANCE`（`:85`）暴露，标注 `@Immutable`（`:79`）并返回 `@Nonnull @Immutable` 视图；填充路径（`:196-237`）是惰性的，因此多线程首次访问可能重复计算同一张 map。请把它当作良性竞争——返回的集合由 `LinkedHashSet` 构造（`:234`）。 |
+| `ClassDataRepository` | **安全：在 JVM 类初始化下只构建一次** | 只以 `INSTANCE`（`:85`）暴露并标注 `@Immutable`（`:79`），返回 `unmodifiableSet` 视图（`:101`、`:165`）。三个 map 是在构造单例的过程中由实例字段初始化器赋值的（`:87-91`），因此整个索引只构建一次，并由持有类的 `<clinit>` 锁保护——这是 happens-before 正确的发布，而不是良性竞争。代价是首次触碰要付出一次全量 classpath 扫描（`:200-201`）。 |
 | `MethodHandleUtils` | 使用了 `ConcurrentMap`，但存在 **`computeIfAbsent` + `null` 的微妙之处** | `lookupCache`（`:169`）是 `newConcurrentHashMap()`；`lookup(...)`（`:305-309`）调用 `computeIfAbsent(key, MethodHandleUtils::newLookup)`。`ConcurrentHashMap` **不会**存储 `null` 结果，所以当 `newLookup` 返回 `null`（构造器被禁止）时该条目永不入缓存，每次调用都会重新尝试特权构造。`LookupKey`（`:253-285`）是一个正确的值类（`final` 不可变字段、`equals`/`hashCode` 覆盖两部分、`:266` 的引用相同短路）。 |
 | `MethodHandleUtils` 类初始化 | 饿加载三个私有 `Constructor`（`:157-167`） | 因此该类的静态初始化只有在 `findConstructor`/`getDeclaredConstructor` 抛异常时才会响亮失败——而它们的契约是返回 `null`。`PUBLIC_LOOKUP`（`:174`）是 `MethodHandles.publicLookup()` 的静态终态快照。 |
 | `MethodHandlesLookupUtils` | 无状态 | 只有 `null`/`PUBLIC_LOOKUP` 两个常量（`:67`、`:72`）；每次 `find` 都构造新的 `MethodType`，并把 `Logger` 的获取放在失败处理器内部（`:122`），因此 `LoggerFactory` 查找发生在失败路径而非热路径。 |
@@ -501,7 +501,8 @@ classDiagram
 
 ## 9. 相关页面
 
-- [用户指南：语言抽象](../../user-guide/microsphere-java-core/zh/language-abstractions.md)
-- [反射、类型与 bean](zh/reflection-and-beans.md) —— `ConstantPoolUtils`、`MethodUtils.findFunctionalInterfaceMethod`、`ExecutableDefinition`
-- [工具、常量与文本](zh/util-and-constants.md) —— `Version`、`ArrayUtils.EMPTY_CLASS_ARRAY`、`SymbolConstants`
-- [集合与过滤器](zh/collections-and-filters.md)、[类型转换](zh/type-conversion.md)、[事件分发](zh/events.md) —— `Prioritized`/`Wrapper` 的消费方
+- [用户指南：语言抽象](../../../user-guide/microsphere-java-core/zh/language-abstractions.md)
+- [反射、类型与 bean](reflection-and-beans.md) —— `ConstantPoolUtils`、`MethodUtils.findFunctionalInterfaceMethod`、`ExecutableDefinition`
+- [工具、常量与文本](util-and-constants.md) —— `Version`、`ArrayUtils.EMPTY_CLASS_ARRAY`、`SymbolConstants`
+- [集合与过滤器](collections-and-filters.md)、[类型转换](type-conversion.md)、[事件分发](events.md) —— `Prioritized`/`Wrapper` 的消费方
+- 英文开发者指南：[Language Abstractions — Developer Guide](../language-abstractions.md)

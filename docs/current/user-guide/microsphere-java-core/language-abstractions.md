@@ -24,7 +24,7 @@ method-handle / lambda introspection helpers.
 | `DelegatingWrapper` | Removes the boilerplate: implement one method (`getDelegate()`) and get `unwrap`/`isWrapperFor` for free. |
 | `WrapperProcessor` | A typed hook (`<W extends Wrapper>`) so a framework can post-process wrapped beans without casting. |
 | `Deprecation` | `@Deprecated` carries no data. `Deprecation` is a serialisable, immutable record of *since which version*, *what replaces it*, *why*, *link*, *level* — used by the library's reflective metadata model. |
-| `ClassDataRepository` | A lazily-populated, cached view of the classpath: class name → class path, package → class names. |
+| `ClassDataRepository` | A cached, eagerly-built index of the classpath: class name → class path, package → class names. Pay attention to its first-touch cost. |
 | `MutableInteger` | A mutable `int` box so lambdas and helper methods can mutate a counter (Java has no pass-by-reference). |
 | `Throwable*` interfaces | JDK functional interfaces cannot throw checked exceptions. These variants let you pass `Files::readString`-style calls into `map`/`forEach` and decide *later* how to handle failure. |
 | `Predicates`, `Streams` | Null-safe, array/`Iterable`-friendly filtering that the JDK `Stream` API does not offer directly. |
@@ -238,12 +238,19 @@ The names mirror `AtomicInteger` but the fields are **not** volatile and there i
 
 `@Immutable public class ClassDataRepository` with a single public entry point,
 `public static final ClassDataRepository INSTANCE`.
-Read API (all `@Nonnull @Immutable` unless noted):
+Public read API (all `@Nonnull @Immutable` unless noted):
 `getAllPackageNamesInClassPaths()`, `getClassNamesInPackage(Package)`, `getClassNamesInPackage(String)`,
 `getClassNamesInClassPath(String classPath, boolean recursive)`, `getClassPathToClassNamesMap()`,
-`getAllClassNamesInClassPaths()`, `getAllClassPaths()`; plus `@Nullable String findClassPath(Class<?>)` and
+`getAllClassNamesInClassPaths()`; plus `@Nullable String findClassPath(Class<?>)` and
 `@Nullable String findClassPath(String className)`.
-It merges bootstrap and system class paths, so its results include JDK classes.
+There is **no** public `getAllClassPaths()` — the class-path set is only observable through
+`getClassPathToClassNamesMap()`'s keys.
+
+The three backing maps are built **eagerly** in instance field initializers
+(`ClassDataRepository.java:87-91`: `classPathToClassNamesMap`, `classNameToClassPathsMap`,
+`packageNameToClassNamesMap`), so touching `ClassDataRepository.INSTANCE` for the first time performs a full
+classpath scan (bootstrap class paths merged with the system ones, `:200-201`) before the first method returns.
+Results include JDK classes, and the returned sets are `unmodifiableSet` views (`:101`, `:165`).
 
 ### 3.8 Throwable-aware functional interfaces (`io.microsphere.lang.function`)
 
@@ -513,9 +520,12 @@ so guard the result.
 Copying the enum name into `--add-opens`-style reasoning is a mistake — the library needs no `java.base` *package*
 opening because `Lookup` is exported; only the private constructor is forced.
 
-### 5.13 `ClassDataRepository` is a process-wide cache
-`INSTANCE` caches class-path/package mappings for the lifetime of the JVM. In container-reload or
-multi-classloader scenarios the cached view goes stale; there is no documented eviction API on this class.
+### 5.13 `ClassDataRepository` costs a full classpath scan on first touch — and never refreshes
+Its three maps are built eagerly in the singleton's field initializers (`ClassDataRepository.java:87-91`), so the first
+reference to `ClassDataRepository.INSTANCE` triggers a scan of every bootstrap and system class path before returning.
+That makes it a start-up-latency and memory item, not a cheap accessor — do not touch `INSTANCE` from a static
+initialiser you care about. It is also a process-wide cache with no documented refresh or eviction API, so in
+container-reload or multi-classloader scenarios the cached view goes stale for the rest of the JVM's life.
 
 ---
 
@@ -526,3 +536,4 @@ multi-classloader scenarios the cached view goes stale; there is no documented e
 - [Type conversion](type-conversion.md) and [Event dispatching](events.md) — the two biggest consumers of `Prioritized`
 - [Class loading and artifacts](classloading-and-artifacts.md) — `Prioritized` handlers selected by priority
 - Chinese version: [中文用户指南](zh/language-abstractions.md)
+- Developer-facing deep dive: [Language Abstractions — Developer Guide](../../developer-guide/microsphere-java-core/language-abstractions.md)

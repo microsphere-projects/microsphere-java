@@ -23,7 +23,7 @@
 | `DelegatingWrapper` | 消除样板代码：只实现一个方法（`getDelegate()`）即可免费获得 `unwrap`/`isWrapperFor`。 |
 | `WrapperProcessor` | 带类型参数的钩子（`<W extends Wrapper>`），让框架无需强制转换即可后处理被包装的 bean。 |
 | `Deprecation` | `@Deprecated` 不携带任何数据。`Deprecation` 是可序列化、不可变的记录，包含*自哪个版本起*、*替代者*、*原因*、*链接*、*级别*——被本库的反射元数据模型使用。 |
-| `ClassDataRepository` | 惰性填充并缓存的 classpath 视图：类名 → class path，包名 → 类名集合。 |
+| `ClassDataRepository` | 已缓存、急切构建的 classpath 索引：类名 → class path，包名 → 类名集合。需要注意首次访问的代价。 |
 | `MutableInteger` | 可变的 `int` 盒子，使 lambda 与辅助方法能够修改计数器（Java 没有传引用）。 |
 | `Throwable*` 接口 | JDK 的函数式接口无法抛出受检异常。这些变体允许把 `Files::readString` 这类调用传入 `map`/`forEach`，把失败处理策略*留到之后*决定。 |
 | `Predicates`、`Streams` | 空安全、对数组/`Iterable` 友好的过滤能力，JDK `Stream` API 并不直接提供。 |
@@ -233,12 +233,18 @@ API：`MutableInteger(int)`、`static MutableInteger of(int)`、`final int get()
 
 `@Immutable public class ClassDataRepository`，唯一公开入口是
 `public static final ClassDataRepository INSTANCE`。
-读取 API（除特别说明外均为 `@Nonnull @Immutable`）：
+公开读取 API（除特别说明外均为 `@Nonnull @Immutable`）：
 `getAllPackageNamesInClassPaths()`、`getClassNamesInPackage(Package)`、`getClassNamesInPackage(String)`、
 `getClassNamesInClassPath(String classPath, boolean recursive)`、`getClassPathToClassNamesMap()`、
-`getAllClassNamesInClassPaths()`、`getAllClassPaths()`；另有 `@Nullable String findClassPath(Class<?>)` 与
+`getAllClassNamesInClassPaths()`；另有 `@Nullable String findClassPath(Class<?>)` 与
 `@Nullable String findClassPath(String className)`。
-它会把 bootstrap 与系统 class path 合并，因此结果中包含 JDK 类。
+**没有**公开的 `getAllClassPaths()` —— class path 集合只能通过 `getClassPathToClassNamesMap()` 的键观察到。
+
+三个底层 map 是在实例字段初始化器中**急切构建**的
+（`ClassDataRepository.java:87-91`：`classPathToClassNamesMap`、`classNameToClassPathsMap`、
+`packageNameToClassNamesMap`），因此第一次触碰 `ClassDataRepository.INSTANCE` 时，会在任何方法返回之前
+完成一次全 classpath 扫描（bootstrap class path 与系统 class path 合并，`:200-201`）。
+结果中包含 JDK 类，返回的集合是 `unmodifiableSet` 视图（`:101`、`:165`）。
 
 ### 3.8 可抛异常的函数式接口（`io.microsphere.lang.function`）
 
@@ -502,9 +508,12 @@ assertDoesNotThrow(() -> handleInvokeExactFailure(new Throwable("testing"), meth
 把枚举名理解为需要 `--add-opens` 之类的处理是个错误——库并不需要打开 `java.base` 的*包*，
 因为 `Lookup` 是被导出的；被强制访问的只是它的私有构造器。
 
-### 5.13 `ClassDataRepository` 是进程级缓存
-`INSTANCE` 在整个 JVM 生命周期内缓存 class path 与包的映射。在容器热重载或多 classloader 场景下缓存视图会过期；
-该类没有提供文档化的失效 API。
+### 5.13 `ClassDataRepository` 首次触碰就要付出全量 classpath 扫描——而且永不刷新
+它的三个 map 在单例的字段初始化器中被急切构建（`ClassDataRepository.java:87-91`），因此对
+`ClassDataRepository.INSTANCE` 的第一次引用会在返回之前扫描所有 bootstrap 与系统 class path。
+这使它成为一个启动延迟与内存问题，而不是廉价的访问器——不要在你在意的静态初始化器里触碰 `INSTANCE`。
+它同时是进程级缓存，且没有提供文档化的刷新或失效 API，所以在容器热重载或多 classloader 场景下，
+缓存视图会在该 JVM 的剩余生命周期内保持过期状态。
 
 ---
 
@@ -514,4 +523,5 @@ assertDoesNotThrow(() -> handleInvokeExactFailure(new Throwable("testing"), meth
 - [反射、类型与 bean](reflection-and-beans.md) —— `LambdaUtils` 背后的 `ConstantPoolUtils`；消费 `Deprecation` 的 `ExecutableDefinition`
 - [类型转换](type-conversion.md) 与 [事件分发](events.md) —— `Prioritized` 最大的两个消费方
 - [类加载与构件](classloading-and-artifacts.md) —— 按优先级挑选的 `Prioritized` 处理器
-- 英文用户指南：[User Guide](language-abstractions.md)
+- 英文用户指南：[User Guide](../language-abstractions.md)
+- 开发者视角的深入解析：[语言抽象 —— 开发者指南](../../../developer-guide/microsphere-java-core/zh/language-abstractions.md)
