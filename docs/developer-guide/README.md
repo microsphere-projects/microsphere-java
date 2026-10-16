@@ -1,3 +1,10 @@
+> [!NOTE]
+> **附录 —— 按主题编排的开发者手册。** 主要文档已改为按 Maven 模块、按版本分支组织：
+> [`../current/developer-guide/README.md`](../current/developer-guide/README.md)（中文：
+> [`../current/developer-guide/zh/README.md`](../current/developer-guide/zh/README.md)）。
+> 本手册保留作为横向主题阅读材料。
+> 文档总目录：[`../README.md`](../README.md) · 中文：[`../zh/README.md`](../zh/README.md)
+
 # Microsphere Java Developer Handbook · Microsphere Java 开发者手册
 
 > A bilingual developer handbook for the [`microsphere-java`](https://github.com/microsphere-projects/microsphere-java)
