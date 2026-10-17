@@ -1,7 +1,7 @@
 # `microsphere-java-core` 包分组索引（开发者文档）
 
 模块：`io.github.microsphere-projects:microsphere-java-core` · 源码线：`release` 分支，`0.3.20-SNAPSHOT`
-本目录的 14 篇是[用户文档分组索引](../../user-guide/microsphere-java-core/zh/README.md)在源码层面的对应；英文版本在 [../README.md](../README.md)。
+本目录的 14 篇是[用户文档分组索引](../../../user-guide/microsphere-java-core/zh/README.md)在源码层面的对应；英文版本在 [../README.md](../README.md)。
 
 ---
 
@@ -97,7 +97,8 @@ graph TD
 ## 3. 贯穿式实现事实
 
 * **发现机制**：子系统在 `src/main/resources/META-INF/services/` 中注册实现。`release` 分支的 `core` 提供 13 个这类
-  注册文件（处理器模块另有 `javax.annotation.processing.Processor`）；完整清单与链接见[开发者文档索引](../zh/README.md)。
+  注册文件（处理器模块另有 `javax.annotation.processing.Processor`）；完整清单与链接见[开发者文档索引](../../zh/README.md)
+  的 1.3 节。
 * **顺序**：在意顺序的地方实现都继承 `io.microsphere.lang.Prioritized`，选择规则是排序后取第一个匹配项。
   不要依赖 `ServiceLoader` 的文件顺序。
 * **降级策略**：当前 JDK 无法提供的能力返回中性值或 no-op 句柄（例如 `NoOpURLClassPathHandle`、`Empty*` 集合），

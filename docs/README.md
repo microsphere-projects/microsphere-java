@@ -26,7 +26,7 @@ registrations, JDK compatibility statements — is read from that branch, not fr
 
 | Directory | Source branch | Version | Status |
 |-----------|---------------|---------|--------|
-| [`current/`](current/user-guide/README.md) | `release` | `0.3.20-SNAPSHOT` (latest tagged release: `0.3.19`) | Active |
+| [`current/`](current/user-guide/README.md) | `release` | `0.3.20-SNAPSHOT` (published as `0.3.20`, the newest tag) | Active |
 | `1.x/` | `release-1.x` | — | Not documented: the `release-1.x` branch does not exist in this repository. Create `docs/1.x/` with the same layout when it does. |
 
 ---
@@ -34,7 +34,7 @@ registrations, JDK compatibility statements — is read from that branch, not fr
 ## 3. Modules covered
 
 One page per Maven module; `microsphere-java-core` is split into one page per top-level package group because of
-its size (686 source files, 34 packages).
+its size (309 main-source files in 34 packages; 686 Java files including tests).
 
 | Maven module | Type | Depends on | User Guide | Developer Guide |
 |--------------|------|------------|------------|-----------------|
@@ -65,7 +65,7 @@ graph TD
     end
 
     subgraph Runtime["Runtime libraries"]
-        CORE["microsphere-java-core<br/>34 packages / 686 types"]
+        CORE["microsphere-java-core<br/>34 packages / 309 main types"]
     end
 
     subgraph Toolchain["Compile-time toolchain"]

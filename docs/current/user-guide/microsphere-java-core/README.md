@@ -3,7 +3,8 @@
 Module: `io.github.microsphere-projects:microsphere-java-core` · Source line: `release` branch, `0.3.20-SNAPSHOT`
 Java level: compiled at **Java 8**, CI-tested on JDK 8 / 11 / 17 / 21 / 25 · Compile dependency: `microsphere-java-annotations` only
 
-`core` holds 686 main-source types in 34 packages, so it is documented as 14 pages, one per top-level package group.
+`core` holds 309 main-source types in 34 packages (686 Java files once test sources are counted), so it is
+documented as 14 pages, one per top-level package group.
 Pick the group you need from the table below; Chinese versions of every page are in the [`zh/`](zh/README.md) subdirectory.
 
 ---
@@ -66,7 +67,7 @@ library probes the classpath and the JDK at runtime and degrades to a portable p
 | Release line | `core` status | Notes |
 |--------------|---------------|-------|
 | `0.1.x` – `0.2.x` | Historical | Package layout was still moving; `io.microsphere.lang` and `io.microsphere.invoke` were added during this period. Individual APIs carry `@Since` values from these lines — see each page's compatibility table. |
-| `0.3.x` (current, up to `0.3.19` released / `0.3.20-SNAPSHOT`) | Active | Public API stabilized; the module gained library-wide `@Nonnull` / `@Nullable` contracts and null-safety degradation fixes. |
+| `0.3.x` (current; tags `0.3.0` … `0.3.20`, the `release` branch working version being `0.3.20-SNAPSHOT`) | Active | Public API stabilized; the module gained library-wide `@Nonnull` / `@Nullable` contracts and null-safety degradation fixes. |
 | `1.x` | Does not exist | No `release-1.x` branch in this repository; no `docs/1.x/` documentation is generated. |
 
 Binary compatibility inside `0.3.x`: public and protected signatures are treated as API; additions are

@@ -12,8 +12,8 @@
 
 | 指南 | 面向读者 | 英文 | 中文 |
 |------|----------|------|------|
-| **用户文档** | 库的使用者：依赖什么、调用哪些 API、支持哪些 JDK | [current/user-guide/zh/README.md](current/user-guide/zh/README.md) | 即本页链接的中文入口 |
-| **开发者文档** | 库的维护者与框架作者：架构设计、源码分析、设计模式、流程图 | [current/developer-guide/zh/README.md](current/developer-guide/zh/README.md) | 即本页链接的中文入口 |
+| **用户文档** | 库的使用者：依赖什么、调用哪些 API、支持哪些 JDK | [current/user-guide/zh/README.md](../current/user-guide/zh/README.md) | 即本页链接的中文入口 |
+| **开发者文档** | 库的维护者与框架作者：架构设计、源码分析、设计模式、流程图 | [current/developer-guide/zh/README.md](../current/developer-guide/zh/README.md) | 即本页链接的中文入口 |
 
 ---
 
@@ -23,26 +23,26 @@
 
 | 目录 | 源码分支 | 版本 | 状态 |
 |------|----------|------|------|
-| [`current/`](current/user-guide/zh/README.md) | `release` | `0.3.20-SNAPSHOT`（最新已发布标签：`0.3.19`） | 使用中 |
+| [`current/`](../current/user-guide/zh/README.md) | `release` | `0.3.20-SNAPSHOT`（该版本线已发布为 `0.3.20`，即最新标签） | 使用中 |
 | `1.x/` | `release-1.x` | — | 未生成：本仓库不存在 `release-1.x` 分支；该分支建立后按相同布局创建 `docs/1.x/` 即可。 |
 
 ---
 
 ## 3. 覆盖的模块
 
-每个 Maven 模块一篇文档；`microsphere-java-core` 由于体量较大（686 个源文件、34 个包），按顶层包分组拆成 14 篇。
+每个 Maven 模块一篇文档；`microsphere-java-core` 由于体量较大（main 源码 309 个文件、34 个包；含测试共 686 个 Java 文件），按顶层包分组拆成 14 篇。
 
 | Maven 模块 | 类型 | 依赖 | 用户文档 | 开发者文档 |
 |------------|------|------|----------|------------|
-| `microsphere-java-annotations` | jar | 无（`jsr305` 为 optional） | [页面](current/user-guide/zh/microsphere-java-annotations.md) | [页面](current/developer-guide/zh/microsphere-java-annotations.md) |
-| `microsphere-java-core` | jar | annotations | [14 篇](current/user-guide/microsphere-java-core/zh/README.md) | [14 篇](current/developer-guide/microsphere-java-core/zh/README.md) |
-| `microsphere-jdk-tools` | jar | core | [页面](current/user-guide/zh/microsphere-jdk-tools.md) | [页面](current/developer-guide/zh/microsphere-jdk-tools.md) |
-| `microsphere-lang-model` | jar | core | [页面](current/user-guide/zh/microsphere-lang-model.md) | [页面](current/developer-guide/zh/microsphere-lang-model.md) |
-| `microsphere-annotation-processor` | jar（shade 打包） | core、lang-model | [页面](current/user-guide/zh/microsphere-annotation-processor.md) | [页面](current/developer-guide/zh/microsphere-annotation-processor.md) |
-| `microsphere-java-test` | jar（测试夹具） | annotations（依赖全部 optional） | [页面](current/user-guide/zh/microsphere-java-test.md) | [页面](current/developer-guide/zh/microsphere-java-test.md) |
-| `microsphere-annotation-test` | jar（测试框架） | java-test、jdk-tools | [页面](current/user-guide/zh/microsphere-annotation-test.md) | [页面](current/developer-guide/zh/microsphere-annotation-test.md) |
+| `microsphere-java-annotations` | jar | 无（`jsr305` 为 optional） | [页面](../current/user-guide/zh/microsphere-java-annotations.md) | [页面](../current/developer-guide/zh/microsphere-java-annotations.md) |
+| `microsphere-java-core` | jar | annotations | [14 篇](../current/user-guide/microsphere-java-core/zh/README.md) | [14 篇](../current/developer-guide/microsphere-java-core/zh/README.md) |
+| `microsphere-jdk-tools` | jar | core | [页面](../current/user-guide/zh/microsphere-jdk-tools.md) | [页面](../current/developer-guide/zh/microsphere-jdk-tools.md) |
+| `microsphere-lang-model` | jar | core | [页面](../current/user-guide/zh/microsphere-lang-model.md) | [页面](../current/developer-guide/zh/microsphere-lang-model.md) |
+| `microsphere-annotation-processor` | jar（shade 打包） | core、lang-model | [页面](../current/user-guide/zh/microsphere-annotation-processor.md) | [页面](../current/developer-guide/zh/microsphere-annotation-processor.md) |
+| `microsphere-java-test` | jar（测试夹具） | annotations（依赖全部 optional） | [页面](../current/user-guide/zh/microsphere-java-test.md) | [页面](../current/developer-guide/zh/microsphere-java-test.md) |
+| `microsphere-annotation-test` | jar（测试框架） | java-test、jdk-tools | [页面](../current/user-guide/zh/microsphere-annotation-test.md) | [页面](../current/developer-guide/zh/microsphere-annotation-test.md) |
 | `microsphere-java-parent` | pom | 外部 `microsphere-build` | 不单独成文，构建约定见各篇的「版本信息」小节 |
-| `microsphere-java-dependencies` | pom（BOM） | — | 不单独成文，其 `dependencyManagement` 条目在[快速开始](current/user-guide/zh/README.md)中列出 |
+| `microsphere-java-dependencies` | pom（BOM） | — | 不单独成文，其 `dependencyManagement` 条目在[快速开始](../current/user-guide/zh/README.md)中列出 |
 
 ---
 
@@ -61,7 +61,7 @@ graph TD
     end
 
     subgraph Runtime["运行时类库"]
-        CORE["microsphere-java-core<br/>34 个包 / 686 个类型"]
+        CORE["microsphere-java-core<br/>34 个包 / 309 个 main 类型"]
     end
 
     subgraph Toolchain["编译期工具链"]
@@ -115,13 +115,13 @@ graph TD
 在上述按模块组织之前，文档曾按 18 个功能主题编排（快速开始、核心工具、反射与类型……）。这套双语主题手册仍然保留，
 适合作为横向阅读材料，但它**不是**按模块组织、也不按版本分支区分：
 
-* 用户主题手册：[user-guide/README.md](user-guide/README.md)
-* 开发者主题手册：[developer-guide/README.md](developer-guide/README.md)（英文在 `developer-guide/en/`，中文在 `developer-guide/zh/`）
+* 用户主题手册：[user-guide/README.md](../user-guide/README.md)
+* 开发者主题手册：[developer-guide/README.md](../developer-guide/README.md)（英文在 `developer-guide/en/`，中文在 `developer-guide/zh/`）
 
 ---
 
 ## 7. 阅读顺序
 
-1. 先读[用户文档索引](current/user-guide/zh/README.md)：其中给出 Maven 坐标、JDK 兼容矩阵与「我该看哪一篇」的对照表。
-2. 若要在库上做扩展，先读[开发者文档索引](current/developer-guide/zh/README.md)了解架构与 SPI 清单，再进入具体模块页面。
+1. 先读[用户文档索引](../current/user-guide/zh/README.md)：其中给出 Maven 坐标、JDK 兼容矩阵与「我该看哪一篇」的对照表。
+2. 若要在库上做扩展，先读[开发者文档索引](../current/developer-guide/zh/README.md)了解架构与 SPI 清单，再进入具体模块页面。
 3. 页面中的事实均来自 `release` 分支源码。若文档与代码不一致，以代码为准。

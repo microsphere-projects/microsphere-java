@@ -3,8 +3,8 @@
 Audience: you want to **use** `microsphere-java` in an application or library — pick the right artifact, call the
 right API, and know which JDK and which library version you may rely on.
 
-Everything here is read from the **`release` branch** (`revision = 0.3.20-SNAPSHOT`, latest tagged release
-`0.3.19`). For the Chinese version of every page, open the `zh/` subdirectory beside it.
+Everything here is read from the **`release` branch** (`revision = 0.3.20-SNAPSHOT`; that line is published as
+`0.3.20`, the newest tag in the repository). For the Chinese version of every page, open the `zh/` subdirectory beside it.
 
 * Index of all documentation and version lines: [../../README.md](../../README.md)
 * Developer Guide (architecture, source analysis, patterns): [../developer-guide/README.md](../developer-guide/README.md)
@@ -16,12 +16,12 @@ Everything here is read from the **`release` branch** (`revision = 0.3.20-SNAPSH
 | Item | Value |
 |------|-------|
 | Group ID (all artifacts) | `io.github.microsphere-projects` |
-| Version documented here | `0.3.20-SNAPSHOT` (source branch `release`); latest published release `0.3.19` |
+| Version documented here | `0.3.20-SNAPSHOT` (source branch `release`); published as `0.3.20`, the newest tag |
 | Build parent | `microsphere-build` `0.3.16` → `microsphere-java-parent` → every module |
 | In-repo BOM | `microsphere-java-dependencies` (manages all seven module versions) |
 | Package root | `io.microsphere.*` |
-| Language level | Compiled at **Java 8** for every module |
-| JDKs tested by CI | 8, 11, 17, 21, 25 |
+| Language level | Target bytecode **Java 8** (level inherited from the external `microsphere-build` parent POM) |
+| JDKs tested by CI | Temurin 8, 11, 17, 21, 25 (`.github/workflows/maven-build.yml`) |
 | Runtime dependencies of `core` | **none required** — `jsr305`, `javax.annotation-api`, `slf4j-api`, `commons-logging` are optional |
 | License | Apache License 2.0 |
 
@@ -33,7 +33,7 @@ Import the BOM so you never repeat a version:
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-java-dependencies</artifactId>
-            <version>0.3.19</version>
+            <version>0.3.20</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -47,6 +47,11 @@ Import the BOM so you never repeat a version:
     </dependency>
 </dependencies>
 ```
+
+> [!TIP]
+> `microsphere-java-dependencies` is built by this reactor and is the smallest dependency-management surface. If the
+> BOM for the release line you need is not available in your repository mirror, declare each artifact with an
+> explicit `<version>0.3.20</version>` instead — all seven modules share one version (`${revision}`).
 
 > [!IMPORTANT]
 > **Compatibility is not uniform across the library.** The plain-utility packages (`util`, `collection`, `convert`,

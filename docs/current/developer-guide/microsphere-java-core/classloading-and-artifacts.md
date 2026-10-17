@@ -143,7 +143,24 @@ Degradation is layered:
   `ClassLoaderUtils.findURLClassLoader` — whenever the delegate returns an empty array (`:50-54`). This is what makes
   JDK-8-style `URLClassLoader` children (including `ClassLoaderUtils.newURLClassLoader` products) work even when the
   reflective handle is inapplicable.
-* `removeURL` returns `false` on `null` arguments (`AbstractURLClassPathHandle.java:131-134`).
+* `removeURL` returns `false` **only** for `null` arguments (`AbstractURLClassPathHandle.java:131-134`). Every other
+  failure throws instead of degrading, because the four reads at `:138-141` are unguarded:
+  * Encapsulated `jdk.internal.loader` (JDK 17/21/25 without `--add-opens java.base/jdk.internal.loader=ALL-UNNAMED`):
+    `AccessibleObjectUtils.trySetAccessible` returns `false` (`FieldUtils.java:826-828`), `field.get()` then raises
+    `IllegalAccessException`, which `getFieldValue` rethrows as `IllegalStateException` (`:830-841`).
+  * Missing field (`ucp`, `urls`, `path` or `loaders` — e.g. a loader that is neither a `URLClassLoader` nor a
+    `BuiltinClassLoader`): `getFieldValue` returns `null` (`:818-820`), and `synchronized (urls)` throws
+    `NullPointerException` at `AbstractURLClassPathHandle.java:147`. A null `ucp` reaches the same `:139` read as a
+    `null` instance, which `FieldUtils` documents as `NullPointerException` for an instance field
+    (`FieldUtils.java:813`).
+  So `getURLs` has a null-`ucp` fallback (`:126-127`) but `removeURL` has none — a known asymmetry, and the reason the
+  ban filter must run against a loader it can actually reflect into.
+* `ServiceLoadingURLClassPathHandle` is a thin, unguarded forwarder. Its `delegate` comes from
+  `filter(supports).findFirst().orElse(null)` (`:36-43`), and `getURLs`/`removeURL` dereference it directly (`:52`,
+  `:58`) — only `supports()` (`:46-48`) tolerates the null. In practice `NoOpURLClassPathHandle.supports()` is `true`, so
+  the chain always binds *something*; the null delegate is reachable only if the `META-INF/services` registration for
+  `URLClassPathHandle` itself is dropped (a shading accident). `ClassLoaderUtils.removeClassPathURL` (`:1598-1603`) adds
+  a `SecureClassLoader` guard but catches nothing, so all of the above exceptions reach the caller.
 
 `initializeLoaders(classLoader)` (`URLClassPathHandle.java:101-108`) is called before removal
 (`AbstractURLClassPathHandle.java:136`) — a deliberate `findResource("just-for-initializing-loaders")` nudge that forces
@@ -198,7 +215,9 @@ sequenceDiagram
 `loaders`, compares each loader's `base` field normalised by `URLUtils.resolveBasePath` against the target URL's base
 path, and on a match removes the loader, then the same URL from `urls` and from `path`. Note the asymmetry — the
 collection removals are keyed on the raw `url`, so the `URL` instance passed in must be **equal** to the one in the
-classpath; `resolveBasePath` only guards the `loaders` comparison.
+classpath; `resolveBasePath` only guards the `loaders` comparison. Note too that `urls` doubles as the lock target: if the
+reflective read produced `null`, the method fails at `:147` before any of this logic runs — §3.3 lists the full
+failure modes.
 
 ---
 
@@ -283,7 +302,9 @@ contribute lines and they accumulate (`:100-105`).
   `artifactResourceResolvers` list is never mutated after construction.
 * **Removal is synchronised, but only on `urls`.** `removeURL` takes `synchronized (urls)` (`:147`) — the JVM's own
   guard — yet the preceding `initializeLoaders` and the field reads are unsynchronised; concurrent class loading during
-  a removal is the documented hazard of this whole approach. Treat `execute()` as startup-only.
+  a removal is the documented hazard of this whole approach. Those same unsynchronised reads are also what turns a
+  blocked reflection into an escaping exception (§3.3), so **`removeURL` is not an exception-free API** — wrap it if the
+  ban filter runs on a JDK whose loader you cannot open. Treat `execute()` as startup-only.
 * **I/O cost per URL.** Each stream resolver opens the archive (`new JarFile`) and, for directories, scans recursively;
   `readArtifactMetadataDataFromFile` buffers the whole entry (`toByteArray`, `:161-163`), so a `detect()` over a
   hundred-jar classpath means a hundred-plus file opens. Metadata lookups short-circuit on the first hit

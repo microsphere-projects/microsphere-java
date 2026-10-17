@@ -3,7 +3,7 @@
 模块：`io.github.microsphere-projects:microsphere-java-core` · 源码线：`release` 分支，`0.3.20-SNAPSHOT`
 Java 级别：按 **Java 8** 编译，CI 在 JDK 8 / 11 / 17 / 21 / 25 上验证 · 编译依赖：仅 `microsphere-java-annotations`
 
-`core` 包含 34 个包、686 个 main 源文件类型，因此按顶层包分组拆成 14 篇。请先用下表定位所需分组；
+`core` 的 main 源码包含 34 个包、309 个类型文件（把测试源码一起算入则为 686 个 Java 文件），因此按顶层包分组拆成 14 篇。请先用下表定位所需分组；
 每篇的中文版都在同目录的 `zh/` 子目录中（本索引的英文版在 [../README.md](../README.md)）。
 
 ---
@@ -65,7 +65,7 @@ graph TD
 | 版本线 | `core` 状态 | 说明 |
 |--------|-------------|------|
 | `0.1.x` – `0.2.x` | 历史 | 包结构仍在演进；`io.microsphere.lang` 与 `io.microsphere.invoke` 在该阶段加入。单个 API 的 `@Since` 取值可追溯到这些版本线，详见各页兼容表。 |
-| `0.3.x`（当前线，已发布至 `0.3.19` / 源码为 `0.3.20-SNAPSHOT`） | 活跃 | 公共 API 趋于稳定；全模块补齐 `@Nonnull` / `@Nullable` 契约，并完成空值安全降级修复。 |
+| `0.3.x`（当前线；标签从 `0.3.0` 至 `0.3.20`，`release` 分支的开发版本为 `0.3.20-SNAPSHOT`） | 活跃 | 公共 API 趋于稳定；全模块补齐 `@Nonnull` / `@Nullable` 契约，并完成空值安全降级修复。 |
 | `1.x` | 不存在 | 本仓库没有 `release-1.x` 分支，因此不生成 `docs/1.x/` 文档。 |
 
 `0.3.x` 内的二进制兼容策略：public 与 protected 签名视为 API；新增能力以 `@Since` 标注版本；行为变更会在所属页面写明，不做静默修改。

@@ -140,7 +140,23 @@ flowchart TD
 * `ServiceLoadingURLClassPathHandle.getURLs` 在委托返回空数组时回落到接口默认实现——先用
   `ClassLoaderUtils.findURLClassLoader` 找到 `URLClassLoader`，再调其 `getURLs()`（`:50-54`）。正是这一点让 JDK 8 风格的
   `URLClassLoader` 子加载器（包括 `ClassLoaderUtils.newURLClassLoader` 造出的加载器）在反射 handle 不适用时依然可用。
-* 参数为 `null` 时 `removeURL` 直接返回 `false`（`AbstractURLClassPathHandle.java:131-134`）。
+* 只有参数为 `null` 时 `removeURL` 才返回 `false`（`AbstractURLClassPathHandle.java:131-134`）。其余失败都会**抛异常**
+  而不是退化，因为 `:138-141` 的四次字段读取没有任何保护：
+  * `jdk.internal.loader` 未开放（JDK 17/21/25 且没有 `--add-opens java.base/jdk.internal.loader=ALL-UNNAMED`）：
+    `AccessibleObjectUtils.trySetAccessible` 返回 `false`（`FieldUtils.java:826-828`），随后 `field.get()` 抛出
+    `IllegalAccessException`，而 `getFieldValue` 把它重新包装成 `IllegalStateException` 抛出（`:830-841`）。
+  * 字段缺失（`ucp`、`urls`、`path` 或 `loaders`——例如目标加载器既不是 `URLClassLoader` 也不是 `BuiltinClassLoader`）：
+    `getFieldValue` 返回 `null`（`:818-820`），于是 `synchronized (urls)` 在
+    `AbstractURLClassPathHandle.java:147` 抛出 `NullPointerException`。若 `ucp` 为 `null`，`:139` 的读取等价于以
+    `null` 实例访问实例字段，`FieldUtils` 的 javadoc 已明确声明这会抛 `NullPointerException`（`FieldUtils.java:813`）。
+  因此 `getURLs` 对 `ucp` 为 `null` 有兜底（`:126-127`），而 `removeURL` 没有——这是一处已知的不对称，也正是禁用过滤器
+  必须运行在「确实能反射进去」的加载器上的原因。
+* `ServiceLoadingURLClassPathHandle` 只是一个毫无保护的转发器。它的 `delegate` 来自
+  `filter(supports).findFirst().orElse(null)`（`:36-43`），而 `getURLs`/`removeURL` 直接解引用它（`:52`、`:58`）——
+  只有 `supports()`（`:46-48`）能容忍 `null`。实际上 `NoOpURLClassPathHandle.supports()` 恒为 `true`，所以这条链总会绑到
+  某个实现；`delegate` 为 `null` 只有在 `URLClassPathHandle` 自身的 `META-INF/services` 注册丢失（常见的 shade 事故）时
+  才可达。`ClassLoaderUtils.removeClassPathURL`（`:1598-1603`）只加了 `SecureClassLoader` 判断，并不捕获任何异常，
+  所以上述异常会原样传给调用方。
 
 移除之前会先调用 `initializeLoaders(classLoader)`（`URLClassPathHandle.java:101-108`，被
 `AbstractURLClassPathHandle.java:136` 调用）——这是一次刻意的 `findResource("just-for-initializing-loaders")` 触碰，
@@ -192,7 +208,8 @@ sequenceDiagram
 `AbstractURLClassPathHandle.removeURL`（`:130-167`）在 `synchronized (urls)` 保护下完成「手术」：遍历 `loaders`，
 把每个 loader 的 `base` 字段经 `URLUtils.resolveBasePath` 归一化后与目标 URL 的基础路径比较，命中即移除该 loader，
 并把同一个 URL 从 `urls` 与 `path` 中删除。需要注意这里的不对称——两个集合的删除用的是**原始 `url`**，所以传入的
-`URL` 必须与 classpath 中的那个 `equals`；`resolveBasePath` 只作用于 `loaders` 的比较。
+`URL` 必须与 classpath 中的那个 `equals`；`resolveBasePath` 只作用于 `loaders` 的比较。还有一点：`urls` 同时充当锁对象，
+因此上一步的反射读取一旦返回 `null`，方法会在 `:147` 直接失败，根本走不到删除逻辑——完整失败模式见 §3.3。
 
 ---
 
@@ -274,7 +291,9 @@ com.example.GradleModuleArtifactResourceResolver
 * **惰性但非 volatile 的缓存。** `AbstractURLClassPathHandle` 中的 `Field`/`Class` 缓存（`:87-107`、`:178-236`）是普通
   字段：并发下的竞态最多导致重复查找，不会破坏状态。`ArtifactDetector` 的解析器列表在构造后不再变更。
 * **移除只锁了 `urls`。** `removeURL` 使用 `synchronized (urls)`（`:147`）——JVM 自身的锁——但此前的
-  `initializeLoaders` 与字段读取并未同步；移除过程中并发加载类是这套做法固有的风险。请把 `execute()` 视为仅启动期使用。
+  `initializeLoaders` 与字段读取并未同步；移除过程中并发加载类是这套做法固有的风险。也正是这些未受保护的读取，让
+  反射被封装挡住时以异常形式逃逸（见 §3.3），所以**`removeURL` 并不是一个「不抛异常」的 API**——如果目标 JDK 的加载器
+  无法 `--add-opens`，请自行 try/catch。请把 `execute()` 视为仅启动期使用。
 * **每个 URL 的 I/O 成本。** 流式解析器每次都 `new JarFile` 打开归档，目录场景还会递归扫描；
   `readArtifactMetadataDataFromFile` 会把整个条目缓冲为字节数组（`toByteArray`，`:161-163`）。因此对上百个 jar 的
   classpath 执行一次 `detect()` 意味着上百次文件打开。命中时是短路返回
