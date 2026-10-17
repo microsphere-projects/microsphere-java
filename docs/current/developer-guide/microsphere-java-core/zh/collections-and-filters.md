@@ -398,7 +398,7 @@ spliterator/stream/parallelStream（`:222-236`）。它被特化为 `MutableQueu
 | `DelegatingIteratorTest.java:42-100` | 转发行为，包括 `getDelegate()` 的身份（`:83`）以及透明的 `equals`/`hashCode`/`toString` 三件套（`:87-99`） |
 | `CollectionUtilsTest.java:78-278` | null 容忍（`:81`、`:167`、`:230`、`:247`、`:252`）、`null`/空 相等规则（`:191-195`），以及空 queue/deque 工厂（`:272`、`:278`） |
 | `ListsTest.java` / `SetsTest.java` / `MapsTest.java` | `MethodHandle` 分支的两端，办法是用 `null` 或故意错误的句柄调用包私有的 `ofList0`… 辅助方法（`ListsTest.java:108`、`:112-114`） |
-| `DefaultEntryTest.java:34` / `ImmutableEntryTest.java:35-78` | 取值相等，以及 `setValue` 的 UOE（`:55`） |
+| `DefaultEntryTest.java:34` / `ImmutableEntryTest.java:35-76` | 取值相等，以及 `setValue` 的 UOE（`:55`） |
 | `filter/FilterTest.java:33-53` | `accept`/`test` 双向桥接 |
 | `filter/FilterOperatorTest.java`、`filter/FilterUtilsTest.java:23-41` | 在 0..9 列表上的 AND/OR/XOR 组合，含单 filter 重载（`:33-35`） |
 | `test/io/microsphere/collection/ArrayStackTest.java:38`、`AbstractEnumerationTest.java:45` → `ArrayEnumerationTest.java:31` | 栈与枚举契约 |

@@ -55,7 +55,7 @@ predicates the classpath scanners need: `ClassFilter` (`Class<?>`), `JarEntryFil
 
 | Fact | Value | Evidence (`release`) |
 |---|---|---|
-| `groupId` | `io.github.microsphere-projects` | `pom.xml:7-8` |
+| `groupId` | `io.github.microsphere-projects` | `pom.xml:12` |
 | `artifactId` | `microsphere-java-core` | module `pom.xml` |
 | Version property | `${revision}`, flattened | `pom.xml:14` |
 | Value of `${revision}` on `release` | `0.3.20-SNAPSHOT` | `pom.xml:54` |

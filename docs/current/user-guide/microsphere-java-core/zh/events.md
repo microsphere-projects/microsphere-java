@@ -413,5 +413,5 @@ assertEquals(1, listener.getEventOccurs());               // :51
 * [日志](logging.md) —— `AbstractEventDispatcher` 用来吞掉 SPI 失败的 `Logger`。
 * [集合与过滤器](collections-and-filters.md) —— `MapUtils.newConcurrentHashMap` 与 `ListUtils.newLinkedList`，
   监听器注册表正是由这两个集合搭成。
-* [事件分发 —— 开发者指南](../../developer-guide/microsphere-java-core/zh/events.md) —— 分发循环、缓存失效、
+* [事件分发 —— 开发者指南](../../../developer-guide/microsphere-java-core/zh/events.md) —— 分发循环、缓存失效、
   设计模式、线程安全分析与测试策略。

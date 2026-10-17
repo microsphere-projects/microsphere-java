@@ -45,6 +45,7 @@ graph TD
     REFL --> META
     REFL --> JSON
     UTIL --> IO
+    IO -. cycle .-> UTIL
     IO --> NET
     NET --> CL
     IO --> CL
@@ -63,9 +64,9 @@ graph TD
 
 | 层 | 包 | 必须遵守的契约 |
 |----|----|----------------|
-| 基础设施层 | `util`、`constants`、`text`、`misc`、`lang*`、`invoke`、`collection`、`filter` | 不依赖 `core` 内任何其他包；只使用 Java 8 API；javadoc 承诺返回中性结果时不得因 `null` 抛异常 |
-| 类型模型层 | `reflect`、`reflect.generics`、`internal.reflect`、`beans` | 唯一允许触碰 JDK 反射内部的层；每条内部访问路径都有 documented 的回退实现 |
-| 服务层 | `convert`、`convert.multiple`、`io.serializer`、`event`、`logging`、`json`、`metadata` | 每个都是一族 SPI，经 `META-INF/services` 发现，并按 `Prioritized` 排序 |
+| 基础设施层 | `util`、`constants`、`text`、`misc`、`lang*`、`invoke`、`collection`、`filter` | **除一处已知循环依赖外**不依赖 `core` 内其他包：`util` 反向 import 了 `io.microsphere.io`（`util/ClassUtils.java:10-13`、`util/ExceptionUtils.java:20`），而 `io` 又依赖 `util`；只使用 Java 8 API；javadoc 承诺返回中性结果时不得因 `null` 抛异常 |
+| 类型模型层 | `reflect`、`reflect.generics`、`internal.reflect`、`beans` | 唯一允许触碰 JDK 反射内部的层；每条内部访问路径都有文档化的回退实现 |
+| 服务层 | `convert`、`convert.multiple`、`io.serializer`、`event`、`logging`、`metadata` | 每个都是一族 SPI，经 `META-INF/services` 发现，并按 `Prioritized` 排序。`json` 属于本层，但它是**模型而非 SPI** —— 它没有注册任何服务文件 |
 | 平台集成层 | `io*`、`nio*`、`net*`、`classloading`、`concurrent`、`process`、`management`、`security` | JDK 版本敏感度最高；每篇页面都带版本矩阵与降级行为说明 |
 
 ---

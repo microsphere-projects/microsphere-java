@@ -53,7 +53,7 @@ lambda，也能直接交给 `Stream.filter(...)`；`FilterOperator`（`filter/Fi
 
 | 事实 | 取值 | 证据（`release`） |
 |---|---|---|
-| `groupId` | `io.github.microsphere-projects` | `pom.xml:7-8` |
+| `groupId` | `io.github.microsphere-projects` | `pom.xml:12` |
 | `artifactId` | `microsphere-java-core` | 模块 `pom.xml` |
 | 版本属性 | `${revision}`，构建时展平 | `pom.xml:14` |
 | `release` 上 `${revision}` 的值 | `0.3.20-SNAPSHOT` | `pom.xml:54` |

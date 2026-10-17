@@ -346,3 +346,16 @@ com.example.GradleModuleArtifactResourceResolver
   handle、连 service 文件也缺失，那么 `supports()` 为 `false` 且首次 `getURLs` 会 NPE——请保留三个内置注册项。
 * 移除操作对 `urls`/`path` 依赖精确的 `URL` 相等（`:159-160`），而 `loaders` 的比较用的是归一化基础路径（`:152-154`）；
   因此请传入从 `getURLs(...)` 取得的 URL。
+
+---
+
+## 9. 另见
+
+* [类加载与构件 —— 用户指南](../../../user-guide/microsphere-java-core/zh/classloading-and-artifacts.md) —— 坐标、可运行示例与面向调用方的陷阱清单
+* [工具类、常量与文本](util-and-constants.md) —— `ClassLoaderUtils`、`ClassPathUtils`、`ServiceLoaderUtils` 与 `util.jar.JarUtils` 为本包提供输入，`Version.ofVersion(Class)` 是回环的消费者
+* [网络与 URL 协议](net-and-url-protocols.md) —— `URLUtils.resolveArchiveFile` / `resolveBasePath`，以及解析这些 URL 的 `classpath:` `Handler`
+* [I/O、NIO、扫描与文件过滤器](io-and-scanning.md) —— `FileUtils`、`IOUtils` 与 `io.scanner` 是 `ArtifactDetector` 的另外几条入边
+* [反射、类型与 Bean](reflection-and-beans.md) —— `sun.misc` 与 JPMS 字段访问所依赖的 `FieldUtils` / `MethodUtils`
+* [语言抽象](language-abstractions.md) —— resolver 与 handle 的排序由 `Prioritized` 决定
+* [子包索引与层级图](README.md)
+* 英文原文：[Class Loading and Artifact Detection — Developer Guide](../classloading-and-artifacts.md)

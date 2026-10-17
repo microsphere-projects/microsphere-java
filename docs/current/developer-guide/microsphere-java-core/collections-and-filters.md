@@ -407,7 +407,7 @@ The remaining suites are behaviour tables rather than ladders:
 | `DelegatingIteratorTest.java:42-100` | forwarding, including `getDelegate()` identity (`:83`) and the transparent `equals`/`hashCode`/`toString` trio (`:87-99`) |
 | `CollectionUtilsTest.java:78-278` | null tolerance (`:81`, `:167`, `:230`, `:247`, `:252`), the `null`/empty equality rule (`:191-195`), and the empty queue/deque factories (`:272`, `:278`) |
 | `ListsTest.java` / `SetsTest.java` / `MapsTest.java` | both sides of the `MethodHandle` branch, by calling the package-private `ofList0`… helpers with `null` or a deliberately wrong handle (`ListsTest.java:108`, `:112-114`) |
-| `DefaultEntryTest.java:34` / `ImmutableEntryTest.java:35-78` | value equality and the `setValue` UOE (`:55`) |
+| `DefaultEntryTest.java:34` / `ImmutableEntryTest.java:35-76` | value equality and the `setValue` UOE (`:55`) |
 | `filter/FilterTest.java:33-53` | the `accept`/`test` bridge in both directions |
 | `filter/FilterOperatorTest.java`, `filter/FilterUtilsTest.java:23-41` | AND/OR/XOR composition over a 0..9 list, including the single-filter overload (`:33-35`) |
 | `test/io/microsphere/collection/ArrayStackTest.java:38`, `AbstractEnumerationTest.java:45` → `ArrayEnumerationTest.java:31` | stack and enumeration contracts |

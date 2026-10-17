@@ -350,6 +350,83 @@ stateDiagram-v2
 > (`convert/Converters.java:46-67`). A custom converter added at runtime *after* the first lookup of its pair will not be
 > picked up for that pair; restart / re-load is required.
 
+### 6.1 The two SPI service files (verbatim, `release`)
+
+`src/main/resources/META-INF/services/io.microsphere.convert.Converter` — the comment on line 1 is the file's own header,
+line 2 is blank, then 35 converter class names:
+
+```
+# io.microsphere.convert.Converter
+
+io.microsphere.convert.ByteArrayToObjectConverter
+io.microsphere.convert.MapToPropertiesConverter
+io.microsphere.convert.NumberToByteConverter
+io.microsphere.convert.NumberToCharacterConverter
+io.microsphere.convert.NumberToDoubleConverter
+io.microsphere.convert.NumberToFloatConverter
+io.microsphere.convert.NumberToIntegerConverter
+io.microsphere.convert.NumberToLongConverter
+io.microsphere.convert.NumberToShortConverter
+io.microsphere.convert.ObjectToBooleanConverter
+io.microsphere.convert.ObjectToByteArrayConverter
+io.microsphere.convert.ObjectToByteConverter
+io.microsphere.convert.ObjectToCharacterConverter
+io.microsphere.convert.ObjectToDoubleConverter
+io.microsphere.convert.ObjectToFloatConverter
+io.microsphere.convert.ObjectToIntegerConverter
+io.microsphere.convert.ObjectToLongConverter
+io.microsphere.convert.ObjectToOptionalConverter
+io.microsphere.convert.ObjectToShortConverter
+io.microsphere.convert.ObjectToStringConverter
+io.microsphere.convert.PropertiesToStringConverter
+io.microsphere.convert.StringToBooleanConverter
+io.microsphere.convert.StringToByteConverter
+io.microsphere.convert.StringToCharacterConverter
+io.microsphere.convert.StringToCharArrayConverter
+io.microsphere.convert.StringToDoubleConverter
+io.microsphere.convert.StringToFloatConverter
+io.microsphere.convert.StringToIntegerConverter
+io.microsphere.convert.StringToLongConverter
+io.microsphere.convert.ObjectToOptionalConverter
+io.microsphere.convert.StringToShortConverter
+io.microsphere.convert.StringToInputStreamConverter
+io.microsphere.convert.StringToDurationConverter
+io.microsphere.convert.StringToClassConverter
+io.microsphere.convert.StringToStringConverter
+```
+
+Two observations, verified against the file:
+
+1. **`ObjectToOptionalConverter` is listed twice** (as `ObjectToOptionalConverter` at lines 20 and 32 of the file).
+   Duplicate service registrations are permitted and harmless — `Converters.findConverter` groups by type pair and
+   returns `first(...)`, so the duplicate simply appends a redundant list element
+   (`convert/Converters.java:52-58,68`). The 35 lines therefore carry 34 distinct concrete `Converter` classes, matching
+   the `convert` package total of 38 minus the 4 non-concrete types (`Converter`, `StringConverter`, `Converters`,
+   `AbstractConverter`).
+2. **`Converters`, `Converter`, `StringConverter`, and `AbstractConverter` are *not* listed** — only the 34 concrete
+   strategies are registered, as intended (see the class map in §2.1).
+
+`src/main/resources/META-INF/services/io.microsphere.convert.multiple.MultiValueConverter`:
+
+```
+# io.microsphere.convert.multiple.MultiValueConverter
+io.microsphere.convert.multiple.StringToArrayConverter
+io.microsphere.convert.multiple.StringToBlockingDequeConverter
+io.microsphere.convert.multiple.StringToBlockingQueueConverter
+io.microsphere.convert.multiple.StringToCollectionConverter
+io.microsphere.convert.multiple.StringToDequeConverter
+io.microsphere.convert.multiple.StringToListConverter
+io.microsphere.convert.multiple.StringToNavigableSetConverter
+io.microsphere.convert.multiple.StringToQueueConverter
+io.microsphere.convert.multiple.StringToSetConverter
+io.microsphere.convert.multiple.StringToSortedSetConverter
+io.microsphere.convert.multiple.StringToTransferQueueConverter
+```
+
+Exactly 11 concrete multi-value converters are listed (header comment + 11 entries). Both the abstract base
+`StringToIterableConverter` and the splitting interface `StringToMultiValueConverter` are *not* registered, which matches
+the §2.2 class map.
+
 ---
 
 ## 7. Thread-safety and performance
@@ -401,3 +478,14 @@ stateDiagram-v2
   (`:71-74`); a `doConvert` that throws a checked `Throwable` must surface as `RuntimeException` (`:81-91`); and
   `equals`/`hashCode` are value-based on `(sourceType, targetType, priority)` (`:100-113`, source at
   `convert/AbstractConverter.java:155-173`).
+
+---
+
+## 9. See also
+
+* User-facing reference: [Type conversion — User Guide](../../user-guide/microsphere-java-core/type-conversion.md)
+* [Language abstractions](language-abstractions.md) — the `Prioritized` rank arithmetic this subsystem selects on
+* [Reflection, types and beans](reflection-and-beans.md) — `TypeUtils.resolveActualTypeArgumentClass`, the source of
+  every element/component type a multi-value converter receives
+* [Serialization](serialization.md) — the `io.serializer` backend behind `byte[] ⇄ Object`
+* [Configuration property metadata](configuration-metadata.md) — the main in-library consumer of conversion

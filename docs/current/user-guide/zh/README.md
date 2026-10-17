@@ -6,7 +6,7 @@
 本目录所有内容均取自 **`release` 分支**（`revision = 0.3.20-SNAPSHOT`；该版本线已发布为 `0.3.20`，即仓库中最新的
 标签）。每个页面的中文版位于同名英文文件所在目录的 `zh/` 子目录中。
 
-* 文档总目录与版本线：[../../../zh/README.md](../../../zh/README.md)
+* 文档总目录与版本线（英文）：[../../../README.md](../../../README.md)
 * 开发者文档（架构、源码分析、设计模式）：[../../developer-guide/zh/README.md](../../developer-guide/zh/README.md)
 
 ---

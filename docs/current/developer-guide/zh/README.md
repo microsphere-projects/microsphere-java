@@ -6,7 +6,7 @@
 所记录的源码线：**`release` 分支**，`revision = 0.3.20-SNAPSHOT`（该版本线已发布为 `0.3.20`，即仓库中最新的标签）。
 每个页面的中文版位于英文文件所在目录的 `zh/` 子目录中。
 
-* 文档总目录与版本线：[../../../zh/README.md](../../../zh/README.md)
+* 文档总目录与版本线（英文）：[../../../README.md](../../../README.md)
 * 用户文档（API 用法、坐标、JDK 支持）：[../../user-guide/zh/README.md](../../user-guide/zh/README.md)
 
 ---

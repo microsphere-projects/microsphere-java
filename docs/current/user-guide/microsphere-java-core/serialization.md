@@ -111,10 +111,10 @@ public static singletons are safe to share.
 |---|---|---|
 | `new Serializers()` / `new Serializers(ClassLoader)` | `Serializers()` (`io/serializer/Serializers.java:68-70`), `Serializers(ClassLoader)` (`:64-66`) | the no-arg form uses `ClassLoaderUtils.getDefaultClassLoader()` |
 | `Serializers#loadSPI` | `void loadSPI()` (`:72-79`) | must be called before any lookup; not `@Nonnull`-guarded, idempotent only by accident — see §6 |
-| `Serializers#getMostCompatible` | `@Nullable Serializer<?> getMostCompatible(Class<?> serializedType)` (`:87-93`) | falls back to the `Object.class` entry |
-| `Serializers#getHighestPriority` | `@Nullable <S> Serializer<S> getHighestPriority(Class<S> serializedType)` (`:102-105`) | `first(list)`; `null` on empty |
-| `Serializers#getLowestPriority` | `@Nullable <S> Serializer<S> getLowestPriority(Class<S> serializedType)` (`:114-117`) | `last(list)`; `null` on empty |
-| `Serializers#get` | `@Nonnull <S> List<Serializer<S>> get(Class<S> serializedType)` (`:126-129`) | returns `emptyList()`, never `null` |
+| `Serializers#getMostCompatible` | `Serializer<?> getMostCompatible(Class<?> serializedType)` (`:87-93`) | falls back to the `Object.class` entry; javadoc says "`null` if not found" (`:85`) but the method carries **no** nullability annotation |
+| `Serializers#getHighestPriority` | `<S> Serializer<S> getHighestPriority(Class<S> serializedType)` (`:102-105`) | `first(list)`; `null` on empty, javadoc-documented only (`:100`) |
+| `Serializers#getLowestPriority` | `<S> Serializer<S> getLowestPriority(Class<S> serializedType)` (`:114-117`) | `last(list)`; `null` on empty, javadoc-documented only (`:112`) |
+| `Serializers#get` | `@Nonnull <S> List<Serializer<S>> get(Class<S> serializedType)` (`:126-129`) | the only annotated accessor in the class; returns `emptyList()`, never `null` |
 | `Deserializers` | same five shapes (`io/serializer/Deserializers.java:64-129`) | see §5 for the caching asymmetry |
 | `AbstractSerializer` singletons | `BOOLEAN_SERIALIZER`, `BYTE_SERIALIZER`, `CHARACTER_SERIALIZER`, `SHORT_SERIALIZER`, `INTEGER_SERIALIZER`, `LONG_SERIALIZER`, `FLOAT_SERIALIZER`, `DOUBLE_SERIALIZER` | e.g. `io/serializer/IntegerSerializer.java:13` |
 | `DefaultSerializer.DEFAULT_SERIALIZER` | `public static final DefaultSerializer` (`io/serializer/DefaultSerializer.java:49`) | JDK-stream serializer for `Object` |
@@ -162,7 +162,6 @@ returning (`io/serializer/DefaultSerializer.java:54-60`, `io/serializer/DefaultD
   (`io/io/FastByteArrayInputStream.java:81-83`, javadoc at `:73` "The buffer array is not copied"). Since the stream
   dies inside `deserialize`, this only means: do not mutate the input array while a `deserialize` call is in flight
   on another thread.
-* `EnumSerializer` and the `AbstractSerializer` subclasses allocate a new array per call and retain nothing.
 
 ### 3.5 Null and invalid-input contract
 
@@ -353,33 +352,23 @@ assertEquals(2, serializer.getBytesLength());   // 200 constants > Byte.MAX_VALU
 ### 4.7 Writing your own codec
 
 Condensed from the javadoc example at `io/serializer/AbstractSerializer.java:22-48`, which is the shape the nine
-built-in codecs follow:
+built-in codecs follow. Three protected methods are all you implement:
 
 ```java
-public class IntegerSerializer extends AbstractSerializer<Integer> {
+public class IntegerSerializer extends AbstractSerializer<Integer> {              // AbstractSerializer.java:24
 
     public static final IntegerSerializer INTEGER_SERIALIZER = new IntegerSerializer();
 
-    @Override
-    protected int calcBytesLength() {
-        return INTEGER_BYTES_SIZE;   // 4 — enables the width guard in AbstractSerializer:87-89
-    }
-
-    @Override
-    protected byte[] doSerialize(Integer value) {
-        ByteBuffer buffer = ByteBuffer.allocate(INTEGER_BYTES_SIZE);
-        buffer.putInt(value);
-        return buffer.array();
-    }
-
-    @Override
-    protected Integer doDeserialize(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getInt();
-    }
+    @Override protected int calcBytesLength()        { return INTEGER_BYTES_SIZE; }   // :29-31
+    @Override protected byte[] doSerialize(Integer v) { /* encode 4 bytes */ }         // :34-38
+    @Override protected Integer doDeserialize(byte[] b) { /* decode 4 bytes */ }       // :41-43
 }
 ```
 
-Variable-length codecs return `UNBOUND_BYTES_SIZE` (`-1`) from `calcBytesLength()`, which disables the width guard.
+Returning a fixed size from `calcBytesLength()` opts you into the width guard at
+`io/serializer/AbstractSerializer.java:87-89`; variable-length codecs return `UNBOUND_BYTES_SIZE` (`-1`)
+instead, which disables it. See [Developer Guide — Serialization](../../developer-guide/microsphere-java-core/serialization.md)
+§6.1 for the SPI registration half of the job.
 
 ---
 
@@ -401,9 +390,8 @@ Variable-length codecs return `UNBOUND_BYTES_SIZE` (`-1`) from `calcBytesLength(
   (`io/serializer/DefaultDeserializer.java:66-68`) collapses **every** exception — `ClassNotFoundException`,
   `InvalidClassException`, even a `RuntimeException` thrown from a target's `readObject` — into a single
   `IOException`. If you need to distinguish them, catch `IOException` and inspect `getCause()`.
-* JDK-deserialization hardening that arrived after Java 8 (`ObjectInputFilter`, the `jdk.io.objects.*` globals) is a
-  **JDK** feature, not a library feature. On JDK 17+ you can configure it globally; the library neither enables nor
-  reads such configuration. §6 covers this.
+* Post-Java-8 deserialization hardening (`ObjectInputFilter`, the `jdk.io.objects.*` globals) is a **JDK** feature,
+  not a library feature. §6 states exactly what is and is not reachable here.
 
 ### 5.2 `serialVersionUID` handling
 
@@ -437,24 +425,16 @@ This is easy to trip over:
 
 ### 5.4 The `Object.class` fallback
 
-`getMostCompatible` has a two-step rule (`io/serializer/Serializers.java:87-93`):
-
-```java
-Serializer<?> serializer = getHighestPriority(serializedType);
-if (serializer == null) {
-    serializer = getLowestPriority(Object.class);
-}
-```
+`getMostCompatible` has a two-step rule (`io/serializer/Serializers.java:87-93`): try
+`getHighestPriority(serializedType)` (`:88`), and on `null` return `getLowestPriority(Object.class)` (`:90`).
 
 Because `DefaultSerializer implements Serializer<Object>` (`io/serializer/DefaultSerializer.java:47`) and the registry
 keys each provider by its first resolved type argument (`io/serializer/Serializers.java:74-75`), `Object.class` is
 populated with `DefaultSerializer` — the last entry in the SPI file. **So `getMostCompatible` never returns `null`
 after a successful `loadSPI()`, for *any* type.** Ask for `getMostCompatible(SomeDomainObject.class)` and you get
 `DefaultSerializer` silently. `getLowestPriority(Object.class)` returns the *last* `Object`-keyed entry, which the
-file order makes `DefaultSerializer` / `DefaultDeserializer`.
-
-`getMostCompatible` is a convenience you probably do not want. Use `getHighestPriority` and handle `null` when you
-need "only the exact codec, or nothing".
+file order makes `DefaultSerializer` / `DefaultDeserializer`. Use `getHighestPriority` and handle `null` instead
+whenever you need "only the exact codec, or nothing".
 
 ---
 

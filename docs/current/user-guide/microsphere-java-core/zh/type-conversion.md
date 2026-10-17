@@ -361,5 +361,5 @@ assertNull(convertIfPossible("1,2,3", Array.class, String.class)); // java.lang.
   （`convert/ByteArrayToObjectConverter.java`、`convert/ObjectToByteArrayConverter.java`）。
 - [集合与过滤器](collections-and-filters.md) — 多值转换器调用到的容器工厂。
 - [配置属性元数据](configuration-metadata.md) — 库内主要的类型转换消费者。
-- [类型转换 — 开发者指南](../../developer-guide/microsphere-java-core/zh/type-conversion.md) — 选择/缓存内部机制、
+- [类型转换 — 开发者指南](../../../developer-guide/microsphere-java-core/zh/type-conversion.md) — 选择/缓存内部机制、
   分发流水线，以及如何通过 SPI 注册你自己的转换器。

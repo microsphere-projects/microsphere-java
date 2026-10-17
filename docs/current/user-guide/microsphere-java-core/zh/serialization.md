@@ -106,10 +106,10 @@ public interface Deserializer<T> {
 |---|---|---|
 | `new Serializers()` / `new Serializers(ClassLoader)` | `Serializers()`（`io/serializer/Serializers.java:68-70`）、`Serializers(ClassLoader)`（`:64-66`） | 无参形式使用 `ClassLoaderUtils.getDefaultClassLoader()` |
 | `Serializers#loadSPI` | `void loadSPI()`（`:72-79`） | 任何查询之前必须调用；无 `@Nonnull` 保护，其幂等性只是巧合 —— 见 §6 |
-| `Serializers#getMostCompatible` | `@Nullable Serializer<?> getMostCompatible(Class<?> serializedType)`（`:87-93`） | 回退到 `Object.class` 条目 |
-| `Serializers#getHighestPriority` | `@Nullable <S> Serializer<S> getHighestPriority(Class<S> serializedType)`（`:102-105`） | `first(list)`；空则 `null` |
-| `Serializers#getLowestPriority` | `@Nullable <S> Serializer<S> getLowestPriority(Class<S> serializedType)`（`:114-117`） | `last(list)`；空则 `null` |
-| `Serializers#get` | `@Nonnull <S> List<Serializer<S>> get(Class<S> serializedType)`（`:126-129`） | 返回 `emptyList()`，绝不返回 `null` |
+| `Serializers#getMostCompatible` | `Serializer<?> getMostCompatible(Class<?> serializedType)`（`:87-93`） | 回退到 `Object.class` 条目；javadoc 写明 "`null` if not found"（`:85`），但该方法**没有**任何可空性注解 |
+| `Serializers#getHighestPriority` | `<S> Serializer<S> getHighestPriority(Class<S> serializedType)`（`:102-105`） | `first(list)`；空则 `null`，仅由 javadoc 记录（`:100`） |
+| `Serializers#getLowestPriority` | `<S> Serializer<S> getLowestPriority(Class<S> serializedType)`（`:114-117`） | `last(list)`；空则 `null`，仅由 javadoc 记录（`:112`） |
+| `Serializers#get` | `@Nonnull <S> List<Serializer<S>> get(Class<S> serializedType)`（`:126-129`） | 该类中唯一带注解的访问器；返回 `emptyList()`，绝不返回 `null` |
 | `Deserializers` | 同样的五个方法形状（`io/serializer/Deserializers.java:64-129`） | 缓存不对称性见 §5 |
 | `AbstractSerializer` 单例 | `BOOLEAN_SERIALIZER`、`BYTE_SERIALIZER`、`CHARACTER_SERIALIZER`、`SHORT_SERIALIZER`、`INTEGER_SERIALIZER`、`LONG_SERIALIZER`、`FLOAT_SERIALIZER`、`DOUBLE_SERIALIZER` | 例如 `io/serializer/IntegerSerializer.java:13` |
 | `DefaultSerializer.DEFAULT_SERIALIZER` | `public static final DefaultSerializer`（`io/serializer/DefaultSerializer.java:49`） | 面向 `Object` 的 JDK 流序列化器 |
@@ -156,7 +156,6 @@ public interface Deserializer<T> {
 * `FastByteArrayInputStream` 直接建立在调用方的数组上，**不复制**
   （`io/io/FastByteArrayInputStream.java:81-83`，`:73` 处 javadoc 写明 "The buffer array is not copied"）。
   由于该流在 `deserialize` 内部就已消亡，这只意味着一点：不要在另一线程的 `deserialize` 调用进行中修改入参数组。
-* `EnumSerializer` 与各 `AbstractSerializer` 子类每次调用都新建数组，不保留任何引用。
 
 ### 3.5 null 与非法输入契约
 
@@ -344,33 +343,23 @@ assertEquals(2, serializer.getBytesLength());   // 200 constants > Byte.MAX_VALU
 
 ### 4.7 编写你自己的编解码器
 
-压缩自 `io/serializer/AbstractSerializer.java:22-48` 的 javadoc 示例，那正是九个内置编解码器遵循的形状：
+压缩自 `io/serializer/AbstractSerializer.java:22-48` 的 javadoc 示例，那正是九个内置编解码器遵循的形状。
+你只需要实现三个 protected 方法：
 
 ```java
-public class IntegerSerializer extends AbstractSerializer<Integer> {
+public class IntegerSerializer extends AbstractSerializer<Integer> {              // AbstractSerializer.java:24
 
     public static final IntegerSerializer INTEGER_SERIALIZER = new IntegerSerializer();
 
-    @Override
-    protected int calcBytesLength() {
-        return INTEGER_BYTES_SIZE;   // 4 — enables the width guard in AbstractSerializer:87-89
-    }
-
-    @Override
-    protected byte[] doSerialize(Integer value) {
-        ByteBuffer buffer = ByteBuffer.allocate(INTEGER_BYTES_SIZE);
-        buffer.putInt(value);
-        return buffer.array();
-    }
-
-    @Override
-    protected Integer doDeserialize(byte[] bytes) {
-        return ByteBuffer.wrap(bytes).getInt();
-    }
+    @Override protected int calcBytesLength()        { return INTEGER_BYTES_SIZE; }   // :29-31
+    @Override protected byte[] doSerialize(Integer v) { /* encode 4 bytes */ }         // :34-38
+    @Override protected Integer doDeserialize(byte[] b) { /* decode 4 bytes */ }       // :41-43
 }
 ```
 
-变长编解码器从 `calcBytesLength()` 返回 `UNBOUND_BYTES_SIZE`（`-1`），这会关闭宽度校验。
+`calcBytesLength()` 返回固定尺寸即等于启用 `io/serializer/AbstractSerializer.java:87-89` 的宽度校验；
+变长编解码器改为返回 `UNBOUND_BYTES_SIZE`（`-1`），从而关闭它。
+注册的另外半程见 [开发者指南 — 序列化](../../../developer-guide/microsphere-java-core/zh/serialization.md) §6.1。
 
 ---
 
@@ -391,8 +380,8 @@ public class IntegerSerializer extends AbstractSerializer<Integer> {
   （`io/serializer/DefaultDeserializer.java:66-68`）把**所有**异常 —— `ClassNotFoundException`、
   `InvalidClassException`，乃至目标类 `readObject` 抛出的 `RuntimeException` —— 统一塌缩成一个 `IOException`。
   若你需要区分它们，请捕获 `IOException` 并检查 `getCause()`。
-* Java 8 之后引入的 JDK 反序列化加固机制（`ObjectInputFilter`、`jdk.io.objects.*` 全局开关）是 **JDK** 特性，
-  不是本库特性。在 JDK 17+ 上你可以全局配置它；本库既不启用它，也不读取它的配置。见 §6。
+* Java 8 之后引入的反序列化加固机制（`ObjectInputFilter`、`jdk.io.objects.*` 全局开关）是 **JDK** 特性，
+  不是本库特性。§6 完整说明了此处可触达与不可触达的边界。
 
 ### 5.2 `serialVersionUID` 处理
 
@@ -425,14 +414,8 @@ JDK 会重新计算它，`DefaultDeserializer` 就会抛出 `InvalidClassExcepti
 
 ### 5.4 `Object.class` 回退
 
-`getMostCompatible` 有两步规则（`io/serializer/Serializers.java:87-93`）：
-
-```java
-Serializer<?> serializer = getHighestPriority(serializedType);
-if (serializer == null) {
-    serializer = getLowestPriority(Object.class);
-}
-```
+`getMostCompatible` 有两步规则（`io/serializer/Serializers.java:87-93`）：先试
+`getHighestPriority(serializedType)`（`:88`），得到 `null` 时改为返回 `getLowestPriority(Object.class)`（`:90`）。
 
 由于 `DefaultSerializer implements Serializer<Object>`（`io/serializer/DefaultSerializer.java:47`），
 且注册中心按每个提供者解析出的第一个类型参数分组（`io/serializer/Serializers.java:74-75`），
@@ -440,9 +423,7 @@ if (serializer == null) {
 `getMostCompatible` 对*任何*类型都不会返回 `null`。** 询问 `getMostCompatible(SomeDomainObject.class)`，
 你会静默拿到 `DefaultSerializer`。`getLowestPriority(Object.class)` 返回 `Object` 键下的*最后*一项，
 按文件顺序即 `DefaultSerializer` / `DefaultDeserializer`。
-
-如果你需要的是“只要精确编解码器，否则什么都不给”，那就别用 `getMostCompatible`。
-改用 `getHighestPriority` 并自行处理 `null`。
+如果你需要的是"只要精确编解码器，否则什么都不给"，请改用 `getHighestPriority` 并自行处理 `null`。
 
 ---
 
@@ -525,5 +506,5 @@ if (serializer == null) {
   决定了每个提供者的注册中心键；`MethodUtils.invokeStaticMethod` 是 `EnumSerializer` 调用 `values()` 的方式。
 * [类加载与构件](classloading-and-artifacts.md) — `ClassLoaderUtils.getDefaultClassLoader()` 与 `ServiceLoaderUtils`，
   支撑起按 `ClassLoader` 划分的注册中心及其缓存开关。
-* [开发者指南 — 序列化](../../developer-guide/microsphere-java-core/serialization.md) — 选择算法、注册中心循环、
+* [开发者指南 — 序列化](../../../developer-guide/microsphere-java-core/zh/serialization.md) — 选择算法、注册中心循环、
   设计模式、线程安全分析与扩展点。

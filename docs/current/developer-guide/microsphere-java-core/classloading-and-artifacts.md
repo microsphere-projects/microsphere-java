@@ -362,3 +362,16 @@ Location: `microsphere-java-core/src/test/java/io/microsphere/classloading/` (18
   built-in registrations intact.
 * Removal equality depends on the exact `URL` in `urls`/`path` (`:159-160`) while the `loaders` match uses normalised
   base paths (`:152-154`); pass URLs taken from `getURLs(...)`.
+
+---
+
+## 9. See also
+
+* [Class loading and artifacts — User Guide](../../user-guide/microsphere-java-core/classloading-and-artifacts.md) — coordinates, runnable examples and the caller-facing pitfall list
+* [Utilities, constants and text](util-and-constants.md) — `ClassLoaderUtils`, `ClassPathUtils`, `ServiceLoaderUtils` and `util.jar.JarUtils` feed this package, and `Version.ofVersion(Class)` is the consumer that loops back
+* [Networking and URL protocols](net-and-url-protocols.md) — `URLUtils.resolveArchiveFile` / `resolveBasePath`, plus the `classpath:` `Handler` that resolves these URLs
+* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `FileUtils`, `IOUtils` and `io.scanner` are the other inbound edges of `ArtifactDetector`
+* [Reflection, types and beans](reflection-and-beans.md) — `FieldUtils` / `MethodUtils` carry the `sun.misc` and JPMS field access these handles need
+* [Language abstractions](language-abstractions.md) — `Prioritized` governs resolver and handle ordering
+* [Package index and layer diagram](README.md)
+* [中文版本](zh/classloading-and-artifacts.md)
