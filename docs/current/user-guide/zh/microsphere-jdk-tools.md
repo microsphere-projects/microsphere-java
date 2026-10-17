@@ -9,8 +9,9 @@
 | **使用的编译器 API** | `javax.tools.ToolProvider.getSystemJavaCompiler()` —— 在 `Compiler.java:64` 导入，在 `:107` 调用 |
 | **测试面** | `src/test/java/io/microsphere/jdk/tools/compiler/CompilerTest.java`（11 个测试方法） |
 
-本模块提供的是**对 JDK 自带编译器的可移植访问能力**：同一段代码可以在 JDK 8 到 25 上执行进程内编译。它是注解处理
-测试栈所坐落的那一层：把 `Class` 对象换算成源文件，在你当前的 JVM 内运行 `javac`，并把工作交给注册的注解处理器。
+本模块提供的是**对 JDK 自带编译器的可移植访问能力**：同一段代码可以在 JDK 8 到 25 上执行进程内编译。
+它是注解处理测试栈所坐落的那一层：把 `Class` 对象换算成源文件，在你当前的 JVM 内运行 `javac`，
+并把工作交给注册的注解处理器。
 
 > [!IMPORTANT]
 > **本模块不触碰 `com.sun.tools.javac` 内部 API。** 主源码里没有 `tools.jar` 路径拼接，没有
@@ -21,7 +22,8 @@
 
 ## 1. 你得到什么，什么时候需要它
 
-当**测试或工具必须在运行中的 JVM 内编译 Java 源文件**、而不是外部调用 `javac` 进程时，你需要本模块：
+当**测试或工具必须在运行中的 JVM 内编译 Java 源文件**、而不是外部调用 `javac` 进程时，
+你需要本模块：
 
 * **注解处理器测试。** 用真实类跑你的处理器，并断言它的产物。`microsphere-annotation-test` 就是这么做的：
   `CompilerInvocationInterceptor` 构造一个 `Compiler`，把测试涉及的类作为源路径喂进去，注册被测处理器以及通过
@@ -42,7 +44,9 @@
 | 控制 javac 选项、locale、编码 | `options`、`locale`、`charset` → `:111-114`、`:146-154` |
 
 那几个路径发现静态方法（`detectClassPath` / `detectRootDirectory` / `detectSourcePath`）才是本模块存在的理由：
-`javax.tools` 编译的是 `File`，而调用方手上通常只有 `Class`。`Compiler` 把每个类映射为 `<name>.java`
+`javax.tools` 编译的是 `File`，
+而调用方手上通常只有 `Class`。
+`Compiler` 把每个类映射为 `<name>.java`
 （`resolveJavaSourceFileRelativePath`，`Compiler.java:284-286`），在配置的源路径里搜索（`:217-226`），
 并丢弃找不到源文件的类（`:209-215`）。
 
@@ -67,8 +71,9 @@
 | `microsphere-lang-model` | **test** | `microsphere-lang-model/pom.xml:46`，`:48` 为 `<scope>test</scope>` |
 | `microsphere-jdk-tools` 自身 | compile | `microsphere-jdk-tools/pom.xml:14` |
 
-`microsphere-annotation-processor` 对本模块**没有直接**依赖；它是通过 `microsphere-annotation-test`（测试作用域，
-`microsphere-annotation-processor/pom.xml:53`）以及 `microsphere-lang-model`（`microsphere-annotation-processor/pom.xml:33`）
+`microsphere-annotation-processor` 对本模块**没有直接**依赖；
+它是通过 `microsphere-annotation-test`（测试作用域，`microsphere-annotation-processor/pom.xml:53`）
+以及 `microsphere-lang-model`（`microsphere-annotation-processor/pom.xml:33`）
 间接拿到的。
 
 > [!NOTE]
@@ -78,8 +83,9 @@
 
 传递依赖里你还会得到 `microsphere-java-core`，本模块大量使用它的工具类 —— `CollectionUtils`、`Lists`、`Sets`、
 `SetUtils`、`FileConstants`、`SymbolConstants`、`StringBuilderWriter`、`SimpleFileScanner`、`LoggerFactory`、
-`FormatUtils`、`Assert`、`ClassUtils`、`StringUtils`（`Compiler.java:19-63`）。core 不需要运行期日志实现：它的门面
-选取第一个可用的 `LoggerFactory`（`microsphere-java-core/src/main/java/io/microsphere/logging/LoggerFactory.java:73-96`）。
+`FormatUtils`、`Assert`、`ClassUtils`、`StringUtils`（`Compiler.java:19-63`）。
+core 不需要运行期日志实现：它的门面选取第一个可用的
+`LoggerFactory`（`microsphere-java-core/src/main/java/io/microsphere/logging/LoggerFactory.java:73-96`）。
 
 ---
 
@@ -316,9 +322,9 @@ ok = compiler.compile(Compiler.class);
 
 ## 7. 参见
 
-* [microsphere-annotation-test](../microsphere-annotation-test.md) —— 驱动本模块的 JUnit 5 扩展
-* [microsphere-annotation-processor](../microsphere-annotation-processor.md) —— 最常被它编译的那批处理器
-* [microsphere-lang-model](../microsphere-lang-model.md) —— 同一工具链的 `javax.lang.model` 门面
+* [microsphere-annotation-test](microsphere-annotation-test.md) —— 驱动本模块的 JUnit 5 扩展
+* [microsphere-annotation-processor](microsphere-annotation-processor.md) —— 最常被它编译的那批处理器
+* [microsphere-lang-model](microsphere-lang-model.md) —— 同一工具链的 `javax.lang.model` 门面
 * [类加载与构件识别 —— 用户指南](../microsphere-java-core/zh/classloading-and-artifacts.md) —— core 中同一主题的
   JDK 内部访问页面
 * [microsphere-jdk-tools —— 开发者指南](../../developer-guide/zh/microsphere-jdk-tools.md) —— `Compiler.java`

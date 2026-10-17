@@ -114,7 +114,7 @@ Chinese mirrors: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/R
 | [microsphere-java-annotations](microsphere-java-annotations.md) | `microsphere-java-annotations` | Contract annotations (`@Since`, `@Nullable`, `@Nonnull`, `@Immutable`, `@ThreadSafe`, `@Experimental`, …) with zero runtime cost |
 | [microsphere-java-test](microsphere-java-test.md) | `microsphere-java-test` | Test fixtures and JUnit 5 helpers; all dependencies are optional |
 | [microsphere-annotation-test](microsphere-annotation-test.md) | `microsphere-annotation-test` | In-process `javac` harness for testing annotation processors |
-| [microsphere-jdk-tools](microsphere-jdk-tools.md) | `microsphere-jdk-tools` | Portable access to `jdk.compiler` / `tools.jar` tooling across JDK 8 → 25 |
+| [microsphere-jdk-tools](microsphere-jdk-tools.md) | `microsphere-jdk-tools` | One-class wrapper over `javax.tools.ToolProvider.getSystemJavaCompiler()` — in-JVM `javac` on JDK 8 → 25 |
 | [microsphere-lang-model](microsphere-lang-model.md) | `microsphere-lang-model` | Wrapper layer over `javax.lang.model` for processor authors |
 | [microsphere-annotation-processor](microsphere-annotation-processor.md) | `microsphere-annotation-processor` | Compile-time generation of configuration-property metadata |
 

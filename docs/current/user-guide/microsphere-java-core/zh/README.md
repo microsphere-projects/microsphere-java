@@ -55,7 +55,7 @@ graph TD
 **日常工具类使用** → 1 → 2 → 5 → 4
 **构建可插拔子系统** → 3（`Prioritized`、`Wrapper`）→ 7（事件）→ 再看 5、6、10、11、13、14 各页的 SPI 小节
 **与 classpath 打交道** → 1（资源/服务加载）→ 8（扫描）→ 9（URL 协议）→ 11（构件探测）
-**IDE 友好的配置元数据** → 4（`ConfigurationProperty`）→ 13 → 以及[注解处理器页面](../zh/microsphere-annotation-processor.md)
+**IDE 友好的配置元数据** → 4（`ConfigurationProperty`）→ 13 → 以及[注解处理器页面](../../zh/microsphere-annotation-processor.md)
 **JDK 17+ / 21+ / 25 迁移** → 11、14、8，以及 4、6 中的 JDK 矩阵
 
 ---

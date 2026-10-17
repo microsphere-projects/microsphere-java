@@ -4,7 +4,7 @@ Module: `io.github.microsphere-projects:microsphere-lang-model` · Source line: 
 (tag `0.3.20` published; root `pom.xml:54`), `groupId` at root `pom.xml:12`.
 Packages analysed: `io.microsphere.lang.model.element` (1 type) + `io.microsphere.lang.model.util` (15 types) =
 **16 main-source types**, covered by 17 test classes.
-Companion user-facing page: [User Guide — Language Model](../../user-guide/microsphere-lang-model.md).
+Companion user-facing page: [User Guide — Language Model](../user-guide/microsphere-lang-model.md) · Chinese version: [中文开发者指南](zh/microsphere-lang-model.md).
 
 All `file:line` references are relative to `microsphere-lang-model/src/main/java/io/microsphere/` (main) or
 `microsphere-lang-model/src/test/java/io/microsphere/` (test), read from the `release` worktree, then shortened to

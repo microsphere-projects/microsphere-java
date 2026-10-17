@@ -6,7 +6,7 @@
 | **Main sources** | 4 types in `io.microsphere.annotation.processor` (`src/main/java/io/microsphere/annotation/processor/`) |
 | **Tests** | `ConfigurationPropertyAnnotationProcessorTest`, `ConfigurationPropertyJSONElementVisitorTest`, `FilerProcessorTest`, `ResourceProcessorTest` + the `TestConfigurationPropertyLoader` SPI fixture |
 | **Compile dependencies** | `microsphere-java-core` (`pom.xml:24-28`, artifactId `:26`), `microsphere-lang-model` (`pom.xml:31-35`, artifactId `:33`) |
-| **Test dependencies** | `microsphere-annotation-test` (`:51-56`, artifactId `:53`, scope `test` `:55`), `junit-jupiter` (`:38-42`), `junit-jupiter-engine` (`:44-48`), `logback-classic` (`:59-63`), `javax.ws.rs-api` (`:66-70`), `jaxws-api` (`:72-77`), `spring-context` (`:80-84`), `spring-web` (`:86-90`) |
+| **Test dependencies** | `microsphere-annotation-test` (`:51-56`, artifactId `:53`, scope `test` `:55`), `junit-jupiter` (`:38-42`), `junit-jupiter-engine` (`:44-48`), `logback-classic` (`:59-63`), `javax.ws.rs-api` (`:66-70`), `jaxws-api` (`:72-76`), `spring-context` (`:80-84`), `spring-web` (`:86-90`) |
 | **Processor SPI file** | `src/main/resources/META-INF/services/javax.annotation.processing.Processor:1` |
 | **Packaging quirk** | runs `maven-shade-plugin` (`pom.xml:105`) and embeds `microsphere-java-core` into its own artifact (`pom.xml:115`) |
 | **JDK level** | bytecode inherited from the external parent `microsphere-build:0.3.16`; CI-tested on JDK 8 / 11 / 17 / 21 / 25 |
