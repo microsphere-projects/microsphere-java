@@ -6,7 +6,7 @@
 | **主源码** | `io.microsphere.annotation.processor` 包下 4 个类型（`src/main/java/io/microsphere/annotation/processor/`） |
 | **测试** | `ConfigurationPropertyAnnotationProcessorTest`、`ConfigurationPropertyJSONElementVisitorTest`、`FilerProcessorTest`、`ResourceProcessorTest` 以及 `TestConfigurationPropertyLoader` SPI 夹具 |
 | **编译依赖** | `microsphere-java-core`（`pom.xml:24-28`，artifactId 在 `:26`）、`microsphere-lang-model`（`pom.xml:31-35`，artifactId 在 `:33`） |
-| **测试依赖** | `microsphere-annotation-test`（`:51-56`，artifactId `:53`，scope `test` 在 `:55`）、`junit-jupiter`（`:38-42`）、`junit-jupiter-engine`（`:44-48`）、`logback-classic`（`:59-63`）、`javax.ws.rs-api`（`:66-70`）、`jaxws-api`（`:72-77`）、`spring-context`（`:80-84`）、`spring-web`（`:86-90`） |
+| **测试依赖** | `microsphere-annotation-test`（`:51-56`，artifactId `:53`，scope `test` 在 `:55`）、`junit-jupiter`（`:38-42`）、`junit-jupiter-engine`（`:44-48`）、`logback-classic`（`:59-63`）、`javax.ws.rs-api`（`:66-70`）、`jaxws-api`（`:72-76`）、`spring-context`（`:80-84`）、`spring-web`（`:86-90`） |
 | **Processor SPI 文件** | `src/main/resources/META-INF/services/javax.annotation.processing.Processor:1` |
 | **打包特性** | 本模块执行 `maven-shade-plugin`（`pom.xml:105`），并把 `microsphere-java-core` 嵌入自身构件（`pom.xml:115`） |
 | **JDK 级别** | 字节码级别继承自外部父 POM `microsphere-build:0.3.16`；CI 在 JDK 8 / 11 / 17 / 21 / 25 上验证 |

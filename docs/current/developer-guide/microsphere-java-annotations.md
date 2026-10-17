@@ -406,6 +406,6 @@ having no observable runtime behaviour).
 * [Microsphere Java Annotations — User Guide](../user-guide/microsphere-java-annotations.md) — per-annotation contracts and pitfalls
 * [Configuration Metadata — Developer Guide](microsphere-java-core/configuration-metadata.md) — the readers downstream of the generated JSON
 * [Language Abstractions — Developer Guide](microsphere-java-core/language-abstractions.md) — `Deprecation`, `io.microsphere.util.AnnotationUtils` and its `isMetaAnnotation` family (`.../util/AnnotationUtils.java:535`)
-* [microsphere-annotation-processor](microsphere-annotation-processor.md) — the compile-time consumer (*page not written yet*)
+* [microsphere-annotation-processor](microsphere-annotation-processor.md) — the compile-time consumer: processing rounds, `Filer`/`Messager` use and the shaded artifact
 * [中文版本](zh/microsphere-java-annotations.md)
 * [Module index](README.md)

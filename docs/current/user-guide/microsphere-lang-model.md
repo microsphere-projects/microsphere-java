@@ -213,7 +213,7 @@ Because `accept` bypasses the JDK's own type-switch, `StringAnnotationValue` is 
 `JSONAnnotationValueVisitor` is a thin writer: every scalar visit is one `append(jsonBuilder, getAttributeName(attributeMethod), value)` call (`:81-133`). Three cases differ — `visitType` writes the **type name** (`:135-139`); `visitEnumConstant` writes the **simple name** (`:141-145`); `visitAnnotation` and `visitArray` recurse with a **child** `JSONAnnotationValueVisitor` over a fresh `StringBuilder` and then append the finished fragment through `doAppend` (`:147-184`, `:191-195`). `visitUnknown` returns the builder untouched (`:186-189`).
 
 > [!NOTE]
-> The JSON output is produced through `io.microsphere.json` types: the visitor imports `JSONUtils.append` and `JSONUtils.appendName` (`lang/model/util/JSONAnnotationValueVisitor.java:36-37`) and takes its brace/bracket/comma symbols from `io.microsphere.constants.SymbolConstants` (`:31-35`). They write **into `io.microsphere.json`'s string-building layer**, not into `JSONObject`/`JSONArray` objects — and note that the sibling `JSONElementVisitor` appends to a raw `StringBuilder` and imports no `io.microsphere.json` type at all. `appendName` skips blank names entirely (`microsphere-java-core/src/main/java/io/microsphere/json/JSONUtils.java:500-508`), which is precisely why `visitArray` passes `null` as the attribute method (`JSONAnnotationValueVisitor.java:176`): array elements must render namelessly. See [JSON](../microsphere-java-core/json.md).
+> The JSON output is produced through `io.microsphere.json` types: the visitor imports `JSONUtils.append` and `JSONUtils.appendName` (`lang/model/util/JSONAnnotationValueVisitor.java:36-37`) and takes its brace/bracket/comma symbols from `io.microsphere.constants.SymbolConstants` (`:31-35`). They write **into `io.microsphere.json`'s string-building layer**, not into `JSONObject`/`JSONArray` objects — and note that the sibling `JSONElementVisitor` appends to a raw `StringBuilder` and imports no `io.microsphere.json` type at all. `appendName` skips blank names entirely (`microsphere-java-core/src/main/java/io/microsphere/json/JSONUtils.java:500-508`), which is precisely why `visitArray` passes `null` as the attribute method (`JSONAnnotationValueVisitor.java:176`): array elements must render namelessly. See [JSON](microsphere-java-core/json.md).
 
 ### 6.4 The two element visitors
 
@@ -409,9 +409,10 @@ Everything else — `ElementUtils`, `AnnotationUtils`, `MemberUtils`, `FieldUtil
 
 ## 11. See also
 
-* [Annotation Processor module](../microsphere-annotation-processor.md) — the framework that drives this module inside `javac`; `AnnotatedElementJSONElementVisitor` is its natural extension point.
-* [JDK Tools module](../microsphere-jdk-tools.md) — a test-scoped dependency here (`pom.xml:44-49`) supplying the in-JVM `ToolProvider` driver that lets this module's tests obtain a real `ProcessingEnvironment`.
-* [Annotation Test module](../microsphere-annotation-test.md) — the test-scoped harness `io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest` that `UtilTest` extends (`lang/model/util/UtilTest.java:20,48`), and the source of the `io.microsphere.test.*` fixtures.
-* [microsphere-java-core README](../microsphere-java-core/README.md) — the module index and the release-line version table.
-* [JSON](../microsphere-java-core/json.md) — `JSONUtils.append` / `appendName`, the emitting layer behind `JSONAnnotationValueVisitor` (`lang/model/util/JSONAnnotationValueVisitor.java:36-37`).
+* [Annotation Processor module](microsphere-annotation-processor.md) — the framework that drives this module inside `javac`; `AnnotatedElementJSONElementVisitor` is its natural extension point.
+* [JDK Tools module](microsphere-jdk-tools.md) — a test-scoped dependency here (`pom.xml:44-49`) supplying the in-JVM `ToolProvider` driver that lets this module's tests obtain a real `ProcessingEnvironment`.
+* [Annotation Test module](microsphere-annotation-test.md) — the test-scoped harness `io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest` that `UtilTest` extends (`lang/model/util/UtilTest.java:20,48`), and the source of the `io.microsphere.test.*` fixtures.
+* [microsphere-java-core README](microsphere-java-core/README.md) — the module index and the release-line version table.
+* [JSON](microsphere-java-core/json.md) — `JSONUtils.append` / `appendName`, the emitting layer behind `JSONAnnotationValueVisitor` (`lang/model/util/JSONAnnotationValueVisitor.java:36-37`).
 * [Developer Guide — Language Model](../developer-guide/microsphere-lang-model.md) — the 16-type inventory, visitor dispatch diagrams, source analysis of type resolution and `AnnotationValue` trees, and the thread-safety review.
+* Chinese version: [中文用户指南](zh/microsphere-lang-model.md)
