@@ -547,3 +547,16 @@ assertSame(targetType, parameterType);                                     // :5
    `deserialize(new byte[3])` 返回 `null`，尽管理论上就是
    `io/serializer/AbstractSerializer.java:87-89` 的行为。
 7. `SerializersTest.java:57`（`testtGet`）说明该套件的方法名没有受工具检查。
+
+---
+
+## 9. 另见
+
+* [反射、类型与 Bean](reflection-and-beans.md) —— 本包解析注册表键所经由的类型模型（`TypeUtils.resolveTypeArgumentClasses`、`JavaType`、`MethodUtils.invokeStaticMethod`）
+* [类型转换](type-conversion.md) —— `ObjectToByteArrayConverter` / `ByteArrayToObjectConverter` 是 `io.serializer` 在主干源码中唯一的消费者
+* [I/O、NIO、扫描与文件过滤器](io-and-scanning.md) —— §1 所述分帧边界另一侧的缓冲与 `io.event`
+* [JSON](json.md) —— 相邻的 `io` 层 SPI 家族，负责本包刻意不处理的记录级结构
+* [语言抽象](language-abstractions.md) —— `Serializers.getHighestPriority` 背后的 `Prioritized` 排序约定
+* [序列化 —— 用户指南](../../../user-guide/microsphere-java-core/zh/serialization.md) —— 面向调用方的 API 参考与示例
+* [子包索引与层级图](README.md)
+* 英文原文：[Serialization — Developer Guide](../serialization.md)

@@ -76,14 +76,15 @@ GroupId 为 `io.github.microsphere-projects`（`pom.xml:12`），版本 `${revis
 </dependency>
 ```
 
-`javac` 会扫描编译 classpath 上的 `META-INF/services/javax.annotation.processing.Processor` 并实例化其中列出的每个类，
-所以不需要任何编译器配置。这条路径有两个后果：处理器及其传递依赖会污染你的**编译** classpath（因此建议
-`provided`，让它们不进入运行时 classpath）；另外较新的 JDK 在通过 classpath 隐式启用注解处理时会打印一条警告——用下面的
-显式 `annotationProcessorPaths` 可以消除它，或者在不需要注解处理的地方使用 `-proc:none`。
+`javac` 会扫描编译 classpath 上的 `META-INF/services/javax.annotation.processing.Processor`
+并实例化其中列出的每个类，所以不需要任何编译器配置。这条路径有两个后果：处理器及其传递依赖会污染你的**编译**
+classpath（因此建议 `provided`，让它们不进入运行时 classpath）；另外较新的 JDK 在通过 classpath 隐式启用注解处理时
+会打印一条警告——用下面的显式 `annotationProcessorPaths` 可以消除它，或者在不需要注解处理的地方使用 `-proc:none`。
 
 `microsphere-java-annotations` 依赖**不是可选项**：访问器会通过
-`Elements.getTypeElement("io.microsphere.annotation.ConfigurationProperty")` 解析注解类型，解析结果为 `null`
-时立即失败（`microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/AnnotatedElementJSONElementVisitor.java:109-110`）。
+`Elements.getTypeElement("io.microsphere.annotation.ConfigurationProperty")` 解析注解类型，
+解析结果为 `null` 时立即失败
+（`microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/AnnotatedElementJSONElementVisitor.java:109-110`）。
 
 ### 2.2 显式 `annotationProcessorPaths`
 
@@ -305,11 +306,12 @@ io.microsphere.annotation.processor.TestConfigurationPropertyLoader
 三个层次，由廉价到昂贵。
 
 1. **看构建日志。** 最后一轮处理器会输出一条 `NOTE`，内容就是*完整的*生成文档，包含 loader 贡献的条目
-   （`ConfigurationPropertyAnnotationProcessor.java:154`）。`javac` 默认打印 note，Maven 会连同该模块的编译器输出一起显示。
+   （`ConfigurationPropertyAnnotationProcessor.java:154`）。`javac` 默认打印 note，
+   Maven 会连同该模块的编译器输出一起显示。
 2. **打开产物。** `META-INF/microsphere/configuration-properties.json` 属于 class 输出，因此在你的 jar 里：
-   `unzip -p target/your.jar META-INF/microsphere/configuration-properties.json`。如果这个条目不存在，说明处理器*没有运行*
-   （陷阱 1），而不是运行了却没找到东西——即便结果为空也会被写成 `[]`
-   （`ConfigurationPropertyAnnotationProcessor.java:113`、`:126-131`）。
+   `unzip -p target/your.jar META-INF/microsphere/configuration-properties.json`。
+   如果这个条目不存在，说明处理器*没有运行*（陷阱 1），而不是运行了却没找到东西——
+   即便结果为空也会被写成 `[]`（`ConfigurationPropertyAnnotationProcessor.java:113`、`:126-131`）。
 3. **在进程内运行它。** 四个测试类都继承 `AbstractAnnotationProcessingTest`
    （`io/microsphere/annotation/processor/ConfigurationPropertyAnnotationProcessorTest.java:34`），后者通过
    JUnit 5 的 `@ExtendWith(CompilerInvocationInterceptor.class)` 挂载
@@ -321,9 +323,10 @@ io.microsphere.annotation.processor.TestConfigurationPropertyLoader
    `microsphere-jdk-tools` 作为包装层的原因。
 
 各测试套件钉住了周边契约：`ResourceProcessorTest` 通过 `SOURCE_PATH` 读回自己的源文件
-（`io/microsphere/annotation/processor/ResourceProcessorTest.java:56`、`:66-68`、`:92-138`），写入并删除随机
-class-output 资源（`:151-189`，清理在 `:71-74`），并用 `assertThrows(RuntimeException.class, …)` 断言重抛行为
-（`:82-90`）；`FilerProcessorTest` 断言返回 `null` 的降级行为
+（`io/microsphere/annotation/processor/ResourceProcessorTest.java:56`、`:66-68`、`:92-138`），
+写入并删除随机 class-output 资源（`:151-189`，清理在 `:71-74`），
+并用 `assertThrows(RuntimeException.class, …)` 断言重抛行为（`:82-90`）；
+`FilerProcessorTest` 断言返回 `null` 的降级行为
 （`io/microsphere/annotation/processor/FilerProcessorTest.java:58-62`）。
 
 > [!WARNING]
@@ -355,17 +358,19 @@ class-output 资源（`:151-189`，清理在 `:71-74`），并用 `assertThrows(
    （`ResourceProcessor.java:235-240`，经由 `:114-117`），而最先撞上它的正是
    `ConfigurationPropertyAnnotationProcessor.java:150-155` 的那个 `NOTE` 打印。有疑问就 `mvn clean`；并且永远不要手工
    编辑生成文件——下次编译会覆盖它。
-5. **`microsphere-java-core` 的 shaded 副本。** `maven-shade-plugin` 绑定在 `package` 阶段（`pom.xml:103-121`，插件声明在
-   `:105`），其 `artifactSet` 只包含一个构件：`io.github.microsphere-projects:microsphere-java-core`（`:113-117`）。整个
-   `<configuration>` 块（`:112-118`）里**没有 `<relocations>`、没有 `<minimizeJar>`、没有 `<filters>`、没有
-   `<shadedArtifactAttached>`**，因此插件只做最低限度的事：core 的每个类都被**原包名**复制进处理器 jar，并且 shaded jar
-   *取代* `target/microsphere-annotation-processor-<version>.jar` 成为主构件（shade 前的原始 jar 被移动为
-   `original-*.jar`）。由于没有任何重定位，对使用者的重复类后果是直接的：如果你的构建同时依赖
+5. **`microsphere-java-core` 的 shaded 副本。** `maven-shade-plugin` 绑定在 `package` 阶段（`pom.xml:103-121`，
+   插件声明在 `:105`），其 `artifactSet` 只包含一个构件：
+   `io.github.microsphere-projects:microsphere-java-core`（`:113-117`）。整个 `<configuration>` 块（`:112-118`）里
+   **没有 `<relocations>`、没有 `<minimizeJar>`、没有 `<filters>`、没有 `<shadedArtifactAttached>`**，
+   因此插件只做最低限度的事：core 的每个类都被**原包名**复制进处理器 jar，并且 shaded jar *取代*
+   `target/microsphere-annotation-processor-<version>.jar` 成为主构件（shade 前的原始 jar 被移动为 `original-*.jar`）。
+   由于没有任何重定位，对使用者的重复类后果是直接的：如果你的构建同时依赖
    `microsphere-annotation-processor` 与 `microsphere-java-core`，那么同一个
-   `io.microsphere.metadata.DefaultConfigurationPropertyGenerator` 在 classpath 上存在两份，赢家取决于 classpath 顺序，
-   而不是你声明的版本。两份副本还携带同样的 `META-INF/services/*` 条目，于是 `ServiceLoader` 会按类名去重，症状通常表现为
-   *版本*错位（内嵌副本在构建时被固定到 `${revision}`，根 `pom.xml:54`）而非 `ClassNotFoundException`。实用结论：处理器保持
-   `provided` 作用域；不要从 core 里 exclude 任何东西；如果你必须依赖另一个版本的 core，请记住内嵌的那一份就跟着处理器 jar 一起分发。
+   `io.microsphere.metadata.DefaultConfigurationPropertyGenerator` 在 classpath 上存在两份，
+   赢家取决于 classpath 顺序，而不是你声明的版本。两份副本还携带同样的 `META-INF/services/*` 条目，
+   于是 `ServiceLoader` 会按类名去重，症状通常表现为*版本*错位（内嵌副本在构建时被固定到 `${revision}`，
+   根 `pom.xml:54`）而非 `ClassNotFoundException`。实用结论：处理器保持 `provided` 作用域；不要从 core 里
+   exclude 任何东西；如果你必须依赖另一个版本的 core，请记住内嵌的那一份就跟着处理器 jar 一起分发。
    同一配置的好处是：`annotationProcessorPaths` 只需要一个 `<path>` 条目，因为 core 已经在处理器构件内部（2.2 节）。
 6. **继承与多模块聚合都不会被合并。** 在一次编译中，元数据累加在同一个 `StringBuilder` 里、跨轮次累积，最后写入
    *本模块*的 class 输出（`ConfigurationPropertyAnnotationProcessor.java:82`、`:112-132`、`:149-156`）。没有任何代码会去读取

@@ -11,10 +11,12 @@
 
 ## 1. 架构定位
 
-`microsphere-jdk-tools` 是注解处理栈的**可移植性垫片（portability shim）**：项目中唯一把 `Class` 对象变成一次
-`javac` 运行的地方。它之上的所有层（`microsphere-annotation-test`、`microsphere-annotation-processor`）都是围绕本
-模块取到并配置好的 `javax.tools` 类型编写的。这个垫片刻意做得很“笨”：一个类、没有 SPI、没有 service 文件、没有
-`module-info.java`、没有资源、也没有属于自己的构建配置。
+`microsphere-jdk-tools` 是注解处理栈的**可移植性垫片（portability shim）**：
+项目中唯一把 `Class` 对象变成一次 `javac` 运行的地方。
+它之上的所有层（`microsphere-annotation-test`、`microsphere-annotation-processor`）
+都是围绕本模块取到并配置好的 `javax.tools` 类型编写的。
+这个垫片刻意做得很“笨”：一个类、没有 SPI、没有 service 文件、
+没有 `module-info.java`、没有资源、也没有属于自己的构建配置。
 
 ```mermaid
 graph TD
@@ -155,9 +157,10 @@ try (StandardJavaFileManager javaFileManager = getJavaFileManager()) {   // :159
   holder，**不是**静态缓存，**不是**双重检查锁：它是急切的、实例级、构造期完成的。JVM 范围的单例保存在
   `ToolProvider` 自己内部，因此 N 个 `Compiler` 实例共享同一个 `JavaCompiler` 对象，第 N 次构造的成本就是一次判空。
 * **类加载器选择：没有。** `Compiler` 从不构建类加载器，从不触碰
-  `Thread.currentThread().getContextClassLoader()`，也不使用系统加载器。加载器决策属于 `ToolProvider`
-  （JDK 9+ 是 `jdk.compiler` 模块的 provider，JDK 8 是它自己的 `tools.jar` 查找），而 `Compiler` 只能通过
-  `javax.tools` 接口接触被加载的实现。你的处理器同样不经过那个加载器：它们由调用方实例化并在 `:162` 注入，
+  `Thread.currentThread().getContextClassLoader()`，也不使用系统加载器。
+  加载器决策属于 `ToolProvider`（JDK 9+ 是 `jdk.compiler` 模块的 provider，JDK 8 是它自己的 `tools.jar` 查找），
+  而 `Compiler` 只能通过 `javax.tools` 接口接触被加载的实现。
+  你的处理器同样不经过那个加载器：它们由调用方实例化并在 `:162` 注入，
   因此 javac 不会自行做处理器发现或加载。
 * **反射查找：本模块为零。** 没有 `Class.forName`，没有 `Method`/`Field`/`MethodHandle`，没有 `setAccessible`。
   唯一的反射式工作在 core 内部：`options`/`processors` 背后的 `List.of`/`Set.of` 方法句柄绑定
@@ -168,9 +171,9 @@ try (StandardJavaFileManager javaFileManager = getJavaFileManager()) {   // :159
 
 ## 3. 实际实现的版本适配策略
 
-**本模块没有版本分支。** `Compiler.java` 没有为版本探测导入任何 `io.microsphere.util` 内容（没有 `JavaVersion`，没有
-`SystemUtils.IS_JAVA_*`，没有 `Runtime.version()`），也没有基于 JDK 号的 `if`。适配是**一条完全信任某个 JDK API 的
-单一代码路径**：
+**本模块没有版本分支。** `Compiler.java` 没有为版本探测导入任何 `io.microsphere.util` 内容
+（没有 `JavaVersion`，没有 `SystemUtils.IS_JAVA_*`，没有 `Runtime.version()`），也没有基于 JDK 号的 `if`。
+适配是**一条完全信任某个 JDK API 的单一代码路径**：
 
 1. `getSystemJavaCompiler()`（`:107`）—— 由 JDK 内部完成 `tools.jar`（8）或 `jdk.compiler` 服务（9+）的解析。
 2. `assertNotNull(...)`（`:108`）—— 本模块唯一会据此行动的“编译器是否可达”信号。
@@ -233,10 +236,12 @@ flowchart TD
 
 ### 4.2 对照本库的“静默降级”策略
 
-`microsphere-java` 通常安静降级；本模块是例外，它带**两个** fail-fast 点（`:108`、`:281`）以及一组降级点
-（`:130-133`、`:212`、`:225`、`:249-253`、`:195-198`、`:203-205`）。这条分界线是自洽的 —— “不能编译”抛异常，
-“找不到某个源文件”返回 `null` —— 但它没有任何文档：类里只有一个 Javadoc 块（`:66-71`），没有方法注释、没有 `@throws`、
-文件里也没有任何 `@Nullable`/`@Nonnull`。针对当前进行中的 NPE 加固审计，本模块的具体条目是：
+`microsphere-java` 通常安静降级；本模块是例外，
+它带**两个** fail-fast 点（`:108`、`:281`）以及一组降级点（`:130-133`、`:212`、`:225`、`:249-253`、`:195-198`、`:203-205`）。
+这条分界线是自洽的 —— “不能编译”抛异常，“找不到某个源文件”返回 `null`。
+但它没有任何文档：类里只有一个 Javadoc 块（`:66-71`），没有方法注释、没有 `@throws`、
+文件里也没有任何 `@Nullable`/`@Nonnull`。
+针对当前进行中的 NPE 加固审计，本模块的具体条目是：
 
 1. `:108` 在**构造器**里抛 `IllegalArgumentException`，Javadoc 未写 `@throws` —— 不读源码就无从发现（这里刻意违背
    “静默”策略，因为没有编译器的 `Compiler` 毫无用处）。
@@ -300,8 +305,10 @@ sequenceDiagram
 * **跨线程共享同一个 `JavaCompiler` 是 `ToolProvider` 的契约，不是本模块的契约。** `Compiler` 在
   `getTask`/`call`（`:160-163`）周围没有加任何同步；若必须并发编译，请每线程一个 `Compiler` 并使用不同输出目录，
   因为 `CLASS_OUTPUT` 与 `SOURCE_OUTPUT` 都指向同一个目录（`:176-177`），并发写入会互相交织。
-* **构造成本 = 一次虚调用 + 源目录遍历**（`:228-230` → `:242-262`）。昂贵的部分是那次遍历（递归扫描模块根目录），
-  所以正确的优化是按 §2.4 的规则缓存已配置好的 `Compiler`，而不是手工缓存 `detectSourcePath` 的结果。
+* **构造成本 = 一次虚调用 + 源目录遍历**（`:228-230` → `:242-262`）。
+  昂贵的部分是那次遍历（递归扫描模块根目录），
+  所以正确的优化是按 §2.4 的规则缓存已配置好的 `Compiler`，
+  而不是手工缓存 `detectSourcePath` 的结果。
 
 ---
 
