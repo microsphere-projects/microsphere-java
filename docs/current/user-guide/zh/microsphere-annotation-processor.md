@@ -396,7 +396,7 @@ io.microsphere.annotation.processor.TestConfigurationPropertyLoader
 ## 9. 参见
 
 * [配置属性元数据 — 用户指南](../microsphere-java-core/zh/configuration-metadata.md) —— 运行时那一半：reader、loader、generator，以及文件缺失时会发生什么
-* [配置属性元数据 — 开发者指南](../../developer-guide/microsphere-java-core/configuration-metadata.md) —— 运行时那一半的源码分析
+* [配置属性元数据 — 开发者指南](../../developer-guide/microsphere-java-core/zh/configuration-metadata.md) —— 运行时那一半的源码分析
 * [注解处理器 — 开发者指南](../../developer-guide/zh/microsphere-annotation-processor.md) —— 轮次、访问器、`Filer`、缺陷清单
 * [microsphere-lang-model](microsphere-lang-model.md) —— `javax.lang.model` 门面与 `JSONElementVisitor` 家族
 * [microsphere-annotation-test](microsphere-annotation-test.md) —— 本页测试所使用的进程内 `javac` 夹具

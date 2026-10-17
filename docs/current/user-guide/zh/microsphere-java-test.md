@@ -527,7 +527,7 @@ assertEquals(testList, model.getColors(), "List contents should match the set va
 
 * [用户指南索引](README.md)
 * 本页英文版：[English User Guide](../microsphere-java-test.md)
-* 本模块的开发者指南：[microsphere-java-test —— 开发者指南](../../../developer-guide/zh/microsphere-java-test.md)
+* 本模块的开发者指南：[microsphere-java-test —— 开发者指南](../../developer-guide/zh/microsphere-java-test.md)
 * [microsphere-java-annotations](../zh/microsphere-java-annotations.md) —— 发布 `@Since` 与 `@ConfigurationProperty`，
   即 `@TestAnnotation` 所嵌入的两个注解（`test/annotation/TestAnnotation.java:20-21`、`:69`、`:71`）
 * [microsphere-annotation-processor](../zh/microsphere-annotation-processor.md) —— `ConfigurationPropertyModel` 的编译期读取者

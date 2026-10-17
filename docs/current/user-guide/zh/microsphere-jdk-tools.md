@@ -322,9 +322,9 @@ ok = compiler.compile(Compiler.class);
 
 ## 7. 参见
 
-* [microsphere-annotation-test](../microsphere-annotation-test.md) —— 驱动本模块的 JUnit 5 扩展
-* [microsphere-annotation-processor](../microsphere-annotation-processor.md) —— 最常被它编译的那批处理器
-* [microsphere-lang-model](../microsphere-lang-model.md) —— 同一工具链的 `javax.lang.model` 门面
+* [microsphere-annotation-test](microsphere-annotation-test.md) —— 驱动本模块的 JUnit 5 扩展
+* [microsphere-annotation-processor](microsphere-annotation-processor.md) —— 最常被它编译的那批处理器
+* [microsphere-lang-model](microsphere-lang-model.md) —— 同一工具链的 `javax.lang.model` 门面
 * [类加载与构件识别 —— 用户指南](../microsphere-java-core/zh/classloading-and-artifacts.md) —— core 中同一主题的
   JDK 内部访问页面
 * [microsphere-jdk-tools —— 开发者指南](../../developer-guide/zh/microsphere-jdk-tools.md) —— `Compiler.java`

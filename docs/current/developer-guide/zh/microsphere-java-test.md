@@ -425,7 +425,7 @@ junit.jupiter.extensions.autodetection.enabled = true
 
 * [开发者指南索引](README.md)
 * 本页英文版：[English Developer Guide](../microsphere-java-test.md)
-* 本模块的用户指南：[microsphere-java-test —— 用户指南](../../../user-guide/zh/microsphere-java-test.md)
+* 本模块的用户指南：[microsphere-java-test —— 用户指南](../../user-guide/zh/microsphere-java-test.md)
 * [microsphere-java-annotations](../zh/microsphere-java-annotations.md) —— 提供 `@Since` 与 `@ConfigurationProperty`，即
   `@TestAnnotation` 的两个注解型属性（`test/annotation/TestAnnotation.java:69`, `:71`）
 * [microsphere-annotation-test](../zh/microsphere-annotation-test.md) —— 其 `addCompiledClasses` 钩子是本模块主要消费点的

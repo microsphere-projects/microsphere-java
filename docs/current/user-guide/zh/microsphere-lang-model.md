@@ -412,9 +412,9 @@ _来源：`lang/model/util/ExecutableElementComparatorTest.java:21-65`_
 
 ## 11. 参见
 
-* [注解处理器模块](../microsphere-annotation-processor.md) —— 在 `javac` 内部驱动本模块的框架；`AnnotatedElementJSONElementVisitor` 是它天然的扩展点。
-* [JDK Tools 模块](../microsphere-jdk-tools.md) —— 此处为测试作用域依赖（`pom.xml:44-49`），提供 JVM 内的 `ToolProvider` 驱动，使本模块测试能获得真实的 `ProcessingEnvironment`。
-* [Annotation Test 模块](../microsphere-annotation-test.md) —— 测试作用域的骨架 `io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest`，即 `UtilTest` 的父类（`lang/model/util/UtilTest.java:20,48`），也是 `io.microsphere.test.*` 夹具的来源。
+* [注解处理器模块](microsphere-annotation-processor.md) —— 在 `javac` 内部驱动本模块的框架；`AnnotatedElementJSONElementVisitor` 是它天然的扩展点。
+* [JDK Tools 模块](microsphere-jdk-tools.md) —— 此处为测试作用域依赖（`pom.xml:44-49`），提供 JVM 内的 `ToolProvider` 驱动，使本模块测试能获得真实的 `ProcessingEnvironment`。
+* [Annotation Test 模块](microsphere-annotation-test.md) —— 测试作用域的骨架 `io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest`，即 `UtilTest` 的父类（`lang/model/util/UtilTest.java:20,48`），也是 `io.microsphere.test.*` 夹具的来源。
 * [microsphere-java-core README](../microsphere-java-core/zh/README.md) —— 模块索引与发布线版本表。
 * [JSON](../microsphere-java-core/zh/json.md) —— `JSONUtils.append` / `appendName`，即 `JSONAnnotationValueVisitor` 背后的输出层（`lang/model/util/JSONAnnotationValueVisitor.java:36-37`）。
 * [开发者指南 —— 语言模型](../../developer-guide/zh/microsphere-lang-model.md) —— 16 个类型的清单、访问器分派图、类型解析与 `AnnotationValue` 树的源码分析，以及线程安全评审。
