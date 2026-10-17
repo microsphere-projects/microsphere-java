@@ -262,9 +262,15 @@ Line by line (`:45-63`):
 | `:63` | `compiler.compile(compiledClasses)` — the round trip; its `boolean` result is discarded |
 
 > [!TIP]
-> Processor order matters and is fixed by the harness: `AnnotationProcessingTestProcessor` is added before the SPI ones
-> (`CompilerInvocationInterceptor.java:57-61`), and `javac` iterates processors in registration order. So your fields
-> (`processingEnv`, `roundEnv`, …) are populated before your own processor runs in the same round.
+> The harness **requests** an order — `AnnotationProcessingTestProcessor` first, SPI processors appended
+> (`CompilerInvocationInterceptor.java:57-61`) — but that order is not guaranteed to survive:
+> `compiler.processors(...)` re-bakes the array into a `Set` (`microsphere-jdk-tools/src/main/java/io/microsphere/jdk/tools/compiler/Compiler.java:136-139`)
+> via `Sets.ofSet` (`microsphere-java-core/src/main/java/io/microsphere/collection/Sets.java:552-557`, `:559-568`),
+> which is `Set.of` (unspecified iteration order) on JDK 9+ and an insertion-ordered `LinkedHashSet` on JDK 8
+> (`microsphere-java-core/src/main/java/io/microsphere/collection/SetUtils.java:155-168`). Never depend on your
+> processor running before or after the harness's: the harness processor claims the wildcard
+> (`AnnotationProcessingTestProcessor.java:45`), so it participates in every round and fills your fields from inside
+> its own `process()` (`:70`, `:89-100`) whichever position it occupies.
 
 ---
 
@@ -461,8 +467,11 @@ output is logged (`Compiler.java:165`), and verify the source file is on disk (�
   (`microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/UtilTest.java:48`)
 * [microsphere-java-test](microsphere-java-test.md) — the compile-scope dependency
   (`microsphere-annotation-test/pom.xml:26`)
-* [Annotation Processing — User Guide](microsphere-java-core/annotation-processing.md) — the `javax.lang.model` layer the
-  exposed fields belong to
+* [Utilities, Constants and Text — User Guide](microsphere-java-core/util-and-constants.md) — the `core` helpers this
+  harness calls: `SymbolConstants.WILDCARD` (`microsphere-java-core/src/main/java/io/microsphere/constants/SymbolConstants.java:313`),
+  `SetUtils.newLinkedHashSet` (`microsphere-java-core/src/main/java/io/microsphere/collection/SetUtils.java:491`),
+  `ExceptionUtils.wrap` (`microsphere-java-core/src/main/java/io/microsphere/util/ExceptionUtils.java:98-104`),
+  `ThrowableUtils.getRootCause` (`microsphere-java-core/src/main/java/io/microsphere/util/ThrowableUtils.java:47`)
 * [microsphere-annotation-test — Developer Guide](../developer-guide/microsphere-annotation-test.md) — round-trip
   sequence diagram, hook structure, design patterns and the fragility review
 * Chinese version: [中文用户指南](zh/microsphere-annotation-test.md)

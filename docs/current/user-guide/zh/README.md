@@ -112,7 +112,7 @@ graph TD
 | [microsphere-java-annotations](microsphere-java-annotations.md) | `microsphere-java-annotations` | 零运行时成本的契约注解（`@Since`、`@Nullable`、`@Nonnull`、`@Immutable`、`@ThreadSafe`、`@Experimental` 等） |
 | [microsphere-java-test](microsphere-java-test.md) | `microsphere-java-test` | 测试夹具与 JUnit 5 辅助类，依赖全部 optional |
 | [microsphere-annotation-test](microsphere-annotation-test.md) | `microsphere-annotation-test` | 进程内 `javac` 的注解处理器测试框架 |
-| [microsphere-jdk-tools](microsphere-jdk-tools.md) | `microsphere-jdk-tools` | 在 JDK 8 → 25 上可移植访问 `jdk.compiler` / `tools.jar` 工具能力 |
+| [microsphere-jdk-tools](microsphere-jdk-tools.md) | `microsphere-jdk-tools` | 单一类封装 `javax.tools.ToolProvider.getSystemJavaCompiler()`——在 JVM 内调用 `javac`（JDK 8 → 25） |
 | [microsphere-lang-model](microsphere-lang-model.md) | `microsphere-lang-model` | 面向处理器作者的 `javax.lang.model` 包装层 |
 | [microsphere-annotation-processor](microsphere-annotation-processor.md) | `microsphere-annotation-processor` | 编译期生成配置属性元数据 |
 

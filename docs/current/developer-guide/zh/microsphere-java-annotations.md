@@ -400,6 +400,6 @@ retention 值得钉住的注解一个类（`ThreadSafe`/`NotThreadSafe` 没有�
 * [Microsphere Java Annotations —— 用户指南](../../user-guide/zh/microsphere-java-annotations.md) —— 逐注解的契约与陷阱
 * [配置属性元数据 —— 开发者指南](../microsphere-java-core/zh/configuration-metadata.md) —— 生成 JSON 下游的那些读取方
 * [语言抽象 —— 开发者指南](../microsphere-java-core/zh/language-abstractions.md) —— `Deprecation`、`io.microsphere.util.AnnotationUtils` 及其 `isMetaAnnotation` 一族（`.../util/AnnotationUtils.java:535`）
-* [microsphere-annotation-processor](../microsphere-annotation-processor.md) —— 编译期消费方
+* [microsphere-annotation-processor](../zh/microsphere-annotation-processor.md) —— 编译期消费方
 * 英文版：[English Developer Guide](../microsphere-java-annotations.md)
 * [模块索引](README.md)

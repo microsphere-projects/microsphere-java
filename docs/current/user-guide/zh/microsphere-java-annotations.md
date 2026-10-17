@@ -426,7 +426,7 @@ public static final boolean SERVICE_LOADER_CACHED = parseBoolean(getProperty(...
 > [!IMPORTANT]
 > 若编译 classpath 上没有注解处理器，`@ConfigurationProperty` 就只是**惰性的文档**：字段带着它，没有任何东西消费它，
 > 也不会产出 `configuration-properties.json`。配套页面是
-> [microsphere-annotation-processor](../microsphere-annotation-processor.md)——它覆盖处理轮次、`Filer`/`Messager`
+> [microsphere-annotation-processor](../zh/microsphere-annotation-processor.md)——它覆盖处理轮次、`Filer`/`Messager`
 > 用法以及被 shade 进产物的细节。
 
 ---
@@ -494,7 +494,7 @@ public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(...);
 7. **`@ConfigurationProperty` 要有处理器才有用。** 它的文档化目的就是生成元数据
    （`annotation/ConfigurationProperty.java:30`）；如果不把 `microsphere-annotation-processor` 配置为编译器的注解
    处理器，JSON 资源永远不会出现，`AdditionalMetadataResourceConfigurationPropertyLoader` 这类运行期读取方也就无物
-   可载。参见 [microsphere-annotation-processor](../microsphere-annotation-processor.md)。
+   可载。参见 [microsphere-annotation-processor](../zh/microsphere-annotation-processor.md)。
 8. **`jsr305` 是 optional，因此 JSR-305 别名可能无法解析。** `@Nonnull`/`@Nullable` 上的
    `@TypeQualifierNickname` 和 `javax.annotation.Nonnull`
    （`annotation/Nonnull.java:19`、`:34-35`；`annotation/Nullable.java:19`、`:24`、`:36-37`）来自一个被标记为
@@ -516,7 +516,7 @@ public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(...);
 
 * [配置属性元数据 —— `microsphere-java-core`](../microsphere-java-core/zh/configuration-metadata.md) —— 消费 `@ConfigurationProperty` 产物的读取方与生成方
 * [语言抽象 —— `microsphere-java-core`](../microsphere-java-core/zh/language-abstractions.md) —— `io.microsphere.lang.Deprecation`，生命周期声明的运行期模型（它读取自己那份 `getSince()` `Version`，`.../lang/Deprecation.java:111`，而不是 `@Since`）
-* [microsphere-annotation-processor](../microsphere-annotation-processor.md) —— `@ConfigurationProperty` 的编译期消费方
+* [microsphere-annotation-processor](../zh/microsphere-annotation-processor.md) —— `@ConfigurationProperty` 的编译期消费方
 * [Microsphere Java Annotations —— 开发者指南](../../developer-guide/zh/microsphere-java-annotations.md) —— 保留策略的取舍、消费方地图与设计模式
 * 英文版：[English User Guide](../microsphere-java-annotations.md)
 * [模块索引](README.md)
