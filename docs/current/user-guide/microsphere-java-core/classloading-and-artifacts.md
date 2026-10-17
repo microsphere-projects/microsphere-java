@@ -174,7 +174,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
     public static final int DEFAULT_PRIORITY = MAX_PRIORITY + 99999;   // Integer.MIN_VALUE + 99999: highest precedence
     @Override public boolean supports()                                // URLClassPath class resolvable
     @Override public URL[] getURLs(ClassLoader classLoader)             // ucp.getURLs() reflectively
-    @Override public final boolean removeURL(ClassLoader classLoader, URL url)  // synchronized on urls
+    @Override public final boolean removeURL(ClassLoader classLoader, URL url)  // synchronized on urls; false only for null args (see pitfall 6)
     public final void setPriority(int priority); public final int getPriority();
     protected abstract String getURLClassPathClassName();
     protected abstract String getUrlsFieldName();
@@ -299,18 +299,23 @@ log4j:log4j:*
    `ClassLoaderUtils.findURLClassLoader(...)`, which returns `null` → `EMPTY_URL_ARRAY`. The `Abstract` handles get
    around this by reading the private `ucp` field, but `ClassLoaderUtils.removeClassPathURL(...)` still refuses any
    loader that is not a `SecureClassLoader` (`ClassLoaderUtils.java:1598-1603`).
-6. **Strong encapsulation.** Reflective reads/writes of `jdk.internal.loader.URLClassPath` internals on JDK 17/21/25
-   are not open by default. If you call `removeURL(...)` against the application loader, launch with
-   `--add-opens java.base/jdk.internal.loader=ALL-UNNAMED`; without it expect the removal to fail rather than to be
-   silently ignored elsewhere.
+6. **Strong encapsulation makes `removeURL` throw, not return `false`.** The private `jdk.internal.loader` internals are
+   not open by default on JDK 17/21/25. If you call `removeURL(...)` (directly or through
+   `ClassLoaderUtils.removeClassPathURL(...)`) against the application loader without
+   `--add-opens java.base/jdk.internal.loader=ALL-UNNAMED`, the reflective read is rejected and the call propagates
+   `IllegalStateException` (wrapping `IllegalAccessException`, `FieldUtils.java:826-841`); if the loader simply has no
+   such field, `removeURL` raises `NullPointerException` at `AbstractURLClassPathHandle.java:147`. Only `null`
+   arguments produce a clean `false`. Launch with the `--add-opens` flag, or catch around the call.
 7. **`detect(true)` includes JDK entries with `UNKNOWN`/manifest-derived ids.** This is expected output, not a bug;
    use `detect(false)` for an application-only view.
 8. **Banned-artifacts parsing stops early.** Reading halts at the first blank line
    (`BannedArtifactClassLoadingExecutor.java:117-125`) and any line without exactly three fields throws
    `IllegalArgumentException` (`:129-138`). Comments are **not** supported — a `# ...` line will fail.
-9. **`execute()` removes, it does not throw.** A matched artifact is dropped from the class loader via
-   `ClassLoaderUtils.removeClassPathURL(...)` (`:84-95`); on a loader that refuses mutation the ban is a silent no-op,
-   so verify removals in integration tests if you rely on this as a guardrail.
+9. **`execute()` never reports a ban.** A matched artifact is dropped through
+   `ClassLoaderUtils.removeClassPathURL(...)` (`:84-95`) and the return value is ignored. It returns `false` — a silent
+   no-op — when the loader is not a `SecureClassLoader`, but it *throws* when the loader is one whose internals are
+   encapsulated (see pitfall 6), because `execute()` catches nothing. Verify removals in integration tests if you rely
+   on this as a guardrail.
 10. **Wildcards are per-field.** `Artifact.WILDCARD` short-circuits one field only
     (`Artifact.java:115-122`) — `*:*:*` bans everything, `foo:*:1.0` bans `foo` at any version.
 

@@ -1,7 +1,7 @@
 # `microsphere-java-core` 包分组索引（开发者文档）
 
 模块：`io.github.microsphere-projects:microsphere-java-core` · 源码线：`release` 分支，`0.3.20-SNAPSHOT`
-本目录的 14 篇是[用户文档分组索引](../../user-guide/microsphere-java-core/zh/README.md)在源码层面的对应；英文版本在 [../README.md](../README.md)。
+本目录的 14 篇是[用户文档分组索引](../../../user-guide/microsphere-java-core/zh/README.md)在源码层面的对应；英文版本在 [../README.md](../README.md)。
 
 ---
 
@@ -45,6 +45,7 @@ graph TD
     REFL --> META
     REFL --> JSON
     UTIL --> IO
+    IO -. cycle .-> UTIL
     IO --> NET
     NET --> CL
     IO --> CL
@@ -63,9 +64,9 @@ graph TD
 
 | 层 | 包 | 必须遵守的契约 |
 |----|----|----------------|
-| 基础设施层 | `util`、`constants`、`text`、`misc`、`lang*`、`invoke`、`collection`、`filter` | 不依赖 `core` 内任何其他包；只使用 Java 8 API；javadoc 承诺返回中性结果时不得因 `null` 抛异常 |
-| 类型模型层 | `reflect`、`reflect.generics`、`internal.reflect`、`beans` | 唯一允许触碰 JDK 反射内部的层；每条内部访问路径都有 documented 的回退实现 |
-| 服务层 | `convert`、`convert.multiple`、`io.serializer`、`event`、`logging`、`json`、`metadata` | 每个都是一族 SPI，经 `META-INF/services` 发现，并按 `Prioritized` 排序 |
+| 基础设施层 | `util`、`constants`、`text`、`misc`、`lang*`、`invoke`、`collection`、`filter` | **除一处已知循环依赖外**不依赖 `core` 内其他包：`util` 反向 import 了 `io.microsphere.io`（`util/ClassUtils.java:10-13`、`util/ExceptionUtils.java:20`），而 `io` 又依赖 `util`；只使用 Java 8 API；javadoc 承诺返回中性结果时不得因 `null` 抛异常 |
+| 类型模型层 | `reflect`、`reflect.generics`、`internal.reflect`、`beans` | 唯一允许触碰 JDK 反射内部的层；每条内部访问路径都有文档化的回退实现 |
+| 服务层 | `convert`、`convert.multiple`、`io.serializer`、`event`、`logging`、`metadata` | 每个都是一族 SPI，经 `META-INF/services` 发现，并按 `Prioritized` 排序。`json` 属于本层，但它是**模型而非 SPI** —— 它没有注册任何服务文件 |
 | 平台集成层 | `io*`、`nio*`、`net*`、`classloading`、`concurrent`、`process`、`management`、`security` | JDK 版本敏感度最高；每篇页面都带版本矩阵与降级行为说明 |
 
 ---
@@ -97,7 +98,8 @@ graph TD
 ## 3. 贯穿式实现事实
 
 * **发现机制**：子系统在 `src/main/resources/META-INF/services/` 中注册实现。`release` 分支的 `core` 提供 13 个这类
-  注册文件（处理器模块另有 `javax.annotation.processing.Processor`）；完整清单与链接见[开发者文档索引](../zh/README.md)。
+  注册文件（处理器模块另有 `javax.annotation.processing.Processor`）；完整清单与链接见[开发者文档索引](../../zh/README.md)
+  的 1.3 节。
 * **顺序**：在意顺序的地方实现都继承 `io.microsphere.lang.Prioritized`，选择规则是排序后取第一个匹配项。
   不要依赖 `ServiceLoader` 的文件顺序。
 * **降级策略**：当前 JDK 无法提供的能力返回中性值或 no-op 句柄（例如 `NoOpURLClassPathHandle`、`Empty*` 集合），

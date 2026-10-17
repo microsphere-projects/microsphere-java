@@ -47,6 +47,7 @@ graph TD
     REFL --> META
     REFL --> JSON
     UTIL --> IO
+    IO -. cycle .-> UTIL
     IO --> NET
     NET --> CL
     IO --> CL
@@ -65,9 +66,9 @@ graph TD
 
 | Layer | Packages | Contract it must honour |
 |-------|----------|-------------------------|
-| Foundation | `util`, `constants`, `text`, `misc`, `lang*`, `invoke`, `collection`, `filter` | No dependency on any other `core` package; JDK 8 only APIs; must never throw on `null` where the javadoc promises a neutral result |
+| Foundation | `util`, `constants`, `text`, `misc`, `lang*`, `invoke`, `collection`, `filter` | Kept free of other `core` packages **except one known cycle**: `util` imports `io.microsphere.io` (`util/ClassUtils.java:10-13`, `util/ExceptionUtils.java:20`) while `io` depends back on `util`; JDK 8 only APIs; must never throw on `null` where the javadoc promises a neutral result |
 | Type model | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | Only layer allowed to touch JDK reflection internals; every internal-access path has a documented fallback |
-| Service layers | `convert`, `convert.multiple`, `io.serializer`, `event`, `logging`, `json`, `metadata` | Each is an SPI family discovered through `META-INF/services`, ordered by `Prioritized` |
+| Service layers | `convert`, `convert.multiple`, `io.serializer`, `event`, `logging`, `metadata` | Each is an SPI family discovered through `META-INF/services`, ordered by `Prioritized`. `json` sits in this layer as a **model, not an SPI** — it registers no service file at all |
 | Platform integration | `io*`, `nio*`, `net*`, `classloading`, `concurrent`, `process`, `management`, `security` | Highest JDK-version sensitivity; each page carries the version matrix and degradation behaviour |
 
 ---
