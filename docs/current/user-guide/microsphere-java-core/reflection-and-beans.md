@@ -540,61 +540,44 @@ assertNotEquals(this.beanProperty, of(bean, "value"));                          
 | `JavaType` / `TypeUtils` / `ParameterizedTypeImpl` | ✅ | ✅ | ✅ | ✅ | pure `java.lang.reflect.Type` API, no internal access |
 | `BeanUtils.resolvePropertiesAsMap` on JDK-internal beans | ✅ | ✅ | ⚠️ depends on §2.1 | ⚠️ same | `beans/BeanUtils.java:479` (unconditional `trySetAccessible`) |
 
-**When you need `--add-opens`.** Only when you *force* access to a member of a JDK package that does not open it —
-that is, when you call `setFieldValue`/`getFieldValue`/`invokeMethod` with `forceAccess = true` against
-`java.base` internals, or `BeanUtils.resolvePropertiesAsMap` against such a bean. The exact flag is printed by the
-library at `reflect/AccessibleObjectUtils.java:204-208`:
-
-```
-It's require to add JVM Options '--add-opens=<module>/<package>=ALL-UNNAMED' for running
-```
-
-For the two packages this group most often touches, that reads
-`--add-opens=java.base/java.lang=ALL-UNNAMED` (e.g. `String.value`, `Class.getConstantPool`) and
-`--add-opens=java.base/java.lang.invoke=ALL-UNNAMED` for method-handle plumbing. Note the repository build itself
-does not add these flags — they live in the external `microsphere-build` parent
-(`pom.xml:8`), so a consuming project must set them.
+**When you need `--add-opens`.** Only when you *force* access to a member of a JDK package that does not open it:
+`getFieldValue`/`setFieldValue`/`invokeMethod` with `forceAccess = true` against `java.base` internals, or
+`BeanUtils.resolvePropertiesAsMap` against such a bean. The library prints the exact flag at
+`reflect/AccessibleObjectUtils.java:204-208`:
+`It's require to add JVM Options '--add-opens=<module>/<package>=ALL-UNNAMED' for running`. For this group that is
+usually `--add-opens=java.base/java.lang=ALL-UNNAMED` (`String.value`, `Class.getConstantPool`) or
+`--add-opens=java.base/java.lang.invoke=ALL-UNNAMED`. The reactor build does **not** add them — they live in the
+external `microsphere-build` parent (`pom.xml:8`), so a consuming project must.
 
 ---
 
 ## 6. Pitfalls and known limits
 
-1. **`findMethod(Class, name)` with no parameter types does not match overloads.** It means "a method with zero
-   parameters of that name": `findMethod(Object.class, "equals")` is `null` while
-   `findMethod(Object.class, "equals", Object.class)` succeeds (`reflect/MethodUtils.java:629-632`;
-   `reflect/MethodUtilsTest.java:395-423`).
-2. **Banned methods poison the cache lookups, not the JDK.** `microsphere.reflect.banned-methods`
-   (`reflect/MethodUtils.java:121-125`, applied by `initBannedMethods()` `:215-235`) makes `findMethod` return `null`
-   (`:631`). If you read that property in a test, you must clear all three caches afterwards
-   (`reflect/MethodUtilsTest.java:120-126`).
-3. **`getFieldValue` and `setFieldValue` wrap failures differently** — `IllegalStateException` versus
-   `IllegalArgumentException` (`reflect/FieldUtils.java:830-831`, `:1030-1031`). Catch both, or catch
-   `RuntimeException`.
-4. **Two `JavaType` factories will dereference a `null` method.** `fromMethodParameters(Method)` `:974` and
-   `fromMethodParameter(Method, int)` `:1005` have no `null` guard, unlike the `Class`-based overloads which return
-   `NULL_JAVA_TYPE`/`EMPTY_JAVA_TYPE_ARRAY` (`:911`, `:943`). Null-check before calling them
-   (`reflect/JavaType.java:818-1094`).
-5. **`JavaType.equals` includes the `source`.** Two `JavaType`s over the identical `Type` can be unequal if one was
-   produced by `as(...)` (`reflect/JavaType.java:454-465`, `:771-783`) — `as` records where you came from
-   (`reflect/JavaTypeTest.java:276`). Compare `getType()` or `toClass()` when you want structural equality.
-6. **`BeanMetadata.equals` ignores the properties.** Two `BeanMetadata` for the same class are equal by class alone
-   (`beans/BeanMetadata.java:112-118`) — fine as a cache key, misleading as a value comparison.
-7. **`resolvePropertiesAsMap` truncates silently.** Reaching `microsphere.bean.properties.max-resolved-depth`
-   (default 100, `beans/BeanUtils.java:108`, `:124`) returns `emptyMap()` for that branch (`:457-459`) — no warning,
-   no exception. `beans/BeanUtilsTest.java:185-192` demonstrates the resulting partial-but-valid map.
-8. **`BeanUtils` always forces access on getters.** `trySetAccessible(readMethod)` runs unconditionally
-   (`beans/BeanUtils.java:479`); there is no opt-out, so on JDK 16+ the §2.1 log noise can appear for JDK-internal
-   beans.
-9. **`getTypeNames(Type...)` throws on `null` elements** (`reflect/TypeUtils.java:1568-1574`) while nearly every
-   sibling returns a neutral value. It is the exception, not the rule.
-10. **`ParameterizedTypeImpl` bounds validation is a no-op.** The bounds loop in `validateConstructorArguments`
-    is empty (`reflect/generics/ParameterizedTypeImpl.java:61-63`), so only the **arity** check
-    (`:55-64`) actually rejects bad input. Type-variable bounds are not verified.
-11. **`ConstantPoolUtils` public getters are `@Nullable` but the entry point is not guarded.** `getConstantPool(...)`
-    runs outside the `catch (Throwable)` (`internal/reflect/ConstantPoolUtils.java:241` vs `:243-247`), so a JDK
-    without a reachable `Class.getConstantPool` surfaces an exception rather than `null`.
-12. **`Modifier` (`reflect/Modifier.java`) is an enum wrapper over the `int` bit masks** with `matchesAny` /
-    `matchesAll` (`:402-437`); it is not a replacement for `java.lang.reflect.Modifier` and does not cache anything.
+1. **`findMethod(Class, name)` with no parameter types does not match overloads.** It means "a zero-parameter method
+   of that name" (`reflect/MethodUtils.java:629-632`; `reflect/MethodUtilsTest.java:395-423`).
+2. **Banned methods make `findMethod` return `null`, silently.** `microsphere.reflect.banned-methods`
+   (`reflect/MethodUtils.java:121-125`, applied by `initBannedMethods()` `:215-235`) short-circuits at `:631`; any
+   test touching it must clear all three caches afterwards (`reflect/MethodUtilsTest.java:120-126`).
+3. **Read and write failures are wrapped differently** — `IllegalStateException` vs `IllegalArgumentException`
+   (`reflect/FieldUtils.java:830-831`, `:1030-1031`). Catch `RuntimeException` to be safe.
+4. **Two `JavaType` factories dereference a `null` method.** `fromMethodParameters(Method)` `:974` and
+   `fromMethodParameter(Method, int)` `:1005` lack the guards the `Class`-based overloads have (`:911`, `:943`).
+5. **`JavaType.equals` includes the `source`.** Two `JavaType`s over the same `Type` can be unequal when one came from
+   `as(...)` (`reflect/JavaType.java:454-465`, `:771-783`; `reflect/JavaTypeTest.java:276`). Compare `getType()`.
+6. **`BeanMetadata.equals` ignores the properties** — equality is by bean class alone (`beans/BeanMetadata.java:112-118`).
+7. **`resolvePropertiesAsMap` truncates silently.** At `microsphere.bean.properties.max-resolved-depth` (default 100,
+   `beans/BeanUtils.java:108`, `:124`) the branch returns `emptyMap()` (`:457-459`); see
+   `beans/BeanUtilsTest.java:185-192` for the resulting partial-but-valid map.
+8. **`BeanUtils` always forces access on getters** (`beans/BeanUtils.java:479`), so §2.1 log noise can appear for
+   JDK-internal beans with no opt-out.
+9. **`getTypeNames(Type...)` throws on `null` elements** (`reflect/TypeUtils.java:1568-1574`) — the exception to the
+   group's neutral-value degradation policy.
+10. **Two internal limits worth knowing.** `ParameterizedTypeImpl`'s bounds loop in `validateConstructorArguments` is
+    empty (`reflect/generics/ParameterizedTypeImpl.java:61-63`), so only arity is validated (`:55-64`); and
+    `ConstantPoolUtils` calls `getConstantPool(...)` **outside** its `catch (Throwable)`
+    (`internal/reflect/ConstantPoolUtils.java:241` vs `:243-247`), so an unreachable `Class.getConstantPool` throws
+    instead of returning `null`. `reflect/Modifier.java` is only an enum wrapper over the `int` bit masks
+    (`matchesAny`/`matchesAll`, `:402-437`) and caches nothing.
 
 ---
 

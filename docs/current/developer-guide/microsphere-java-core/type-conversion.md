@@ -286,6 +286,25 @@ sequenceDiagram
     Leaf-->>App: HashSet {1,2,3}
 ```
 
+### 4.4 `AbstractConverter.convert` template-method state machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> Called: convert(source)
+    Called --> NullOut: source == null<br/>AbstractConverter.java:102-104
+    Called --> DoConvert: doConvert(source)
+    DoConvert --> TargetOut: returned normally
+    DoConvert --> Caught: throws Throwable
+    Caught --> WarnLog: logger.warn(...)
+    WarnLog --> Wrapped: ExceptionUtils.wrap(e, RuntimeException)<br/>AbstractConverter.java:110
+    Wrapped --> ThrowUnchecked: e already RuntimeException<br/>re-thrown as-is (ExceptionUtils.java:99-100)
+    Wrapped --> ThrowChecked: e checked<br/>new RuntimeException(e)
+    NullOut --> [*]
+    TargetOut --> [*]
+    ThrowUnchecked --> [*]
+    ThrowChecked --> [*]
+```
+
 ---
 
 ## 5. Design patterns
@@ -297,6 +316,7 @@ sequenceDiagram
 | **Registry / (light) Composite** | `Converters` holds the cache `ConcurrentMap<(source,target), List<Converter>>` and dispatches | `convert/Converters.java:46-60` |
 | **Facade** | `Converter.getConverter` / `convertIfPossible`; `MultiValueConverter.find` / `convertIfPossible` hide loading, sorting, filtering | `convert/Converter.java:135-168`, `convert/multiple/MultiValueConverter.java:73-90` |
 | **Flyweight (shared singletons)** | each concrete converter publishes a stateless `INSTANCE` (e.g. `StringToIntegerConverter.INSTANCE`) | `convert/StringToIntegerConverter.java:32`, repeated across `StringTo*`/`NumberTo*`/`ObjectTo*` |
+| **Null Object (non-`null` neutral result)** | `ObjectToOptionalConverter` returns `Optional.empty()` instead of `null` on absent input, bypassing `AbstractConverter`'s null short-circuit | `convert/ObjectToOptionalConverter.java:28-43`, `convert/ObjectToOptionalConverterTest.java:48-52` |
 
 ---
 
@@ -318,6 +338,12 @@ sequenceDiagram
 5. **Classloader visibility**: converters are loaded with `getClassLoader(Converters.class)`
    (`convert/Converters.java:44`), so the implementation and its service file must be on a classloader visible to
    `microsphere-java-core`.
+6. **Opt out of the template when needed.** Implement `Converter<S,T>` directly (rather than extending
+   `AbstractConverter`) when you must return a *non-`null` neutral value* for absent input — `ObjectToOptionalConverter`
+   does exactly this so `convert(null)` yields `Optional.empty()` (`convert/ObjectToOptionalConverter.java:28-43`) — or
+   when you want a custom `getPriority()` that ignores depth. In that case you also own `equals`/`hashCode`; the default
+   value-based ones live on `AbstractConverter` (`convert/AbstractConverter.java:155-173`, exercised by
+   `convert/AbstractConverterTest.java:100-113`).
 
 > [!WARNING]
 > The single-value cache is populated at class load and on first miss, and a per-pair miss list is memoized
@@ -370,3 +396,8 @@ sequenceDiagram
 - **Recursion coverage.** To exercise the array NPE path, add a test converting to an array whose component type has no
   registered `String` converter; the production code dereferences the looked-up converter without a null check
   (`convert/multiple/StringToArrayConverter.java:40-46`).
+- **Template-base contract.** `AbstractConverterTest` (`convert/AbstractConverterTest.java:37-127`) drives the seams §3.5–3.6
+  describe: a subclass overriding `resolvePriority()` to `null` must yield `NORMAL_PRIORITY` from `getPriority()`
+  (`:71-74`); a `doConvert` that throws a checked `Throwable` must surface as `RuntimeException` (`:81-91`); and
+  `equals`/`hashCode` are value-based on `(sourceType, targetType, priority)` (`:100-113`, source at
+  `convert/AbstractConverter.java:155-173`).
