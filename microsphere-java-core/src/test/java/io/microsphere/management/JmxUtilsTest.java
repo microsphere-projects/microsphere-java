@@ -357,7 +357,7 @@ class JmxUtilsTest {
     }
 
     private void assertPlatformMXBean(Optional<? extends PlatformManagedObject> platformMXBean, String name) throws Throwable {
-        if (platformMXBean.isEmpty()) {
+        if (!platformMXBean.isPresent()) {
             return;
         }
         assertPlatformMXBean(platformMXBean.get(), name);
