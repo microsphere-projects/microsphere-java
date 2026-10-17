@@ -4,7 +4,8 @@ Audience: you are going to **read, change, or extend** `microsphere-java` — as
 author building on its SPIs. These pages give the architecture, class-level source analysis with `file:line`
 references, the design patterns actually used, and flow charts for the non-trivial control flows.
 
-Source line documented: **`release` branch**, `revision = 0.3.20-SNAPSHOT` (latest tagged release `0.3.19`).
+Source line documented: **`release` branch**, `revision = 0.3.20-SNAPSHOT` (published as `0.3.20`, the newest tag in
+the repository).
 Chinese mirrors of every page live in a `zh/` subdirectory next to the English file.
 
 * Documentation index and version lines: [../../README.md](../../README.md)
@@ -26,7 +27,7 @@ graph TD
         ANNO["microsphere-java-annotations"]
     end
     subgraph L2["Layer 2 — runtime library"]
-        CORE["microsphere-java-core<br/>34 packages, 686 types,<br/>~13 SPI extension points"]
+        CORE["microsphere-java-core<br/>34 packages, 309 main types,<br/>~13 SPI extension points"]
     end
     subgraph L3["Layer 3 — compile-time toolchain"]
         JDKTOOLS["microsphere-jdk-tools<br/>JDK compiler tooling bridge"]
@@ -201,12 +202,21 @@ Chinese index: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/REA
 | Aspect | Value | Where it is defined |
 |--------|-------|---------------------|
 | Reactor build order | parent → dependencies → annotations → core → jdk-tools → java-test → annotation-test → lang-model → annotation-processor | root `pom.xml` `<modules>` |
-| Language level | Java 8 (`java.version=8`) | `microsphere-java-parent` / external `microsphere-build` |
 | Version scheme | `${revision}` flatten pattern (`revision=0.3.20-SNAPSHOT` on `release`) | root `pom.xml` properties |
+| Language level | Java 8 target; the level is inherited from the external `microsphere-build` parent POM, so no `maven.compiler` setting appears in this repository | root `pom.xml` `<parent>` (`microsphere-build` `0.3.16`) |
+| Dependency management chain | `microsphere-java-parent` imports `microsphere-all-bom` `0.3.13` and `spring-framework-bom`; `microsphere-java-dependencies` then manages the seven module versions | `microsphere-java-parent/pom.xml`, `microsphere-java-dependencies/pom.xml` |
+| JDK-conditional test stack | profile `java8-16` (activation `[1.8,17)`) pins Spring `5.3.39`; otherwise Spring `7.0.9` is used | `microsphere-java-parent/pom.xml:21-24,52-64` |
+| CI JDK matrix | Temurin `8`, `11`, `17`, `21`, `25` | `.github/workflows/maven-build.yml:25` |
+| CI build command | `mvn --batch-mode --update-snapshots -Drevision=0.0.1-SNAPSHOT -Dsurefire.useSystemClassLoader=false test --activate-profiles test,coverage` | `.github/workflows/maven-build.yml:37-45` |
+| CI triggers | push to `main`/`dev`; pull requests touching `main`/`dev`/`release` | `.github/workflows/maven-build.yml:14-18` |
+| Publishing JDK | single run on Java `11` | `.github/workflows/maven-publish.yml:41` |
 | Test framework | JUnit 5 (Jupiter), with `microsphere-java-test` fixtures | module poms, `src/test/java` |
 | Extra test tooling | Mockito, Logback (test logging), Spring (cross-check conversions), JMH (benchmarks in core) | `microsphere-java-core/pom.xml` test scope |
-| JDK matrix | CI runs 8 / 11 / 17 / 21 / 25 | `.github/workflows/` |
-| Publishing | `${revision}` flatten + Maven Central publishing workflows | `.github/workflows/` |
+
+> [!NOTE]
+> CI runs Surefire with `-Dsurefire.useSystemClassLoader=false`. Keep that flag when reproducing classloader-,
+> artifact-detection- or URL-protocol-related tests locally, because those areas are the ones where the default
+> classloader isolation changes observed behaviour.
 
 > [!NOTE]
 > Maven is currently unreliable when invoked from an automated shell session in this workspace. Use a normal

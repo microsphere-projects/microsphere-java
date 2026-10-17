@@ -3,10 +3,10 @@
 读者对象：需要**阅读、修改或扩展** `microsphere-java` 的人 —— 库的维护者，或基于其 SPI 构建框架的作者。
 本目录给出架构设计、带 `file:line` 引用的类级源码分析、代码库中实际使用的设计模式，以及复杂控制流的流程图。
 
-所记录的源码线：**`release` 分支**，`revision = 0.3.20-SNAPSHOT`（最新已发布标签 `0.3.19`）。
+所记录的源码线：**`release` 分支**，`revision = 0.3.20-SNAPSHOT`（该版本线已发布为 `0.3.20`，即仓库中最新的标签）。
 每个页面的中文版位于英文文件所在目录的 `zh/` 子目录中。
 
-* 文档总目录与版本线：[../../../zh/README.md](../../../zh/README.md)
+* 文档总目录与版本线（英文）：[../../../README.md](../../../README.md)
 * 用户文档（API 用法、坐标、JDK 支持）：[../../user-guide/zh/README.md](../../user-guide/zh/README.md)
 
 ---
@@ -24,7 +24,7 @@ graph TD
         ANNO["microsphere-java-annotations"]
     end
     subgraph L2["第 2 层 —— 运行期类库"]
-        CORE["microsphere-java-core<br/>34 个包、686 个类型、<br/>约 13 个 SPI 扩展点"]
+        CORE["microsphere-java-core<br/>34 个包、309 个 main 类型、<br/>约 13 个 SPI 扩展点"]
     end
     subgraph L3["第 3 层 —— 编译期工具链"]
         JDKTOOLS["microsphere-jdk-tools<br/>JDK 编译工具桥接层"]
@@ -80,19 +80,19 @@ flowchart LR
 
 | SPI | 模块 | 用途 | 文档页面 |
 |-----|------|------|----------|
-| `io.microsphere.convert.Converter` | core | 单值类型转换 | [类型转换](microsphere-java-core/zh/type-conversion.md) |
-| `io.microsphere.convert.multiple.MultiValueConverter` | core | 数组/集合/Map 转换 | [类型转换](microsphere-java-core/zh/type-conversion.md) |
-| `io.microsphere.io.serializer.Serializer` | core | 二进制序列化 | [序列化](microsphere-java-core/zh/serialization.md) |
-| `io.microsphere.io.serializer.Deserializer` | core | 二进制反序列化 | [序列化](microsphere-java-core/zh/serialization.md) |
-| `io.microsphere.event.EventDispatcher` | core | 事件分发策略 | [事件分发](microsphere-java-core/zh/events.md) |
-| `io.microsphere.logging.LoggerFactory` | core | 日志后端委托链 | [日志](microsphere-java-core/zh/logging.md) |
-| `io.microsphere.classloading.ArtifactResourceResolver` | core | 定位构件元数据 | [类加载与构件探测](microsphere-java-core/zh/classloading-and-artifacts.md) |
-| `io.microsphere.classloading.URLClassPathHandle` | core | 按 JDK 版本访问 URLClassPath | [类加载与构件探测](microsphere-java-core/zh/classloading-and-artifacts.md) |
-| `io.microsphere.net.ExtendableProtocolURLStreamHandler` | core | 自定义 URL 协议处理器 | [网络与 URL 协议](microsphere-java-core/zh/net-and-url-protocols.md) |
-| `io.microsphere.process.ProcessIdResolver` | core | 进程 id 探测 | [并发、进程、管理与安全](microsphere-java-core/zh/concurrency-process-and-management.md) |
-| `io.microsphere.metadata.ConfigurationPropertyReader` | core | 读取属性元数据 | [配置属性元数据](microsphere-java-core/zh/configuration-metadata.md) |
-| `io.microsphere.metadata.ConfigurationPropertyLoader` | core | 加载属性元数据资源 | [配置属性元数据](microsphere-java-core/zh/configuration-metadata.md) |
-| `io.microsphere.metadata.ConfigurationPropertyGenerator` | core | 生成属性元数据 | [配置属性元数据](microsphere-java-core/zh/configuration-metadata.md) |
+| `io.microsphere.convert.Converter` | core | 单值类型转换 | [类型转换](../microsphere-java-core/zh/type-conversion.md) |
+| `io.microsphere.convert.multiple.MultiValueConverter` | core | 数组/集合/Map 转换 | [类型转换](../microsphere-java-core/zh/type-conversion.md) |
+| `io.microsphere.io.serializer.Serializer` | core | 二进制序列化 | [序列化](../microsphere-java-core/zh/serialization.md) |
+| `io.microsphere.io.serializer.Deserializer` | core | 二进制反序列化 | [序列化](../microsphere-java-core/zh/serialization.md) |
+| `io.microsphere.event.EventDispatcher` | core | 事件分发策略 | [事件分发](../microsphere-java-core/zh/events.md) |
+| `io.microsphere.logging.LoggerFactory` | core | 日志后端委托链 | [日志](../microsphere-java-core/zh/logging.md) |
+| `io.microsphere.classloading.ArtifactResourceResolver` | core | 定位构件元数据 | [类加载与构件探测](../microsphere-java-core/zh/classloading-and-artifacts.md) |
+| `io.microsphere.classloading.URLClassPathHandle` | core | 按 JDK 版本访问 URLClassPath | [类加载与构件探测](../microsphere-java-core/zh/classloading-and-artifacts.md) |
+| `io.microsphere.net.ExtendableProtocolURLStreamHandler` | core | 自定义 URL 协议处理器 | [网络与 URL 协议](../microsphere-java-core/zh/net-and-url-protocols.md) |
+| `io.microsphere.process.ProcessIdResolver` | core | 进程 id 探测 | [并发、进程、管理与安全](../microsphere-java-core/zh/concurrency-process-and-management.md) |
+| `io.microsphere.metadata.ConfigurationPropertyReader` | core | 读取属性元数据 | [配置属性元数据](../microsphere-java-core/zh/configuration-metadata.md) |
+| `io.microsphere.metadata.ConfigurationPropertyLoader` | core | 加载属性元数据资源 | [配置属性元数据](../microsphere-java-core/zh/configuration-metadata.md) |
+| `io.microsphere.metadata.ConfigurationPropertyGenerator` | core | 生成属性元数据 | [配置属性元数据](../microsphere-java-core/zh/configuration-metadata.md) |
 | `javax.annotation.processing.Processor` | microsphere-annotation-processor | 编译期元数据生成 | [注解处理器](microsphere-annotation-processor.md) |
 
 ---
@@ -162,20 +162,20 @@ flowchart TD
 
 | 页面 | 覆盖的包 | 源码分析重点 |
 |------|----------|--------------|
-| [工具类、常量与文本](microsphere-java-core/zh/util-and-constants.md) | `util`、`util.jar`、`constants`、`text`、`misc` | 类加载器与资源解析、服务加载缓存、版本解析 |
-| [集合与过滤器](microsphere-java-core/zh/collections-and-filters.md) | `collection`、`filter` | 委托/不可变包装类内部实现，零分配的空集合与单例集合 |
-| [语言抽象](microsphere-java-core/zh/language-abstractions.md) | `lang`、`lang.function`、`lang.invoke`、`invoke` | `Prioritized` 排序、`Wrapper` 解包循环、lambda/方法句柄内省 |
-| [反射、类型与 JavaBean](microsphere-java-core/zh/reflection-and-beans.md) | `reflect`、`reflect.generics`、`internal.reflect`、`beans` | 泛型解析算法、`JavaType` 模型、按 JDK 处理可访问性 |
-| [类型转换](microsphere-java-core/zh/type-conversion.md) | `convert`、`convert.multiple` | 转换器选择、缓存、泛型实参解析 |
-| [序列化](microsphere-java-core/zh/serialization.md) | `io.serializer` | 序列化/反序列化分派，以及安全相关的反序列化路径 |
-| [事件分发](microsphere-java-core/zh/events.md) | `event` | 监听器解析、条件过滤、分发线程安全性 |
-| [I/O、NIO、扫描与文件过滤](microsphere-java-core/zh/io-and-scanning.md) | `io`、`io.event`、`io.scanner`、`io.filter`、`nio.*` | 扫描器插件式设计、`WatchService` 到事件流水线的映射 |
-| [网络与 URL 协议](microsphere-java-core/zh/net-and-url-protocols.md) | `net`、`net.classpath`、`net.console` | Handler 注册约束、子协议链式解析 |
-| [日志](microsphere-java-core/zh/logging.md) | `logging` | 后端探测顺序、懒初始化、JUL 回退 |
-| [类加载与构件探测](microsphere-java-core/zh/classloading-and-artifacts.md) | `classloading` | classpath URL 解析、JPMS 与 `sun.misc` 路径、禁用构件校验 |
-| [JSON](microsphere-java-core/zh/json.md) | `json` | 分词/解析循环、`JSONObject` 的 Map 选择与顺序语义 |
-| [配置属性元数据](microsphere-java-core/zh/configuration-metadata.md) | `metadata` | Reader/Loader/Generator 流水与合并 |
-| [并发、进程、管理与安全](microsphere-java-core/zh/concurrency-process-and-management.md) | `concurrent`、`process`、`management`、`management.builder`、`security` | `ProcessIdResolver` 回退链、MBean 注册、SecurityManager 废弃处理 |
+| [工具类、常量与文本](../microsphere-java-core/zh/util-and-constants.md) | `util`、`util.jar`、`constants`、`text`、`misc` | 类加载器与资源解析、服务加载缓存、版本解析 |
+| [集合与过滤器](../microsphere-java-core/zh/collections-and-filters.md) | `collection`、`filter` | 委托/不可变包装类内部实现，零分配的空集合与单例集合 |
+| [语言抽象](../microsphere-java-core/zh/language-abstractions.md) | `lang`、`lang.function`、`lang.invoke`、`invoke` | `Prioritized` 排序、`Wrapper` 解包循环、lambda/方法句柄内省 |
+| [反射、类型与 JavaBean](../microsphere-java-core/zh/reflection-and-beans.md) | `reflect`、`reflect.generics`、`internal.reflect`、`beans` | 泛型解析算法、`JavaType` 模型、按 JDK 处理可访问性 |
+| [类型转换](../microsphere-java-core/zh/type-conversion.md) | `convert`、`convert.multiple` | 转换器选择、缓存、泛型实参解析 |
+| [序列化](../microsphere-java-core/zh/serialization.md) | `io.serializer` | 序列化/反序列化分派，以及安全相关的反序列化路径 |
+| [事件分发](../microsphere-java-core/zh/events.md) | `event` | 监听器解析、条件过滤、分发线程安全性 |
+| [I/O、NIO、扫描与文件过滤](../microsphere-java-core/zh/io-and-scanning.md) | `io`、`io.event`、`io.scanner`、`io.filter`、`nio.*` | 扫描器插件式设计、`WatchService` 到事件流水线的映射 |
+| [网络与 URL 协议](../microsphere-java-core/zh/net-and-url-protocols.md) | `net`、`net.classpath`、`net.console` | Handler 注册约束、子协议链式解析 |
+| [日志](../microsphere-java-core/zh/logging.md) | `logging` | 后端探测顺序、懒初始化、JUL 回退 |
+| [类加载与构件探测](../microsphere-java-core/zh/classloading-and-artifacts.md) | `classloading` | classpath URL 解析、JPMS 与 `sun.misc` 路径、禁用构件校验 |
+| [JSON](../microsphere-java-core/zh/json.md) | `json` | 分词/解析循环、`JSONObject` 的 Map 选择与顺序语义 |
+| [配置属性元数据](../microsphere-java-core/zh/configuration-metadata.md) | `metadata` | Reader/Loader/Generator 流水与合并 |
+| [并发、进程、管理与安全](../microsphere-java-core/zh/concurrency-process-and-management.md) | `concurrent`、`process`、`management`、`management.builder`、`security` | `ProcessIdResolver` 回退链、MBean 注册、SecurityManager 废弃处理 |
 
 英文索引：[microsphere-java-core/README.md](../microsphere-java-core/README.md)。
 
@@ -197,12 +197,20 @@ flowchart TD
 | 方面 | 取值 | 定义位置 |
 |------|------|----------|
 | Reactor 构建顺序 | parent → dependencies → annotations → core → jdk-tools → java-test → annotation-test → lang-model → annotation-processor | 根 `pom.xml` 的 `<modules>` |
-| 语言级别 | Java 8（`java.version=8`） | `microsphere-java-parent` 及外部 `microsphere-build` |
 | 版本方案 | `${revision}` flatten 模式（`release` 分支上 `revision=0.3.20-SNAPSHOT`） | 根 `pom.xml` 属性 |
+| 语言级别 | 目标字节码为 Java 8；该级别继承自外部 `microsphere-build` 父 POM，因此本仓库的 POM 中看不到 `maven.compiler` 配置 | 根 `pom.xml` 的 `<parent>`（`microsphere-build` `0.3.16`） |
+| 依赖管理链 | `microsphere-java-parent` 导入 `microsphere-all-bom` `0.3.13` 与 `spring-framework-bom`；`microsphere-java-dependencies` 再统一管理七个模块版本 | `microsphere-java-parent/pom.xml`、`microsphere-java-dependencies/pom.xml` |
+| 按 JDK 切换的测试栈 | profile `java8-16`（激活条件 `[1.8,17)`）将 Spring 固定为 `5.3.39`；其余情况使用 Spring `7.0.9` | `microsphere-java-parent/pom.xml:21-24,52-64` |
+| CI JDK 矩阵 | Temurin `8`、`11`、`17`、`21`、`25` | `.github/workflows/maven-build.yml:25` |
+| CI 构建命令 | `mvn --batch-mode --update-snapshots -Drevision=0.0.1-SNAPSHOT -Dsurefire.useSystemClassLoader=false test --activate-profiles test,coverage` | `.github/workflows/maven-build.yml:37-45` |
+| CI 触发条件 | push 到 `main`/`dev`；针对 `main`/`dev`/`release` 的 pull request | `.github/workflows/maven-build.yml:14-18` |
+| 发布使用的 JDK | 单次 Java `11` 运行 | `.github/workflows/maven-publish.yml:41` |
 | 测试框架 | JUnit 5（Jupiter），配合 `microsphere-java-test` 夹具 | 各模块 pom、`src/test/java` |
 | 额外测试工具 | Mockito、Logback（测试日志）、Spring（转换交叉验证）、JMH（core 基准测试） | `microsphere-java-core/pom.xml` 的 test 作用域 |
-| JDK 矩阵 | CI 覆盖 8 / 11 / 17 / 21 / 25 | `.github/workflows/` |
-| 发布 | `${revision}` flatten + Maven Central 发布工作流 | `.github/workflows/` |
+
+> [!NOTE]
+> CI 以 `-Dsurefire.useSystemClassLoader=false` 运行 Surefire。在本地复现类加载器、构件探测与 URL 协议相关测试时请保留该参数，
+> 这些正是默认类加载器隔离会改变可观测行为的区域。
 
 > [!NOTE]
 > 在本工作区的自动化 shell 会话中 Maven 目前不可靠。构建请使用普通终端，或依赖 CI；源码级阅读与 grep 分析不需要构建。

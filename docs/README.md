@@ -26,7 +26,7 @@ registrations, JDK compatibility statements — is read from that branch, not fr
 
 | Directory | Source branch | Version | Status |
 |-----------|---------------|---------|--------|
-| [`current/`](current/user-guide/README.md) | `release` | `0.3.20-SNAPSHOT` (latest tagged release: `0.3.19`) | Active |
+| [`current/`](current/user-guide/README.md) | `release` | `0.3.20-SNAPSHOT` (published as `0.3.20`, the newest tag) | Active |
 | `1.x/` | `release-1.x` | — | Not documented: the `release-1.x` branch does not exist in this repository. Create `docs/1.x/` with the same layout when it does. |
 
 ---
@@ -34,7 +34,7 @@ registrations, JDK compatibility statements — is read from that branch, not fr
 ## 3. Modules covered
 
 One page per Maven module; `microsphere-java-core` is split into one page per top-level package group because of
-its size (686 source files, 34 packages).
+its size (309 main-source files in 34 packages; 686 Java files including tests).
 
 | Maven module | Type | Depends on | User Guide | Developer Guide |
 |--------------|------|------------|------------|-----------------|
@@ -65,7 +65,7 @@ graph TD
     end
 
     subgraph Runtime["Runtime libraries"]
-        CORE["microsphere-java-core<br/>34 packages / 686 types"]
+        CORE["microsphere-java-core<br/>34 packages / 309 main types"]
     end
 
     subgraph Toolchain["Compile-time toolchain"]
@@ -113,18 +113,18 @@ The graph is derived from the `<dependencies>` blocks of each module `pom.xml` o
 * **English is the default language** and lives at the primary path (`docs/current/user-guide/foo.md`).
 * **Chinese** is stored independently, mirrored file-for-file under a `zh/` subdirectory
   (`docs/current/user-guide/zh/foo.md`), with identical filenames.
-* This index has its own Chinese mirror: [zh/README.md](zh/README.md).
+* The Chinese entry points are the guide-level indexes:
+  [current/user-guide/zh/README.md](current/user-guide/zh/README.md) and
+  [current/developer-guide/zh/README.md](current/developer-guide/zh/README.md). This top-level index is English-only.
 
 ---
 
-## 6. Appendix: the topic-organized handbook
+## 6. Retired layout
 
-Before the module-based layout above, the documentation was organized by 18 functional topics
-(Getting Started, Core Utilities, Reflection and Types, …). That bilingual handbook is still available and is a
-useful cross-cutting read, but it is **not** module-oriented and is not version-scoped:
-
-* User handbook: [user-guide/README.md](user-guide/README.md) (English pages, with `en/`/`zh/` in the developer handbook)
-* Developer handbook: [developer-guide/README.md](developer-guide/README.md) — English in `developer-guide/en/`, Chinese in `developer-guide/zh/`
+The documentation that used to live under `docs/user-guide/` and `docs/developer-guide/{en,zh}/` was organized by
+functional topic instead of by Maven module. That handbook has been **removed**; the module-based, version-scoped
+pages under `current/` are the only documentation tree in this repository, and `current/` corresponds to the
+`release` branch.
 
 ---
 

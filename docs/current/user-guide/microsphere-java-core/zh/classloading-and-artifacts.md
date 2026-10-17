@@ -170,7 +170,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
     public static final int DEFAULT_PRIORITY = MAX_PRIORITY + 99999;   // Integer.MIN_VALUE + 99999：最高优先级
     @Override public boolean supports()                                // URLClassPath 类可解析
     @Override public URL[] getURLs(ClassLoader classLoader)             // 反射调用 ucp.getURLs()
-    @Override public final boolean removeURL(ClassLoader classLoader, URL url)  // 对 urls 加锁
+    @Override public final boolean removeURL(ClassLoader classLoader, URL url)  // 对 urls 加锁；仅参数为 null 才返回 false（见第 6 条）
     public final void setPriority(int priority); public final int getPriority();
     protected abstract String getURLClassPathClassName();
     protected abstract String getUrlsFieldName();
@@ -294,15 +294,19 @@ log4j:log4j:*
    `ClassLoaderUtils.findURLClassLoader(...)`，返回 `null` 时给出 `EMPTY_URL_ARRAY`。`Abstract` 系列通过读取私有
    `ucp` 字段绕开这一点，但 `ClassLoaderUtils.removeClassPathURL(...)` 仍会拒绝非 `SecureClassLoader`
    （`ClassLoaderUtils.java:1598-1603`）。
-6. **强封装。** JDK 17/21/25 上对 `jdk.internal.loader.URLClassPath` 内部字段的反射读写默认不开放。若你要对应用
-   类加载器调用 `removeURL(...)`，请追加 `--add-opens java.base/jdk.internal.loader=ALL-UNNAMED`；否则移除操作会失败，
-   而不是在其他地方被静默忽略。
+6. **强封装下 `removeURL` 是抛异常，而不是返回 `false`。** JDK 17/21/25 上 `jdk.internal.loader` 的私有内部默认不开放。
+   若在不加 `--add-opens java.base/jdk.internal.loader=ALL-UNNAMED` 的情况下对应用类加载器调用 `removeURL(...)`
+   （无论是直接调用还是经 `ClassLoaderUtils.removeClassPathURL(...)`），反射读取会被拒绝并向外抛出
+   `IllegalStateException`（包装 `IllegalAccessException`，`FieldUtils.java:826-841`）；若加载器根本没有这个字段，
+   `removeURL` 会在 `AbstractURLClassPathHandle.java:147` 抛 `NullPointerException`。只有参数为 `null` 时才干净地返回
+   `false`。因此请加上 `--add-opens`，或在调用处 try/catch。
 7. **`detect(true)` 会包含 JDK 条目**，其 id/version 多为 `UNKNOWN` 或来自 manifest，这是预期输出而非缺陷；
    需要只看应用依赖时使用 `detect(false)`。
 8. **禁用清单会被提前截断。** 读取在遇到第一个空行时终止（`BannedArtifactClassLoadingExecutor.java:117-125`），
    且任何不足恰好三个字段的行都会抛 `IllegalArgumentException`（`:129-138`）。**不支持注释行**——`# ...` 会解析失败。
-9. **`execute()` 是移除而非抛异常。** 命中的构件会经 `ClassLoaderUtils.removeClassPathURL(...)` 从加载器上摘除
-   （`:84-95`）；若目标加载器拒绝变更，禁用动作就是一次静默的空操作，因此要把它当护栏用时请在集成测试里校验结果。
+9. **`execute()` 不会报告禁用结果。** 命中的构件会经 `ClassLoaderUtils.removeClassPathURL(...)` 摘除（`:84-95`），
+   而返回值被忽略：目标加载器不是 `SecureClassLoader` 时返回 `false`（静默空操作），但加载器内部被封装时则会**抛异常**
+   （见第 6 条），因为 `execute()` 什么都不捕获。要把它当护栏用时请在集成测试里校验结果。
 10. **通配符按字段生效。** `Artifact.WILDCARD` 只对单个字段短路（`Artifact.java:115-122`）——`*:*:*` 禁用一切，
     `foo:*:1.0` 禁用 `foo` 的任意版本。
 
