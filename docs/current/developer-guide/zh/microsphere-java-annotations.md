@@ -207,8 +207,8 @@ sequenceDiagram
    `…/util/ServiceLoaderUtils.java:140`），也标注在不可修改的发布物本身上
    （`…/util/ServiceLoaderUtils.java:468-469`）。
 3. **`@Immutable` 放错了包，就这一对的搭配而言。** `javax.annotation.concurrent` 同时容纳 `Immutable` 和线程安全
-   那一 pair；Microsphere 把它们拆开了：`Immutable` 在 `io.microsphere.annotation`
-   （`annotation/Immutable.java:17`），那一 pair 在 `io.microsphere.annotation.concurrent`
+   注解对；Microsphere 把它们拆开了：`Immutable` 在 `io.microsphere.annotation`
+   （`annotation/Immutable.java:17`），注解对则在 `io.microsphere.annotation.concurrent`
    （`concurrent/ThreadSafe.java:7`）。后果是“状态看不到变化”这个承诺（`annotation/Immutable.java:24-25`）和
    “没有非法交错”这个承诺（`concurrent/ThreadSafe.java:18-22`）由两个互不相关、retention 也不同（`RUNTIME` vs
    `CLASS`）的类型来标注，而且两者都不关联 JSR-305。
