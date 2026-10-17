@@ -406,7 +406,7 @@ charset effects on diagnostics.
 ## 9. See also
 
 * [microsphere-jdk-tools — User Guide](../user-guide/microsphere-jdk-tools.md) — coordinates, per-JDK table, API and pitfalls
-* [microsphere-annotation-test](microsphere-annotation-test.md) — the consumer that drives `Compiler` from JUnit 5
+* [microsphere-annotation-test — User Guide](../user-guide/microsphere-annotation-test.md) — the consumer that drives `Compiler` from JUnit 5
 * [microsphere-annotation-processor](microsphere-annotation-processor.md) — processors compiled by that harness
 * [microsphere-lang-model](microsphere-lang-model.md) — the `javax.lang.model` layer of the same toolchain
 * [Class Loading and Artifact Detection — Developer Guide](microsphere-java-core/classloading-and-artifacts.md) —

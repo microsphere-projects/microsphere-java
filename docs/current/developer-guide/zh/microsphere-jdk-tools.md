@@ -386,7 +386,7 @@ sequenceDiagram
 ## 9. 参见
 
 * [microsphere-jdk-tools —— 用户指南](../microsphere-jdk-tools.md) —— 坐标、分 JDK 行为表、API 与陷阱
-* [microsphere-annotation-test](../microsphere-annotation-test.md) —— 在 JUnit 5 中驱动 `Compiler` 的使用方
+* [microsphere-annotation-test —— 用户指南](../../user-guide/microsphere-annotation-test.md) —— 在 JUnit 5 中驱动 `Compiler` 的使用方
 * [microsphere-annotation-processor](../microsphere-annotation-processor.md) —— 由该测试框架编译的处理器
 * [microsphere-lang-model](../microsphere-lang-model.md) —— 同一工具链的 `javax.lang.model` 层
 * [类加载与构件识别 —— 开发者指南](../microsphere-java-core/zh/classloading-and-artifacts.md) —— 对照案例：
