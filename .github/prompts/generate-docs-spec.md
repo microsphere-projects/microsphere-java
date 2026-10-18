@@ -107,8 +107,6 @@ public void testMethodName() { ... }
 | 11           | Yes       |              |
 | 17           | Partial   | Experimental |
 
-```
-```
 
 ---
 
@@ -150,7 +148,7 @@ flowchart TD
 
 #### Example Module Dependency Diagram
 
-```markdown
+
 ```mermaid
 flowchart LR
     module-core --> module-utils
@@ -159,7 +157,6 @@ flowchart LR
     module-batch --> module-core
 ```
 
-```
 
 ### 4.4 Example Module Document Outline
 
@@ -225,5 +222,3 @@ The root `README.md` must include:
 - [ ] Flowcharts for module dependencies (Mermaid)
 - [ ] Branch-specific directories: `current/` and `1.x/`
 - [ ] Only `release` and `release-1.x` branches analyzed
-
-```
