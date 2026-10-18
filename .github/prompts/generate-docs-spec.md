@@ -107,7 +107,6 @@ public void testMethodName() { ... }
 | 11           | Yes       |              |
 | 17           | Partial   | Experimental |
 
-
 ---
 
 ## 4. Developer Guide (`docs/developer-guide/`)
@@ -148,7 +147,6 @@ flowchart TD
 
 #### Example Module Dependency Diagram
 
-
 ```mermaid
 flowchart LR
     module-core --> module-utils
@@ -157,16 +155,19 @@ flowchart LR
     module-batch --> module-core
 ```
 
-
 ### 4.4 Example Module Document Outline
 
 ```markdown
 # Module `{module-name}` — Developer Guide
 
 ## Architecture Design
+
 ## Source Code Analysis
+
 ## Design Patterns
+
 ## Workflow
+
 ## Module Dependencies
 ```
 
@@ -203,10 +204,10 @@ The root `README.md` must include:
 
 ## Available Versions
 
-| Version | User Guide | Developer Guide |
-|---------|------------|-----------------|
+| Version           | User Guide                                                     | Developer Guide                                                          |
+|-------------------|----------------------------------------------------------------|--------------------------------------------------------------------------|
 | Current (release) | current/user-guide/README.md / current/user-guide/README.zh.md | current/developer-guide/README.md / current/developer-guide/README.zh.md |
-| 1.x (release-1.x) | 1.x/user-guide/README.md / 1.x/user-guide/README.zh.md | 1.x/developer-guide/README.md / 1.x/developer-guide/README.zh.md |
+| 1.x (release-1.x) | 1.x/user-guide/README.md / 1.x/user-guide/README.zh.md         | 1.x/developer-guide/README.md / 1.x/developer-guide/README.zh.md         |
 ```
 
 ---
