@@ -11,7 +11,7 @@
 
 All `file:line` references in this page are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main sources) or `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree.
-After the first mention they are shortened to `event/Foo.java:40-55` / `event/FooTest.java:40-55`.
+After the first mention they are shortened to `event/EventDispatcher.java:40-55` / `event/EventDispatcherTest.java:40-55`.
 
 ---
 
@@ -85,6 +85,24 @@ bus** — none of those exist here; there is a single flat listener registry per
 > The `java8-16` profile is a **build-time** property switch, not a runtime one; `io.microsphere.event` has no Spring
 > dependency whatsoever, so nothing on this page changes between Spring 5 and Spring 7. It matters only when you add
 > Spring-facing `microsphere-java-*` modules to the same reactor.
+
+
+### 2.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 2 of 10 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `45c4b6b7 Add nullability annotations to event APIs`.
+* **No other change in this range touches the area this page covers.**
+
+> [!NOTE]
+> Reading the commit list: `EventDispatcher` and `Listenable` are the only two annotated sources; nothing else in the range touches `io.microsphere.event`.
 
 ---
 
@@ -419,12 +437,12 @@ assertEquals(1, listener.getEventOccurs());               // :51
 
 ## 7. See also
 
-* [Language abstractions](language-abstractions.md) — `Prioritized` ordering arithmetic, `LambdaUtils`, the
+* [Language abstractions](./language-abstractions.md) — `Prioritized` ordering arithmetic, `LambdaUtils`, the
   `Throwable*` helpers that wrap listener exceptions.
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `io.microsphere.io.event` and
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — `io.microsphere.io.event` and
   `StandardFileWatchService`, the engine's only in-module consumer.
-* [Logging](logging.md) — the `Logger` that `AbstractEventDispatcher` uses to swallow SPI failures.
-* [Collections and filters](collections-and-filters.md) — `MapUtils.newConcurrentHashMap` and `ListUtils.newLinkedList`,
+* [Logging](./logging.md) — the `Logger` that `AbstractEventDispatcher` uses to swallow SPI failures.
+* [Collections and filters](./collections-and-filters.md) — `MapUtils.newConcurrentHashMap` and `ListUtils.newLinkedList`,
   the two collections the listener registry is built from.
 * [Event dispatching — Developer Guide](../../developer-guide/microsphere-java-core/events.md) — dispatch loop, cache
   invalidation, design patterns, thread-safety analysis and testing strategy.

@@ -2,14 +2,14 @@
 
 | | |
 |---|---|
-| **Layer** | Service layer (`convert`, `convert.multiple`) — built on the Type-model layer; see the [layer table](README.md#1-internal-dependency-structure) |
+| **Layer** | Service layer (`convert`, `convert.multiple`) — built on the Type-model layer; see the [layer table](./README.md#1-internal-dependency-structure) |
 | **Packages** | `io.microsphere.convert` (38 main sources) · `io.microsphere.convert.multiple` (14 main sources) = **52** |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` |
 | **Analysis focus** | converter selection and caching; multi-value dispatch; lossy-conversion decisions |
 | **Verified outward edges** | `convert → reflect` (`TypeUtils.resolveActualTypeArgumentClass`), `convert → io.serializer` (byte[] ⇄ Object), `convert → util/lang/collection/logging/constants/annotation` |
 
 Paths are relative to `microsphere-java-core/src/main/java/io/microsphere/` unless a `test/` path is spelled out;
-after the first full mention they appear as `convert/Foo.java:40-55` / `convert/multiple/Foo.java:40-55`.
+after the first full mention they appear as `convert/AbstractConverter.java:40-55` / `convert/multiple/StringToArrayConverter.java:40-55`.
 
 ---
 
@@ -484,8 +484,8 @@ the §2.2 class map.
 ## 9. See also
 
 * User-facing reference: [Type conversion — User Guide](../../user-guide/microsphere-java-core/type-conversion.md)
-* [Language abstractions](language-abstractions.md) — the `Prioritized` rank arithmetic this subsystem selects on
-* [Reflection, types and beans](reflection-and-beans.md) — `TypeUtils.resolveActualTypeArgumentClass`, the source of
+* [Language abstractions](./language-abstractions.md) — the `Prioritized` rank arithmetic this subsystem selects on
+* [Reflection, types and beans](./reflection-and-beans.md) — `TypeUtils.resolveActualTypeArgumentClass`, the source of
   every element/component type a multi-value converter receives
-* [Serialization](serialization.md) — the `io.serializer` backend behind `byte[] ⇄ Object`
-* [Configuration property metadata](configuration-metadata.md) — the main in-library consumer of conversion
+* [Serialization](./serialization.md) — the `io.serializer` backend behind `byte[] ⇄ Object`
+* [Configuration property metadata](./configuration-metadata.md) — the main in-library consumer of conversion

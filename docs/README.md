@@ -14,8 +14,8 @@ they describe), and every page exists in English and in Chinese.
 
 | Guide | Audience | English | 中文 |
 |-------|----------|---------|------|
-| **User Guide** | Library users: what to depend on, which API to call, which JDK is supported | [current/user-guide/README.md](current/user-guide/README.md) | [current/user-guide/zh/README.md](current/user-guide/zh/README.md) |
-| **Developer Guide** | Library maintainers and framework authors: architecture, source analysis, design patterns, flow charts | [current/developer-guide/README.md](current/developer-guide/README.md) | [current/developer-guide/zh/README.md](current/developer-guide/zh/README.md) |
+| **User Guide** | Library users: what to depend on, which API to call, which JDK is supported | [./current/user-guide/README.md](./current/user-guide/README.md) | [./current/user-guide/README.zh.md](./current/user-guide/README.zh.md) |
+| **Developer Guide** | Library maintainers and framework authors: architecture, source analysis, design patterns, flow charts | [./current/developer-guide/README.md](./current/developer-guide/README.md) | [./current/developer-guide/README.zh.md](./current/developer-guide/README.zh.md) |
 
 ---
 
@@ -26,7 +26,7 @@ registrations, JDK compatibility statements — is read from that branch, not fr
 
 | Directory | Source branch | Version | Status |
 |-----------|---------------|---------|--------|
-| [`current/`](current/user-guide/README.md) | `release` | `0.3.20-SNAPSHOT` (published as `0.3.20`, the newest tag) | Active |
+| [`current/`](./current/user-guide/README.md) | `release` | `0.3.20-SNAPSHOT` (published as `0.3.20`, the newest tag) | Active |
 | `1.x/` | `release-1.x` | — | Not documented: the `release-1.x` branch does not exist in this repository. Create `docs/1.x/` with the same layout when it does. |
 
 ---
@@ -38,15 +38,15 @@ its size (309 main-source files in 34 packages; 686 Java files including tests).
 
 | Maven module | Type | Depends on | User Guide | Developer Guide |
 |--------------|------|------------|------------|-----------------|
-| `microsphere-java-annotations` | jar | — (optional `jsr305`) | [page](current/user-guide/microsphere-java-annotations.md) | [page](current/developer-guide/microsphere-java-annotations.md) |
-| `microsphere-java-core` | jar | annotations | [14 pages](current/user-guide/microsphere-java-core/README.md) | [14 pages](current/developer-guide/microsphere-java-core/README.md) |
-| `microsphere-jdk-tools` | jar | core | [page](current/user-guide/microsphere-jdk-tools.md) | [page](current/developer-guide/microsphere-jdk-tools.md) |
-| `microsphere-lang-model` | jar | core | [page](current/user-guide/microsphere-lang-model.md) | [page](current/developer-guide/microsphere-lang-model.md) |
-| `microsphere-annotation-processor` | jar (shaded) | core, lang-model | [page](current/user-guide/microsphere-annotation-processor.md) | [page](current/developer-guide/microsphere-annotation-processor.md) |
-| `microsphere-java-test` | jar (test fixtures) | annotations (all deps optional) | [page](current/user-guide/microsphere-java-test.md) | [page](current/developer-guide/microsphere-java-test.md) |
-| `microsphere-annotation-test` | jar (test harness) | java-test, jdk-tools | [page](current/user-guide/microsphere-annotation-test.md) | [page](current/developer-guide/microsphere-annotation-test.md) |
+| `microsphere-java-annotations` | jar | — (optional `jsr305`) | [page](./current/user-guide/module-microsphere-java-annotations.md) | [page](./current/developer-guide/module-microsphere-java-annotations.md) |
+| `microsphere-java-core` | jar | annotations | [14 pages](./current/user-guide/microsphere-java-core/README.md) | [14 pages](./current/developer-guide/microsphere-java-core/README.md) |
+| `microsphere-jdk-tools` | jar | core | [page](./current/user-guide/module-microsphere-jdk-tools.md) | [page](./current/developer-guide/module-microsphere-jdk-tools.md) |
+| `microsphere-lang-model` | jar | core | [page](./current/user-guide/module-microsphere-lang-model.md) | [page](./current/developer-guide/module-microsphere-lang-model.md) |
+| `microsphere-annotation-processor` | jar (shaded) | core, lang-model | [page](./current/user-guide/module-microsphere-annotation-processor.md) | [page](./current/developer-guide/module-microsphere-annotation-processor.md) |
+| `microsphere-java-test` | jar (test fixtures) | annotations (all deps optional) | [page](./current/user-guide/module-microsphere-java-test.md) | [page](./current/developer-guide/module-microsphere-java-test.md) |
+| `microsphere-annotation-test` | jar (test harness) | java-test, jdk-tools | [page](./current/user-guide/module-microsphere-annotation-test.md) | [page](./current/developer-guide/module-microsphere-annotation-test.md) |
 | `microsphere-java-parent` | pom | external `microsphere-build` | No page — build conventions are covered in the *Version information* section of each page |
-| `microsphere-java-dependencies` | pom (BOM) | — | No page — its `dependencyManagement` entries are quoted in [Getting started](current/user-guide/README.md) |
+| `microsphere-java-dependencies` | pom (BOM) | — | No page — its `dependencyManagement` entries are quoted in [Getting started](./current/user-guide/README.md) |
 
 ---
 
@@ -111,11 +111,18 @@ The graph is derived from the `<dependencies>` blocks of each module `pom.xml` o
 ## 5. Language and file layout
 
 * **English is the default language** and lives at the primary path (`docs/current/user-guide/foo.md`).
-* **Chinese** is stored independently, mirrored file-for-file under a `zh/` subdirectory
-  (`docs/current/user-guide/zh/foo.md`), with identical filenames.
-* The Chinese entry points are the guide-level indexes:
-  [current/user-guide/zh/README.md](current/user-guide/zh/README.md) and
-  [current/developer-guide/zh/README.md](current/developer-guide/zh/README.md). This top-level index is English-only.
+* **Chinese** is stored in an independent file with the same stem plus a `.zh.md` suffix, in the **same** directory
+  (`docs/current/user-guide/foo.zh.md`). Every English page has a Chinese counterpart and vice versa.
+* Entry points, per language:
+
+  | Level | English | 中文 |
+  |-------|---------|------|
+  | Documentation root | [README.md](./README.md) | [README.zh.md](./README.zh.md) |
+  | User Guide index | [current/user-guide/README.md](./current/user-guide/README.md) | [current/user-guide/README.zh.md](./current/user-guide/README.zh.md) |
+  | Developer Guide index | [current/developer-guide/README.md](./current/developer-guide/README.md) | [current/developer-guide/README.zh.md](./current/developer-guide/README.zh.md) |
+  | `microsphere-java-core` index | [current/user-guide/microsphere-java-core/README.md](./current/user-guide/microsphere-java-core/README.md) | [current/user-guide/microsphere-java-core/README.zh.md](./current/user-guide/microsphere-java-core/README.zh.md) |
+
+  A Chinese page links its English sibling only as an explicit language switcher (labelled 英文版 / 英文原文).
 
 ---
 
@@ -124,14 +131,15 @@ The graph is derived from the `<dependencies>` blocks of each module `pom.xml` o
 The documentation that used to live under `docs/user-guide/` and `docs/developer-guide/{en,zh}/` was organized by
 functional topic instead of by Maven module. That handbook has been **removed**; the module-based, version-scoped
 pages under `current/` are the only documentation tree in this repository, and `current/` corresponds to the
-`release` branch.
+`release` branch. An earlier revision of the current tree also mirrored Chinese into `zh/` subdirectories; those
+paths are gone too — `zh/foo.md` is now `foo.zh.md`.
 
 ---
 
 ## 7. How to read these docs
 
-1. Start with the [User Guide index](current/user-guide/README.md) — it carries coordinates, the JDK matrix, and a
+1. Start with the [User Guide index](./current/user-guide/README.md) — it carries coordinates, the JDK matrix, and a
    "which page do I need" table.
-2. If you are extending the library, read the [Developer Guide index](current/developer-guide/README.md) for the
+2. If you are extending the library, read the [Developer Guide index](./current/developer-guide/README.md) for the
    architecture and the SPI registry, then the module page you are touching.
 3. Facts in these pages are taken from the `release` branch sources. If a page and the code disagree, the code wins.

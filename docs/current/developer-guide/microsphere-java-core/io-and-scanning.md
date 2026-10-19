@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Layer** | Platform integration (`io`, `io.event`, `io.scanner`, `io.filter`, `nio.*`) — see the [layer table](README.md#1-internal-dependency-structure) |
+| **Layer** | Platform integration (`io`, `io.event`, `io.scanner`, `io.filter`, `nio.*`) — see the [layer table](./README.md#1-internal-dependency-structure) |
 | **Packages** | `io.microsphere.io` (7 main sources) · `io.microsphere.io.event` (3) · `io.microsphere.io.scanner` (4) · `io.microsphere.io.filter` (5) · `io.microsphere.nio.file` (1) · `io.microsphere.nio.charset` (1) = **21** |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` |
 | **Analysis focus** | scanner plugin design; `WatchService` event-overflow handling; resource-close discipline |
@@ -44,7 +44,7 @@ converts raw `java.nio.file` primitives (`WatchService`, `WatchKey`, `Path`, `Ja
 | `util/SystemUtils.java:21` | `nio.charset.CharsetUtils` | `FILE_ENCODING` default (`util/SystemUtils.java:332`) |
 
 > [!NOTE]
-> **Cross-check against the layer diagram in [README.md](README.md#1-internal-dependency-structure).** That diagram now
+> **Cross-check against the layer diagram in [./README.md](./README.md#1-internal-dependency-structure).** That diagram now
 > shows the cycle (`IO -. cycle .-> UTIL`) and its Foundation row states the exception, but the diagram is drawn at
 > package-group granularity, so the evidence is reproduced here: the `release` sources contain the opposite direction as
 > well — `util/ClassUtils.java:10-13` and `:54-55` import `io.FileUtils`, `io.filter.*` and `io.scanner.*`, while
@@ -57,7 +57,7 @@ converts raw `java.nio.file` primitives (`WatchService`, `WatchKey`, `Path`, `Ja
 > `net.URLUtils` themselves (`scanner/SimpleClassScanner.java:23-24`), so `io.scanner` → `net` exists too.
 
 The slice is also the **`File` predicate home**. `io.microsphere.io.filter` holds `IOFileFilter` and its four implementations;
-`io.microsphere.filter` holds the generic `Filter<T>` SPI. They are documented separately in [Collections and filters](collections-and-filters.md),
+`io.microsphere.filter` holds the generic `Filter<T>` SPI. They are documented separately in [Collections and filters](./collections-and-filters.md),
 which records the same correction.
 
 ---
@@ -97,7 +97,7 @@ and both declaring `IllegalArgumentException` / `IllegalStateException`. On the 
 
 * **no type implements it** — grepping `implements Scanner`, `extends Scanner` and `ClassPathScanner` across the whole worktree returns zero matches;
 * **no service file exists for it** — the 13 `META-INF/services` files shipped in `core` do not include `io.microsphere.io.scanner.Scanner`
-  (the full list is in the [developer index](README.md)); the closest scanner-ish registrations are
+  (the full list is in the [developer index](./README.md)); the closest scanner-ish registrations are
   `io.microsphere.classloading.ArtifactResourceResolver` and `io.microsphere.classloading.URLClassPathHandle`, which consume this slice
   rather than implement it;
 * the three `Simple*Scanner` classes are unrelated concrete types with **their own** parameter shapes —
@@ -506,7 +506,7 @@ than as a liveness signal (see the `OVERFLOW` discussion in 3.2).
 ## 8. Testing strategy
 
 The slice has 21 main types and 20 test classes under `microsphere-java-core/src/test/java/io/microsphere/io/**` and `.../nio/**` (excluding
-the 17 `io/serializer/**` suites, which belong to [Serialization](serialization.md)).
+the 17 `io/serializer/**` suites, which belong to [Serialization](./serialization.md)).
 
 | Suite | What it pins |
 |---|---|
@@ -549,14 +549,14 @@ Three conventions are worth copying:
 ## 9. See also
 
 * User-facing reference: [I/O, NIO, scanning and file filters — User Guide](../../user-guide/microsphere-java-core/io-and-scanning.md)
-* [Collections and filters](collections-and-filters.md) — the generic `Filter<T>` / `FilterOperator` SPI, and the `File`-predicate correction
+* [Collections and filters](./collections-and-filters.md) — the generic `Filter<T>` / `FilterOperator` SPI, and the `File`-predicate correction
   this page repeats
-* [Event dispatching](events.md) — `EventDispatcher`, `AbstractEventDispatcher`, `Prioritized`, `ConditionalEventListener`, the machinery
+* [Event dispatching](./events.md) — `EventDispatcher`, `AbstractEventDispatcher`, `Prioritized`, `ConditionalEventListener`, the machinery
   `io.event` bridges into
-* [Utilities, constants and text](util-and-constants.md) — `SystemUtils` (`FILE_ENCODING`, `IS_OS_WINDOWS`), `ClassLoaderUtils`,
+* [Utilities, constants and text](./util-and-constants.md) — `SystemUtils` (`FILE_ENCODING`, `IS_OS_WINDOWS`), `ClassLoaderUtils`,
   `util.jar.JarUtils`, `ClassDataRepository`
-* [Networking and URL protocols](net-and-url-protocols.md) — `URLUtils.resolveArchiveFile` and the `jar:` protocol the scanners depend on
-* [Class loading and artifacts](classloading-and-artifacts.md) — the downstream consumer of `FastByteArrayInputStream` and of the scanners
-* [Serialization](serialization.md) — the sibling `io.microsphere.io.serializer` package
-* [Developer Guide index](README.md) — layer table, 13-file SPI registry, degradation policy
-* [中文开发者指南](zh/io-and-scanning.md)
+* [Networking and URL protocols](./net-and-url-protocols.md) — `URLUtils.resolveArchiveFile` and the `jar:` protocol the scanners depend on
+* [Class loading and artifacts](./classloading-and-artifacts.md) — the downstream consumer of `FastByteArrayInputStream` and of the scanners
+* [Serialization](./serialization.md) — the sibling `io.microsphere.io.serializer` package
+* [Developer Guide index](./README.md) — layer table, 13-file SPI registry, degradation policy
+* [中文开发者指南](./io-and-scanning.zh.md)

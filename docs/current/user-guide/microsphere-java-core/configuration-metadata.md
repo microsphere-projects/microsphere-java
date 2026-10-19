@@ -16,7 +16,7 @@ document to offer autocompletion and documentation popups on `application.proper
 under `META-INF/microsphere/configuration-properties.json`, and the `io.microsphere.metadata` package is the runtime
 counterpart of that file — it **reads** it, **loads** it from the classpath (possibly from many jars), and **generates**
 it. The compile-time half lives in the sibling module
-[`microsphere-annotation-processor`](../microsphere-annotation-processor.md), which is documented separately.
+[`microsphere-annotation-processor`](../module-microsphere-annotation-processor.md), which is documented separately.
 
 | Contract | Kind | One-line responsibility | Shipped implementations |
 |---|---|---|---|
@@ -49,7 +49,7 @@ stable across the whole `0.x` line.
 
 Spring is listed above for completeness only: nothing in `io.microsphere.metadata` imports Spring. The JSON document
 format is defined by the in-repo `io.microsphere.json` model, which the reader and the generators call directly — see
-[JSON support](json.md) rather than assuming a third-party mapper.
+[JSON support](./json.md) rather than assuming a third-party mapper.
 
 Add the dependency (the annotation processor is the compile-time companion and is usually `provided`):
 
@@ -67,6 +67,24 @@ Add the dependency (the annotation processor is the compile-time companion and i
     <scope>provided</scope>
 </dependency>
 ```
+
+
+### 1.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 4 of 9 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `2b0989d3 Allow nullable configuration descriptions` / `e3a84c77 Add nullability annotations to resolvers`.
+* **No other change in this range touches the area this page covers.**
+
+> [!NOTE]
+> Reading the commit list: `2b0989d3 Allow nullable configuration descriptions` concerns the `description` member of `@ConfigurationProperty`, whose generating side lives in the annotation-processor module, so its effect is split between this page and that module's page. The range also carries `da6586f1 Assert resource processing does not throw`, but no test file on this line matches it, so it is left unattributed.
 
 ---
 
@@ -347,7 +365,7 @@ _Source: `metadata/ReflectiveConfigurationPropertyGeneratorTest.java:46-51`_
    loaders use the single-hit constructors (`MetadataResourceConfigurationPropertyLoader.java:36`,
    `AdditionalMetadataResourceConfigurationPropertyLoader.java:36`), so neither merges across jars by default.
    `getResources` matches an **exact** resource path — no `**` patterns, no file-name globs, no directory scanning
-   (that is `io.microsphere.io.scanner`, see [I/O and scanning](io-and-scanning.md)).
+   (that is `io.microsphere.io.scanner`, see [I/O and scanning](./io-and-scanning.md)).
 4. **`null` and empty are tolerated; exceptions are swallowed — but not all of them.** `@Nullable load()`
    (`metadata/ConfigurationPropertyLoader.java:67-68`) explicitly permits `null`, and `loadAll()` filters it
    (`:98`). A throwing loader is caught as `Throwable` and logged (`:101-103`) — your metadata can silently shrink to
@@ -375,7 +393,7 @@ _Source: `metadata/ReflectiveConfigurationPropertyGeneratorTest.java:46-51`_
    (`metadata/DefaultConfigurationPropertyReader.java:61`, `:67`). Resolving `java.lang.String[]` into a `Class` and
    converting `defaultValue` into that type is the job of `io.microsphere.reflect` and `io.microsphere.convert`, which
    the JSON layer already uses underneath (`json/JSONUtils.java:63`, `:66-67`, `:1427-1442`). See
-   [Type conversion](type-conversion.md) and [Reflection and beans](reflection-and-beans.md).
+   [Type conversion](./type-conversion.md) and [Reflection and beans](./reflection-and-beans.md).
 9. **`throws Throwable` is part of the contract.** Both reader methods (`metadata/ConfigurationPropertyReader.java:66`,
    `:94`, `:119`) and `ConfigurationPropertyLoader.load()` (`:68`) declare `throws Throwable`, so a `catch (Exception)`
    block does not satisfy the compiler. `loadAll()` is the only `throws`-free API (`:91`).
@@ -389,9 +407,9 @@ _Source: `metadata/ReflectiveConfigurationPropertyGeneratorTest.java:46-51`_
 
 ## 7. See also
 
-* [Type conversion](type-conversion.md) — turning `getType()` / `getDefaultValue()` into usable values
-* [Reflection and beans](reflection-and-beans.md) — `ConfigurationProperty` as a JavaBean, `BeanUtils.resolvePropertiesAsMap`
-* [Utilities and constants](util-and-constants.md) — `ServiceLoaderUtils`, `ClassLoaderUtils`, `ResourceConstants`
-* [JSON support](json.md) — the `io.microsphere.json` model behind the reader and both generators
-* [Annotation processor — module page](../microsphere-annotation-processor.md) — the compile-time half that writes these files
+* [Type conversion](./type-conversion.md) — turning `getType()` / `getDefaultValue()` into usable values
+* [Reflection and beans](./reflection-and-beans.md) — `ConfigurationProperty` as a JavaBean, `BeanUtils.resolvePropertiesAsMap`
+* [Utilities and constants](./util-and-constants.md) — `ServiceLoaderUtils`, `ClassLoaderUtils`, `ResourceConstants`
+* [JSON support](./json.md) — the `io.microsphere.json` model behind the reader and both generators
+* [Annotation processor — module page](../module-microsphere-annotation-processor.md) — the compile-time half that writes these files
 * Developer-facing deep dive: [Configuration Property Metadata — Developer Guide](../../developer-guide/microsphere-java-core/configuration-metadata.md)

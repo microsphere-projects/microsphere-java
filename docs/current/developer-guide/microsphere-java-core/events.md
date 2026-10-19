@@ -2,14 +2,14 @@
 
 | | |
 |---|---|
-| **Layer** | Service layer (`event`) — see the [layer table](README.md#1-internal-dependency-structure) |
+| **Layer** | Service layer (`event`) — see the [layer table](./README.md#1-internal-dependency-structure) |
 | **Packages** | `io.microsphere.event` (10 main sources) |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` |
 | **Analysis focus** | listener matching, conditional filtering, dispatch concurrency |
 | **Allowed imports** | `io.microsphere.annotation`, `io.microsphere.collection`, `io.microsphere.lang*`, `io.microsphere.logging`, `io.microsphere.reflect`, `io.microsphere.util` — and nothing from the platform-integration layer |
 
 Paths are relative to `microsphere-java-core/src/main/java/io/microsphere/` unless a `test/` path is spelled out;
-after the first full mention they appear as `event/Foo.java:40-55`.
+after the first full mention they appear as `event/EventDispatcher.java:40-55`.
 
 ---
 
@@ -453,9 +453,9 @@ removal (§3.1).
 ## 9. See also
 
 * [Event dispatching — User Guide](../../user-guide/microsphere-java-core/events.md) — API tables, test-derived examples, pitfalls.
-* [Language abstractions](language-abstractions.md) — `Prioritized` (`lang/Prioritized.java:56-106`), `LambdaUtils`, `Throwable*`.
-* [Reflection, types and beans](reflection-and-beans.md) — `TypeUtils.getAllParameterizedTypes` (`reflect/TypeUtils.java:843-847`) and `isAssignableFrom` (`:375-378`).
-* [Collections and filters](collections-and-filters.md) — `newConcurrentHashMap` / `newLinkedList`, the two collections behind the registry.
-* [Logging](logging.md) — the `Logger` that swallows SPI failures in this dispatcher.
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `io.event` and `StandardFileWatchService`, this engine's only consumer.
-* [Developer Guide index](README.md) — the layer table and the SPI registry list.
+* [Language abstractions](./language-abstractions.md) — `Prioritized` (`lang/Prioritized.java:56-106`), `LambdaUtils`, `Throwable*`.
+* [Reflection, types and beans](./reflection-and-beans.md) — `TypeUtils.getAllParameterizedTypes` (`reflect/TypeUtils.java:843-847`) and `isAssignableFrom` (`:375-378`).
+* [Collections and filters](./collections-and-filters.md) — `newConcurrentHashMap` / `newLinkedList`, the two collections behind the registry.
+* [Logging](./logging.md) — the `Logger` that swallows SPI failures in this dispatcher.
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — `io.event` and `StandardFileWatchService`, this engine's only consumer.
+* [Developer Guide index](./README.md) — the layer table and the SPI registry list.

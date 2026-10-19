@@ -507,6 +507,6 @@ Testing implications for maintainers:
 ## 9. Related pages
 
 - [User guide: Language Abstractions](../../user-guide/microsphere-java-core/language-abstractions.md)
-- [Reflection, types and beans](reflection-and-beans.md) — `ConstantPoolUtils`, `MethodUtils.findFunctionalInterfaceMethod`, `ExecutableDefinition`
-- [Utilities, constants and text](util-and-constants.md) — `Version`, `ArrayUtils.EMPTY_CLASS_ARRAY`, `SymbolConstants`
-- [Collections and filters](collections-and-filters.md), [Type conversion](type-conversion.md), [Event dispatching](events.md) — `Prioritized`/`Wrapper` consumers
+- [Reflection, types and beans](./reflection-and-beans.md) — `ConstantPoolUtils`, `MethodUtils.findFunctionalInterfaceMethod`, `ExecutableDefinition`
+- [Utilities, constants and text](./util-and-constants.md) — `Version`, `ArrayUtils.EMPTY_CLASS_ARRAY`, `SymbolConstants`
+- [Collections and filters](./collections-and-filters.md), [Type conversion](./type-conversion.md), [Event dispatching](./events.md) — `Prioritized`/`Wrapper` consumers

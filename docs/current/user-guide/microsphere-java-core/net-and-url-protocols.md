@@ -11,7 +11,7 @@
 
 All `file:line` references in this page are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main sources) or `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree.
-After the first mention they are shortened to `net/Foo.java:40-55`.
+After the first mention they are shortened to `net/URLUtils.java:40-55`.
 
 ---
 
@@ -86,6 +86,24 @@ No extra artifact and no third-party library is required: all 13 types compile a
 > `net/ExtendableProtocolURLStreamHandler.java:130`, `net/classpath/Handler.java:38`,
 > `net/console/ConsoleURLConnection.java:33`). That tag is a **source-level** marker and does not refer to the Maven
 > `0.3.x` release line documented here; do not read it as "removed in 1.x" — no `1.x` line exists.
+
+
+### 3.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 3 of 13 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. No commit subject names this area specifically; the library-wide pass `34e27823 Refine nullability contracts across core APIs` covers it.
+* **Null-input and behaviour fixes.** `574364c7 Handle null URL components safely` / `ffa038ae Harden URLUtils close() unit tests`.
+
+> [!NOTE]
+> Reading the commit list: No subject in the range names `io.microsphere.net`, yet three of its thirteen sources carry the annotations — the library-wide pass reached it without a commit of its own.
 
 ---
 
@@ -529,11 +547,11 @@ _Source: net/DelegatingURLConnectionTest.java:63-69, :76-79, :110-150, :200-221,
 
 ## 11. See also
 
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `IOUtils.close` and the scanners that read `jar:`/`classpath:` URLs
-* [Class loading and artifacts](classloading-and-artifacts.md) — the biggest consumer of `URLUtils` (`EMPTY_URL_ARRAY`)
-* [Language abstractions](language-abstractions.md) — `Prioritized`, which orders every factory and sub-protocol chain in this group
-* [Collections and filters](collections-and-filters.md) — `SetUtils.ofSet`, `MapUtils.toFixedMap` and `ListUtils.newLinkedList`, used throughout §7
-* [Utilities and constants](util-and-constants.md) — `StringUtils.split`, `SymbolConstants`, `ProtocolConstants`, `SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR`
-* [Type conversion](type-conversion.md) — `URL`/`URI` converters that delegate into this package
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — `IOUtils.close` and the scanners that read `jar:`/`classpath:` URLs
+* [Class loading and artifacts](./classloading-and-artifacts.md) — the biggest consumer of `URLUtils` (`EMPTY_URL_ARRAY`)
+* [Language abstractions](./language-abstractions.md) — `Prioritized`, which orders every factory and sub-protocol chain in this group
+* [Collections and filters](./collections-and-filters.md) — `SetUtils.ofSet`, `MapUtils.toFixedMap` and `ListUtils.newLinkedList`, used throughout §7
+* [Utilities and constants](./util-and-constants.md) — `StringUtils.split`, `SymbolConstants`, `ProtocolConstants`, `SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR`
+* [Type conversion](./type-conversion.md) — `URL`/`URI` converters that delegate into this package
 * Developer-facing deep dive: [Networking and URL protocols — Developer Guide](../../developer-guide/microsphere-java-core/net-and-url-protocols.md)
-* [中文用户指南](zh/net-and-url-protocols.md)
+* [中文用户指南](./net-and-url-protocols.zh.md)

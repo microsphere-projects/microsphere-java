@@ -7,7 +7,7 @@ Companion user-facing page: [User Guide — JSON](../../user-guide/microsphere-j
 
 All `file:line` references are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main) or `microsphere-java-core/src/test/java/io/microsphere/` (test), read from the `release` worktree,
-then shortened to `json/Foo.java:40-55`.
+then shortened to `json/JSONUtils.java:40-55`.
 
 ---
 
@@ -460,7 +460,7 @@ rather than reading, and it does so with one of exactly two messages — `"Nesti
 | **Visitor (non-GoF, javadoc-acknowledged)** | `JSONUtils.appendValue` + `JSONStringer.value(Object)` | two hand-written runtime-type ladders rather than double dispatch: `json/JSONUtils.java:469-486` (array → map → iterable → char-family → `Type` → fallback) and `json/JSONStringer.java:261-287`. `JSONAnnotationValueVisitor` in `microsphere-lang-model` consumes `append`/`appendName` as its visit results (`microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/JSONAnnotationValueVisitor.java:36-37`) |
 | **Adapter (Java ⇄ JSON)** | `JSONObject.wrap`, `JSONUtils.readValueAsBean`, `writeBeanAsString` | `wrap` adapts `Iterable`/array/`Enumeration`/`Map`/`Class`/`CharSequence`/`Enum`/`java.*`/JavaBean into the JSON union (`json/JSONObject.java:859-886`), the bean path adapts back through `BeanUtils.resolvePropertiesAsMap` and `findWriteMethod` (`json/JSONObject.java:25,881`; `json/JSONUtils.java:988-1007`) |
 | **Template-less Factory Methods** | the five `JSONObject` and six `JSONArray` constructors | each constructor is a *parse-then-steal* or *copy-and-wrap* factory rather than one overloading an existing one (`json/JSONObject.java:121-198`; `json/JSONArray.java:83-159`) |
-| **Static utility (marker-conformant)** | `JSONUtils` | `public abstract class JSONUtils implements Utils` (`json/JSONUtils.java:113`) with a `private` constructor (`:1477-1478`) — the library-wide convention described in [Utilities and constants](util-and-constants.md). `JSON` is package-private with a `private JSON()` (`json/JSON.java:25`, `:125-126`); `JSONObject`/`JSONArray` are not utility classes and have no such guard |
+| **Static utility (marker-conformant)** | `JSONUtils` | `public abstract class JSONUtils implements Utils` (`json/JSONUtils.java:113`) with a `private` constructor (`:1477-1478`) — the library-wide convention described in [Utilities and constants](./util-and-constants.md). `JSON` is package-private with a `private JSON()` (`json/JSON.java:25`, `:125-126`); `JSONObject`/`JSONArray` are not utility classes and have no such guard |
 
 **Absent on purpose, and worth recording so nobody re-adds it:** there is no `Registry` (nothing is discovered), no
 `Factory` interface, no `Mapper`-style configuration object, no `Context`/`Config` parameter on any method, and no
@@ -667,7 +667,7 @@ severity:
 * **`json/JSONTokenerTest.java:48-51` (`testConstrcutorWithNull`) constructs `new JSONTokener(null)` and never reads
   from it**, which is exactly why defect 3 in §11.3 survives — the NPE the tokener's own javadoc promises
   (`json/JSONTokener.java:84-85`) is unexercised. The method name is also misspelled ("Constrcutor"), echoing the
-  `testtGet` typo recorded on the [Serialization](serialization.md) page
+  `testtGet` typo recorded on the [Serialization](./serialization.md) page
   (`io/serializer/SerializersTest.java:57`): test method names are evidently not checked by any tool in the build.
 * **No test in the package asserts on an error message that the code produced.** A grep for
   `"cannot be converted"`, `"No value for"` and `"is null"` across `src/test/java/io/microsphere/json/` matches only
@@ -701,19 +701,19 @@ severity:
 
 * [User Guide — JSON](../../user-guide/microsphere-java-core/json.md) — the API surface, runnable examples, the
   throw-vs-default table and the thirteen pitfalls.
-* [Configuration property metadata](configuration-metadata.md) — `metadata` is the only in-`core` consumer, on both
+* [Configuration property metadata](./configuration-metadata.md) — `metadata` is the only in-`core` consumer, on both
   sides of the wire (`metadata/DefaultConfigurationPropertyGenerator.java:29-30,88-117`,
   `metadata/ReflectiveConfigurationPropertyGenerator.java:22,24`,
   `metadata/DefaultConfigurationPropertyReader.java:29,43`).
-* [Reflection, types and beans](reflection-and-beans.md) — `BeanUtils.resolvePropertiesAsMap` /
+* [Reflection, types and beans](./reflection-and-beans.md) — `BeanUtils.resolvePropertiesAsMap` /
   `findWriteMethod` / `getBeanMetadata` and `ConstructorUtils` / `MethodUtils` / `TypeUtils` are what make the JavaBean
   conversions work at all (`json/JSONObject.java:25`, `json/JSONUtils.java:22-23,43-45,65-67`).
-* [Type conversion](type-conversion.md) — `Converter.convertIfPossible` is the leaf every JSON→Java scalar reaches
+* [Type conversion](./type-conversion.md) — `Converter.convertIfPossible` is the leaf every JSON→Java scalar reaches
   (`json/JSONUtils.java:63,1427-1442`), and `convert` itself does not depend on `json`.
-* [Collections and filters](collections-and-filters.md) — `MapUtils.newLinkedHashMap`
+* [Collections and filters](./collections-and-filters.md) — `MapUtils.newLinkedHashMap`
   (`collection/MapUtils.java:574-577`) and `ListUtils.newArrayList` (`collection/ListUtils.java:313-315`) decide
   `JSONObject`'s key ordering and `JSONArray`'s storage.
-* [Language abstractions](language-abstractions.md) — `ThrowableAction.execute` is the checked→unchecked
+* [Language abstractions](./language-abstractions.md) — `ThrowableAction.execute` is the checked→unchecked
   translation layer behind `toString(int)` (`lang/function/ThrowableAction.java:79-81,105-107`).
-* [Serialization](serialization.md) — the sibling Service-layer package, and the genuine SPI family that `json`
+* [Serialization](./serialization.md) — the sibling Service-layer package, and the genuine SPI family that `json`
   is often mistaken for (§1.1).

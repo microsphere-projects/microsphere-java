@@ -4,11 +4,11 @@ Audience: you are going to **read, change, or extend** `microsphere-java` — as
 author building on its SPIs. These pages give the architecture, class-level source analysis with `file:line`
 references, the design patterns actually used, and flow charts for the non-trivial control flows.
 
-Source line documented: **`release` branch**, `revision = 0.3.20-SNAPSHOT` (published as `0.3.20`, the newest tag in
-the repository).
-Chinese mirrors of every page live in a `zh/` subdirectory next to the English file.
+Source line documented: **`release` branch**, `revision = 0.3.20-SNAPSHOT` (published as `0.3.20`, tagged 2026-10-16;
+the previous release `0.3.19` was tagged 2026-08-30).
+Every page has an independent Chinese mirror in the same directory: same stem, `.zh.md` suffix (`foo.md` → `foo.zh.md`).
 
-* Documentation index and version lines: [../../README.md](../../README.md)
+* Documentation index and version lines: [../../README.md](../../README.md) · [中文](../../README.zh.md)
 * User Guide (API usage, coordinates, JDK support): [../user-guide/README.md](../user-guide/README.md)
 
 ---
@@ -54,7 +54,7 @@ graph TD
 |-------|------------------------------------|
 | Contracts | Contains only annotations; nothing depends on `core`. Adding a runtime dependency here would break the zero-cost promise. |
 | Runtime | `core` depends on `annotations` only, plus optional integrations (`slf4j-api`, `commons-logging`, `javax.annotation-api`, `jsr305`). Every subsystem is reachable through `META-INF/services`, never through a hard dependency. |
-| Toolchain | The only layer that touches `jdk.compiler` internals; that contact surface is deliberately funneled through `microsphere-jdk-tools` so the rest of the stack stays portable. |
+| Toolchain | Compilation is the only place the stack meets the JDK compiler, and `microsphere-jdk-tools` resolves it through `javax.tools.ToolProvider.getSystemJavaCompiler()` (`Compiler.java:107`). No source in the reactor imports `com.sun.tools.*`, mentions `tools.jar`, or asks for `--add-exports`; the single `--add-opens` string in the codebase is the reflective-access message in `reflect/AccessibleObjectUtils.java:204`. |
 | Test support | `microsphere-java-test` has **all** dependencies `optional` so a consumer's JUnit/Mockito/Spring versions win. |
 
 ### 1.2 The recurring subsystem shape
@@ -85,20 +85,20 @@ Each of these has a `META-INF/services` file in `microsphere-java-core/src/main/
 
 | SPI | Module | Purpose | Documented in |
 |-----|--------|---------|---------------|
-| `io.microsphere.convert.Converter` | core | Single-value type conversion | [Type conversion](microsphere-java-core/type-conversion.md) |
-| `io.microsphere.convert.multiple.MultiValueConverter` | core | Array/Collection/Map conversion | [Type conversion](microsphere-java-core/type-conversion.md) |
-| `io.microsphere.io.serializer.Serializer` | core | Binary serialization | [Serialization](microsphere-java-core/serialization.md) |
-| `io.microsphere.io.serializer.Deserializer` | core | Binary deserialization | [Serialization](microsphere-java-core/serialization.md) |
-| `io.microsphere.event.EventDispatcher` | core | Event dispatch strategy | [Events](microsphere-java-core/events.md) |
-| `io.microsphere.logging.LoggerFactory` | core | Log backend delegation chain | [Logging](microsphere-java-core/logging.md) |
-| `io.microsphere.classloading.ArtifactResourceResolver` | core | Locate artifact metadata | [Class loading and artifacts](microsphere-java-core/classloading-and-artifacts.md) |
-| `io.microsphere.classloading.URLClassPathHandle` | core | JDK-version-specific URLClassPath access | [Class loading and artifacts](microsphere-java-core/classloading-and-artifacts.md) |
-| `io.microsphere.net.ExtendableProtocolURLStreamHandler` | core | Custom URL protocol handlers | [Networking](microsphere-java-core/net-and-url-protocols.md) |
-| `io.microsphere.process.ProcessIdResolver` | core | Process id detection | [Concurrency, process, management](microsphere-java-core/concurrency-process-and-management.md) |
-| `io.microsphere.metadata.ConfigurationPropertyReader` | core | Read property metadata | [Configuration metadata](microsphere-java-core/configuration-metadata.md) |
-| `io.microsphere.metadata.ConfigurationPropertyLoader` | core | Load property metadata resources | [Configuration metadata](microsphere-java-core/configuration-metadata.md) |
-| `io.microsphere.metadata.ConfigurationPropertyGenerator` | core | Generate property metadata | [Configuration metadata](microsphere-java-core/configuration-metadata.md) |
-| `javax.annotation.processing.Processor` | microsphere-annotation-processor | Compile-time metadata generation | [Annotation processor](microsphere-annotation-processor.md) |
+| `io.microsphere.convert.Converter` | core | Single-value type conversion | [Type conversion](./microsphere-java-core/type-conversion.md) |
+| `io.microsphere.convert.multiple.MultiValueConverter` | core | Array/Collection/Map conversion | [Type conversion](./microsphere-java-core/type-conversion.md) |
+| `io.microsphere.io.serializer.Serializer` | core | Binary serialization | [Serialization](./microsphere-java-core/serialization.md) |
+| `io.microsphere.io.serializer.Deserializer` | core | Binary deserialization | [Serialization](./microsphere-java-core/serialization.md) |
+| `io.microsphere.event.EventDispatcher` | core | Event dispatch strategy | [Events](./microsphere-java-core/events.md) |
+| `io.microsphere.logging.LoggerFactory` | core | Log backend delegation chain | [Logging](./microsphere-java-core/logging.md) |
+| `io.microsphere.classloading.ArtifactResourceResolver` | core | Locate artifact metadata | [Class loading and artifacts](./microsphere-java-core/classloading-and-artifacts.md) |
+| `io.microsphere.classloading.URLClassPathHandle` | core | JDK-version-specific URLClassPath access | [Class loading and artifacts](./microsphere-java-core/classloading-and-artifacts.md) |
+| `io.microsphere.net.ExtendableProtocolURLStreamHandler` | core | Custom URL protocol handlers | [Networking](./microsphere-java-core/net-and-url-protocols.md) |
+| `io.microsphere.process.ProcessIdResolver` | core | Process id detection | [Concurrency, process, management](./microsphere-java-core/concurrency-process-and-management.md) |
+| `io.microsphere.metadata.ConfigurationPropertyReader` | core | Read property metadata | [Configuration metadata](./microsphere-java-core/configuration-metadata.md) |
+| `io.microsphere.metadata.ConfigurationPropertyLoader` | core | Load property metadata resources | [Configuration metadata](./microsphere-java-core/configuration-metadata.md) |
+| `io.microsphere.metadata.ConfigurationPropertyGenerator` | core | Generate property metadata | [Configuration metadata](./microsphere-java-core/configuration-metadata.md) |
+| `javax.annotation.processing.Processor` | microsphere-annotation-processor | Compile-time metadata generation | [Annotation processor](./module-microsphere-annotation-processor.md) |
 
 ---
 
@@ -167,33 +167,33 @@ Each module page names the pattern and cites the concrete class with a `file:lin
 
 | Page | Packages | Focus of the source analysis |
 |------|----------|------------------------------|
-| [Utilities, constants and text](microsphere-java-core/util-and-constants.md) | `util`, `util.jar`, `constants`, `text`, `misc` | Class-loader and resource resolution, service-loading cache, version parsing |
-| [Collections and filters](microsphere-java-core/collections-and-filters.md) | `collection`, `filter` | Delegating/immutable wrapper internals, allocation-free empties and singletons |
-| [Language abstractions](microsphere-java-core/language-abstractions.md) | `lang`, `lang.function`, `lang.invoke`, `invoke` | `Prioritized` ordering, `Wrapper` unwrap loops, lambda/method-handle introspection |
-| [Reflection, types and beans](microsphere-java-core/reflection-and-beans.md) | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | Generic-type resolution algorithm, `JavaType` model, accessibility handling per JDK |
-| [Type conversion](microsphere-java-core/type-conversion.md) | `convert`, `convert.multiple` | Converter selection, caching, generic parameter resolution |
-| [Serialization](microsphere-java-core/serialization.md) | `io.serializer` | Serializer/Deserializer dispatch and security-relevant deserialization paths |
-| [Events](microsphere-java-core/events.md) | `event` | Listener resolution, conditional filtering, dispatch thread-safety |
-| [I/O, NIO, scanning and file filters](microsphere-java-core/io-and-scanning.md) | `io`, `io.event`, `io.scanner`, `io.filter`, `nio.*` | Scanner plugin design, `WatchService` → event pipeline mapping |
-| [Networking and URL protocols](microsphere-java-core/net-and-url-protocols.md) | `net`, `net.classpath`, `net.console` | Handler registration constraints, sub-protocol chaining |
-| [Logging](microsphere-java-core/logging.md) | `logging` | Backend detection order, lazy init, JUL fallback |
-| [Class loading and artifacts](microsphere-java-core/classloading-and-artifacts.md) | `classloading` | classpath URL parsing, JPMS vs `sun.misc` paths, banned-artifact enforcement |
-| [JSON](microsphere-java-core/json.md) | `json` | Tokenizer/parser loop, `JSONObject` map choice and ordering |
-| [Configuration metadata](microsphere-java-core/configuration-metadata.md) | `metadata` | Reader/Loader/Generator pipeline and merging |
-| [Concurrency, process, management and security](microsphere-java-core/concurrency-process-and-management.md) | `concurrent`, `process`, `management`, `management.builder`, `security` | `ProcessIdResolver` fallback chain, MBean registration, SecurityManager deprecation handling |
+| [Utilities, constants and text](./microsphere-java-core/util-and-constants.md) | `util`, `util.jar`, `constants`, `text`, `misc` | Class-loader and resource resolution, service-loading cache, version parsing |
+| [Collections and filters](./microsphere-java-core/collections-and-filters.md) | `collection`, `filter` | Delegating/immutable wrapper internals, allocation-free empties and singletons |
+| [Language abstractions](./microsphere-java-core/language-abstractions.md) | `lang`, `lang.function`, `lang.invoke`, `invoke` | `Prioritized` ordering, `Wrapper` unwrap loops, lambda/method-handle introspection |
+| [Reflection, types and beans](./microsphere-java-core/reflection-and-beans.md) | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | Generic-type resolution algorithm, `JavaType` model, accessibility handling per JDK |
+| [Type conversion](./microsphere-java-core/type-conversion.md) | `convert`, `convert.multiple` | Converter selection, caching, generic parameter resolution |
+| [Serialization](./microsphere-java-core/serialization.md) | `io.serializer` | Serializer/Deserializer dispatch and security-relevant deserialization paths |
+| [Events](./microsphere-java-core/events.md) | `event` | Listener resolution, conditional filtering, dispatch thread-safety |
+| [I/O, NIO, scanning and file filters](./microsphere-java-core/io-and-scanning.md) | `io`, `io.event`, `io.scanner`, `io.filter`, `nio.*` | Scanner plugin design, `WatchService` → event pipeline mapping |
+| [Networking and URL protocols](./microsphere-java-core/net-and-url-protocols.md) | `net`, `net.classpath`, `net.console` | Handler registration constraints, sub-protocol chaining |
+| [Logging](./microsphere-java-core/logging.md) | `logging` | Backend detection order, lazy init, JUL fallback |
+| [Class loading and artifacts](./microsphere-java-core/classloading-and-artifacts.md) | `classloading` | classpath URL parsing, JPMS vs `sun.misc` paths, banned-artifact enforcement |
+| [JSON](./microsphere-java-core/json.md) | `json` | Tokenizer/parser loop, `JSONObject` map choice and ordering |
+| [Configuration metadata](./microsphere-java-core/configuration-metadata.md) | `metadata` | Reader/Loader/Generator pipeline and merging |
+| [Concurrency, process, management and security](./microsphere-java-core/concurrency-process-and-management.md) | `concurrent`, `process`, `management`, `management.builder`, `security` | `ProcessIdResolver` fallback chain, MBean registration, SecurityManager deprecation handling |
 
-Chinese index: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/README.md).
+Chinese index: [./microsphere-java-core/README.zh.md](./microsphere-java-core/README.zh.md).
 
 ### 4.2 Other modules
 
 | Page | Module | Focus |
 |------|--------|-------|
-| [microsphere-java-annotations](microsphere-java-annotations.md) | annotations | Retention policy choices and their reflective/compile-time consequences |
-| [microsphere-jdk-tools](microsphere-jdk-tools.md) | jdk-tools | JDK tool discovery across `tools.jar` (8) and `jdk.compiler` (9+) |
-| [microsphere-lang-model](microsphere-lang-model.md) | lang-model | Adapter layer over `javax.lang.model`, visitor traversal, caching |
-| [microsphere-annotation-processor](microsphere-annotation-processor.md) | annotation-processor | Processor lifecycle, rounds, `Filer`/`Messager` usage, option handling |
-| [microsphere-java-test](microsphere-java-test.md) | java-test | Fixture lifecycle, JUnit 5 extension wiring, optional-dependency design |
-| [microsphere-annotation-test](microsphere-annotation-test.md) | annotation-test | In-process `javac` harness, in-memory file manager, diagnostics capture |
+| [microsphere-java-annotations](./module-microsphere-java-annotations.md) | annotations | Retention policy choices and their reflective/compile-time consequences |
+| [microsphere-jdk-tools](./module-microsphere-jdk-tools.md) | jdk-tools | One-class wrapper over `ToolProvider.getSystemJavaCompiler()` — in-JVM `javac` on JDK 8 → 25 |
+| [microsphere-lang-model](./module-microsphere-lang-model.md) | lang-model | Adapter layer over `javax.lang.model`, visitor traversal, caching |
+| [microsphere-annotation-processor](./module-microsphere-annotation-processor.md) | annotation-processor | Processor lifecycle, rounds, `Filer`/`Messager` usage, option handling |
+| [microsphere-java-test](./module-microsphere-java-test.md) | java-test | Fixture lifecycle, JUnit 5 extension wiring, optional-dependency design |
+| [microsphere-annotation-test](./module-microsphere-annotation-test.md) | annotation-test | In-process `javac` harness, in-memory file manager, diagnostics capture |
 
 ---
 
@@ -226,7 +226,9 @@ Chinese index: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/REA
 
 ## 6. Conventions to follow when you change this code
 
-* Every public and protected member carries `@Nonnull` / `@Nullable`; new API must too.
+* Public and protected members are supposed to carry `@Nonnull` / `@Nullable`, and every member you touch must.
+  The pass is not finished: 103 of the 309 `core` main sources carry the annotations today, and each User Guide page
+  reports the measured count for its own scope.
 * New API gets `@Since` with the version that will ship it.
 * Failures in capability that the current JDK cannot provide degrade silently (no-op / neutral value), and the
   degradation is documented on the page — never add a new `assertNotNull`-style throw to "fix" an NPE.
