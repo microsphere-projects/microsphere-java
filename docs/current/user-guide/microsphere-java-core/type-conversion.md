@@ -10,7 +10,7 @@
 
 All `file:line` references in this page are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main sources) or `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree.
-After the first mention they are shortened to `convert/Foo.java:40-55` / `convert/multiple/Foo.java:40-55`.
+After the first mention they are shortened to `convert/AbstractConverter.java:40-55` / `convert/multiple/StringToArrayConverter.java:40-55`.
 
 ---
 
@@ -71,6 +71,24 @@ converters produce `null`, never an exception (`convert/AbstractConverter.java:1
 > `microsphere-java-core` carries **no Spring dependency**, so nothing on this page behaves differently between the
 > Spring 5 and Spring 7 profiles. The `java8-16` profile is a build-time property switch that matters only when
 > Spring-aware modules join the same reactor.
+
+
+### 2.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 3 of 52 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `3c7729da Annotate converter nullability contracts`.
+* **Null-input and behaviour fixes.** `88763a60 Handle null source in convertIfPossible` / `28e46fca Remove unused valueType from BeanUtils converters`.
+
+> [!NOTE]
+> Reading the commit list: Only `AbstractConverter`, `Converter` and `StringToInputStreamConverter` carry the annotations, so the `@Nonnull` / `@Nullable` contract on this page is still the exception rather than the rule across the 52 converter sources.
 
 ---
 
@@ -376,12 +394,12 @@ assertNull(convertIfPossible("1,2,3", Array.class, String.class)); // java.lang.
 
 ## 7. See also
 
-- [Language abstractions](language-abstractions.md) — `Prioritized` ordering arithmetic that drives converter selection.
-- [Reflection, types and beans](reflection-and-beans.md) — `TypeUtils.resolveActualTypeArgumentClass`, used to derive
+- [Language abstractions](./language-abstractions.md) — `Prioritized` ordering arithmetic that drives converter selection.
+- [Reflection, types and beans](./reflection-and-beans.md) — `TypeUtils.resolveActualTypeArgumentClass`, used to derive
   `getSourceType()` / `getTargetType()` (`convert/Converter.java:99-110`).
-- [Serialization](serialization.md) — the `io.serializer` backend behind `byte[] ⇄ Object`
+- [Serialization](./serialization.md) — the `io.serializer` backend behind `byte[] ⇄ Object`
   (`convert/ByteArrayToObjectConverter.java`, `convert/ObjectToByteArrayConverter.java`).
-- [Collections and filters](collections-and-filters.md) — the container factories the multi-value converters call into.
-- [Configuration property metadata](configuration-metadata.md) — the main in-library consumer of type conversion.
+- [Collections and filters](./collections-and-filters.md) — the container factories the multi-value converters call into.
+- [Configuration property metadata](./configuration-metadata.md) — the main in-library consumer of type conversion.
 - [Type conversion — Developer Guide](../../developer-guide/microsphere-java-core/type-conversion.md) — selection/caching
   internals, dispatch pipeline, and how to register your own converter through SPI.

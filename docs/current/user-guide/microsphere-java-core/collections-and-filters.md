@@ -11,7 +11,7 @@
 
 All `file:line` references in this page are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main sources) or `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree.
-After the first mention they are shortened to `collection/Foo.java:40-55` / `filter/Foo.java:40-55`.
+After the first mention they are shortened to `collection/Lists.java:40-55` / `filter/FilterUtils.java:40-55`.
 
 ---
 
@@ -69,6 +69,24 @@ predicates the classpath scanners need: `ClassFilter` (`Class<?>`), `JarEntryFil
 > The `java8-16` profile is a **build-time** property switch, not a runtime one; `microsphere-java-core` itself has no
 > Spring dependency, so nothing in this page changes between Spring 5 and Spring 7. It matters when you add
 > `microsphere-java-*` modules that do use Spring to the same reactor.
+
+
+### 2.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 12 of 41 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `e047067b Annotate filter APIs with nullability`.
+* **Null-input and behaviour fixes.** `07e2d28e Harden NameFileFilter input handling` / `38dfd3d0 Make class entry filter null-safe` / `6a2a9735 Allow null input in ArrayEnumeration ctor` / `7be0a9c8 Harden ArrayUtils null handling` / `c3b41416 Remove null fallbacks in ArrayUtils` / `cf440a70 Update Iterators.java` / `1d1bf9fc Update DefaultEntry.java`.
+
+> [!NOTE]
+> Reading the commit list: `38dfd3d0` reads as a jar-entry filter change but names no file; the candidate types on this line are `filter.ClassFileJarEntryFilter` and `filter.JarEntryFilter`, not `io.microsphere.filter.ClassFilter`. `ArrayUtils` lives in `io.microsphere.util`, so its two subjects are counted on the utilities page as well.
 
 ---
 
@@ -425,12 +443,12 @@ degrades rather than crashes — consistent with the library-wide policy in the 
 
 ## 7. See also
 
-* [Utilities, constants and text](util-and-constants.md) — `ArrayUtils.length`, `ObjectUtils.defaultIfNull` and
+* [Utilities, constants and text](./util-and-constants.md) — `ArrayUtils.length`, `ObjectUtils.defaultIfNull` and
   `Assert`, which every null-tolerance rule in this page leans on
-* [Language abstractions](language-abstractions.md) — `DelegatingWrapper`, the interface the `Delegating*` classes
+* [Language abstractions](./language-abstractions.md) — `DelegatingWrapper`, the interface the `Delegating*` classes
   implement
-* [Reflection, types and beans](reflection-and-beans.md) — the main consumer of `collection`'s `Map.Entry` types
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `io.microsphere.io.filter`, where the `File` predicates
+* [Reflection, types and beans](./reflection-and-beans.md) — the main consumer of `collection`'s `Map.Entry` types
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — `io.microsphere.io.filter`, where the `File` predicates
   live; `io.scanner.Scanner` consumes `io.microsphere.filter.Filter` directly
 * Developer-facing deep dive: [Collections and filters — Developer Guide](../../developer-guide/microsphere-java-core/collections-and-filters.md)
-* [中文用户指南](zh/collections-and-filters.md)
+* [中文用户指南](./collections-and-filters.zh.md)

@@ -2,7 +2,7 @@
 
 Module: `io.github.microsphere-projects:microsphere-java-core` · Source line: `release` branch, `0.3.20-SNAPSHOT`
 These 14 pages are the source-analysis counterpart of the [User Guide group index](../README.md); Chinese versions
-live in [`zh/`](zh/README.md).
+live beside them with a `.zh.md` suffix ([`./README.zh.md`](./README.zh.md) for this index).
 
 ---
 
@@ -77,20 +77,20 @@ graph TD
 
 | # | Page | Packages | Main analysis topics |
 |---|------|----------|----------------------|
-| 1 | [Utilities, constants and text](util-and-constants.md) | `util`, `util.jar`, `constants`, `text`, `misc` | `Utils` marker convention; class-loader and resource resolution order; service-loading cache; `Version` parsing |
-| 2 | [Collections and filters](collections-and-filters.md) | `collection`, `filter` | `Delegating*` / `Unmodifiable*` / `Empty*` / `Singleton*` families; allocation strategy; filter composition |
-| 3 | [Language abstractions](language-abstractions.md) | `lang`, `lang.function`, `lang.invoke`, `invoke` | `Prioritized` ordering arithmetic; `Wrapper` unwrap loop termination; lambda/method-handle introspection |
-| 4 | [Reflection, types and beans](reflection-and-beans.md) | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | Generic type-variable resolution; `JavaType` model; accessibility and `setAccessible` branching per JDK |
-| 5 | [Type conversion](type-conversion.md) | `convert`, `convert.multiple` | Converter selection and caching; multi-value dispatch; lossy-conversion decisions |
-| 6 | [Serialization](serialization.md) | `io.serializer` | Serializer/Deserializer selection; object-deserialization risk surface |
-| 7 | [Event dispatching](events.md) | `event` | Listener matching, conditional filtering, dispatch concurrency |
-| 8 | [I/O, NIO, scanning and file filters](io-and-scanning.md) | `io`, `io.event`, `io.scanner`, `io.filter`, `nio.*` | Scanner plugin design; `WatchService` event overflow handling; resource-close discipline |
-| 9 | [Networking and URL protocols](net-and-url-protocols.md) | `net`, `net.classpath`, `net.console` | Single-registration constraint on `URL.setURLStreamHandlerFactory`; sub-protocol chaining |
-| 10 | [Logging](logging.md) | `logging` | Backend detection order and lazy bootstrap; JUL fallback; logger publication safety |
-| 11 | [Class loading and artifacts](classloading-and-artifacts.md) | `classloading` | classpath URL parsing, `URLClassPathHandle` per-JDK variants, JPMS paths, banned-artifact enforcement |
-| 12 | [JSON](json.md) | `json` | Tokenizer/parser loop, escaping, `JSONObject` map choice and key ordering |
-| 13 | [Configuration property metadata](configuration-metadata.md) | `metadata` | Reader/Loader/Generator pipeline, metadata merging, ordering rules |
-| 14 | [Concurrency, process, management and security](concurrency-process-and-management.md) | `concurrent`, `process`, `management`, `management.builder`, `security` | `ProcessIdResolver` fallback chain; MBean registration lifecycle; SecurityManager deprecation handling |
+| 1 | [Utilities, constants and text](./util-and-constants.md) | `util`, `util.jar`, `constants`, `text`, `misc` | `Utils` marker convention; class-loader and resource resolution order; service-loading cache; `Version` parsing |
+| 2 | [Collections and filters](./collections-and-filters.md) | `collection`, `filter` | `Delegating*` / `Unmodifiable*` / `Empty*` / `Singleton*` families; allocation strategy; filter composition |
+| 3 | [Language abstractions](./language-abstractions.md) | `lang`, `lang.function`, `lang.invoke`, `invoke` | `Prioritized` ordering arithmetic; `Wrapper` unwrap loop termination; lambda/method-handle introspection |
+| 4 | [Reflection, types and beans](./reflection-and-beans.md) | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | Generic type-variable resolution; `JavaType` model; accessibility and `setAccessible` branching per JDK |
+| 5 | [Type conversion](./type-conversion.md) | `convert`, `convert.multiple` | Converter selection and caching; multi-value dispatch; lossy-conversion decisions |
+| 6 | [Serialization](./serialization.md) | `io.serializer` | Serializer/Deserializer selection; object-deserialization risk surface |
+| 7 | [Event dispatching](./events.md) | `event` | Listener matching, conditional filtering, dispatch concurrency |
+| 8 | [I/O, NIO, scanning and file filters](./io-and-scanning.md) | `io`, `io.event`, `io.scanner`, `io.filter`, `nio.*` | Scanner plugin design; `WatchService` event overflow handling; resource-close discipline |
+| 9 | [Networking and URL protocols](./net-and-url-protocols.md) | `net`, `net.classpath`, `net.console` | Single-registration constraint on `URL.setURLStreamHandlerFactory`; sub-protocol chaining |
+| 10 | [Logging](./logging.md) | `logging` | Backend detection order and lazy bootstrap; JUL fallback; logger publication safety |
+| 11 | [Class loading and artifacts](./classloading-and-artifacts.md) | `classloading` | classpath URL parsing, `URLClassPathHandle` per-JDK variants, JPMS paths, banned-artifact enforcement |
+| 12 | [JSON](./json.md) | `json` | Tokenizer/parser loop, escaping, `JSONObject` map choice and key ordering |
+| 13 | [Configuration property metadata](./configuration-metadata.md) | `metadata` | Reader/Loader/Generator pipeline, metadata merging, ordering rules |
+| 14 | [Concurrency, process, management and security](./concurrency-process-and-management.md) | `concurrent`, `process`, `management`, `management.builder`, `security` | `ProcessIdResolver` fallback chain; MBean registration lifecycle; SecurityManager deprecation handling |
 
 Every page follows the same developer-facing skeleton: purpose in the architecture → package/class map → source
 analysis with `file:line` references → design patterns with the implementing class named → mermaid flow charts for

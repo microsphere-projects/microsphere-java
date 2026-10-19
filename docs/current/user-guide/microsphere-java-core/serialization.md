@@ -11,7 +11,7 @@
 
 All `file:line` references in this page are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main sources) or `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree.
-After the first mention they are shortened to `io/serializer/Foo.java:40-55`.
+After the first mention they are shortened to `io/serializer/AbstractSerializer.java:40-55`.
 
 ---
 
@@ -77,6 +77,24 @@ validates the fixed byte width, and already discovers the type you encode, so a 
 > Nothing in this package touches Spring, so the `java8-16` profile is irrelevant here. What *is* JDK-sensitive is the
 > `DefaultSerializer` / `DefaultDeserializer` pair: their output is the JDK serialization stream, whose behaviour and
 > default filter configuration changed across JDK 8 → 25. See §5.
+
+
+### 2.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 3 of 18 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `30507ecd Annotate serializer APIs with nullability`.
+* **Null-input and behaviour fixes.** `0da2976b Inline return in Character deserializer` / `93147704 Inline BooleanSerializer byte array return`.
+
+> [!NOTE]
+> Reading the commit list: `93147704 Inline BooleanSerializer byte array return` names a type that exists on this line (`io.microsphere.io.serializer.BooleanSerializer`). `0da2976b Inline return in Character deserializer` does not: there is no `CharacterDeserializer` here, the closest types being `CharacterSerializer` and `DefaultDeserializer`, so that subject is quoted but not attributed to a file. Neither commit touches the `io.microsphere.json` writers.
 
 ---
 
@@ -515,14 +533,14 @@ Other real limits:
 
 ## 7. See also
 
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `FastByteArrayInputStream` / `FastByteArrayOutputStream`,
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — `FastByteArrayInputStream` / `FastByteArrayOutputStream`,
   the buffers both `Default*` classes wrap, and the resource-close discipline of the `io` package.
-* [Type conversion](type-conversion.md) — `ObjectToByteArrayConverter` and `ByteArrayToObjectConverter`, the two
+* [Type conversion](./type-conversion.md) — `ObjectToByteArrayConverter` and `ByteArrayToObjectConverter`, the two
   converters that expose this package's JDK-serialization path through the `Converter` SPI.
-* [Reflection, types and beans](reflection-and-beans.md) — `JavaType`/`TypeUtils.resolveTypeArgumentClasses`, which
+* [Reflection, types and beans](./reflection-and-beans.md) — `JavaType`/`TypeUtils.resolveTypeArgumentClasses`, which
   decide the registry key for every provider, and `MethodUtils.invokeStaticMethod`, which `EnumSerializer` uses to
   call `values()`.
-* [Class loading and artifacts](classloading-and-artifacts.md) — `ClassLoaderUtils.getDefaultClassLoader()` and
+* [Class loading and artifacts](./classloading-and-artifacts.md) — `ClassLoaderUtils.getDefaultClassLoader()` and
   `ServiceLoaderUtils`, which back the per-`ClassLoader` registry and its caching switch.
 * [Developer Guide — Serialization](../../developer-guide/microsphere-java-core/serialization.md) — the selection
   algorithm, the registry loop, design patterns, thread-safety analysis and extension points.

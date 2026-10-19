@@ -6,13 +6,13 @@ Companion user-facing page: [User Guide — Serialization](../../user-guide/micr
 
 All `file:line` references are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main) or `microsphere-java-core/src/test/java/io/microsphere/` (test), read from the `release` worktree,
-then shortened to `io/serializer/Foo.java:40-55`.
+then shortened to `io/serializer/AbstractSerializer.java:40-55`.
 
 ---
 
 ## 1. Role in the architecture
 
-`io.serializer` sits in the **Service layer** of the [developer index layer table](README.md) — the same band as
+`io.serializer` sits in the **Service layer** of the [developer index layer table](./README.md) — the same band as
 `convert`, `event`, `logging`, `json` and `metadata`, and for the same reason: it is an SPI family discovered through
 `META-INF/services`, and its implementations are looked up rather than wired.
 
@@ -370,7 +370,7 @@ sequenceDiagram
 | **Template Method** | `AbstractSerializer<T>` | `serialize`/`deserialize` are `final` (`io/serializer/AbstractSerializer.java:71`, `:80`) and delegate to abstract hooks `calcBytesLength`/`doSerialize`/`doDeserialize` (`:119`, `:128`, `:137`); the constructor calls the hook once and caches it (`:67`) |
 | **Service Provider / Plug-in (SPI)** | `Serializers`, `Deserializers` | keyed on `META-INF/services/io.microsphere.io.serializer.Serializer` and `…Deserializer`; loaded via `loadServicesList` (`io/serializer/Serializers.java:73`) |
 | **Flyweight / canonical instance** | the eight numeric `…SERIALIZER` singletons, `DEFAULT_SERIALIZER`, `DEFAULT_DESERIALIZER` | each is `public static final` and stateless after construction — e.g. `io/serializer/IntegerSerializer.java:13`, `io/serializer/BooleanSerializer.java:14`, `io/serializer/DefaultSerializer.java:49`, `io/serializer/DefaultDeserializer.java:53`. `ServiceLoader` instantiates a *second* set of these at `loadSPI()` time, since the SPI files name the same classes (`Serializers.java:73`) |
-| **Null Object (as neutral degradation)** | `AbstractSerializer`, `DefaultDeserializer` | invalid input yields `null` instead of throwing: `io/serializer/AbstractSerializer.java:73-75`, `:81-84`, `:87-89`; `io/serializer/DefaultDeserializer.java:57-59`. Matches the [index degradation policy](README.md) |
+| **Null Object (as neutral degradation)** | `AbstractSerializer`, `DefaultDeserializer` | invalid input yields `null` instead of throwing: `io/serializer/AbstractSerializer.java:73-75`, `:81-84`, `:87-89`; `io/serializer/DefaultDeserializer.java:57-59`. Matches the [index degradation policy](./README.md) |
 | **Adapter / delegation over codecs** | `FloatSerializer`, `DoubleSerializer`, `EnumSerializer` | bit-layout reuse rather than duplication: `io/serializer/FloatSerializer.java:41-44` → `INTEGER_SERIALIZER`, `io/serializer/DoubleSerializer.java:26-30` → `LONG_SERIALIZER`, `io/serializer/EnumSerializer.java:56`, `:69` → `SHORT_SERIALIZER`. Note this is *composition/delegation*, **not** the GoF Decorator — no codec wraps another's interface to add behaviour |
 | **Facade (over the JDK stream)** | `DefaultSerializer`, `DefaultDeserializer` | collapse `OutputStream` + `ObjectOutputStream` + lifecycle into one `byte[]` call (`io/serializer/DefaultSerializer.java:52-62`) |
 | **Type-token resolution** | `AbstractSerializer`, `Serializers`, `Deserializers` | `JavaType` (`io/serializer/AbstractSerializer.java:65`) and `resolveTypeArgumentClasses` (`io/serializer/Serializers.java:74`) recover `T` that erasure removed |
@@ -556,11 +556,11 @@ through the JDK stream via a variable typed `Object`. `DefaultDeserializerTest.j
 
 ## 9. See also
 
-* [Reflection, types and beans](reflection-and-beans.md) — the type model this package resolves its registry keys through (`TypeUtils.resolveTypeArgumentClasses`, `JavaType`, `MethodUtils.invokeStaticMethod`)
-* [Type conversion](type-conversion.md) — `ObjectToByteArrayConverter` / `ByteArrayToObjectConverter` are the only main-source consumers of `io.serializer`
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — the buffer and `io.event` side of the framing boundary described in §1
-* [JSON](json.md) — the neighbouring `io`-layer family that owns record-level structure this package deliberately does not
-* [Language abstractions](language-abstractions.md) — the `Prioritized` ordering contract behind `Serializers.getHighestPriority`
+* [Reflection, types and beans](./reflection-and-beans.md) — the type model this package resolves its registry keys through (`TypeUtils.resolveTypeArgumentClasses`, `JavaType`, `MethodUtils.invokeStaticMethod`)
+* [Type conversion](./type-conversion.md) — `ObjectToByteArrayConverter` / `ByteArrayToObjectConverter` are the only main-source consumers of `io.serializer`
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — the buffer and `io.event` side of the framing boundary described in §1
+* [JSON](./json.md) — the neighbouring `io`-layer family that owns record-level structure this package deliberately does not
+* [Language abstractions](./language-abstractions.md) — the `Prioritized` ordering contract behind `Serializers.getHighestPriority`
 * [Serialization — User Guide](../../user-guide/microsphere-java-core/serialization.md) — caller-facing API reference and examples
-* [Package index and layer diagram](README.md)
-* [中文版本](zh/serialization.md)
+* [Package index and layer diagram](./README.md)
+* [中文版本](./serialization.zh.md)

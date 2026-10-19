@@ -518,4 +518,12 @@ and nothing asserts behaviour when `Microsphere`'s `SERVICE_LOADER_CACHED` is fl
 
 ---
 
-*User-facing counterpart: [Concurrency, process, management and security](../../user-guide/microsphere-java-core/concurrency-process-and-management.md)*
+## 11. See also
+
+* [Concurrency, process, management and security — User Guide](../../user-guide/microsphere-java-core/concurrency-process-and-management.md)
+* [Language abstractions — Developer Guide](./language-abstractions.md) — `Prioritized` and the comparator contract that `JmxUtils` ordering leans on
+* [Utilities, constants and text — Developer Guide](./util-and-constants.md) — `ClassLoaderUtils`/`ClassUtils`, the MXBean export layer and `ProcessIdResolver` all build on them
+* [Reflection, types and beans — Developer Guide](./reflection-and-beans.md) — how `@ManagedAttribute` accessors are discovered
+* [microsphere-jdk-tools — Developer Guide](../module-microsphere-jdk-tools.md) — the compile-time counterpart of the `management` runtime layer
+* [Core package-group index](./README.md) · [Developer Guide index](../README.md)
+* 中文版本：[并发、进程、管理与安全 —— 开发者指南](./concurrency-process-and-management.zh.md)

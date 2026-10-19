@@ -2,14 +2,14 @@
 
 | | |
 |---|---|
-| **Layer** | Foundation (`collection`, `filter`) — see the [layer table](README.md#1-internal-dependency-structure) |
+| **Layer** | Foundation (`collection`, `filter`) — see the [layer table](./README.md#1-internal-dependency-structure) |
 | **Packages** | `io.microsphere.collection` (32 main sources) · `io.microsphere.filter` (9 main sources) = **41** |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` |
 | **Analysis focus** | the `Delegating*` / `Unmodifiable*` / `Empty*` / `Singleton*` families, allocation strategy, filter composition |
 | **Allowed imports** | `io.microsphere.util`, `io.microsphere.constants`, `io.microsphere.lang`, `io.microsphere.invoke`, `io.microsphere.annotation` — and nothing higher in the layering |
 
 Paths are relative to `microsphere-java-core/src/main/java/io/microsphere/` unless a `test/` path is spelled out;
-after the first full mention they appear as `collection/Foo.java:40-55` / `filter/Foo.java:40-55`.
+after the first full mention they appear as `collection/Lists.java:40-55` / `filter/FilterUtils.java:40-55`.
 
 ---
 
@@ -290,7 +290,7 @@ one-way and measurable:
 
 Consequences for maintenance: `Filter` may gain default methods freely, but any change to `ListUtils.newArrayList`
 semantics is observable through `FilterUtils.filter`, and moving either package into another artifact would break the
-Foundation-layer rule of the [developer index](README.md#1-internal-dependency-structure) (`collection` must not import
+Foundation-layer rule of the [developer index](./README.md#1-internal-dependency-structure) (`collection` must not import
 `filter`, and neither may import above the Foundation layer).
 
 ---
@@ -422,8 +422,8 @@ The remaining suites are behaviour tables rather than ladders:
 ## 8. See also
 
 * User-facing reference: [Collections and filters — User Guide](../../user-guide/microsphere-java-core/collections-and-filters.md)
-* [Utilities, constants and text](util-and-constants.md) — `ArrayUtils`, `ObjectUtils`, `Assert`, the `Utils` marker
-* [Language abstractions](language-abstractions.md) — `DelegatingWrapper`, `Prioritized`
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — the `File` predicates and the scanners that consume `Filter`
-* [Class loading and artifacts](classloading-and-artifacts.md) — downstream consumer of `collection`
-* [中文开发者指南](zh/collections-and-filters.md)
+* [Utilities, constants and text](./util-and-constants.md) — `ArrayUtils`, `ObjectUtils`, `Assert`, the `Utils` marker
+* [Language abstractions](./language-abstractions.md) — `DelegatingWrapper`, `Prioritized`
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — the `File` predicates and the scanners that consume `Filter`
+* [Class loading and artifacts](./classloading-and-artifacts.md) — downstream consumer of `collection`
+* [中文开发者指南](./collections-and-filters.zh.md)

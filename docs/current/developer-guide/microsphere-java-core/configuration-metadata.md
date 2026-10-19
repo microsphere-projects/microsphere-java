@@ -400,7 +400,7 @@ Read this package with the following in hand:
 4. **The `type` field is inert data by design.** Nothing here resolves `java.lang.String[]` into a `Class`; the only
    type machinery in the pipeline is the `convert`/`reflect` usage inside `json/JSONUtils.java:63`, `:66-67`,
    `:1427-1442`. A reviewer looking for binding logic in `io.microsphere.metadata` will not find it — it belongs to the
-   consumers documented in [type-conversion.md](../../user-guide/microsphere-java-core/type-conversion.md).
+   consumers documented in [./type-conversion.md](../../user-guide/microsphere-java-core/type-conversion.md).
 5. **Cost model.** One `ServiceLoader` traversal + sort per `loadAll()`; one `getResourceAsStream` (or N
    `openStream()` calls under `loadedAll`) per loader; one full-content `String` per resource
    (`metadata/ConfigurationPropertyReader.java:95` buffers everything via `copyToString`). Fine at startup, wrong in a
@@ -412,5 +412,5 @@ Read this package with the following in hand:
 ---
 
 * User-facing reference: [Configuration Property Metadata — User Guide](../../user-guide/microsphere-java-core/configuration-metadata.md)
-* Compile-time half: [microsphere-annotation-processor module page](../../user-guide/microsphere-annotation-processor.md)
-* Same-package neighbours: [JSON](json.md) · [Reflection and beans](reflection-and-beans.md) · [Type conversion](type-conversion.md) · [Utilities and constants](util-and-constants.md)
+* Compile-time half: [microsphere-annotation-processor module page](../../user-guide/module-microsphere-annotation-processor.md)
+* Same-package neighbours: [JSON](./json.md) · [Reflection and beans](./reflection-and-beans.md) · [Type conversion](./type-conversion.md) · [Utilities and constants](./util-and-constants.md)

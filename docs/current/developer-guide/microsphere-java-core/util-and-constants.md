@@ -34,14 +34,14 @@ Two inbound dependencies worth naming precisely:
 * **`lang.Prioritized`** — `ServiceLoaderUtils` sorts every provider list with `Prioritized.COMPARATOR`
   (`util/ServiceLoaderUtils.java:890`); the comparator is imported from `io.microsphere.lang`. This is the one
   cross-package contract the slice leans on for behaviour, so `loadServices*` results depend on `Prioritized` living in
-  `lang` (documented in [Language Abstractions](language-abstractions.md)).
+  `lang` (documented in [Language Abstractions](./language-abstractions.md)).
 * **`text.FormatUtils`** is used *by* `ServiceLoaderUtils` to build its "no provider" message
   (`util/ServiceLoaderUtils.java:884`) and by `Version` (`util/Version.java`), so `text` is a leaf the `util` package
   calls into — it must stay free of upward imports.
 
 Consumption runs outward too: `classloading.ArtifactDetector` is driven by `ClassLoaderUtils.findAllClassPathURLs`
 (`util/ClassLoaderUtils.java:1550-1564`), and `Version.ofVersion(Class)` builds an `ArtifactDetector` to resolve a
-library version (`util/Version.java:626-640`) — see [Class Loading and Artifacts](classloading-and-artifacts.md).
+library version (`util/Version.java:626-640`) — see [Class Loading and Artifacts](./classloading-and-artifacts.md).
 
 ---
 
@@ -428,6 +428,6 @@ Location: `microsphere-java-core/src/test/java/io/microsphere/{util,constants,te
 ## 9. See also
 
 * [Utilities, Constants and Text — User Guide](../../user-guide/microsphere-java-core/util-and-constants.md) — the operator-facing view of the same sources
-* [Class Loading and Artifacts](classloading-and-artifacts.md) — the `URLClassPathHandle` SPI that `ClassLoaderUtils` delegates to, and `Version.ofVersion(Class)`'s `ArtifactDetector`
-* [Collections and Filters](collections-and-filters.md) — `Lists`/`Sets`/`Prioritized` used by the service sort
-* [Language Abstractions](language-abstractions.md) — `io.microsphere.lang.Prioritized`, the ordering contract
+* [Class Loading and Artifacts](./classloading-and-artifacts.md) — the `URLClassPathHandle` SPI that `ClassLoaderUtils` delegates to, and `Version.ofVersion(Class)`'s `ArtifactDetector`
+* [Collections and Filters](./collections-and-filters.md) — `Lists`/`Sets`/`Prioritized` used by the service sort
+* [Language Abstractions](./language-abstractions.md) — `io.microsphere.lang.Prioritized`, the ordering contract
