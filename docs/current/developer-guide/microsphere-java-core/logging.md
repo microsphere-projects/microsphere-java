@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Layer** | Service layer (`logging`) — sits on the Foundation layer only; see the [layer table](README.md#1-internal-dependency-structure) |
+| **Layer** | Service layer (`logging`) — sits on the Foundation layer only; see the [layer table](./README.md#1-internal-dependency-structure) |
 | **Package** | `io.microsphere.logging` — **9** top-level types + 3 nested adapter classes = 12 classes |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` |
 | **Analysis focus** | backend resolution chain, adapter wrapping, logger (non-)caching and thread-safety, optional-dependency safety |
@@ -510,8 +510,8 @@ Ordered by severity, all verified against `release`.
 ## 10. See also
 
 * User-facing reference: [Logging — User Guide](../../user-guide/microsphere-java-core/logging.md)
-* [Language abstractions](language-abstractions.md) — `Prioritized` constants, `COMPARATOR` and `compareTo`, the ordering machinery behind §3.2
-* [Utilities, constants and text](util-and-constants.md) — `FormatUtils`, `ArrayUtils`, `ClassUtils`, `StringUtils`, `SymbolConstants`, plus the `ClassLoaderUtils`/`ServiceLoaderUtils` conventions `LoggerFactory` does not follow (§6)
-* [Collections and filters](collections-and-filters.md) — `ListUtils.newLinkedList`, the eager drain in §3.2
-* [Type conversion](type-conversion.md) — the sibling SPI whose per-pair cache (§5) `logging` deliberately lacks
-* [Events](events.md) · [Serialization](serialization.md) · [Reflection, types and beans](reflection-and-beans.md) — the layers above; `logging` does **not** depend on `reflect`
+* [Language abstractions](./language-abstractions.md) — `Prioritized` constants, `COMPARATOR` and `compareTo`, the ordering machinery behind §3.2
+* [Utilities, constants and text](./util-and-constants.md) — `FormatUtils`, `ArrayUtils`, `ClassUtils`, `StringUtils`, `SymbolConstants`, plus the `ClassLoaderUtils`/`ServiceLoaderUtils` conventions `LoggerFactory` does not follow (§6)
+* [Collections and filters](./collections-and-filters.md) — `ListUtils.newLinkedList`, the eager drain in §3.2
+* [Type conversion](./type-conversion.md) — the sibling SPI whose per-pair cache (§5) `logging` deliberately lacks
+* [Events](./events.md) · [Serialization](./serialization.md) · [Reflection, types and beans](./reflection-and-beans.md) — the layers above; `logging` does **not** depend on `reflect`

@@ -94,6 +94,24 @@ artifact are not pinned in this reactor; they come from the externally imported 
 > `logging` carries **no Spring and no JDK-version branch**: behaviour is identical under the `java8-16` (`5.3.39`) and
 > default (`7.0.9`) profiles, which only switch a Spring property that this package never reads.
 
+
+### 3.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 1 of 9 main sources in the scope of this page declares `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `a2824fff Add nullability annotations to logging APIs`.
+* **Null-input and behaviour fixes.** `6f83fb21 Document no-op logger methods`.
+
+> [!NOTE]
+> Reading the commit list: The annotated source is `LoggerFactory` only; `AbstractLogger` and the adapters are untouched by the pass, which is consistent with the no-op-degradation contract documented on this page.
+
 ---
 
 ## 4. Obtaining a `Logger`
@@ -502,19 +520,19 @@ _Source: logging/NoOpLoggerFactoryTest.java:35-43_
 
 ## 9. See also
 
-- [Language abstractions](language-abstractions.md) — `Prioritized`, whose inverted constants and `COMPARATOR` define the
+- [Language abstractions](./language-abstractions.md) — `Prioritized`, whose inverted constants and `COMPARATOR` define the
   backend order (§6.1).
-- [Utilities, constants and text](util-and-constants.md) — `ClassUtils.getTypeName`, `StringUtils.substringBefore` /
+- [Utilities, constants and text](./util-and-constants.md) — `ClassUtils.getTypeName`, `StringUtils.substringBefore` /
   `isBlank`, `FormatUtils.format` and `SymbolConstants.DOLLAR`, the foundation `LoggerUtils` and `AbstractLogger` sit on.
-- [Collections and filters](collections-and-filters.md) — `ListUtils.newLinkedList`, the eager-consumption step of the SPI
+- [Collections and filters](./collections-and-filters.md) — `ListUtils.newLinkedList`, the eager-consumption step of the SPI
   load (`logging/LoggerFactory.java:86`).
-- [Type conversion](type-conversion.md) — the sibling SPI with the same `Prioritized` + cached-list selection shape, and
+- [Type conversion](./type-conversion.md) — the sibling SPI with the same `Prioritized` + cached-list selection shape, and
   one of the ~37 in-library consumers of `Logger`.
-- [Events](events.md) · [Reflection, types and beans](reflection-and-beans.md) ·
-  [I/O, NIO, scanning and file filters](io-and-scanning.md) ·
-  [Class loading and artifacts](classloading-and-artifacts.md) · [JSON](json.md) ·
-  [Configuration property metadata](configuration-metadata.md) ·
-  [Concurrency, process and management](concurrency-process-and-management.md) — the other `core` groups that log through
+- [Events](./events.md) · [Reflection, types and beans](./reflection-and-beans.md) ·
+  [I/O, NIO, scanning and file filters](./io-and-scanning.md) ·
+  [Class loading and artifacts](./classloading-and-artifacts.md) · [JSON](./json.md) ·
+  [Configuration property metadata](./configuration-metadata.md) ·
+  [Concurrency, process and management](./concurrency-process-and-management.md) — the other `core` groups that log through
   this facade instead of importing a framework.
 - [Logging — Developer Guide](../../developer-guide/microsphere-java-core/logging.md) — the resolution chain, adapter
   internals, caching/thread-safety analysis, design patterns and the diagrams.

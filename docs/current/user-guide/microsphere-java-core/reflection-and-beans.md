@@ -11,7 +11,7 @@
 
 All `file:line` references are relative to `microsphere-java-core/src/main/java/io/microsphere/` (main) or
 `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree, shortened to
-`reflect/Foo.java:40-55` after the first mention. All 26 types carry javadoc `@since 1.0.0`; no `@Since` **annotation** is used here.
+`reflect/MethodUtils.java:40-55` after the first mention. All 26 types carry javadoc `@since 1.0.0`; no `@Since` **annotation** is used here.
 
 ---
 
@@ -74,6 +74,24 @@ methods through `MethodHandle`s and stores `null` when they do not exist (`:62` 
 > (`reflect/AccessibleObjectUtils.java:97-104`) reports *whether the object is accessible now*; the package-private
 > `setAccessible` (`:157-168`) reports *whether it was accessible before the call*. The tests rely on exactly this
 > split — see §4.1.
+
+
+### 2.2 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 20 of 26 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `d62b4c8a Add nullability annotations in bean APIs` / `34e27823 Refine nullability contracts across core APIs`.
+* **Null-input and behaviour fixes.** `8fce81e2 Remove redundant throws from BeanUtils` / `28e46fca Remove unused valueType from BeanUtils converters` / `e6c91d8a Guard null getter in BeanUtils resolveProperty` / `90168797 Resolve type in array assertion` / `3220952e Handle missing fields in type assertions`.
+
+> [!NOTE]
+> Reading the commit list: `90168797` and `3220952e` are test-side commits; they assert the generic-resolution behaviour described on this page rather than change it.
 
 ---
 
@@ -511,10 +529,10 @@ For this group that is usually `--add-opens=java.base/java.lang=ALL-UNNAMED` (`S
 
 ## 7. See also
 
-* [Language abstractions](language-abstractions.md) — `Version` / `Deprecation` (definition family),
+* [Language abstractions](./language-abstractions.md) — `Version` / `Deprecation` (definition family),
   `MutableInteger` (bean depth guard), `ThrowableSupplier.execute` (behind `getConstructor`).
-* [Type conversion](type-conversion.md) — consumes `JavaType` / `TypeUtils` to pick converters.
-* [Class loading and artifacts](classloading-and-artifacts.md) — the other JDK-internals consumer; same `--add-opens` story.
-* [Utilities and constants](util-and-constants.md) — `Utils` marker, `Assert`, and the `MICROSPHERE_PROPERTY_NAME_PREFIX` these packages build their system-property names from.
+* [Type conversion](./type-conversion.md) — consumes `JavaType` / `TypeUtils` to pick converters.
+* [Class loading and artifacts](./classloading-and-artifacts.md) — the other JDK-internals consumer; same `--add-opens` story.
+* [Utilities and constants](./util-and-constants.md) — `Utils` marker, `Assert`, and the `MICROSPHERE_PROPERTY_NAME_PREFIX` these packages build their system-property names from.
 * Developer guide, same slice: [../../developer-guide/microsphere-java-core/reflection-and-beans.md](../../developer-guide/microsphere-java-core/reflection-and-beans.md) — accessibility decision tree, generic-resolution recursion, cache inventory.
-* Group index [README.md](README.md) · module index [../../developer-guide/microsphere-java-core/README.md](../../developer-guide/microsphere-java-core/README.md)
+* Group index [./README.md](./README.md) · module index [../../developer-guide/microsphere-java-core/README.md](../../developer-guide/microsphere-java-core/README.md)

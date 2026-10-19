@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Layer** | Type-model / foundation layer — `io.microsphere.reflect`, `io.microsphere.reflect.generics`, `io.microsphere.internal.reflect`, `io.microsphere.beans`; see the [layer table](README.md#1-internal-dependency-structure) |
+| **Layer** | Type-model / foundation layer — `io.microsphere.reflect`, `io.microsphere.reflect.generics`, `io.microsphere.internal.reflect`, `io.microsphere.beans`; see the [layer table](./README.md#1-internal-dependency-structure) |
 | **Packages** | `reflect` (19 types) · `reflect/generics` (2) · `internal/reflect` (1) · `beans` (4) = **26** main-source types |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` |
 | **Analysis focus** | lookup + caching internals, the generic-type resolution algorithm, per-JDK accessibility degradation, JavaBeans introspection |
@@ -10,7 +10,7 @@
 
 All `file:line` references are relative to `microsphere-java-core/src/main/java/io/microsphere/` (main) or
 `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the **`release` worktree** — never from the dirty
-`main` checkout. After the first full mention they appear as `reflect/Foo.java:40-55`.
+`main` checkout. After the first full mention they appear as `reflect/MethodUtils.java:40-55`.
 
 ---
 
@@ -570,9 +570,9 @@ branch (`microsphere-java-parent/pom.xml:54-62`).
 ## 11. See also
 
 * User guide, same slice: [Reflection, types and beans](../../user-guide/microsphere-java-core/reflection-and-beans.md) — API reference, accessibility matrix, test-mined examples
-* [Language abstractions](language-abstractions.md) — `Deprecation` / `Version` behind the definition family, `MutableInteger` behind the depth guard, `ThrowableSupplier.execute` behind every wrapped throw
-* [Utilities and constants](util-and-constants.md) — `TypeFinder`, the hierarchy walker `TypeUtils` delegates to
-* [Type conversion](type-conversion.md) — the first consumer above this layer
-* [Class loading and artifacts](classloading-and-artifacts.md) — the other JDK-internals consumer, same `--add-opens` story
-* [Configuration property metadata](configuration-metadata.md) — the main consumer of `io.microsphere.beans`
-* Group index [README.md](README.md) · module index [../../developer-guide/README.md](../../developer-guide/README.md)
+* [Language abstractions](./language-abstractions.md) — `Deprecation` / `Version` behind the definition family, `MutableInteger` behind the depth guard, `ThrowableSupplier.execute` behind every wrapped throw
+* [Utilities and constants](./util-and-constants.md) — `TypeFinder`, the hierarchy walker `TypeUtils` delegates to
+* [Type conversion](./type-conversion.md) — the first consumer above this layer
+* [Class loading and artifacts](./classloading-and-artifacts.md) — the other JDK-internals consumer, same `--add-opens` story
+* [Configuration property metadata](./configuration-metadata.md) — the main consumer of `io.microsphere.beans`
+* Group index [./README.md](./README.md) · module index [../README.md](../README.md)

@@ -92,6 +92,24 @@ All 23 types record `@since 1.0.0` in their Javadoc — including the newest-loo
 `DelegatingScheduledExecutorService`, `SecurityUtils`) and the `process` resolvers. There is therefore no version signal
 inside this group separating newer additions from the originals; `0.3.20` is the published tag that ships them.
 
+
+### 3.4 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 11 of 23 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `588b93d3 Add nullability annotations to concurrency APIs`.
+* **Null-input and behaviour fixes.** `52d4d4aa Fix compilation MXBean lazy initialization` / `170582a6 Use Objects.isNull for MXBean guard`.
+
+> [!NOTE]
+> Reading the commit list: The concurrency subject does **not** show up in `io.microsphere.concurrent`: all four sources (`CustomizedThreadFactory`, `DelegatingBlockingQueue`, `DelegatingScheduledExecutorService`, `ExecutorUtils`) are unannotated on this line. The 11 annotated sources are `io.microsphere.management` (9) plus `process.ProcessManager` and `security.SecurityUtils`.
+
 ---
 
 ## 4. Thread factories and executor helpers (`io.microsphere.concurrent`)
@@ -530,11 +548,11 @@ _Sources: `security/SecurityUtilsTest.java:46-71`_
 
 ## 9. See also
 
-* [Language abstractions](language-abstractions.md) — `Prioritized`, `Wrapper` / `DelegatingWrapper`, which drive resolver ordering and queue unwrapping
-* [Utilities, constants and text](util-and-constants.md) — `ShutdownHookUtils`, `ServiceLoaderUtils`, `ClassLoaderUtils.resolveClass`, `Assert`
-* [Reflection, types and beans](reflection-and-beans.md) — `MethodUtils` / `FieldUtils` (the reflective PID paths) and `BeanUtils.getBeanMetadata`
-* [Collections and filters](collections-and-filters.md) — `MapUtils.newConcurrentHashMap`, `ListUtils.newLinkedList`
-* [IO and scanning](io-and-scanning.md) — `FastByteArrayOutputStream` / `IOUtils.copy`, used by `ProcessExecutor`
-* [Logging](logging.md) — the `Logger` every type in this group obtains from `LoggerFactory`
-* [Class loading and artifact detection](classloading-and-artifacts.md) — the sibling JDK-version-dispatch story
+* [Language abstractions](./language-abstractions.md) — `Prioritized`, `Wrapper` / `DelegatingWrapper`, which drive resolver ordering and queue unwrapping
+* [Utilities, constants and text](./util-and-constants.md) — `ShutdownHookUtils`, `ServiceLoaderUtils`, `ClassLoaderUtils.resolveClass`, `Assert`
+* [Reflection, types and beans](./reflection-and-beans.md) — `MethodUtils` / `FieldUtils` (the reflective PID paths) and `BeanUtils.getBeanMetadata`
+* [Collections and filters](./collections-and-filters.md) — `MapUtils.newConcurrentHashMap`, `ListUtils.newLinkedList`
+* [IO and scanning](./io-and-scanning.md) — `FastByteArrayOutputStream` / `IOUtils.copy`, used by `ProcessExecutor`
+* [Logging](./logging.md) — the `Logger` every type in this group obtains from `LoggerFactory`
+* [Class loading and artifact detection](./classloading-and-artifacts.md) — the sibling JDK-version-dispatch story
 * Developer-facing deep dive: [Concurrency, process, management and security — Developer Guide](../../developer-guide/microsphere-java-core/concurrency-process-and-management.md)

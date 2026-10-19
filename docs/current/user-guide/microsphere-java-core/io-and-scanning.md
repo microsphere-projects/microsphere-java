@@ -38,7 +38,7 @@ follows the file system or archive order:
 > [!IMPORTANT]
 > `io.microsphere.io.filter` holds the **`File` predicates** (`IOFileFilter`, `DirectoryFileFilter`,
 > `FileExtensionFilter`, `NameFileFilter`, `TrueFileFilter`). The generic `Filter<T>` SPI lives in the *other* package,
-> `io.microsphere.filter`, and is documented in [Collections and filters](collections-and-filters.md). The two are not
+> `io.microsphere.filter`, and is documented in [Collections and filters](./collections-and-filters.md). The two are not
 > interchangeable: `SimpleFileScanner` takes an `IOFileFilter`, `Scanner.scan(S, Filter<R>)` takes a `Filter<R>`, and
 > `SimpleJarEntryScanner` takes `JarEntryFilter` (from `io.microsphere.filter`). Keeping them straight is the single most
 > common mistake in this area.
@@ -121,6 +121,24 @@ without an explicit `Charset`, pin the charset or set `-Dfile.encoding` — the 
 > from … `native.encoding` and `file.encoding` … or the default charset is `UTF-8`". The implementation is a plain
 > `Charset.defaultCharset()` call (`:43`); `NATIVE_ENCODING` is only referenced from `util/SystemUtils.java:337`, not
 > from here. Trust the code, not that sentence.
+
+
+### 2.3 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 8 of 21 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `81505bba Add nullability annotations in IO classes` / `441c0b6e Add nullability annotations to IO APIs`.
+* **Null-input and behaviour fixes.** `07e2d28e Harden NameFileFilter input handling`.
+
+> [!NOTE]
+> Reading the commit list: `NameFileFilter` is one of the five `io.microsphere.io.filter` types, which is why a *file filter* subject belongs to this page and not to the collections/filters page (that one covers `io.microsphere.filter`).
 
 ---
 
@@ -491,16 +509,16 @@ Cross-platform, the two facts that actually bite are:
 
 ## 7. See also
 
-* [Networking and URL protocols](net-and-url-protocols.md) — `net.URLUtils` consumes `IOUtils`, and the
+* [Networking and URL protocols](./net-and-url-protocols.md) — `net.URLUtils` consumes `IOUtils`, and the
   `jar:`/`file:` protocol handling that feeds `SimpleJarEntryScanner.scan(URL, …)`
-* [Class loading and artifacts](classloading-and-artifacts.md) — `classloading` consumes `FastByteArrayInputStream`;
+* [Class loading and artifacts](./classloading-and-artifacts.md) — `classloading` consumes `FastByteArrayInputStream`;
   `util.ClassUtils.findClassNamesInClassPath` is the scanner's main client
-* [Collections and filters](collections-and-filters.md) — where the **generic** `Filter<T>` SPI lives, i.e.
+* [Collections and filters](./collections-and-filters.md) — where the **generic** `Filter<T>` SPI lives, i.e.
   `io.microsphere.filter`, as opposed to the `File` predicates in `io.microsphere.io.filter` used here
-* [Event dispatching](events.md) — `EventDispatcher`, `EventListener` and `Prioritized`, which `io.event` bridges to
+* [Event dispatching](./events.md) — `EventDispatcher`, `EventListener` and `Prioritized`, which `io.event` bridges to
   file-change events
-* [Serialization](serialization.md) — `io.microsphere.io.serializer`, the sibling package under `io.microsphere.io`
-* [Utilities, constants and text](util-and-constants.md) — `SystemUtils.FILE_ENCODING`, `SeparatorConstants`,
+* [Serialization](./serialization.md) — `io.microsphere.io.serializer`, the sibling package under `io.microsphere.io`
+* [Utilities, constants and text](./util-and-constants.md) — `SystemUtils.FILE_ENCODING`, `SeparatorConstants`,
   `StringUtils.split` and `ClassLoaderUtils`, which the helpers above delegate to
 * Developer-facing deep dive: [I/O, NIO, scanning and file filters — Developer Guide](../../developer-guide/microsphere-java-core/io-and-scanning.md)
-* [中文用户指南](zh/io-and-scanning.md)
+* [中文用户指南](./io-and-scanning.zh.md)

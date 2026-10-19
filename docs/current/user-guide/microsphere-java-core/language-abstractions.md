@@ -83,6 +83,24 @@ this page says so instead of guessing.
 - **Deprecation status:** none of the 18 types is `@Deprecated`. The `Deprecation` class is a *description* of
   deprecation, not a deprecation itself.
 
+
+### 2.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 5 of 18 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `e1e83e85 Add nullability annotations to lang APIs` / `e0b17365 Add nullability annotations to function APIs` / `01918859 Annotate LambdaUtils return values` / `2cae6dba Refine nullability in invoke utilities`.
+* **Null-input and behaviour fixes.** `0bc33ddc Annotate nullability in lang utilities`.
+
+> [!NOTE]
+> Reading the commit list: `0bc33ddc` says *lang utilities*, but the annotated sources in this page's scope are 5 of 18 (`ClassDataRepository`, `Deprecation`, `LambdaUtils`, and the `Predicates`/`Streams` helpers in `io.microsphere.lang.function`); the remaining part of that subject lands on `io.microsphere.util`, which is counted on the utilities page.
+
 ---
 
 ## 3. API reference
@@ -531,9 +549,9 @@ container-reload or multi-classloader scenarios the cached view goes stale for t
 
 ## 6. See also
 
-- [Utilities, constants and text](util-and-constants.md) — `io.microsphere.util.Version` used by `Deprecation`
-- [Reflection, types and beans](reflection-and-beans.md) — `ConstantPoolUtils` behind `LambdaUtils`; `ExecutableDefinition` consuming `Deprecation`
-- [Type conversion](type-conversion.md) and [Event dispatching](events.md) — the two biggest consumers of `Prioritized`
-- [Class loading and artifacts](classloading-and-artifacts.md) — `Prioritized` handlers selected by priority
-- Chinese version: [中文用户指南](zh/language-abstractions.md)
+- [Utilities, constants and text](./util-and-constants.md) — `io.microsphere.util.Version` used by `Deprecation`
+- [Reflection, types and beans](./reflection-and-beans.md) — `ConstantPoolUtils` behind `LambdaUtils`; `ExecutableDefinition` consuming `Deprecation`
+- [Type conversion](./type-conversion.md) and [Event dispatching](./events.md) — the two biggest consumers of `Prioritized`
+- [Class loading and artifacts](./classloading-and-artifacts.md) — `Prioritized` handlers selected by priority
+- Chinese version: [中文用户指南](./language-abstractions.zh.md)
 - Developer-facing deep dive: [Language Abstractions — Developer Guide](../../developer-guide/microsphere-java-core/language-abstractions.md)

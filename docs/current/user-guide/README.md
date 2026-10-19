@@ -4,7 +4,7 @@ Audience: you want to **use** `microsphere-java` in an application or library �
 right API, and know which JDK and which library version you may rely on.
 
 Everything here is read from the **`release` branch** (`revision = 0.3.20-SNAPSHOT`; that line is published as
-`0.3.20`, the newest tag in the repository). For the Chinese version of every page, open the `zh/` subdirectory beside it.
+`0.3.20`, the newest tag in the repository). Every page has an independent Chinese mirror in the same directory, named with a `.zh.md` suffix (`foo.md` -> `foo.zh.md`).
 
 * Index of all documentation and version lines: [../../README.md](../../README.md)
 * Developer Guide (architecture, source analysis, patterns): [../developer-guide/README.md](../developer-guide/README.md)
@@ -17,6 +17,7 @@ Everything here is read from the **`release` branch** (`revision = 0.3.20-SNAPSH
 |------|-------|
 | Group ID (all artifacts) | `io.github.microsphere-projects` |
 | Version documented here | `0.3.20-SNAPSHOT` (source branch `release`); published as `0.3.20`, the newest tag |
+| Release date of `0.3.20` | **2026-10-16** (previous release `0.3.19`, 2026-08-30). Every page carries a *Release date and what changed in `0.3.20`* table that quotes the commit subjects reaching its own scope. |
 | Build parent | `microsphere-build` `0.3.16` → `microsphere-java-parent` → every module |
 | In-repo BOM | `microsphere-java-dependencies` (manages all seven module versions) |
 | Package root | `io.microsphere.*` |
@@ -90,33 +91,33 @@ Read the graph bottom-up for usage: you depend on `core` for runtime utilities, 
 
 | Page | Packages (main sources) | Types | Use it when you need |
 |------|-------------------------|-------|----------------------|
-| [Utilities, constants and text](microsphere-java-core/util-and-constants.md) | `util`, `util.jar`, `constants`, `text`, `misc` | 45 | Strings, classes, class loaders, resources, service loading, assertions, versions, JARs, shared constants |
-| [Collections and filters](microsphere-java-core/collections-and-filters.md) | `collection`, `filter` | 41 | Null-safe factories, immutable/unmodifiable views, singletons, empty objects, predicates and file filters |
-| [Language abstractions](microsphere-java-core/language-abstractions.md) | `lang`, `lang.function`, `lang.invoke`, `invoke` | 18 | `Prioritized`, `Wrapper`, `Deprecation`, checked-exception-safe functional interfaces, lambda/method-handle introspection |
-| [Reflection, types and beans](microsphere-java-core/reflection-and-beans.md) | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | 26 | Method/field/constructor lookup, generic-type resolution, `JavaType`, bean introspection |
-| [Type conversion](microsphere-java-core/type-conversion.md) | `convert`, `convert.multiple` | 52 | `Converter` SPI, string→number/boolean/date conversions, multi-value (array/collection/map) conversion |
-| [Serialization](microsphere-java-core/serialization.md) | `io.serializer` | 18 | `Serializer` / `Deserializer` SPIs and binary round-tripping |
-| [Event dispatching](microsphere-java-core/events.md) | `event` | 10 | `Event`, `EventListener`, `EventDispatcher`, conditional and generic listeners |
-| [I/O, NIO, scanning and file filters](microsphere-java-core/io-and-scanning.md) | `io`, `io.event`, `io.scanner`, `io.filter`, `nio.file`, `nio.charset` | 21 | Stream/reader helpers, classpath/JAR/directory scanning, file watching |
-| [Networking and URL protocols](microsphere-java-core/net-and-url-protocols.md) | `net`, `net.classpath`, `net.console` | 13 | `classpath:` and `console:` URL protocols, custom `URLStreamHandler` registration |
-| [Logging](microsphere-java-core/logging.md) | `logging` | 9 | `Logger` facade and `LoggerFactory` delegation to SLF4J / Commons Logging / JUL |
-| [Class loading and artifacts](microsphere-java-core/classloading-and-artifacts.md) | `classloading` | 16 | Detect a dependency's version at runtime, enforce banned artifacts |
-| [JSON](microsphere-java-core/json.md) | `json` | 8 | Dependency-free `JSONObject` / `JSONArray` / `JSONTokener` |
-| [Configuration property metadata](microsphere-java-core/configuration-metadata.md) | `metadata` | 9 | Read/load/generate configuration-property metadata for IDE support |
-| [Concurrency, process, management and security](microsphere-java-core/concurrency-process-and-management.md) | `concurrent`, `process`, `management`, `management.builder`, `security` | 23 | Thread factories, executor helpers, process id and exit, MBean builders |
+| [Utilities, constants and text](./microsphere-java-core/util-and-constants.md) | `util`, `util.jar`, `constants`, `text`, `misc` | 45 | Strings, classes, class loaders, resources, service loading, assertions, versions, JARs, shared constants |
+| [Collections and filters](./microsphere-java-core/collections-and-filters.md) | `collection`, `filter` | 41 | Null-safe factories, immutable/unmodifiable views, singletons, empty objects, predicates and file filters |
+| [Language abstractions](./microsphere-java-core/language-abstractions.md) | `lang`, `lang.function`, `lang.invoke`, `invoke` | 18 | `Prioritized`, `Wrapper`, `Deprecation`, checked-exception-safe functional interfaces, lambda/method-handle introspection |
+| [Reflection, types and beans](./microsphere-java-core/reflection-and-beans.md) | `reflect`, `reflect.generics`, `internal.reflect`, `beans` | 26 | Method/field/constructor lookup, generic-type resolution, `JavaType`, bean introspection |
+| [Type conversion](./microsphere-java-core/type-conversion.md) | `convert`, `convert.multiple` | 52 | `Converter` SPI, string→number/boolean/date conversions, multi-value (array/collection/map) conversion |
+| [Serialization](./microsphere-java-core/serialization.md) | `io.serializer` | 18 | `Serializer` / `Deserializer` SPIs and binary round-tripping |
+| [Event dispatching](./microsphere-java-core/events.md) | `event` | 10 | `Event`, `EventListener`, `EventDispatcher`, conditional and generic listeners |
+| [I/O, NIO, scanning and file filters](./microsphere-java-core/io-and-scanning.md) | `io`, `io.event`, `io.scanner`, `io.filter`, `nio.file`, `nio.charset` | 21 | Stream/reader helpers, classpath/JAR/directory scanning, file watching |
+| [Networking and URL protocols](./microsphere-java-core/net-and-url-protocols.md) | `net`, `net.classpath`, `net.console` | 13 | `classpath:` and `console:` URL protocols, custom `URLStreamHandler` registration |
+| [Logging](./microsphere-java-core/logging.md) | `logging` | 9 | `Logger` facade and `LoggerFactory` delegation to SLF4J / Commons Logging / JUL |
+| [Class loading and artifacts](./microsphere-java-core/classloading-and-artifacts.md) | `classloading` | 16 | Detect a dependency's version at runtime, enforce banned artifacts |
+| [JSON](./microsphere-java-core/json.md) | `json` | 8 | Dependency-free `JSONObject` / `JSONArray` / `JSONTokener` |
+| [Configuration property metadata](./microsphere-java-core/configuration-metadata.md) | `metadata` | 9 | Read/load/generate configuration-property metadata for IDE support |
+| [Concurrency, process, management and security](./microsphere-java-core/concurrency-process-and-management.md) | `concurrent`, `process`, `management`, `management.builder`, `security` | 23 | Thread factories, executor helpers, process id and exit, MBean builders |
 
-Chinese mirrors: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/README.md).
+Chinese mirrors: [./microsphere-java-core/README.zh.md](./microsphere-java-core/README.zh.md).
 
 ### 3.2 Other modules
 
 | Page | Module | What you get |
 |------|--------|--------------|
-| [microsphere-java-annotations](microsphere-java-annotations.md) | `microsphere-java-annotations` | Contract annotations (`@Since`, `@Nullable`, `@Nonnull`, `@Immutable`, `@ThreadSafe`, `@Experimental`, …) with zero runtime cost |
-| [microsphere-java-test](microsphere-java-test.md) | `microsphere-java-test` | Test fixtures and JUnit 5 helpers; all dependencies are optional |
-| [microsphere-annotation-test](microsphere-annotation-test.md) | `microsphere-annotation-test` | In-process `javac` harness for testing annotation processors |
-| [microsphere-jdk-tools](microsphere-jdk-tools.md) | `microsphere-jdk-tools` | One-class wrapper over `javax.tools.ToolProvider.getSystemJavaCompiler()` — in-JVM `javac` on JDK 8 → 25 |
-| [microsphere-lang-model](microsphere-lang-model.md) | `microsphere-lang-model` | Wrapper layer over `javax.lang.model` for processor authors |
-| [microsphere-annotation-processor](microsphere-annotation-processor.md) | `microsphere-annotation-processor` | Compile-time generation of configuration-property metadata |
+| [microsphere-java-annotations](./module-microsphere-java-annotations.md) | `microsphere-java-annotations` | Contract annotations (`@Since`, `@Nullable`, `@Nonnull`, `@Immutable`, `@ThreadSafe`, `@Experimental`, …) with zero runtime cost |
+| [microsphere-java-test](./module-microsphere-java-test.md) | `microsphere-java-test` | Test fixtures and JUnit 5 helpers; all dependencies are optional |
+| [microsphere-annotation-test](./module-microsphere-annotation-test.md) | `microsphere-annotation-test` | In-process `javac` harness for testing annotation processors |
+| [microsphere-jdk-tools](./module-microsphere-jdk-tools.md) | `microsphere-jdk-tools` | One-class wrapper over `javax.tools.ToolProvider.getSystemJavaCompiler()` — in-JVM `javac` on JDK 8 → 25 |
+| [microsphere-lang-model](./module-microsphere-lang-model.md) | `microsphere-lang-model` | Wrapper layer over `javax.lang.model` for processor authors |
+| [microsphere-annotation-processor](./module-microsphere-annotation-processor.md) | `microsphere-annotation-processor` | Compile-time generation of configuration-property metadata |
 
 ---
 
@@ -124,18 +125,18 @@ Chinese mirrors: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/R
 
 | Symptom / goal | Start here |
 |----------------|------------|
-| Need a null-safe `List`/`Map`/`Set` factory or an immutable view | [Collections and filters](microsphere-java-core/collections-and-filters.md) |
-| Need to convert a `String` (or any value) to a target type | [Type conversion](microsphere-java-core/type-conversion.md) |
-| Need to read a generic type argument, or invoke a method reflectively | [Reflection, types and beans](microsphere-java-core/reflection-and-beans.md) |
-| Need to sort beans/listeners/handlers by priority | [Language abstractions](microsphere-java-core/language-abstractions.md) (`Prioritized`) |
-| Need to load an SPI, a resource, or a class-path entry | [Utilities, constants and text](microsphere-java-core/util-and-constants.md) |
-| Need to know which version of a dependency is present at runtime | [Class loading and artifacts](microsphere-java-core/classloading-and-artifacts.md) |
-| Need a `classpath:` URL | [Networking and URL protocols](microsphere-java-core/net-and-url-protocols.md) |
-| Need to watch a directory for changes | [I/O, NIO, scanning and file filters](microsphere-java-core/io-and-scanning.md) |
-| Want a log facade without binding a backend | [Logging](microsphere-java-core/logging.md) |
-| Need to react to a state change without coupling components | [Event dispatching](microsphere-java-core/events.md) |
-| IDE autocompletion for your `@ConfigurationProperty` fields | [Configuration property metadata](microsphere-java-core/configuration-metadata.md) + [microsphere-annotation-processor](microsphere-annotation-processor.md) |
-| `InaccessibleObjectException` / `--add-opens` errors at runtime | the JDK matrix in [Class loading and artifacts](microsphere-java-core/classloading-and-artifacts.md) and [Concurrency, process, management and security](microsphere-java-core/concurrency-process-and-management.md) |
+| Need a null-safe `List`/`Map`/`Set` factory or an immutable view | [Collections and filters](./microsphere-java-core/collections-and-filters.md) |
+| Need to convert a `String` (or any value) to a target type | [Type conversion](./microsphere-java-core/type-conversion.md) |
+| Need to read a generic type argument, or invoke a method reflectively | [Reflection, types and beans](./microsphere-java-core/reflection-and-beans.md) |
+| Need to sort beans/listeners/handlers by priority | [Language abstractions](./microsphere-java-core/language-abstractions.md) (`Prioritized`) |
+| Need to load an SPI, a resource, or a class-path entry | [Utilities, constants and text](./microsphere-java-core/util-and-constants.md) |
+| Need to know which version of a dependency is present at runtime | [Class loading and artifacts](./microsphere-java-core/classloading-and-artifacts.md) |
+| Need a `classpath:` URL | [Networking and URL protocols](./microsphere-java-core/net-and-url-protocols.md) |
+| Need to watch a directory for changes | [I/O, NIO, scanning and file filters](./microsphere-java-core/io-and-scanning.md) |
+| Want a log facade without binding a backend | [Logging](./microsphere-java-core/logging.md) |
+| Need to react to a state change without coupling components | [Event dispatching](./microsphere-java-core/events.md) |
+| IDE autocompletion for your `@ConfigurationProperty` fields | [Configuration property metadata](./microsphere-java-core/configuration-metadata.md) + [microsphere-annotation-processor](./module-microsphere-annotation-processor.md) |
+| `InaccessibleObjectException` / `--add-opens` errors at runtime | the JDK matrix in [Class loading and artifacts](./microsphere-java-core/classloading-and-artifacts.md) and [Concurrency, process, management and security](./microsphere-java-core/concurrency-process-and-management.md) |
 
 ---
 
@@ -143,10 +144,11 @@ Chinese mirrors: [microsphere-java-core/zh/README.md](microsphere-java-core/zh/R
 
 * **Semantics**: `0.x` releases are still pre-1.0; the project keeps public APIs stable inside a `0.3.x` line and
   marks additions with `@Since`, removals/deprecations with `@Deprecated` (see
-  [Language abstractions](microsphere-java-core/language-abstractions.md) for the `Deprecation` contract).
-* **Nullability**: public and protected members across all modules carry `@Nonnull` / `@Nullable`; treat a
-  documented `@Nonnull` return as an invariant, not a hope. See
-  [microsphere-java-annotations](microsphere-java-annotations.md).
+  [Language abstractions](./microsphere-java-core/language-abstractions.md) for the `Deprecation` contract).
+* **Nullability**: public and protected members of the library modules carry `@Nonnull` / `@Nullable`, but coverage is
+  uneven and measured per page — from 1 of 9 sources in `logging` up to 20 of 26 in `reflect`/`beans`, while
+  `microsphere-java-test` (0 of 16) and `microsphere-jdk-tools` (0 of 1) carry none. Treat a documented `@Nonnull
+  return` as an invariant, not a hope. See [microsphere-java-annotations](./module-microsphere-java-annotations.md).
 * **No forced transitive dependencies**: `core` runs with an empty classpath apart from `annotations`; every
   integration (SLF4J, Commons Logging, JMX, JPMS) is optional and detected at runtime.
 * **JDK floor**: binaries are compiled against Java 8. Java 8 users get the same public API as Java 25 users; the

@@ -12,7 +12,7 @@
 
 All `file:line` references in this page are relative to `microsphere-java-core/src/main/java/io/microsphere/`
 (main sources) or `microsphere-java-core/src/test/java/io/microsphere/` (tests), read from the `release` worktree.
-After the first mention they are shortened to `json/Foo.java:40-55`.
+After the first mention they are shortened to `json/JSONUtils.java:40-55`.
 
 ---
 
@@ -131,6 +131,24 @@ This is the table to memorise. "Neutral value" means `null`, a default, or the i
 > `RuntimeException` (`toString`), unchecked `IllegalArgumentException` (`JSONUtils.jsonObject`/`jsonArray`), and
 > silent `null` (`wrap`, `writeValueAsString`, `readValues` on an unsupported target type). If you only catch
 > `JSONException`, the last three will get you. §10 items 5, 8, 9 and 11 name the specific unchecked escapes.
+
+
+### 3.4 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 1 of 8 main sources in the scope of this page declares `@Nonnull` / `@Nullable`. No commit subject names this area specifically; the library-wide pass `34e27823 Refine nullability contracts across core APIs` covers it.
+* **No other change in this range touches the area this page covers.**
+
+> [!NOTE]
+> Reading the commit list: `JSONUtils` is the only annotated source, and no subject in the range names `io.microsphere.json`; the two serializer cleanups in this release belong to `io.microsphere.io.serializer`. The JSON layer is behaviourally unchanged on this line.
 
 ---
 
@@ -655,23 +673,23 @@ write method and convert the value to the *generic* parameter type
 
 ## 11. See also
 
-* [Configuration property metadata](configuration-metadata.md) — `metadata` is the largest in-library consumer:
+* [Configuration property metadata](./configuration-metadata.md) — `metadata` is the largest in-library consumer:
   `DefaultConfigurationPropertyGenerator` writes JSON with `JSONUtils.append`
   (`metadata/DefaultConfigurationPropertyGenerator.java:29-30,88-117`), `ReflectiveConfigurationPropertyGenerator`
   with `writeBeanAsString` (`metadata/ReflectiveConfigurationPropertyGenerator.java:24,78`), and
   `DefaultConfigurationPropertyReader` reads with `readValues(content, List.class, Map.class)`
   (`metadata/DefaultConfigurationPropertyReader.java:29,43`).
-* [Reflection, types and beans](reflection-and-beans.md) — `BeanUtils.resolvePropertiesAsMap` is what makes
+* [Reflection, types and beans](./reflection-and-beans.md) — `BeanUtils.resolvePropertiesAsMap` is what makes
   `JSONObject.wrap` handle JavaBeans (`json/JSONObject.java:25,881`), and `ConstructorUtils` / `MethodUtils` /
   `TypeUtils` drive `readValueAsBean` (`json/JSONUtils.java:988-1007`).
-* [Type conversion](type-conversion.md) — `Converter.convertIfPossible` is the leaf of every
+* [Type conversion](./type-conversion.md) — `Converter.convertIfPossible` is the leaf of every
   JSON→Java scalar conversion (`json/JSONUtils.java:63,1427-1442`).
-* [Collections and filters](collections-and-filters.md) — `ListUtils.newArrayList` and `MapUtils.newLinkedHashMap`
+* [Collections and filters](./collections-and-filters.md) — `ListUtils.newArrayList` and `MapUtils.newLinkedHashMap`
   decide `JSONArray`'s storage and `JSONObject`'s key ordering (`json/JSONArray.java:84`, `json/JSONObject.java:122`).
-* [Utilities and constants](util-and-constants.md) — `ClassUtils` supplies every type predicate used by `wrap`
+* [Utilities and constants](./util-and-constants.md) — `ClassUtils` supplies every type predicate used by `wrap`
   (`json/JSONObject.java:39-45`) and `SymbolConstants` supplies the punctuation used by `JSONUtils`
   (`json/JSONUtils.java:56-62`).
-* [Serialization](serialization.md) — the neighbouring `io.microsphere.io.serializer` package, which covers binary
+* [Serialization](./serialization.md) — the neighbouring `io.microsphere.io.serializer` package, which covers binary
   `Object` ↔ `byte[]` and is the right choice when you do *not* want a text format.
 * [Developer Guide — JSON](../../developer-guide/microsphere-java-core/json.md) — the tokener state machine, the
   `JSONObject` map choice, the writer's scope stack, the exception taxonomy, the design-pattern inventory, the

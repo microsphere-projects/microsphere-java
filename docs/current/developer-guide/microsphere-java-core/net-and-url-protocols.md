@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Layer** | Platform integration (`net`, `net.classpath`, `net.console`) — see the [layer graph](README.md#1-internal-dependency-structure) |
+| **Layer** | Platform integration (`net`, `net.classpath`, `net.console`) — see the [layer graph](./README.md#1-internal-dependency-structure) |
 | **Packages** | `io.microsphere.net` (10 main sources) · `io.microsphere.net.classpath` (1) · `io.microsphere.net.console` (2) = **13** files / 3 359 lines |
 | **Source line** | `release` branch, `0.3.20-SNAPSHOT` (tag `0.3.20` published) |
 | **Analysis focus** | the write-once `URL.factory` slot, handler selection from JDK 8 → 25, sub-protocol parse/rewrite/dispatch |
@@ -540,10 +540,10 @@ test suite, which always runs against a cooperative JDK and an already-populated
 ## 13. See also
 
 * [Networking and URL protocols — User Guide](../../user-guide/microsphere-java-core/net-and-url-protocols.md) — runnable examples and the pitfall list
-* [I/O, NIO, scanning and file filters](io-and-scanning.md) — `SimpleClassScanner` calls `ofURL`/`resolveArchiveFile`; `IOUtils.close` is called back by `URLUtils`
-* [Class loading and artifacts](classloading-and-artifacts.md) — the largest consumer of `URLUtils`
-* [Collections and filters](collections-and-filters.md) — the `Delegating*` convention this group deliberately does **not** follow
-* [Language abstractions](language-abstractions.md) — `Prioritized` ordering arithmetic behind the three sorted chains
-* [Utilities, constants and text](util-and-constants.md) — `SystemUtils`, `ProtocolConstants`, `SeparatorConstants`
-* [Type conversion](type-conversion.md) — the charset arguments of `encode`/`decode` resolve through `CharsetUtils`
-* [中文版本](zh/net-and-url-protocols.md)
+* [I/O, NIO, scanning and file filters](./io-and-scanning.md) — `SimpleClassScanner` calls `ofURL`/`resolveArchiveFile`; `IOUtils.close` is called back by `URLUtils`
+* [Class loading and artifacts](./classloading-and-artifacts.md) — the largest consumer of `URLUtils`
+* [Collections and filters](./collections-and-filters.md) — the `Delegating*` convention this group deliberately does **not** follow
+* [Language abstractions](./language-abstractions.md) — `Prioritized` ordering arithmetic behind the three sorted chains
+* [Utilities, constants and text](./util-and-constants.md) — `SystemUtils`, `ProtocolConstants`, `SeparatorConstants`
+* [Type conversion](./type-conversion.md) — the charset arguments of `encode`/`decode` resolve through `CharsetUtils`
+* [中文版本](./net-and-url-protocols.zh.md)

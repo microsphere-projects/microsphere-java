@@ -79,6 +79,24 @@ Maven coordinates (from the reactor POM):
 > relevant to these utilities because several tests assert behaviour that depends on which class loader sees the test
 > resources.
 
+
+### 2.1 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 21 of 45 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `74743377 Add nullability annotations to core utils` / `34e27823 Refine nullability contracts across core APIs`.
+* **Null-input and behaviour fixes.** `001f2a6c Update VersionUtils.java` / `40919b19 Update Version.java` / `0f2c953d Update ValueHolder.java` / `dd98f715 Update StringUtils.java` / `7098a537 Update ObjectUtils.java` / `7162bd14 Update PriorityComparator.java` / `afdd348c Update ServiceLoaderUtils.java` / `abe91a32 Update PropertyResourceBundleUtils.java` / `1fa3f655 Update PropertyResourceBundleControl.java` / `9f123115 Add Apache license header to ClassUtils` / `6e039faa Use computeIfAbsent for package class sets` / `81806fd9 Refine utility APIs and test assertions`.
+
+> [!NOTE]
+> Reading the commit list: Two subjects in the same range do **not** hold on this line: `0ddf8dd9 Remove deprecated BaseUtils class` (`io.microsphere.util.BaseUtils` is still present on `release`, 44 lines) and `2c166301 Add ObjectUtils.requireNonNull helpers` (`ObjectUtils` declares no `requireNonNull`). The `0.3.19...0.3.20` comparison range includes the `chore: merge main into release [skip ci]` commits, so it carries `main`-side work that the published `release` tree does not have yet.
+
 ---
 
 ## 3. API reference
@@ -480,8 +498,8 @@ assertSame(java.util.Collections.emptyList(), JarUtils.filter(null, null)); // n
 
 ## 7. See also
 
-* [Class Loading and Artifacts](classloading-and-artifacts.md) — the `URLClassPathHandle` SPI that `ClassLoaderUtils` delegates to
-* [Collections and Filters](collections-and-filters.md) — `Lists`/`Sets`/`Prioritized` used by `ServiceLoaderUtils` sorting
-* [Networking and URL Protocols](net-and-url-protocols.md) — `URLUtils` behind `JarUtils` archive-path resolution
-* [Language Abstractions](language-abstractions.md) — `io.microsphere.lang.Prioritized`, the ordering contract these utilities honour
+* [Class Loading and Artifacts](./classloading-and-artifacts.md) — the `URLClassPathHandle` SPI that `ClassLoaderUtils` delegates to
+* [Collections and Filters](./collections-and-filters.md) — `Lists`/`Sets`/`Prioritized` used by `ServiceLoaderUtils` sorting
+* [Networking and URL Protocols](./net-and-url-protocols.md) — `URLUtils` behind `JarUtils` archive-path resolution
+* [Language Abstractions](./language-abstractions.md) — `io.microsphere.lang.Prioritized`, the ordering contract these utilities honour
 * Developer-facing deep dive: [Utilities, Constants and Text — Developer Guide](../../developer-guide/microsphere-java-core/util-and-constants.md)

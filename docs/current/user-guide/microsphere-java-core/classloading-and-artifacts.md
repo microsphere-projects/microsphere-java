@@ -81,6 +81,24 @@ released version cannot be established from the code. `release-notes.md` records
 changes: the `ArtifactDetector` detection API was refactored in **0.2.7** (`release-notes.md:5-15`), and
 `StreamArtifactResourceResolver` was refactored together with `JarUtils` in **0.3.4** (`release-notes.md:135-152`).
 
+
+### 1.4 Release date and what changed in `0.3.20`
+
+| Item | Value | Evidence |
+|---|---|---|
+| Documented line | `release`, `${revision}` = `0.3.20-SNAPSHOT` | root `pom.xml:54` |
+| Newest published release | `0.3.20`, tagged **2026-10-16** | the `0.3.20` tag resolves to `chore: merge main into release [skip ci]`, committed `2026-10-16T03:43:20Z` |
+| Previous release | `0.3.19`, tagged **2026-08-30** | the `0.3.19` tag, committed `2026-08-30T12:51:37Z` |
+| Changelog source | `release-notes.md` at the repository root | The project publishes no `CHANGELOG.md`; the `v0.3.16`–`v0.3.20` blocks of `release-notes.md` read *Release notes generation failed* and carry raw commit lists, so every entry below is quoted as a commit subject and checked against the `release` sources. |
+
+`0.3.20` adds no new API surface for this area — the `0.3.19...0.3.20` range is a hardening release. What it does change, and how far that reaches the sources this page documents:
+
+* **Nullability contracts.** 9 of 16 main sources in the scope of this page declare `@Nonnull` / `@Nullable`. Subjects in the range that name this area: `4b409125 Add nullability annotations in classloading` / `9d1f4a78 Add nullability annotations to URL classpath handle` / `e3a84c77 Add nullability annotations to resolvers` / `e78c5585 Restrict resolver constructor visibility`.
+* **Null-input and behaviour fixes.** `bc5cb8ea Harden class loader handling in resolver base` / `9e9f33f3 Fix null-safe artifact matching` / `f95fd45f Strengthen ClassLoaderUtils tests` / `973a4f13 Relax class loader test assertions`.
+
+> [!NOTE]
+> Reading the commit list: This is the densest area of the release: four of the nullability subjects land here, and `e78c5585 Restrict resolver constructor visibility` is a signature-level change — check it against your own subclasses of the resolver base.
+
 ---
 
 ## 2. API reference
@@ -323,8 +341,8 @@ log4j:log4j:*
 
 ## 5. See also
 
-* [Utilities, constants and text](util-and-constants.md) — `ClassLoaderUtils`, `ClassPathUtils`, `ServiceLoaderUtils`
-* [Networking and URL protocols](net-and-url-protocols.md) — `URLUtils.resolveArchiveFile` / `resolveBasePath`
-* [Reflection, types and beans](reflection-and-beans.md) — the field access the `Abstract*URLClassPathHandle` types need
-* [Language abstractions](language-abstractions.md) — `Prioritized`, which orders both SPI families
+* [Utilities, constants and text](./util-and-constants.md) — `ClassLoaderUtils`, `ClassPathUtils`, `ServiceLoaderUtils`
+* [Networking and URL protocols](./net-and-url-protocols.md) — `URLUtils.resolveArchiveFile` / `resolveBasePath`
+* [Reflection, types and beans](./reflection-and-beans.md) — the field access the `Abstract*URLClassPathHandle` types need
+* [Language abstractions](./language-abstractions.md) — `Prioritized`, which orders both SPI families
 * Developer-facing deep dive: [Class Loading and Artifact Detection — Developer Guide](../../developer-guide/microsphere-java-core/classloading-and-artifacts.md)
