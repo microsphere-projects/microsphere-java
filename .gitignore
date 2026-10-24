@@ -66,10 +66,13 @@ compiler/.gradle/*
 .extract
 .java-version
 
-# others
-build.txt
-
 # Wiki generated output
 wiki/
 wiki-output/
 __pycache__/
+
+# sonar
+.sonar/
+
+# others
+build.txt
