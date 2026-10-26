@@ -20,7 +20,7 @@
 
     <properties>
         <microsphere-bom.version>0.3.16</microsphere-bom.version>
-        <spring-framework.version>7.0.9</spring-framework.version>
+        <spring-framework.version>7.0.10</spring-framework.version>
     </properties>
 
     <dependencyManagement>
