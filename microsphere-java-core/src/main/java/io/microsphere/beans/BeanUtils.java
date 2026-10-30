@@ -275,11 +275,32 @@ public abstract class BeanUtils implements Utils {
     }
 
     /**
-     * Get the {@link BeanMetadata} for the specified {@link Class}.
+     * Gets the {@link BeanMetadata} for the specified {@link Class}.
+     * <p>
+     * This method retrieves the metadata associated with a given class, caching
+     * the result to avoid repeated introspection overhead. The metadata contains
+     * information about the bean's properties, methods, and other characteristics
+     * necessary for Java Beans operations.
+     * </p>
      *
-     * @param beanClass the specified {@link Class}
-     * @return non-null
-     * @throws RuntimeException if an exception occurs during introspection
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Person {
+     *     private String name;
+     *     private int age;
+     *
+     *     // Getters and setters...
+     * }
+     *
+     * BeanMetadata metadata = BeanUtils.getBeanMetadata(Person.class);
+     * System.out.println(metadata.getProperties().size()); // Outputs: 2 (name and age)
+     * System.out.println(metadata.getProperty("name"));   // Returns PropertyDescriptor for name
+     * }</pre>
+     *
+     * @param beanClass the class for which to retrieve bean metadata; must not be {@code null}
+     * @return the {@link BeanMetadata} for the specified class, never {@code null}
+     * @throws RuntimeException if an exception occurs during bean introspection
+     * @see #BEAN_METADATA_CACHE_SIZE
      */
     @Nonnull
     public static BeanMetadata getBeanMetadata(@Nonnull Class<?> beanClass) {
