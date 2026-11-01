@@ -65,7 +65,6 @@ jobs:
     needs: build
     permissions:
       contents: write
-      models: read
     steps:
       - name: Checkout Source
         uses: actions/checkout@v7.0.1
@@ -83,9 +82,10 @@ jobs:
             git push origin ${{ inputs.revision }}
           fi
 
-      - name: Generate Release Notes with Copilot
+      - name: Generate Release Notes with DeepSeek
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: ${{ vars.DEEPSEEK_MODEL || 'deepseek-flash' }}
         run: |
           CURRENT_TAG="${{ inputs.revision }}"
 
@@ -106,14 +106,14 @@ jobs:
           export PREV_TAG_DATA="$SINCE_LABEL"
           export COMMITS_DATA="$COMMITS"
 
-          # Call GitHub Copilot via GitHub Models API and capture the summary
+          # Generate release notes with DeepSeek, falling back to raw commits on failure
           SUMMARY=$(python3 << 'PYEOF'
           import json, os, urllib.request, sys
 
           current_tag = os.environ['CURRENT_TAG_DATA']
           prev_tag    = os.environ['PREV_TAG_DATA']
           commits     = os.environ['COMMITS_DATA']
-          token       = os.environ['GH_TOKEN']
+          token       = os.environ.get('DEEPSEEK_API_KEY', '')
 
           prompt = (
               f"Generate concise release notes for version {current_tag}.\n\n"
@@ -125,12 +125,14 @@ jobs:
           )
 
           payload = json.dumps({
-              "model": "gpt-4o",
-              "messages": [{"role": "user", "content": prompt}]
+              "model": os.environ.get('DEEPSEEK_MODEL') or 'deepseek-flash',
+              "messages": [{"role": "user", "content": prompt}],
+              "thinking": {"type": "disabled"},
+              "max_tokens": 4096
           }).encode()
 
           req = urllib.request.Request(
-              "https://models.inference.ai.azure.com/chat/completions",
+              "https://api.deepseek.com/chat/completions",
               data=payload,
               headers={
                   "Content-Type": "application/json",
@@ -139,11 +141,19 @@ jobs:
           )
 
           try:
-              with urllib.request.urlopen(req) as resp:
+              if not token:
+                  raise ValueError("DEEPSEEK_API_KEY is not configured")
+              with urllib.request.urlopen(req, timeout=120) as resp:
                   data = json.loads(resp.read())
-                  print(data["choices"][0]["message"]["content"])
+                  choice = data["choices"][0]
+                  summary = (choice["message"]["content"] or "").strip()
+                  if not summary:
+                      raise ValueError("DeepSeek returned empty release notes")
+                  if choice.get("finish_reason") == "length":
+                      raise ValueError("DeepSeek response exceeded the output limit")
+                  print(summary)
           except Exception as e:
-              print(f"Failed to generate summary via Copilot: {e}", file=sys.stderr)
+              print(f"::warning::DeepSeek release notes generation failed; using raw commits: {e}", file=sys.stderr)
               print(f"_Release notes generation failed. Raw commits since {prev_tag}:_\n\n```\n{commits}\n```")
           PYEOF
           )
