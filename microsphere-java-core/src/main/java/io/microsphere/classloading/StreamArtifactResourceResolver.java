@@ -37,7 +37,6 @@ import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.toByteArray;
 import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
-import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.jar.JarUtils.filter;
 
 /**
