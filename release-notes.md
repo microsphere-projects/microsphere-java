@@ -754,4 +754,32 @@ d16c2e73 Bump io.github.microsphere-projects:microsphere-all-bom
 24bcd908 chore: bump version to next patch after publishing 0.3.19
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.19...0.3.20
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.19...0.3.20## v0.3.21
+
+## Documentations
+- Restructured bilingual docs by module and added module-based core documentation.
+- Added bilingual module guides, including a developer guide for test fixtures.
+- Expanded BeanUtils metadata documentation and clarified conversion and reflection docs.
+- Documented class loading and artifact detection.
+- Refined Chinese developer and user guides and fixed documentation links.
+
+## Bug Fixes
+- Fixed stray code fences in documentation spec.
+- Fixed optional MXBean test guard and used a Java 8-compatible Optional check.
+
+## Dependency Updates
+- Bumped Microsphere BOM to 0.3.17.
+- Bumped `org.springframework:spring-framework-bom` from 7.0.9 to 7.0.10.
+- Bumped `actions/setup-java` from 6.0.1 to 6.1.0.
+
+## Build and Workflow Enhancements
+- Upgraded build parent to 1.0.1.
+- Added Qoder pull request review workflow.
+- Switched release notes generation to DeepSeek.
+- Ignored SonarQube working directory.
+
+## Other Changes
+- Cleaned up unused imports.
+- Polished documentation spec formatting and added documentation generation prompts (including bilingual).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.20...0.3.21
