@@ -125,7 +125,7 @@ public class ProcessExecutor {
             System.arraycopy(options, 0, commandArray, 1, optionsLength);
         }
         for (String argument : commandArray) {
-            assertNotNull(argument, "The command/option argument must not be null: " + Arrays.toString(commandArray));
+            assertNotNull(argument, () -> "The command/option argument must not be null: " + Arrays.toString(commandArray));
         }
         this.command = commandArray;
         StringBuilder optionsBuilder = new StringBuilder();
