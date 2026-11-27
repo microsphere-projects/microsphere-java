@@ -10,6 +10,7 @@ import io.microsphere.logging.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +25,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.lang.Long.getLong;
 import static java.lang.Long.parseLong;
@@ -36,6 +38,10 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * <p>Executes operating system commands and manages the execution lifecycle, including handling input/output streams,
  * monitoring process status, and enforcing timeouts. This class wraps command execution in a structured way to provide
  * enhanced control and integration with the framework.
+ *
+ * <p>The command and its options are passed to {@link ProcessBuilder} as an argument array, preserved as-is:
+ * whitespace inside an argument (e.g. {@code "-Dfoo=a b"}) is passed to the process as a single token, and no
+ * shell is involved at all.
  *
  * <h3>Example Usage</h3>
  * <pre>
@@ -91,6 +97,13 @@ public class ProcessExecutor {
 
     private final ProcessManager processManager = INSTANCE;
 
+    /**
+     * The command and its arguments, preserved as-is. Arguments are never joined
+     * and re-split, so whitespace inside an argument (e.g. {@code -Dfoo=a b}) is
+     * passed to the process as a single token.
+     */
+    private final String[] command;
+
     private final String options;
 
     private final String commandLine;
@@ -100,10 +113,21 @@ public class ProcessExecutor {
     /**
      * Constructor
      *
-     * @param command command
-     * @param options command options
+     * @param command command, must not be {@code null}
+     * @param options command options, each must not be {@code null}
+     * @throws IllegalArgumentException if {@code command} or any element of {@code options} is {@code null}
      */
-    public ProcessExecutor(@Nullable String command, String... options) {
+    public ProcessExecutor(@Nonnull String command, @Nullable String... options) {
+        int optionsLength = options == null ? 0 : options.length;
+        String[] commandArray = new String[1 + optionsLength];
+        commandArray[0] = command;
+        if (optionsLength > 0) {
+            System.arraycopy(options, 0, commandArray, 1, optionsLength);
+        }
+        for (String argument : commandArray) {
+            assertNotNull(argument, () -> "The command/option argument must not be null: " + Arrays.toString(commandArray));
+        }
+        this.command = commandArray;
         StringBuilder optionsBuilder = new StringBuilder();
         if (isNotEmpty(options)) {
             for (String argument : options) {
@@ -153,7 +177,9 @@ public class ProcessExecutor {
         Future<byte[]> future = executor.submit(() -> {
             // Use ProcessBuilder with merged stderr so we only need to drain one stream,
             // avoiding the classic stdout/stderr deadlock caused by sequential draining.
-            Process process = new ProcessBuilder(commandLine.split("\\s+"))
+            // The command array is passed as-is: arguments containing whitespace are NOT
+            // joined and re-split, so each element stays a single argument.
+            Process process = new ProcessBuilder(this.command)
                     .redirectErrorStream(true)
                     .start();
             InputStream processInputStream = process.getInputStream();
