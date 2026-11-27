@@ -10,7 +10,6 @@ import io.microsphere.logging.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -19,13 +18,14 @@ import java.util.concurrent.TimeoutException;
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
-import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
-import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.ArrayUtils.combine;
+import static io.microsphere.util.Assert.assertNoNullElements;
+import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.lang.Long.getLong;
 import static java.lang.Long.parseLong;
@@ -104,10 +104,6 @@ public class ProcessExecutor {
      */
     private final String[] command;
 
-    private final String options;
-
-    private final String commandLine;
-
     private final ExecutorService executor;
 
     /**
@@ -118,25 +114,11 @@ public class ProcessExecutor {
      * @throws IllegalArgumentException if {@code command} or any element of {@code options} is {@code null}
      */
     public ProcessExecutor(@Nonnull String command, @Nullable String... options) {
-        int optionsLength = options == null ? 0 : options.length;
-        String[] commandArray = new String[1 + optionsLength];
-        commandArray[0] = command;
-        if (optionsLength > 0) {
-            System.arraycopy(options, 0, commandArray, 1, optionsLength);
-        }
-        for (String argument : commandArray) {
-            assertNotNull(argument, () -> "The command/option argument must not be null: " + Arrays.toString(commandArray));
-        }
+        assertNotBlank(command, () -> "The command must not be blank");
+        assertNoNullElements(options, () -> "The command options must not contain null elements");
+        String[] commandArray = combine(command, options);
         this.command = commandArray;
-        StringBuilder optionsBuilder = new StringBuilder();
-        if (isNotEmpty(options)) {
-            for (String argument : options) {
-                optionsBuilder.append(SPACE_CHAR).append(argument);
-            }
-        }
-        this.options = optionsBuilder.toString();
         this.executor = newSingleThreadExecutor(newThreadFactory("process-exec", true));
-        this.commandLine = command + this.options;
         shutdownOnExit(this.executor);
     }
 
@@ -186,7 +168,7 @@ public class ProcessExecutor {
             FastByteArrayOutputStream targetOutputStream = new FastByteArrayOutputStream();
             int exitValue = -1;
             try {
-                processManager.addUnfinishedProcess(process, options);
+                processManager.addUnfinishedProcess(process);
                 // Copy the merged standard + error output stream
                 copy(processInputStream, targetOutputStream);
 
@@ -196,13 +178,13 @@ public class ProcessExecutor {
                 // try to exit with value
                 exitValue = process.exitValue();
                 if (exitValue != 0) {
-                    String message = format("The command['{}'] execution is exited with invalid value : {}", commandLine, exitValue);
+                    String message = format("The command['{}'] execution is exited with invalid value : {}", arrayToString(this.command), exitValue);
                     throw new IOException(message);
                 }
             } finally {
-                processManager.removeUnfinishedProcess(process, options);
+                processManager.removeUnfinishedProcess(process);
                 if (logger.isTraceEnabled()) {
-                    logger.trace("The command['{}'] is executed with exit value : {}", commandLine, exitValue);
+                    logger.trace("The command['{}'] is executed with exit value : {}", arrayToString(this.command), exitValue);
                 }
             }
             return targetOutputStream.toByteArray();
