@@ -44,20 +44,20 @@ public class ProcessManager {
      */
     public static final ProcessManager INSTANCE = new ProcessManager();
 
-    final ConcurrentMap<Process, String> unfinishedProcessesCache = newConcurrentHashMap();
+    final ConcurrentMap<Process, Object> unfinishedProcessesCache = newConcurrentHashMap();
 
     private ProcessManager() {
     }
 
     @Nonnull
-    protected ProcessManager addUnfinishedProcess(@Nonnull Process process, @Nonnull String arguments) {
-        unfinishedProcessesCache.putIfAbsent(process, arguments);
+    protected ProcessManager addUnfinishedProcess(@Nonnull Process process) {
+        unfinishedProcessesCache.putIfAbsent(process, this);
         return this;
     }
 
     @Nonnull
-    protected ProcessManager removeUnfinishedProcess(@Nonnull Process process, @Nonnull String arguments) {
-        unfinishedProcessesCache.remove(process, arguments);
+    protected ProcessManager removeUnfinishedProcess(@Nonnull Process process) {
+        unfinishedProcessesCache.remove(process, this);
         return this;
     }
 
@@ -68,7 +68,7 @@ public class ProcessManager {
      */
     @Nonnull
     @Immutable
-    public Map<Process, String> unfinishedProcessesMap() {
+    public Map<Process, Object> unfinishedProcessesMap() {
         return unmodifiableMap(unfinishedProcessesCache);
     }
 }
