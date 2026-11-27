@@ -44,6 +44,32 @@ class ProcessExecutorTest extends LoggingTest implements Loggable {
         log(response);
     }
 
+    /**
+     * Arguments containing whitespace must be passed to the process as a single token.
+     * <p>
+     * {@code "-Dfoo=a b"} is one JVM option. With the previous join-then-split
+     * implementation, the command line became {@code "java -Dfoo=a b -version"} and was
+     * re-split into {@code ["java", "-Dfoo=a", "b", "-version"]}, making {@code java}
+     * treat {@code "b"} as the main class and fail with a non-zero exit value.
+     */
+    @Test
+    void testExecuteWithArgumentContainingWhitespace() throws Exception {
+        ProcessExecutor processExecutor = new ProcessExecutor("java", "-Dfoo=a b", "-version");
+        processExecutor.execute(this.outputStream);
+        assertTrue(this.outputStream.size() > 0);
+        log(this.outputStream.toString());
+    }
+
+    @Test
+    void testNullCommand() {
+        assertThrows(IllegalArgumentException.class, () -> new ProcessExecutor(null));
+    }
+
+    @Test
+    void testNullOption() {
+        assertThrows(IllegalArgumentException.class, () -> new ProcessExecutor("java", (String) null));
+    }
+
     @Test
     void testExecuteWithTimeout() {
         ProcessExecutor processExecutor = new ProcessExecutor("javac", "--help");
