@@ -118,6 +118,7 @@ public abstract class AbstractLogger implements Logger {
             Object lastArgument = arguments[length - 1];
             if (lastArgument instanceof Throwable) {
                 messageThrowableHandler.accept(message, (Throwable) lastArgument);
+                return;
             }
         }
         messageHandler.accept(message);
