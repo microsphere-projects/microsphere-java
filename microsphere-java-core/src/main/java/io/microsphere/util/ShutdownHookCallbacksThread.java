@@ -80,12 +80,19 @@ class ShutdownHookCallbacksThread extends Thread {
     }
 
     private void executeShutdownHookCallbacks() {
-        for (Runnable callback : shutdownHookCallbacks) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The ShutdownHook Callback is about to run : {}", callback);
+        do {
+            Runnable callback = shutdownHookCallbacks.poll();
+            if (callback == null) {
+                break;
             }
-            callback.run();
-        }
+            runCallback(callback);
+        } while (true);
     }
 
+    private void runCallback(Runnable callback) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("The ShutdownHook Callback is about to run : {}", callback);
+        }
+        callback.run();
+    }
 }
