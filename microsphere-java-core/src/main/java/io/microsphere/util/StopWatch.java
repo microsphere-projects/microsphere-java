@@ -329,7 +329,7 @@ public class StopWatch {
      * @return the total elapsed time in the specified time unit
      */
     public long getTotalTime(@Nonnull TimeUnit timeUnit) {
-        return NANOSECONDS.convert(this.totalTimeNanos, timeUnit);
+        return timeUnit.convert(this.totalTimeNanos, NANOSECONDS);
     }
 
     /**
