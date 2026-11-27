@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link ProcessManager} Test
@@ -44,12 +44,12 @@ class ProcessManagerTest implements Loggable {
         });
 
         while (!future.isDone()) {
-            Map<Process, String> unfinishedProcessesMap = processManager.unfinishedProcessesMap();
-            for (Map.Entry<Process, String> entry : unfinishedProcessesMap.entrySet()) {
+            Map<Process, Object> unfinishedProcessesMap = processManager.unfinishedProcessesMap();
+            for (Map.Entry<Process, Object> entry : unfinishedProcessesMap.entrySet()) {
                 Process process = entry.getKey();
-                String arguments = entry.getValue();
+                Object holder = entry.getValue();
                 assertNotNull(process);
-                assertEquals(" -version", arguments);
+                assertSame(INSTANCE, holder);
             }
         }
 
